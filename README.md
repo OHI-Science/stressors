@@ -1,2 +1,2 @@
-# pressures
-Cleaning past, present, future pressures
+# stressors
+Cleaning past, present, future stressors
