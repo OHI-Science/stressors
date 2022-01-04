@@ -19,7 +19,7 @@ output:
 
 # Summary
 
-This script creates the Sea Surface Temperature (SST) stressor. Script is modified from the Ocean Health Index 2021 methods.
+This script creates the Sea Surface Temperature (SST) stressor.
 
 
 ***  
@@ -42,10 +42,9 @@ Cortadv6_weeklySST.nc =  SST, weekly data for all years, degrees Kelvin
 
 # Methods
 
-1. Extreme events per year based calculated as number of times SST anomaly exceeds the standard deviation calculated from SST based on weekly values.
-2. Sum extreme events for five year periods to control for yearly variation.
-3. Change in extreme events: Subtract number of extreme events for each five year period from control period (1985-1989).
-4. Rescale "Change in extreme events" data to values between 0 and 1 by dividing by the 99.99th quantile among all years of data.
+1. Extreme events per year based calculated as number of times SST anomaly exceeds the 90th quantile calculated from SST based on weekly values from 1985-2015.
+2. Sum extreme weekly events for each year. Final file ends up using summing extreme events from 2016-2020.
+3. Rescale by dividing by the total possible extreme events in a 5 year period.
 
 ## Setup
 
@@ -110,8 +109,7 @@ closeAllConnections()
 
 ## Generate annual extreme events
 
-We define an extreme event as time when the average absolute weekly temperature exceeds the mean plus/minus one standard deviation calculated across the entire time series for each week of the year (1 through ~52). In regards to calculating this, we determine when the weekly anomoly data downloaded from CoRTAD (observed value minus climatological mean) exceeds the standard deviation calculated for that week across all years. For each raster cell, we count the number of times this occurs in a year period, so values can range from 0-52. To smooth for yearly stochasticity we then analyze 5 year periods. Even in an unchanging climate, it is normal for observed weekly temperatures to exceed 1 sd, and this will vary according to area. To control for this, we compare the number of extreme events we observe in a five year time period to a reference 5 year time period from 1985-1989. 
-
+We define an extreme event as time when the average weekly anomoly temperature exceeds the 90th quantile calculated for years 1985-2015 for each week of the year (1 through ~52). For each raster cell, we count the number of weeks this is exceeded for each year from 2016-2020, so values can range from 0-52. To smooth for yearly stochasticity we then sum the exceedences for the 5 year period from 2016-2020. 
 
 ## Get list of data
 ```{r generate annual positive anomalies, eval = FALSE}
@@ -135,106 +133,9 @@ ssta_df <- names_ssta %>% # View(ssta_df)
 ```
 
 
-# Calculate weekly SD
-
-```{r}
-## the next for-loop takes a long time, ~22min for each of 53 layers
-## create weekly standard deviations across all years
-
-for(week in 1:53){
-  
- # week = 1
-  t0 = Sys.time()
-  print(paste("calculating sd for week", week, "-- started at", t0))
-
-    s = stack()
-  for (yr in yrs){ # yr = 1999
-    # FOR APPROACH OF USING REF PERIOD TO CALC EXTREME EVENTS: CHANGE 'YRS' HERE TO INCLUDE JUST REFERENCE YEARS
-    w = which(substr(names_weekly, 2, 5) == yr)[week]
-    if(is.na(week)) next() # most yrs don't have 53 weeks; 'next' works in for loop but not foreach+dopar
-    w_week = weekly_sst[[w]]
-    s = stack(s, w_week)
-  }
-  
-## memory requirements
-    # https://strimas.com/post/processing-large-rasters-in-r/
-# mem_est <-  8 * ncell(s)*nlayers(s) / 2^20  #11,106 MB to hold object
-#  canProcessInMemory(s, verbose=TRUE)  
-#  rasterOptions()
-#  blockSize(s)
-  
-rasterOptions(maxmemory= 50e+09, chunksize=10e+08)  
-
-beginCluster(n=8)
-sd_raster <- raster::clusterR(s, fun = calc, args=list(fun=sd, na.rm=TRUE))
-endCluster()
-
-#plot(sd_raster)
-
-writeRaster(sd_raster, file.path(dir_M, sprintf("stressors_2021/_dataprep/SST_past_present/anomoly_90quant/quant_anomoly_week_%s.tif", week)), overwrite=TRUE)
-
-}
-
-```
-
-
-# Calculate weekly 90th quantile
-Trying out this as an alternative.
-
-```{r}
-## the next for-loop takes a long time, ~22min for each of 53 layers
-## create weekly standard deviations across all years
-
-anomoly_90quant_1985-2015
-
-for(week in 1:53){
-  
- # week = 1
-  t0 = Sys.time()
-  print(paste("calculating 90th quantile for week", week, "-- started at", t0))
-
-    s = stack()
-  for (yr in yrs){ # yr = 1999
-    # FOR APPROACH OF USING REF PERIOD TO CALC EXTREME EVENTS: CHANGE 'YRS' HERE TO INCLUDE JUST REFERENCE YEARS
-    w = which(substr(names_weekly, 2, 5) == yr)[week]
-    if(is.na(week)) next() # most yrs don't have 53 weeks; 'next' works in for loop but not foreach+dopar
-    w_week = ssta[[w]]
-    s = stack(s, w_week)
-  }
-  
-## memory requirements
-    # https://strimas.com/post/processing-large-rasters-in-r/
-# mem_est <-  8 * ncell(s)*nlayers(s) / 2^20  #11,106 MB to hold object
-#  canProcessInMemory(s, verbose=TRUE)  
-#  rasterOptions()
-#  blockSize(s)
-  
-rasterOptions(maxmemory= 50e+09, chunksize=10e+08)  
-
-fun_90 <- function(x){quantile(x, probs = c(0.90), na.rm=TRUE)}
-
-beginCluster(n=8)
-quant_raster <- raster::clusterR(s, fun = calc, args=list(fun=fun_90))
-endCluster()
-
-#plot(quant_raster)
-#test <- quant_raster
-# test[test>7] <- 7 
-# plot(test)
-
-writeRaster(quant_raster, file.path(dir_M, sprintf("stressors_2021/_dataprep/SST_past_present/anomoly_90quant/quant_anomoly_week_%s.tif", week)), overwrite=TRUE)
-
-
-}
-
-```
-
 # Calculate weekly 90th quantile, using 1985 - 2015
-Trying out this as an alternative.
 
 ```{r}
-## the next for-loop takes a long time, ~22min for each of 53 layers
-## create weekly standard deviations across all years
 
 
 yrs <- 1985:2015
@@ -280,8 +181,7 @@ writeRaster(quant_raster, file.path(dir_M, sprintf("stressors_2021/_dataprep/SST
 
 ```
 
-### Quantile exceedences
-### calculate exceedences
+### calculate exceedences for years 2016 - 2020
 
 ```{r}
  yrs <- 2016:2020
@@ -312,7 +212,7 @@ for(week in 1:52){ # week = wks$week[1]
 ```
 
 ## Calculate quantile annual exceedances
-Sum weekly exceedences in each year. 
+Sum proportion of weekly exceedences in each year. 
 ```{r}
  yrs <- 2016:2020
 for(yr in yrs){  # yr = yrs[2]
@@ -337,7 +237,14 @@ plot(tmp, main = yr)
 ```
   
 
-## calculate average of 5 years
+## calculate average exceedences for 5 years
+
+* Average of 5 year intervals of weekly proportional exceedences (e.g. sum of exceedences divided by 52)
+* Convert to mollweide
+* Aggregate to be closer to our target raster resolution
+* Resample to have same dimensions as target raster
+* Mask ocean
+* Save
 ```{r cumulative sum of extreme events, eval = FALSE}
 
 exceed_files <- list.files(file.path(dir_M, sprintf("stressors_2021/_dataprep/SST_past_present/annual_quant_exceed/", pattern = "annual_quant_exceed")), full.names = TRUE)
@@ -382,148 +289,6 @@ writeRaster(r, filename = file.path(dir_M, sprintf("stressors_2021/_dataprep/SST
 ```
 
 
-
-
-
-
-
-
-
-
-
-### calculate exceedences
-
-```{r}
- # yrs <- yrs[12:39]
-
-## calculate annual positive anomalies; ~17 minutes per year with 5 cores
-for(yr in yrs){ # yr=yrs[2]
-    t0 = Sys.time()
-  print(paste("calculating anomaly for", yr, "-- started at", t0))
-
-  wks = ssta_df %>% 
-    filter(year == yr) %>% 
-    select(week)
-  
-for(week in wks$week){ # week = wks$week[1]
-    sd_sst = raster::raster(file.path(dir_M, sprintf( "stressors_2021/_dataprep/SST_past_present/weekly_sd/sd_sst_week_%s.tif", week))) 
-    w = which(substr(names_ssta, 2, 5) == yr)[week]
-    w_ssta = ssta[[w]]
-    
-    fun_exceed <- function(x, y){ifelse(is.na(x) | is.na(y), 0, ifelse(x > y, 1, 0))}
-    
-    beginCluster(n=8)
-    weekly_exceed <- raster::clusterR(stack(w_ssta, sd_sst),
-                     overlay, 
-                    arg = list(fun = fun_exceed))
-    endCluster()
-
-  writeRaster(weekly_exceed, filename = file.path(dir_M, sprintf("stressors_2021/_dataprep/SST_past_present/weekly_sd_exceed/sd_exceed_%s_%s.tif", week, yr)), overwrite=TRUE)
-  }
-}
-  
-
-```
-  
-  
-## Calculate annual exceedances
-Sum weekly exceedences in each year. 
-```{r}
-
-for(yr in yrs){  # yr = yrs[2]
-
-  yearly_files <- list.files(file.path(dir_M, sprintf("stressors_2021/_dataprep/SST_past_present/weekly_sd_exceed")), pattern=sprintf("_%s.tif", yr), full=TRUE)
-  
-  yearly_files_stack <- stack(yearly_files)
-
-  t0 <- Sys.time()
-    test <- calc(yearly_files_stack, fun = sum, na.rm=TRUE, filename = file.path(dir_M, sprintf("stressors_2021/_dataprep/SST_past_present/annual_sd_exceed/annual_sd_exceed_%s.tif", yr)), overwrite=TRUE) 
-  Sys.time() - t0
-  
-}
-```
-  
-
-
-## Create 5 year cumulative sum of extreme events and calculate difference from historical
-Sequence:
-* Add 5 year intervals of weekly exceedences
-* Mask out original NA values
-* Convert to mollweide
-* Aggregate to be closer to our target raster resolution
-* Resample to have same dimensions as target raster
-* Save
-
-```{r cumulative sum of extreme events, eval = FALSE}
-
-exceed_files <- list.files(file.path(dir_M, sprintf("stressors_2021/_dataprep/SST_past_present/annual_sd_exceed/", pattern = "annual_sd_exceed")), full.names = TRUE)
-
-
-## time period for historical comparison (1985-1989)
-ref_years <-c(1985:1989)
-ref_years <- paste(ref_years, collapse="|")
-ref_files <- grep(ref_years, exceed_files, value=TRUE)
-ref <- stack(ref_files) %>% sum(.)
-
-
-## mask out orginal NA values
-NA_mask   <- stack(list.files(file.path(dir_M, "stressors_2021/_raw_data/SST_cortad"), pattern = "FilledSST.nc",
-                                 full.names = TRUE), varname = "FilledSST")
-NA_mask <- NA_mask[[1]]
-NA_mask[!is.na(NA_mask)] <- 1
-
-
-registerDoParallel(3)
-t0 = Sys.time()
-foreach(year = seq(1986, max(yrs)-4)) %dopar% { # year = 1986
-  years = year:(year + 4)
-  
-stack_exceed <- stack(exceed_files[substr(exceed_files, 95, 98) %in% years]) %>% 
-  sum(.)
-
-tmp <- raster::overlay(stack_exceed, 
-          ref, 
-          fun = function(x, y){x - y}) 
-
-tmp <- tmp * NA_mask
-
-projection(tmp) = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
-  
-tmp_mol <-  projectRaster(tmp, crs = mollCRS, over = TRUE) 
-tmp_mol <- aggregate(tmp_mol, fact=2, fun=mean) # get close to resolution of template raster, not sure if this is necessary, but makes me feel better.
-tmp_mol <- resample(tmp_mol, template_raster, method="bilinear")
-
-writeRaster(tmp_mol, filename = file.path(dir_M, sprintf("stressors_2021/_dataprep/SST_past_present/change_in_exceed/sst_exceeds_compared_to_ref_%s-%s.tif", 
-                                   years[1], years[5])), overwrite = TRUE)
-
-
-}
-Sys.time() - t0
-```
-
-## Reference Point
-
-```{r reference point calculation, eval = F}
-
-## get data across all years
-diffs <- list.files(file.path(dir_M, "stressors_2021/_dataprep/SST_past_present/change_in_exceed"), pattern = "compared", full.names = TRUE)
-
-plot(raster(diffs[31]))
-
-vals <- c()
-
-for(i in 1:length(diffs)){
-  m = diffs[i] %>% raster() %>% getValues()
-  vals = c(vals, m)
-}
-
-## get min, max, and 99.99th quantile
-min_val   <- min(vals, na.rm = TRUE) # -261
-max_val   <- max(vals, na.rm = TRUE) # 261
-resc_num  <- quantile(vals, prob = 0.9999, na.rm = TRUE) # 148
-write_csv(data.frame(quantile99.99 = resc_num), here("prep/sst_past_present/rescale_sst.csv"))
-```
-
 ## Check to see if we need to gapfill
 
 ```{r}
@@ -553,95 +318,25 @@ plot(raster(diffs[[1]]))
 plot(need_gf, add=TRUE, col="red")
 
 ```
-## need to gapfill
-The main problem may be ice cover where SST isn't measured. But it could also be convoluted shorelines.
-
-```{r}
-
-gf_raster <- function(x){raster::focal(x, w = matrix(1,3,3), fun = mean, na.rm=TRUE, pad = TRUE, NAonly=TRUE)}
-
-ocean_template <- raster("../spp_vuln_mapping/_spatial/ocean_area_mol.tif")
-ocean_template[ocean_template>0] <- 1
-
-diffs <- list.files(file.path(dir_M, "stressors_2021/_dataprep/SST_past_present/change_in_exceed"), pattern = "compared", full.names = TRUE)
-
-registerDoParallel(2)
-
-foreach(file_name = diffs,.packages="dplyr") %dopar%{ # file_name = diffs[1]
-  
-  yrs <- substr(file_name, nchar(file_name)-12, nchar(file_name)-4)
-  
-  r = raster::raster(file_name)
-  
-## Repeat 100 times (most is immediately gapfilled but the antarctic area was persistant)
-i <- 0
-while (i <= 100){
-r <- gf_raster(r)
-i <- i + 1
-print(i)
-}
-
-r <- r*ocean_template
-
-raster::writeRaster(r, filename = file.path(dir_M, sprintf("stressors_2021/_dataprep/SST_past_present/change_in_exceed_gf/sst_exceeds_compared_to_ref_gf_%s.tif", 
-                                   yrs)), overwrite = TRUE)
-}
-
-
-```
-
-
-## Rescaling
-
-```{r rescale, eval = F}
-## get diff files to rescale
-
-diffs <- list.files(file.path(dir_M, "stressors_2021/_dataprep/SST_past_present/change_in_exceed_gf"), pattern="_gf", full.names = TRUE)
-
-## read rescaling number from pressures reference points files
-resc_num <- read.csv(here("prep/sst_past_present/rescale_sst.csv")) %>%
-  .$quantile99.99
-  
-
-
-for(diff_raster in diffs) { # diff_raster <- diffs[2]
-  
-  r = raster::raster(diff_raster)
-  year_string = substr(diff_raster, nchar(diff_raster)-12, nchar(diff_raster)-4)
-  
-  out = raster::calc(r, fun = function(x){ifelse(x > 0, ifelse(x > resc_num, 1, x/resc_num), 0)})
-  
-  raster::writeRaster(out, 
-              filename = file.path(dir_M, sprintf("stressors_2021/_dataprep/SST_past_present/rescaled/sst_extreme_rescaled_%s.tif", 
-                                   year_string)), overwrite = TRUE)
-              
-}
-
-check <- raster(file.path(dir_M, "stressors_2021/_dataprep/SST_past_present/rescaled/sst_extreme_rescaled_1986-1990.tif"))
-plot(check)
-check <- raster(file.path(dir_M, "stressors_2021/_dataprep/SST_past_present/rescaled/sst_extreme_rescaled_2016-2020.tif"))
-plot(check)
-
-
-```
 
 
 ## Get mean SST data for select years
 
 ```{r}
+
 weekly_sst   <- stack(list.files(file.path(dir_M, "stressors_2021/_raw_data/SST_cortad"), pattern = "FilledSST.nc",
                                  full.names = TRUE), varname = "FilledSST")
 
-rasterOptions(progress = 'text',timer=TRUE)
+plot(weekly_sst[[1]])
 
-yrs <- 1982:2020
+rasterOptions(progress = 'text',timer=TRUE)
 
 yrs <- 2016:2020
 
 
 registerDoParallel(5)
 
-foreach(year = yrs) %dopar%{ # #year <- 2020
+foreach(year = yrs) %dopar%{ # year <- 2020
 
 year_sst <- weekly_sst[[grep(year, names(weekly_sst))]] 
 
@@ -655,6 +350,80 @@ raster::writeRaster(test, filename = file.path(dir_M, sprintf("stressors_2021/_d
   
 
 
+
+```
+
+## calculate average SST for 2016-2020
+
+* Average of SST from 2016-2020 
+* Convert to mollweide
+* Aggregate to be closer to our target raster resolution
+* Resample to have same dimensions as target raster
+* Mask ocean
+* Save
+```{r cumulative sum of extreme events, eval = FALSE}
+
+yrs <- 2016:2020
+
+sst_yearly <- list.files(file.path(dir_M, "stressors_2021/_dataprep/SST_past_present/annual_SST"), full=TRUE)
+sst_yearly <- grep(paste(yrs, collapse="|"), sst_yearly, value=TRUE)
+
+sst_avg <- stack(sst_yearly) %>% 
+  mean(.) 
+
+sst_avg_c <- sst_avg - 273 # convert to C from K
+
+projection(sst_avg_c) = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+  
+sst_avg_mol <-  projectRaster(sst_avg_c, crs = mollCRS, over = TRUE) 
+sst_avg_mol <- aggregate(sst_avg_mol, fact=2, fun=mean) # get close to resolution of template raster, not sure if this is necessary, but makes me feel better.
+sst_avg_mol <- resample(sst_avg_mol, template_raster, method="bilinear")
+
+## gapfill
+gf_raster <- function(x){raster::focal(x, w = matrix(1,3,3), fun = mean, na.rm=TRUE, pad = TRUE, NAonly=TRUE)}
+
+ocean_template <- raster("../spp_vuln_mapping/_spatial/ocean_area_mol.tif")
+ocean_template[ocean_template>0] <- 1
+
+r = sst_avg_mol
+  
+## Repeat 100 times (most is immediately gapfilled but the antarctic area was persistent)
+i <- 0
+while (i <= 100){
+r <- gf_raster(r)
+i <- i + 1
+print(i)
+}
+
+r <- r*ocean_template
+
+writeRaster(r, filename = file.path(dir_M, sprintf("stressors_2021/_dataprep/SST_past_present/final_avg_tmp/sst_avg_%s-%s.tif", 
+                                   yrs[1], yrs[5])), overwrite = TRUE)
+
+plot(raster(list.files(file.path(dir_M, "stressors_2021/_dataprep/SST_past_present/final_avg_tmp"), full=TRUE)[1]))
+
+```
+
+## Function to turn to rescaled stressor specific to each taxa
+
+```{r}
+
+T_max_a <- 25
+T_max_p <- 20
+T_raster <- raster(list.files(file.path(dir_M, "stressors_2021/_dataprep/SST_past_present/final_avg_tmp"), full=TRUE)[1])
+
+T_max_pressure <- function(T_max_a, T_max_p, T_raster){
+#t0 <- Sys.time()
+pressure <- (1/(T_max_a - T_max_p))*(T_raster-T_max_p)
+pressure[pressure<0] <- 0
+pressure[pressure>1] <- 1
+return(pressure)
+#Sys.time()-t0
+}
+
+t0 <- Sys.time()
+tmp <- T_max_pressure(T_max_a = T_max_a, T_max_p = T_max_p, T_raster=T_raster)
+Sys.time()-t0
 
 ```
 
