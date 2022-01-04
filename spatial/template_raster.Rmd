@@ -1,0 +1,25 @@
+---
+title: "Creating a template raster"
+output: html_document
+---
+
+Create a template raster with mollweide coordinate reference system and 10km resolution (=100 km2 cell area).
+
+```{r setup, include=FALSE}
+library(sp)
+library(raster)
+library(here)
+```
+
+```{r}
+
+x <- raster::raster()
+x <- raster::setValues(x, 1)
+resolution <- 10000
+s.crs <- "+proj=moll"
+
+template_rast <- raster::projectRaster(x, crs=s.crs, res=resolution, progress="text")
+
+raster::writeRaster(template_rast, here("spatial/output/template_raster.tif"))
+
+```

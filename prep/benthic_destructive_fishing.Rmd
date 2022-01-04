@@ -1,0 +1,44 @@
+---
+title: "Benthic Destructive Fishing"
+output: html_document
+---
+We did this analysis for the food system marine disturbance:
+https://github.com/OHI-Science/food_systems/tree/master/fisheries/marine/disturbance
+
+Data from here: 
+destructive_hours <- raster("/home/shares/food-systems/Food_footprint/all_food_systems/dataprep/fisheries/marine/disturbance/global_fishing_watch/FishingWatch_annual_effort_destructive_hours_2017.tif")
+
+
+```{r setup, include=FALSE}
+
+destructive_hours <- raster("/home/shares/ohi/stressors_2021/_dataprep/fishing_benthic_destructive/FishingWatch_annual_effort_destructive_hours_2017.tif")
+```
+Rescale the hours of habitat destructive fisheries to values between 0-1 using the 99.9th quantile.
+
+```{r}
+destructive_hours <- raster("/home/shares/food-systems/Food_footprint/all_food_systems/dataprep/fisheries/marine/disturbance/global_fishing_watch/FishingWatch_annual_effort_destructive_hours_2017.tif")
+destructive_hours_low_res <- aggregate(destructive_hours, fact=50, fun=sum, progress="text")
+# both have 259200 cells now!
+plot(log(destructive_hours_low_res+1))
+cellStats(destructive_hours_low_res, "sum")
+cellStats(destructive_hours, "sum", na.rm=TRUE)
+# both equal 16009799
+## divide by area to get hours effort per km2 to control for differences in raster area in lat/long projection
+destructive_hours_per_km2 <- destructive_hours_low_res/area(destructive_hours_low_res)
+## get the rescaling raster by removing land zero values:
+land_remove_template <- raster("/home/shares/food-systems/Food_footprint/all_food_systems/dataprep/spatial/food_rgns.tif") %>%
+  resample(destructive_hours_per_km2) %>%
+  raster::calc(fun=function(x){ifelse(is.na(x), 1, NA)})
+land_remove_template
+plot(land_remove_template)
+destructive_hours_per_km2_rescale_data <- destructive_hours_per_km2 * land_remove_template
+destructive_hours_per_km2_rescale_data
+plot(destructive_hours_per_km2_rescale_data)
+rescale_value <- quantile(destructive_hours_per_km2_rescale_data, c(0.999))
+#rescale_value <- quantile(destructive_hours_per_km2[destructive_hours_per_km2>0], c(0.999))
+destructive_hours_per_km2_rescaled <- destructive_hours_per_km2 %>%
+  raster::calc(fun=function(x){ifelse(x<0, 0,
+                                      ifelse(x>rescale_value, 1, x/rescale_value))})
+plot(destructive_hours_per_km2_rescaled)
+```
+
