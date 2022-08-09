@@ -1,0 +1,424 @@
+---
+title: "Set up master rasters"
+author: "*Compiled on `r date()` by `r Sys.info()['user']`*"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_depth: 3
+    toc_float: yes
+    number_sections: true
+    theme: cerulean
+    highlight: haddock
+    includes: 
+      in_header: '~/github/src/templates/ohara_hdr.html'
+  pdf_document:
+    toc: true
+---
+
+``` {r setup, echo = TRUE, message = FALSE, warning = FALSE}
+
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+
+library(raster)
+library(sf)
+library(fasterize)
+library(oharac)
+oharac::setup()
+source(here('common_fxns.R'))
+
+```
+
+# Summary
+
+Set up rasters for analysis.
+
+* Master rasters at 10 x 10 km and 1 x 1 km resolution Mollweide CRS.
+    * 10 x 10 km raster will double as a cell ID raster.
+* Ocean area proportion $\in$ (0, 1], 10 km x 10 km Mollweide
+    * create global raster from NE ocean at 1 km x 1 km resolution; aggregate up to 10 km x 10 km
+* Coastal area proportion $\in$ (0, 1], 10 km x 10 km Mollweide
+    * create global raster from buffered land, at 3 nmi distance, at 1 x 1 km resolution; aggregate up to 10 km x 10 km.
+    * can also create one at 1 km buffer.
+    * do we need inland buffers?
+* Using the 10 km x 10 km ocean area raster as a base, create:
+    * EEZ raster
+    * MEOW raster
+    * Bathymetry raster (to clip species to max depth levels)
+
+# Data
+
+Land and ocean shapefiles from Natural Earth.  Free vector and raster map data @ naturalearthdata.com.
+
+# Methods
+
+## Master raster 1 km and 10 km
+
+``` {r}
+moll_crs <- '+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m'
+
+rast_base_10km_file <- here('_spatial/rast_base_mol_10km.tif')
+
+if(!file.exists(rast_base_10km_file)) {
+  x <- raster() %>%
+    setValues(1)
+
+  rast_base_10km <- projectRaster(x, crs = moll_crs, res = 10000, progress="text")
+
+  writeRaster(rast_base_10km, rast_base_10km_file)
+}
+
+### disaggregate 10 x 10 km cells to 1 x 1 km cells
+rast_base_1km_file <- here_anx('_spatial/rast_base_moll_1km.tif')
+
+if(!file.exists(rast_base_1km_file)) {
+  rast_base_10km <- raster(rast_base_10km_file)
+
+  rast_base_1km <- disaggregate(rast_base_10km, fact = 10, progress = 'text')
+  
+  writeRaster(rast_base_1km, rast_base_1km_file)
+}
+
+```
+
+## Ocean area raster
+
+* Reproject NE ocean shapefile to Mollweide.
+* Use `fasterize::fasterize` to rasterize the reprojected ocean shapefile to Mollweide CRS with a 1 km resolution.
+    * This will be saved on the server, too large for Github.
+    * Values will be 1 (ocean) and 0 (not ocean).
+* Aggregate the 1 km raster to 10 km cells, taking the sum of ocean cells and divide by 100 to result in values $\in$ (0, 1].  Cells with no ocean presence will result in NA.
+
+```{r ocean 1 km}
+
+ocean_1km_file <- here_anx('_spatial/ocean_moll_1km.tif')
+# unlink(ocean_1km_file)
+
+if(!file.exists(ocean_1km_file)) {
+  message('Processing ocean area at 1 km resolution...')
+  ocean_sf <- read_sf(here('_spatial', 'ne_10m_ocean', 'ne_10m_ocean.shp'))
+  
+  ocean_moll_sf <- ocean_sf %>%
+    st_transform(crs = moll_crs)
+  
+  rast_base_moll_1km <- raster(rast_base_1km_file)
+  
+  ocean_moll_1km <- fasterize::fasterize(ocean_moll_sf, rast_base_1km, 
+                                         field = NULL, ### NULL sets all polygons to 1
+                                         background = NA)
+    
+  writeRaster(ocean_moll_1km, filename = ocean_1km_file)
+}
+```
+
+```{r ocean 10 km}
+ocean_10km_file <- here('_spatial', 'ocean_area_mol.tif')
+# unlink(ocean_10km_file)
+
+if(!file.exists(ocean_10km_file)) {
+  message('Processing ocean area at 10 km resolution...')
+  ocean_moll_1km <- raster(ocean_1km_file)
+  
+  ocean_moll_10km <- aggregate(ocean_moll_1km, fact = 10, fun = sum, progress = 'text')
+  
+  # rast_base_10km <- raster(rast_base_10km_file)
+  # compareRaster(ocean_moll_10km, rast_base_10km)
+  # [1] TRUE
+  
+  ### drop the Caspian Sea:
+  casp_bbox <- c(xmin = 3700000, xmax = 4800000, ymin = 4300000, ymax = 5650000)
+  ocean_moll_df <- as.data.frame(ocean_moll_10km, xy = TRUE) %>%
+    setNames(c('x', 'y', 'z')) %>%
+    mutate(caspian_x = between(x, casp_bbox['xmin'], casp_bbox['xmax']),
+           caspian_y = between(y, casp_bbox['ymin'], casp_bbox['ymax']),
+           caspian   = caspian_x & caspian_y) %>%
+    mutate(z = ifelse(caspian, NA, z)) %>%
+    select(-contains('caspian'))
+  
+  ocean_moll_10km_no_casp <- rasterFromXYZ(ocean_moll_df, res = 10000, crs = crs(ocean_moll_10km))
+  
+  # plot(ocean_moll_10km_no_casp)
+  ocean_moll_10km_no_casp <- ocean_moll_10km_no_casp / 100
+  
+  writeRaster(ocean_moll_10km_no_casp, ocean_10km_file, overwrite = TRUE)
+}
+
+ocean_moll_10km <- raster(ocean_10km_file)
+plot(ocean_moll_10km, main = 'ocean area')
+```
+
+
+## Coastal zone raster
+
+* Reproject NE land shapefile to Mollweide.  Buffer to 3 km.
+* Use `fasterize::fasterize` to rasterize the reprojected buffered land shapefile to Mollweide CRS with a 1 km resolution.
+    * This will be saved on the server, too large for Github.
+    * Values will be 1 (land) and 0 (not land).
+* Mask with the ocean 1 km raster to include only ocean-based cells that fall within the 3 km buffer.
+* Aggregate the 1 km raster to 10 km cells, taking the sum of remaining cells and divide by 100 to result in values $\in$ (0, 1].
+* Coastal cells bordering land will contain the proportion of ocean area within 3 km of land.  
+    * Verify that this should always be less than or equal to ocean proportion in the cell.
+
+```{r coastal 1 km}
+coastal_3nmi_buffer_1km_file <- here_anx('_spatial/coastal_3nmi_buffer_moll_1km.tif')
+# unlink(coastal_3nmi_buffer_1km_file)
+
+if(!file.exists(coastal_3nmi_buffer_1km_file)) {
+  message('Processing 3 nmi coastal buffer at 1 km resolution...')
+  land_sf <- read_sf(here('_spatial', 'ne_10m_land', 'ne_10m_land.shp'))
+  
+  land_moll_sf <- land_sf %>%
+    st_transform(crs = moll_crs) 
+  
+  land_3nmi_moll_sf <- land_moll_sf %>%
+    st_buffer(dist = 5556) %>% ### 3 nautical miles = 5.556 km
+    st_cast('MULTIPOLYGON')
+
+  rast_base_moll_1km <- raster(rast_base_1km_file)
+  
+  land_moll_1km <- fasterize::fasterize(land_3nmi_moll_sf, 
+                                        rast_base_moll_1km, 
+                                        field = NULL, ### NULL sets all polygons to 1
+                                        background = NA)
+  
+  ocean_moll_1km <- raster(here_anx('_spatial/ocean_moll_1km.tif'))
+
+  coastal_3nmi_buffer_1km <- mask(land_moll_1km, ocean_moll_1km, progress = 'text')
+
+  writeRaster(coastal_3nmi_buffer_1km, 
+              filename = coastal_3nmi_buffer_1km_file)
+}
+
+```
+
+```{r coastal 10 km}
+coastal_3nmi_10km_file <- here('_spatial', 'coastal_3nmi_area_mol.tif')
+# unlink(coastal_3nmi_10km_file)
+if(!file.exists(coastal_3nmi_10km_file)) {
+  message('Processing coastal 3 nautical mile buffer area at 10 km resolution...')
+  coastal_moll_1km <- raster(coastal_3nmi_buffer_1km_file)
+  
+  coastal_moll_10km <- aggregate(coastal_moll_1km, fact = 10, fun = sum, progress = 'text')
+  
+  coastal_moll_10km <- coastal_moll_10km / 100
+  
+  writeRaster(coastal_moll_10km, coastal_3nmi_10km_file)
+}
+
+coastal_moll_10km <- raster(coastal_3nmi_10km_file)
+plot(coastal_moll_10km, main = '3nmi coastal area')
+
+```
+
+## LOICZID raster
+
+for projecting AquaMaps to Mollweide CRS
+
+``` {r set up LOICZID raster}
+
+loiczid_rast_file <- here('_spatial', 'loiczid_mol.tif')
+
+if(!file.exists(loiczid_rast_file)) {
+  
+  loiczid_rast <- raster(ext = extent(c(xmin = -180, xmax = 180, ymin = -90, ymax = 90)), 
+                         res = 0.5,
+                         crs = '+init=epsg:4326') %>%
+    setValues(1:ncell(.))
+  
+  ocean_moll_10km <- raster(ocean_10km_file)
+  
+  loiczid_moll <- projectRaster(loiczid_rast, ocean_moll_10km, method = 'ngb')
+  
+  writeRaster(loiczid_moll, loiczid_rast_file, overwrite = TRUE)
+  ### this drops some polar cells
+  # x <- 1:ncell(loiczid_rast)
+  # y <- x[!x %in% values(loiczid_moll)]
+  # hist(y)
+}
+
+loiczid_moll <- raster(loiczid_rast_file)
+plot(mask(loiczid_moll, ocean_moll_10km), 
+     main = 'LOICZID raster 10 km^2 Mollweide projection')
+
+```
+
+
+## EEZ raster
+
+``` {r set up EEZ raster}
+
+eez_rast_file <- here('_spatial', 'eez_mol.tif')
+
+if(!file.exists(eez_rast_file)) {
+  
+  eez_shp_file  <- file.path(here('_spatial/rgns/rgns_mol_1k.gpkg'))
+  eez_sf <- read_sf(eez_shp_file)
+
+  eez_df <- eez_sf %>%
+    as.data.frame() %>%
+    dplyr::select(-geom)
+  eez_ids <- eez_df %>%
+    select(rgn_id, rgn_name, rgn_ant_id) %>%
+    distinct()
+  ### rgn_ant_id is same as rgn_id except for Antarctica.  We don't really
+  ### need to chunk out Antarctica at this point so just use rgn_id.
+
+  ocean_moll_10km <- raster(ocean_10km_file)
+  
+  eez_rast <- fasterize::fasterize(eez_sf, ocean_moll_10km,
+                                   field = 'rgn_id', 
+                                   fun = 'min')
+  
+  eez_rast_ocean <- eez_rast %>%
+    mask(ocean_moll_10km)
+  
+  writeRaster(eez_rast_ocean, eez_rast_file, overwrite = TRUE)
+  
+}
+eez_rast_ocean <- raster(eez_rast_file)
+plot(eez_rast_ocean, main = 'EEZ raster 10 km^2 Mollweide projection')
+
+```
+
+## MEOW raster
+
+Using the MEOW shapefile, we will include all the shapes at the region and province level and then mask out land using the area raster (for consistency).
+
+``` {r set up MEOW rgns raster}
+
+meow_rgn_rast_file <- here('_spatial', 'meow_rgns_mol.tif')
+
+if(!file.exists(meow_rgn_rast_file)) {
+  meow_sf <- read_sf(here('_spatial/meow_rgns/meow_rgns.shp'))
+
+  ocean_moll_10km <- raster(ocean_10km_file)
+
+  meow_sf_moll <- meow_sf %>%
+    smoothr::densify(max_distance = 0.1) %>%
+    select(ECO_CODE_X, geometry) %>%
+    st_transform(crs(ocean_moll_10km))
+  
+  # plot(meow_sf_moll)
+  
+  meow_rast <- fasterize::fasterize(meow_sf_moll, ocean_moll_10km, 
+                                   field = 'ECO_CODE_X', fun = 'min')
+  
+  meow_rast <- meow_rast %>%
+    mask(ocean_moll_10km)
+    
+  writeRaster(meow_rast, meow_rgn_rast_file, overwrite = TRUE)
+}
+ 
+meow_rgn_rast <- raster::raster(meow_rgn_rast_file)
+
+plot(meow_rgn_rast, main = 'MEOW ecoregions raster 10 km^2 Mollweide')
+
+```
+
+``` {r set up MEOW provinces raster}
+
+meow_prov_rast_file <- here('_spatial', 'meow_prov_mol.tif')
+
+if(!file.exists(meow_prov_rast_file)) {
+  meow_sf <- read_sf(here('_spatial/meow_rgns/meow_rgns.shp'))
+
+  ocean_moll_10km <- raster(ocean_10km_file)
+
+  meow_sf_moll <- meow_sf %>%
+    smoothr::densify(max_distance = 0.1) %>%
+    select(PROV_CODE, geometry) %>%
+    st_transform(crs(ocean_moll_10km))
+  
+  # plot(meow_sf_moll)
+  
+  meow_rast <- fasterize::fasterize(meow_sf_moll, ocean_moll_10km, 
+                                   field = 'PROV_CODE', fun = 'min')
+  
+  meow_rast <- meow_rast %>%
+    mask(ocean_moll_10km)
+    
+  writeRaster(meow_rast, meow_prov_rast_file, overwrite = TRUE)
+}
+ 
+meow_prov_rast <- raster::raster(meow_prov_rast_file)
+
+plot(meow_prov_rast, main = 'MEOW provinces raster 10 km^2 Mollweide')
+
+```
+
+
+## Bathymetry raster
+
+Using [General Bathymetric Chart of the Oceans (GEBCO) bathymetry raster](https://www.bodc.ac.uk/data/hosted_data_systems/gebco_gridded_bathymetry_data/), identify min depth of ocean cells.  For neritic and coastal cells, leaving as min depth allows for changing depth thresholds if desired.  We will not clip based on anything below 200 m, so can classify these more coarsely.
+
+NOTE: 1 arcmin and 30 arcsec are available; 30 arcsec is more recent but one arcmin should be sufficient for our purposes.  Resample to 6 arc-minute (0.10°) using min depth in each cell.
+
+Additionally, to ensure some minimum coastal cell presence, we will include a buffer based on the 3nm coastal zone from OHI.
+
+Bathymetry is masked to the ocean area raster.  
+
+### Create and view minimum depth raster
+
+``` {r set up bathymetry raster}
+
+bathy_rast_file <- here('_spatial', 'bathy_mol.tif')
+
+
+if(!file.exists(bathy_rast_file)) {
+  
+  gebco_rast_file <- here_anx('_spatial/gebco/GRIDONE_1D.nc')
+  gebco_rast_raw  <- raster(gebco_rast_file)
+  ocean_moll_10km <- raster(ocean_10km_file)
+
+  ### The GEBCO raster is elevation, so depth is neg... for min depth, 
+  ### aggregate by max (and vice versa)
+  bathy_rast_min <- gebco_rast_raw %>%
+    raster::aggregate(fact = 6, fun = max, progress = 'text')
+  
+  bathy_rast_min <- -1 * bathy_rast_min ### depth as positive
+    
+  bathy_rast_raw <- bathy_rast_min %>%
+    projectRaster(ocean_moll_10km, 
+                  progress = 'text',
+                  method = 'ngb')
+  
+  ### reclassify:
+  ### compress cells above zero to sea level;
+  ### compress cells below 200 m to rough depth clips
+  bathy_rast <- bathy_rast_raw
+  values(bathy_rast)[values(bathy_rast_raw) <    0] <-    0
+  values(bathy_rast)[values(bathy_rast_raw) >  200] <- 1000
+  values(bathy_rast)[values(bathy_rast_raw) > 1000] <- 2000
+  values(bathy_rast)[values(bathy_rast_raw) > 2000] <- 3000
+  values(bathy_rast)[values(bathy_rast_raw) > 3000] <- 4000
+  values(bathy_rast)[values(bathy_rast_raw) > 4000] <- 5000
+  values(bathy_rast)[values(bathy_rast_raw) > 5000] <- 6000
+  values(bathy_rast)[values(bathy_rast_raw) > 6000] <- 7000
+  values(bathy_rast)[values(bathy_rast_raw) > 7000] <- 8000
+  
+  bathy_rast <- bathy_rast %>%
+    mask(ocean_moll_10km)
+    
+  writeRaster(bathy_rast, bathy_rast_file, overwrite = TRUE)
+
+  ### set up all masks with a base filled with NAs
+  coastal_rast <- raster(coastal_3nmi_10km_file)
+  rast_neritic <- rast_shallow <- raster(bathy_rast)
+  values(rast_neritic)[values(bathy_rast) <= 200] <- 1
+  values(rast_neritic)[!is.na(values(coastal_rast))] <- 1
+  values(rast_shallow)[values(bathy_rast) <=  60] <- 1
+  values(rast_shallow)[!is.na(values(coastal_rast))] <- 1
+  
+  writeRaster(rast_neritic, here('_spatial', 'bathy_mol_neritic.tif'),
+              overwrite = TRUE)
+  writeRaster(rast_shallow, here('_spatial', 'bathy_mol_shallow.tif'),
+              overwrite = TRUE)
+  
+}
+
+bathy_rast <- raster::raster(bathy_rast_file)
+
+plot(bathy_rast, main = 'Bathymetry (minimum depth) raster 10 km^2 Mollweide')
+
+```
+
