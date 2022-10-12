@@ -1,0 +1,32 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+## Some notes
+
+The NPP and Oxygen data will likely be NOAA data from here:
+
+https://psl.noaa.gov/ipcc/cmip6/
+
+I have downloaded the ensemble averages to the raw_data folder. But, there is a pretty large difference in the number of climate models included in each scenario ensemble. Given this, it might be better to download the "raw" climate model data and average it ourselves. This is complicated by the weird .nc formatting and that you can only download 6 models at a time.
+
+Also, it would be better to find a different source because these data are non-biased corrected.
+
+For the ensemble data I did download, the rasters are organized like this:
+
+**Caption:** Primary Organic Carbon Production by All Types of Phytoplankton for ENSMN interpolated on a 1x1 grid for the entire year; **First panel:** ssp126 futur climate for the period (2020-2049); **Second panel:** difference in the mean climate in the future time period (ssp126: 2020-2049) compared to the historical reference period (1985-2014); **Third panel:** inter-annual (de-trended) standard deviation for the historical reference period (1985-2014); **Fourth panel:** ratio of the de-trended variance in the future (2020-2049) divided by the past (1985-2014).
+
+For the ensembles, I think the best bet will be to save the first two sets of rasters with the file name from the ncatt_get function
+
+```{r}
+tmp <- terra::rast("/Users/frazier/Downloads/myplot.430100.1663339289.619597.nc")
+tmp <- nc_open("/Users/frazier/Downloads/myplot.430100.1663339289.619597.nc")
+names(tmp[['var']])
+ncatt_get(tmp, attributes(tmp$var)$names[24])$info
+
+library(metR)
+tmp <- ReadNetCDF("/Users/frazier/Downloads/myplot.430100.1663339289.619597.nc")
+
+```

@@ -1,0 +1,380 @@
+---
+title: "OA pressure"
+output: html_document
+date: '2022-08-12'
+---
+#Data Source
+**Reference**: From: Liqing JIANG - NOAA Affiliate <liqing.jiang@noaa.gov>
+Jiang, L.-Q., B. R. Carter, J. Dunne, R. A. Feely, P. Hogan, and R. Wanninkhof (2022). Global ocean acidification indicators: past, present, and future. Global Biogeochemical Cycles, in prep.
+**Downloaded**:
+**Description**:  Aragonite Saturation State  $\Omega_{arg}$
+**Native data resolution**: 1 [20.5:1:379.5] degree longitude x 1 [-89.5:1:89.75] degree latitude grid in the global surface ocean
+**Time range**: historical 1750 and average decadal from 1840-2010 (n = 18 layers);
+average decadal future scenarios 2010-2100 (n=9 layers)
+**Format**:  NetCDF
+
+This script takes the raw netCDF data and does the following:
+
+   a. Calculates the historic mean for a 50 year period from 1840-1890 
+   b. Rescales each averaged decadal raster layer from 0 to 1 based on a biological threshold (&#937; <= 1) and the proportional change compared to a historical mean
+   c. Resamples/reprojects to our CRS
+   c. Interpolates the data to gap-fill for cells where there is no data
+   e. Mask the resampled data to select only those cells within the ocean
+
+## Rescaling
+This pressure layer is rescaled so that all values lie between 0 and 1 using both a historical reference period and a biological reference point. All cells with values less than one, indicating an undersaturated state, are set equal to the highest stressor level, 1. For all other cells, rescaling the aragonite staturation state value to between 0 and 1 relies upon the change in saturation relative to the reference period.
+
+Deviation from aragonite saturation state is determined for each year in the study period using this equation:
+
+$$\Delta \Omega_{year} = \frac{(\Omega_{base} - \Omega_{year})}{(\Omega_{base} - 1)}$$
+
+Note that the current value is subtracted from the baseline; this way, a reduction in $\Omega$ becomes a positive pressure value.  It is then normalized by the current mean state; so a decrease in $\Omega$ while the current state is high indicates less pressure than the same decrease when the current state is near 1. 
+
+$\Delta \Omega_{year}$ is then modified to account for increases in aragonite saturation state (pressure = 0) and arag sat state less than 1 (pressure = 1).
+
+If the current value is less than or equal to 1, it is set to 1, otherwise the value is calculated from the above equation.
+
+##Setup  
+
+```{r setup,message=FALSE,warning=FALSE,verbose=FALSE}
+#set options for all chunks in code
+knitr::opts_chunk$set(warning=FALSE, message=FALSE,fig.width=6, fig.height=6)
+#libraries
+library(maps)
+library(tidyverse)
+library(RColorBrewer)
+library(terra)
+library(here)
+
+# color
+cols = rev(colorRampPalette(brewer.pal(9, 'Spectral'))(255)) # rainbow color scheme
+
+# spatial map data
+ocean <- terra::rast(here("_spatial/ocean_area_mol.tif"))
+ocean[ocean >0] <- 1
+
+```
+
+## Defining years to use
+```{r}
+years_select <- data.frame(
+  time_frame = c(rep("historic", 5), rep(c("current", "near-term", "medium-term", "long-term"), each=2)),
+  year_range = c("1841-1850",
+                 "1851-1860",
+                 "1861-1870",
+                 "1871-1880",
+                 "1881-1890",
+                 "2001-2010",
+                 "2011-2020",
+                 "2021-2030", "2031-2040",
+                 "2041-2050", "2051-2060",
+                 "2081-2090", "2091-2100"))
+
+
+```
+
+
+Explore: can be skipped
+```{r}
+# see what is in directory
+dir("/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang")
+
+tmp <- readtext::readtext("/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/README.txt")
+
+# get description of data
+oa <- nc_open("/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_ssp245.nc")
+names(oa$var)
+
+# Get the data
+ssp245_stack <- raster::stack("/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_ssp245.nc")
+
+hist_stack <- raster::stack("/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_historical.nc")
+
+```
+
+
+## Function to align raster data
+```{r}
+align_rasts <- function(hist_stack){
+  #hist_stack <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_ssp245.nc")
+
+terra::ext(hist_stack)<- c(0, 360, -90, 90)
+hist_stack <- terra::rotate(hist_stack)
+hist_stack <- terra::shift(hist_stack, dx=20)
+x1 <- terra::crop(hist_stack, terra::ext(180, 200, -90, 90))
+x2 <- terra::crop(hist_stack, terra::ext(-160, 180, -90, 90))
+terra::ext(x1) <- c(-180, -160, -90, 90)
+terra::ext(x2) <- c(-160, 180, -90, 90)
+m <- terra::merge(x1, x2)
+terra::crs(m) <- "epsg:4326"
+m
+#plot(m)
+#maps::map('world', col='gray95', fill=T, border='gray80', add=T)
+}
+
+#dir.create("/home/shares/ohi/stressors_2021/_dataprep/oa")
+```
+
+***
+
+# Methods
+
+## Get historical values
+This will be average of decadal data from 1840-1890.
+```{r load_data}
+# list of rasters in historical nc files
+historic_stack_list <- data.frame(rasters_name = paste0("X",1:18),
+                         years=c("years_1750",
+                                 "years_1841-1850",
+                                 "years_1851-1860",
+                                 "years_1861-1870",
+                                 "years_1871-1880",
+                                 "years_1881-1890",
+                                 "years_1891-1900",
+                                 "years_1901-1910",
+                                 "years_1911-1920",
+                                 "years_1921-1930",
+                                 "years_1931-1940",
+                                 "years_1941-1950",
+                                 "years_1951-1960",
+                                 "years_1961-1970",
+                                 "years_1971-1980",
+                                 "years_1981-1990",
+                                 "years_1991-2000",
+                                 "years_2001-2010"))
+
+
+# read in historical data
+hist_stack <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_historical.nc")
+hist_stack <- hist_stack[[grep("decade", names(hist_stack))]]
+names(hist_stack) <- historic_stack_list$years
+plot(hist_stack[[1]]) #we'll have to rotate the rasters
+
+hist_stack_align <- align_rasts(hist_stack)
+plot(hist_stack_align[[1]])
+maps::map('world', col='gray95', fill=T, border='gray80', add=T)
+
+years_select_hist <- years_select %>%
+  filter(time_frame == "historic") %>%
+  pull(year_range)
+years_select_hist <- paste(years_select_hist, collapse="|")
+
+hist_stack_historical <- hist_stack_align[[grep(years_select_hist, names(hist_stack_align))]]
+
+# Take avg of 5 time periods
+historical_avg <- terra::app(hist_stack_historical, mean)
+plot(historical_avg)
+
+```
+
+
+## Select relevant years and rescale
+
+### Function for future scenarios
+The `oa_rescale` function averages the appropriate rasters for each time series and then rescales and saves. 
+
+```{r rescale,eval=F}
+
+#for each layer, all values <=1 are assigned a 1, otherwise old-new/(old-1)
+oa_rescale <- function(raster_path, stack_list=stack_list_spp, historical_avg){ #raster_path <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_ssp245.nc"
+
+  saveName <- basename(raster_path)
+  saveName <- gsub(".nc", "", saveName)
+  saveName <- gsub("ARAG_", "", saveName)
+  
+  raster_stack <- terra::rast(raster_path)
+  raster_stack <- raster_stack[[grep("decade", names(raster_stack))]]
+  names(raster_stack) <- stack_list$years
+  raster_stack_align <- align_rasts(raster_stack)
+
+  scenario <- c("near-term", "medium-term", "long-term")
+
+for(select_time_frame in scenario){
+          #select_time_frame = "current"
+
+    ## Select relevant years for time period
+    select_year_range_tmp <- years_select %>%
+      filter(time_frame == select_time_frame) %>%
+      pull(year_range)
+    select_year_range <- paste(select_year_range_tmp, collapse="|")
+
+    year_range_stack <- raster_stack_align[[grep(select_year_range, names(raster_stack_align))]]
+    cat(sprintf("third dimension should be 2: observed is %s", dim(year_range_stack)[3]))
+    oa_predict <- app(year_range_stack, mean)
+
+    ## rescale
+  diff = (historical_avg - oa_predict)/(historical_avg - 1)
+  
+  oa_predict[oa_predict<=1] <- 1                                 #all values at or less than 1 are given a value of 1
+  oa_predict[oa_predict>1] <- diff[oa_predict>1]                     #all cells with values greater than 1 are swapped out with their amount of change scaled to how close to 1 
+  oa_predict[oa_predict<0] <- 0                                  #all values less than 0 (indicating a decrease in acidity) are capped at 0
+
+## format raster
+oa_predict_crs <- terra::project(oa_predict, ocean, method="bilinear")
+oa_predict_crs[is.nan(oa_predict_crs)] <- NA
+
+# gapfill coastline
+oa_predict_gf <- oa_predict_crs
+for(i in 1:200){
+  i=1+i
+oa_predict_gf <- terra::focal(oa_predict_gf, w=3, fun=mean, na.rm=TRUE, na.policy="only")
+}
+
+oa_mask <- terra::mask(oa_predict_gf, ocean)
+
+terra::writeRaster(oa_mask, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/oa/oa_%s_%s.tif",
+              saveName, select_time_frame), overwrite=TRUE)
+}
+}
+```
+
+### Run function for future years
+
+```{r}
+## Clean
+
+#rm_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oa", full=TRUE)
+#file.remove(rm_list)
+
+
+#Associate raster layers with years
+stack_list_spp <- data.frame(rasters_name = paste0("X",1:9),
+                         years=c("years_2011-2020",
+                                 "years_2021-2030",
+                                 "years_2031-2040",
+                                 "years_2041-2050",
+                                 "years_2051-2060",
+                                 "years_2061-2070",
+                                 "years_2071-2080",
+                                 "years_2081-2090",
+                                 "years_2091-2100"))
+
+ssp245_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_ssp245.nc"
+oa_rescale(raster_path = ssp245_stack, stack_list=stack_list_spp, historical_avg=historical_avg)
+plot(terra::rast(rm_list[3]))
+
+ssp119_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_ssp119.nc"
+oa_rescale(raster_path = ssp119_stack, stack_list=stack_list_spp, historical_avg=historical_avg)
+
+ssp126_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_ssp126.nc"
+oa_rescale(raster_path = ssp126_stack, stack_list=stack_list_spp, historical_avg=historical_avg)
+
+ssp370_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_ssp370.nc"
+oa_rescale(raster_path = ssp370_stack, stack_list=stack_list_spp, historical_avg=historical_avg)
+
+ssp585_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_ssp585.nc"
+oa_rescale(raster_path = ssp585_stack, stack_list=stack_list_spp, historical_avg=historical_avg)
+
+```
+
+
+### Calculate current years
+# have to use historical and future data to get these values
+
+```{r rescale,eval=F}
+
+historical_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_historical.nc"
+future_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_ssp119.nc"
+
+## get the years in historical file
+raster_stack_his <- terra::rast(historical_stack)
+  raster_stack_his <- raster_stack_his[[grep("decade", names(raster_stack_his))]]
+  names(raster_stack_his) <- historic_stack_list$years
+  raster_stack_align_his <- align_rasts(raster_stack_his)
+  hist_rast <- raster_stack_align_his[[grep("2001-2010", names(raster_stack_his))]]
+
+  ## get the years in scenario file
+raster_stack_future <- terra::rast(future_stack)
+  raster_stack_future <- raster_stack_future[[grep("decade", names(raster_stack_future))]]
+  names(raster_stack_future) <- stack_list_spp$years
+  raster_stack_align_future <- align_rasts(raster_stack_future)
+  future_rast <- raster_stack_align_future[[grep("2011-2020", names(raster_stack_future))]]
+  
+  oa_predict <- app(c(future_rast, hist_rast), mean)
+
+    ## rescale
+  diff = (historical_avg - oa_predict)/(historical_avg - 1)
+  
+  oa_predict[oa_predict<=1] <- 1                                 #all values at or less than 1 are given a value of 1
+  oa_predict[oa_predict>1] <- diff[oa_predict>1]                     #all cells with values greater than 1 are swapped out with their amount of change scaled to how close to 1 
+  oa_predict[oa_predict<0] <- 0                                  #all values less than 0 (indicating a decrease in acidity) are capped at 0
+
+## format raster
+oa_predict_crs <- terra::project(oa_predict, ocean, method="bilinear")
+oa_predict_crs[is.nan(oa_predict_crs)] <- NA
+
+# gapfill coastline
+oa_predict_gf <- oa_predict_crs
+for(i in 1:200){
+  i=1+i
+oa_predict_gf <- terra::focal(oa_predict_gf, w=3, fun=mean, na.rm=TRUE, na.policy="only")
+}
+
+oa_mask <- terra::mask(oa_predict_gf, ocean)
+
+terra::writeRaster(oa_mask, filename="/home/shares/ohi/stressors_2021/_dataprep/oa/oa_current.tif")
+
+```
+
+
+## Some checks
+```{r plot rescale}
+rast_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oa", full=TRUE)
+library(ggplot2)
+library(tidyterra)
+library(ggmap)
+library(gridExtra)
+ library(rnaturalearth)
+# For stamen map, you have to give the extremity of the window you are looking at. here is an example with the watercolor background (Around brisbane)
+world <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf")
+
+ggplot() +
+  geom_spatraster(data = terra::rast(rast_list[1])) +
+  scale_fill_whitebox_c(
+    palette = "muted",
+    labels = scales::label_number(suffix = "")
+  ) +
+  geom_sf(data=world, fill="lightgray", color="white", size=0.1) +
+  labs(fill = "Rescaled aragonite",
+       title = "Current") +
+    geom_spatraster(data = terra::rast(rast_list[1])) +
+  theme_minimal() 
+```
+
+
+# Gap-filled cells
+
+We want to create a raster layer that shows all cells that were gap-filled. Since they were the same cells interpolated across all years, we only need to create one raster.
+
+```{r,eval=F}
+#Data before interpolation 
+historical_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_historical.nc"
+## get the years in historical file
+raster_stack_his <- terra::rast(historical_stack)
+  raster_stack_his <- raster_stack_his[[grep("decade", names(raster_stack_his))]]
+  names(raster_stack_his) <- historic_stack_list$years
+  raster_stack_align_his <- align_rasts(raster_stack_his)
+  hist_rast <- raster_stack_align_his[[grep("2001-2010", names(raster_stack_his))]]
+plot(hist_rast)
+
+hist_rast_mol <- terra::project(hist_rast, ocean, method="bilinear")
+oa_org <- hist_rast_mol
+oa_org[oa_org >=0] <- 1
+oa_org[is.na(oa_org)] <- 0
+
+#interpolated (or gap-filled) cells    
+gf <- terra::rast(list.files("/home/shares/ohi/stressors_2021/_dataprep/oa", full=TRUE)[1])
+gf[gf >= 0] <- 1
+gf[is.na(gf)] <- 0
+
+gf_locations <- gf-oa_org
+plot(gf_locations)
+
+```
+
+```{r plot_interp_cells}
+plot(raster(file.path(oagit_dir, 'v2017/output/oa_interpolated_cells.tif')), col=cols, box=F, axes=F, main='Interpolated cells')
+```
+
+
+

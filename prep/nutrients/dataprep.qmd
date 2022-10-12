@@ -1,0 +1,131 @@
+---
+title: "nutrients"
+format: html
+editor: visual
+---
+
+## Data Source
+
+\*\*Reference\*\*: Beusen et al. 2022
+
+https://www.sciencedirect.com/science/article/pii/S0959378021002053#f0015
+
+\*\*Downloaded\*\*: 10/2022
+
+\*\*Description\*\*:
+
+| name                 | sum  | units     | longname                                                                                                                                                           |
+|----------------------|------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Nsurface_runoff_nat  | 1.6  | kg N yr-1 | Nitrogen load from surface runoff from natural land                                                                                                                |
+| Nsurface_runoff_agri | 14.1 | kg N yr-1 | Nitrogen load from surface runoff from agricultural land                                                                                                           |
+| Ngroundwater_nat     | 12.6 | kg N yr-1 | Nitrogen load from groundwater from natural land                                                                                                                   |
+| Ngroundwater_agri    | 26   | kg N yr-1 | Nitrogen load from groundwater from agricultural land                                                                                                              |
+| Nvegetation          | 6.7  | kg N yr-1 | Nitrogen load from allochtonous organic matter input to rivers                                                                                                     |
+| Ndeposition_water    | 1.2  | kg N yr-1 | Direct nitrogen deposition on water                                                                                                                                |
+| Naqauculture         | 1.8  | kg N yr-1 | Nitrogen load from aquaculture to surface water                                                                                                                    |
+| Nsewage              | 12   | kg N yr-1 | Nitrogen load from waste water (human and industry) to surface water                                                                                               |
+| Nloss_channel        | 20.7 | kg N yr-1 | Total nitrogen loss in the main channel of the river                                                                                                               |
+| Nloss_streams        | 7.8  | kg N yr-1 | Total nitrogen loss in the small streams of the river before it flows to the main channel                                                                          |
+| Nload                |      | kg N yr-1 | Accumulated nitrogen load from all sources in the river accounting for in-stream retention and all upstream grid cells, thus this load is the outflow of each cell |
+| Nconc                |      | kg N L-1  | Nitrogen concentration                                                                                                                                             |
+| Sgd                  | 0.3  | kg N yr-1 | Nitrogen load of submarine groundwater discharge to the ocean                                                                                                      |
+
+\*\*Native data resolution\*\*: 0.5 degree
+
+\*\*Time range\*\*: projection 1970-2070, 5 year periods (SSP1_RCP4_5, SSP2_RCP6, SSP3_RCP6, SSP4_RCP6, SSP5_RCP8_5, note: these are not typical combinations of ssp and rcp values.)
+
+\*\*Format\*\*: netcdf
+
+```{r}
+library(raster)
+library(ncdf4)
+library(tidyverse)
+```
+
+Set up year intervals
+
+```{r}
+years_select <- data.frame(
+  time_frame = rep(c("current", "near-term", "medium-term"), each=4),
+  year_range = c("2005", "2010", "2015", "2020",
+                 "2025", "2030", "2035", "2040",
+                 "2045", "2050", "2055", "2060"))
+
+scenarios <- c("SSP1", 
+               "SSP2",
+               "SSP3",
+               "SSP4",
+               "SSP5")
+
+```
+
+```{r}
+
+for(scenario in scenarios){
+  #scenario = "SSP1"
+
+for(range in unique(years_select$time_frame)){ 
+  #range = unique(years_select$time_frame)[1]
+
+  raster_yr_layers <- years_select %>%
+    filter(time_frame == range)
+  raster_yr_layers <- paste(raster_yr_layers$year_range, collapse="|")
+
+  ## excluding natural sources    
+#Nrun_nat <- stack(sprintf("/home/shares/ohi/stressors_2021/_raw_data/nutrient_beusen/Output-IMAGE_GNM-%s_oct2020-Nitrogen_Rivers-v2.nc", scenario), varname="Nsurface_runoff_nat")
+#raster_names <- names(Nrun_nat)
+#select_yrs <- grep(raster_yr_layers, raster_names)
+#Nrun_nat <- Nrun_nat[[select_yrs]]
+
+#Nrun_nat_avg <- calc(Nrun_nat, mean, na.rm=TRUE)
+
+#Nground_nat <- stack(sprintf("/home/shares/ohi/stressors_2021/_raw_data/nutrient_beusen/Output-IMAGE_GNM-%s_oct2020-Nitrogen_Rivers-v2.nc", scenario), varname="Ngroundwater_nat")
+#Nground_nat <- Nground_nat[[select_yrs]]
+#Nground_nat_avg <- calc(Nground_nat, mean, na.rm=TRUE)
+
+#Nveg <- stack(sprintf("/home/shares/ohi/stressors_2021/_raw_data/nutrient_beusen/Output-IMAGE_GNM-SSP1_oct2020-Nitrogen_Rivers-v2.nc", scenario), varname="Nvegetation")
+#Nveg <- Nveg[[select_yrs]]
+#cat("num rasts included: ", dim(Nveg)[3])
+#Nveg_avg <- calc(Nveg, mean, na.rm=TRUE)
+
+#nat_n <- calc(stack(Nrun_nat_avg, Nground_nat_avg, Nveg_avg), sum, na.rm=TRUE)
+
+Nrun_ag <- stack(sprintf("/home/shares/ohi/stressors_2021/_raw_data/nutrient_beusen/Output-IMAGE_GNM-%s_oct2020-Nitrogen_Rivers-v2.nc", scenario), varname="Nsurface_runoff_agri")
+raster_names <- names(Nrun_ag)
+select_yrs <- grep(raster_yr_layers, raster_names)
+Nrun_ag <- Nrun_ag[[select_yrs]]
+cat("num rasts included: ", names(Nrun_ag), "\n")
+Nrun_ag_avg <- calc(Nrun_ag, mean, na.rm=TRUE)
+
+Nground_ag <- stack(sprintf("/home/shares/ohi/stressors_2021/_raw_data/nutrient_beusen/Output-IMAGE_GNM-%s_oct2020-Nitrogen_Rivers-v2.nc", scenario), varname="Ngroundwater_agri")
+Nground_ag <- Nground_ag[[select_yrs]]
+cat("num rasts included: ", names(Nground_ag), "\n")
+Nground_ag_avg <- calc(Nground_ag, mean, na.rm=TRUE)
+
+# not including this:
+#Ndep <- stack(sprintf("/home/shares/ohi/stressors_2021/_raw_data/nutrient_beusen/Output-IMAGE_GNM-%s_oct2020-Nitrogen_Rivers-v2.nc", scenario), varname="Ndeposition_water")
+#Ndep <- Ndep[[select_yrs]]
+#cat("num rasts included: ", names(Ndep), "\n")
+#Ndep_avg <- calc(Ndep, mean, na.rm=TRUE)
+
+Naq <- stack(sprintf("/home/shares/ohi/stressors_2021/_raw_data/nutrient_beusen/Output-IMAGE_GNM-%s_oct2020-Nitrogen_Rivers-v2.nc", scenario), varname="Naquaculture")
+Naq <- Naq[[select_yrs]]
+cat("num rasts included: ", names(Naq), "\n")
+Naq_avg <- calc(Naq, mean, na.rm=TRUE)
+
+Nsewage <- stack(sprintf("/home/shares/ohi/stressors_2021/_raw_data/nutrient_beusen/Output-IMAGE_GNM-%s_oct2020-Nitrogen_Rivers-v2.nc", scenario), varname="Nsewage")
+Nsewage <- Nsewage[[select_yrs]]
+cat("num rasts included: ", names(Nsewage), "\n")
+Nsewage_avg <- calc(Nsewage, mean, na.rm=TRUE)
+
+inputs <- stack(Nrun_ag_avg, Nground_ag_avg,
+                Nveg_avg, Naq_avg, Nsewage_avg)
+input_n <- calc(inputs, sum, na.rm=TRUE)
+export_n <- input_n * (1 - 0.4) # general accounting for loss in waterways 
+#cellStats(input_n, sum, na.rm=TRUE)/1e9
+#plot(input_n)
+writeRaster(export_n, sprintf("/home/shares/ohi/stressors_2021/_dataprep/nutrients/export_to_ocean/export_n_%s_%s.tif", scenario, range), overwrite=TRUE)
+}
+}
+
+```

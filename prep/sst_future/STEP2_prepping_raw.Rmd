@@ -1,0 +1,203 @@
+---
+title: "Downloading and prepping SST future data"
+output: html_document
+date: '2022-08-09'
+---
+ 
+Downloaded from here (Aug 9 2022): 
+https://www.scidb.cn/en/detail?dataSetId=791587189614968832&dataSetType=personal
+ 
+Bias-corrected CMIP6 global dataset for dynamical downscaling of the Earth’s historical and future climate (1979–2100) 
+
+1. Xu, Z., Han, Y., Tam, C.-Y., Yang, Z.-L. & Fu, C. Bias-corrected CMIP6 global dataset for dynamical downscaling of the historical and future climate (1979–2100). Sci Data 8, 293 (2021).
+
+Dynamical downscaling is an important approach to obtaining fine-scale weather and climate information. However, dynamical downscaling simulations are often degraded by biases in the large-scale forcing itself. We constructed a bias-corrected global dataset based on 18 models from the Coupled Model Intercomparison Project Phase 6 (CMIP6) and the European Centre for Medium-Range Weather Forecasts Reanalysis 5 (ERA5) dataset. The bias-corrected data have an ERA5-based mean climate and interannual variance, but with a non-linear trend from the ensemble mean of the 18 CMIP6 models. The dataset spans the historical time period 1979–2014 and future scenarios (SSP245 and SSP585) for 2015–2100 with a horizontal grid spacing of (1.25° × 1.25°) at six-hourly intervals. Our evaluation suggests that the bias-corrected data are of better quality than the individual CMIP6 models in terms of the climatological mean, interannual variance and extreme events. This dataset will be useful for dynamical downscaling projections of the Earth’s future climate, atmospheric environment, hydrology, agriculture, wind power, etc.
+
+ 
+Issue: https://github.com/OHI-Science/stressors_issues/issues/24
+ 
+
+```{r setup, include=FALSE}
+library(raster)
+library(ncdf4)
+library(here)
+library(tidyverse)
+library(foreach)
+library(doParallel)
+
+```
+
+Explore the rasters a bit:
+```{r}
+tmp <- nc_open("/home/shares/ohi/stressors_2021/_raw_data/sst_Xu/atm_hist_1979_01.nc4")
+tmp$dim$time$vals
+read_sst <- ncvar_get(tmp, "tos")
+names(tmp$var)
+tmp$dim$time$vals # origin 1850-1-1
+tmp <- raster::raster("/home/shares/ohi/stressors_2021/_raw_data/sst_Xu/atm_hist_1979_01.nc4", varname="tos")
+
+```
+
+Current data is reported every 6 hours. Average this to get the daily value. Using cdo system commands to do this.
+
+```{r}
+file_names <- list.files("/home/shares/ohi/stressors_2021/_raw_data/sst_Xu/")
+
+registerDoParallel(6)
+
+foreach(file_name=file_names) %do% {
+#for(file_name %in% files_names)
+#file_name = file_names[1]
+file_rename <- gsub("atm", "daymean", file_name)
+
+cdo_command <- sprintf("cdo daymean /home/shares/ohi/stressors_2021/_raw_data/sst_Xu/%s /home/shares/ohi/stressors_2021/_dataprep/SST/day_mean/%s", file_name, file_rename)
+system(cdo_command)
+}
+
+system("cdo daymean /home/shares/ohi/stressors_2021/_raw_data/sst_Xu/atm_hist_1979_01.nc4 /home/shares/ohi/stressors_2021/_dataprep/SST/day_mean/${name}")
+check <- raster("/home/shares/ohi/stressors_2021/_dataprep/SST/day_mean/daymean_1979_1.nc", varname="tos")
+
+```
+
+Next step is to merge the daily values into one yearly netcdf file.
+```{r}
+
+registerDoParallel(6)
+
+foreach(year=1979:2014) %do% {
+#year = 1979
+cdo_command <- sprintf("cdo -b F64 mergetime /home/shares/ohi/stressors_2021/_dataprep/SST/day_mean/daymean_hist_%s_*.nc4  /home/shares/ohi/stressors_2021/_dataprep/SST/year_merge/hist_%s.nc", year, year)
+
+system(cdo_command)
+}
+
+foreach(year=2015:2100) %do% {
+#year = 1979
+cdo_command <- sprintf("cdo -b F64 mergetime /home/shares/ohi/stressors_2021/_dataprep/SST/day_mean/daymean_ssp245_%s_*.nc4  /home/shares/ohi/stressors_2021/_dataprep/SST/year_merge/ssp245_%s.nc", year, year)
+
+system(cdo_command)
+}
+
+foreach(year=2015:2100) %do% {
+#year = 1979
+cdo_command <- sprintf("cdo -b F64 mergetime /home/shares/ohi/stressors_2021/_dataprep/SST/day_mean/daymean_ssp585_%s_*.nc4  /home/shares/ohi/stressors_2021/_dataprep/SST/year_merge/ssp585_%s.nc", year, year)
+
+system(cdo_command)
+}
+
+```
+
+
+Next step is to convert to weekly averages.
+```{r}
+# take care of historical data
+for(year in 1979:2014){
+  #year = 1979
+yr_stack <- stack(sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/year_merge/hist_%s.nc", year), varname="tos")
+weeks <- lubridate::week(lubridate::ymd(gsub("X", "", names(yr_stack))))
+weekly_mean <- stackApply(yr_stack, weeks, fun=mean, na.rm=TRUE)
+names(weekly_mean) <- gsub("index", sprintf("hist_y%s", year), names(weekly_mean))
+cat("weeks = ", length(names(weekly_mean)), "\n")
+writeRaster(weekly_mean, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_mean/%s", names(weekly_mean)), bylayer=TRUE, format='GTiff')
+}
+
+# ssp245
+for(year in 2015:2100){
+  #year = 1979
+yr_stack <- stack(sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/year_merge/ssp245_%s.nc", year), varname="tos")
+weeks <- lubridate::week(lubridate::ymd(gsub("X", "", names(yr_stack))))
+weekly_mean <- stackApply(yr_stack, weeks, fun=mean, na.rm=TRUE)
+names(weekly_mean) <- gsub("index", sprintf("ssp245_y%s", year), names(weekly_mean))
+cat("weeks = ", length(names(weekly_mean)), "\n")
+writeRaster(weekly_mean, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_mean/%s", names(weekly_mean)), bylayer=TRUE, format='GTiff')
+}
+
+# ssp585
+for(year in 2015:2100){
+  #year = 1979
+yr_stack <- stack(sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/year_merge/ssp585_%s.nc", year), varname="tos")
+weeks <- lubridate::week(lubridate::ymd(gsub("X", "", names(yr_stack))))
+weekly_mean <- stackApply(yr_stack, weeks, fun=mean, na.rm=TRUE)
+names(weekly_mean) <- gsub("index", sprintf("ssp585_y%s", year), names(weekly_mean))
+cat("weeks = ", length(names(weekly_mean)), "\n")
+writeRaster(weekly_mean, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_mean/%s", names(weekly_mean)), bylayer=TRUE, format='GTiff')
+}
+
+```
+
+Next use historical data to estimate 90th quantile for each week using years 1979-2010.
+```{r}
+hist_yrs <- paste(1979:2010, collapse="|")
+
+weekly_mean_files <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_mean/", full=TRUE)
+plot(raster(weekly_mean_files[1]))
+
+hist_rasts <- grep(hist_yrs, weekly_mean_files, value=TRUE)
+
+for(week_num in 1:52){
+# week_num <- 1
+
+  week <- paste0("_", week_num, ".tif")
+  
+hist_rasts_week <- grep(week, hist_rasts, value=TRUE)
+stack_week <- stack(hist_rasts_week)
+cat(week, " n= ", dim(stack_week)[3], "\n")
+fun_90 <- function(x){quantile(x, probs = c(0.90), na.rm=TRUE)}
+
+beginCluster(n=8)
+quant_raster <- raster::clusterR(stack_week, fun = calc, args=list(fun=fun_90))
+endCluster()
+
+writeRaster(quant_raster, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/historical_quant90/ref_point_week%s", week), overwrite=TRUE)
+
+}
+
+
+```
+
+Calculate whether each week exceeds the relevant week's 90th quantile value.
+```{r}
+
+
+for(week_num in 1:52){ #week_num = 1
+ref_val <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/historical_quant90/", full=TRUE, pattern = sprintf("_%s.tif", week_num))
+ref_raster <- raster(ref_val)
+
+sst_week <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_mean", pattern = sprintf("_%s.tif", week_num), full=TRUE)
+for(file in sst_week){ # file <- sst_week[50]
+  sst_raster <- raster(file)
+  save_name <- basename(file)
+  save_name <- gsub(".tif", "_exceed_boolean", save_name)
+  
+  fun_exceed <- function(x, y){ifelse(is.na(x) | is.na(y), 0, ifelse(x > y, 1, 0))}
+    
+    beginCluster(n=8)
+    weekly_exceed <- raster::clusterR(stack(sst_raster, ref_raster),
+                     overlay, 
+                    arg = list(fun = fun_exceed))
+    endCluster()
+
+  writeRaster(weekly_exceed, filename =  sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_exceed/quant_exceed_%s.tif", save_name), overwrite=TRUE)
+}
+}
+
+
+```
+
+
+```{r}
+tmp <- nc_open("/Users/frazier/Desktop/MARISCO/sst_test/combined.nc")
+tmp$dim$time$vals # origin 1850-1-1
+
+year <- "1979"
+year_list <- list.files("/Users/frazier/Desktop/MARISCO/sst_test", pattern=year, full=TRUE)
+yrs_stack <- stack(year_list, varname="tos")
+weeks <- lubridate::isoweek(ymd(gsub("X", "", names(yrs_stack))))
+
+weekly_mean <- stackApply(yrs_stack, weeks, fun=mean, na.rm=TRUE)
+names(weekly_mean) <- gsub("index", sprintf("yr_month_%s", year), names(weekly_mean))
+writeRaster(weekly_mean, sprintf("/Users/frazier/Desktop/MARISCO/sst_test/weekly_data/%s", names(weekly_mean)), bylayer=TRUE, format='GTiff')
+
+plot(weekly_mean[[1]])
+plot(raster("/Users/frazier/Desktop/MARISCO/sst_test/weekly_data/yr_month_1979_1.tif"))
+```

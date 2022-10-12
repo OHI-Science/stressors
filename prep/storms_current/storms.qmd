@@ -1,0 +1,17 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+## Storms
+
+```{r}
+install.packages("rnoaa")
+
+library(rnoaa)
+df <- rnoaa::storm_shp(basin="NA")
+
+list.files("ftp://eclipse.ncdc.noaa.gov/pub/ibtracs/v03r04/")
+
+```

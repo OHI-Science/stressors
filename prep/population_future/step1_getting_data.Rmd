@@ -1,0 +1,39 @@
+---
+title: "Downloading population data"
+output: html_document
+date: '2022-09-07'
+---
+
+```{r}
+library(curl)
+#url = "ftp://sidekick.nateko.lu.se/SSP2_RCP4_5/"
+#url = "ftp://sidekick.nateko.lu.se/SSP1_RCP2_6/"
+#url = "ftp://sidekick.nateko.lu.se/SSP5_RCP8_5/"
+#url = "ftp://sidekick.nateko.lu.se/SSP3_RCP7/"
+#url = "ftp://sidekick.nateko.lu.se/SSP4_RCP6/"
+url = "ftp://sidekick.nateko.lu.se/SSP4_RCP3_4/"
+
+h = new_handle(dirlistonly=TRUE)
+con = curl(url, "r", h)
+tbl = read.table(con, stringsAsFactors=TRUE, fill = TRUE)
+close(con)
+tbl
+
+complete <- dir("/home/shares/ohi/stressors_2021/_raw_data/olen_population")
+#complete <- grep("SSP1", complete, value=TRUE)
+todo <- setdiff(tbl$V1, complete)
+urls <- paste0(url[1], todo)
+
+fls = basename(urls)
+
+
+for(url_item in urls){ # url_item = urls[1]
+fileName = basename(url_item)
+  curl_download(url_item, sprintf("/home/shares/ohi/stressors_2021/_raw_data/olen_population/%s", fileName))
+  cat(paste0(fileName, "\n"))
+}
+
+complete <- dir("/home/shares/ohi/stressors_2021/_raw_data/olen_population")
+complete <- grep("SSP1", complete, value=TRUE)
+dir("/home/shares/ohi/stressors_2021/_raw_data/population/SSP4_RCP3_4")
+```
