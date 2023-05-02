@@ -25,6 +25,10 @@ library(tidyverse)
 library(foreach)
 library(doParallel)
 
+#year ranges and scenarios:
+yr_range <- data.frame(period = rep(c("current", "near", "medium", "long"), each=20),
+                       year = c(2001:2020, 2021:2040, 2041:2060, 2081:2100))
+
 ```
 
 Explore the rasters a bit:
@@ -123,9 +127,12 @@ cat("weeks = ", length(names(weekly_mean)), "\n")
 writeRaster(weekly_mean, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_mean/%s", names(weekly_mean)), bylayer=TRUE, format='GTiff')
 }
 
+tmp <- terra::rast(list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_mean", full=TRUE)[1])
+terra::plot(tmp)
+terra::click(tmp)
 ```
 
-Next use historical data to estimate 90th quantile for each week using years 1979-2010.
+Next use historical data to estimate sd (or, 90th quantile) for each week using years 1979-2010.
 ```{r}
 hist_yrs <- paste(1979:2010, collapse="|")
 
@@ -142,62 +149,251 @@ for(week_num in 1:52){
 hist_rasts_week <- grep(week, hist_rasts, value=TRUE)
 stack_week <- stack(hist_rasts_week)
 cat(week, " n= ", dim(stack_week)[3], "\n")
-fun_90 <- function(x){quantile(x, probs = c(0.90), na.rm=TRUE)}
+#fun_90 <- function(x){quantile(x, probs = c(0.90), na.rm=TRUE)}
+fun_sd <- function(x){sd(x, na.rm=TRUE)}
 
 beginCluster(n=8)
-quant_raster <- raster::clusterR(stack_week, fun = calc, args=list(fun=fun_90))
+#quant_raster <- raster::clusterR(stack_week, fun = calc, args=list(fun=fun_90))
+sd_raster <- raster::clusterR(stack_week, fun = calc, args=list(fun=fun_sd))
 endCluster()
 
-writeRaster(quant_raster, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/historical_quant90/ref_point_week%s", week), overwrite=TRUE)
+#writeRaster(quant_raster, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/historical_quant90/ref_point_week%s", week), overwrite=TRUE)
+writeRaster(sd_raster, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/historical_sd/sd_week%s", week), overwrite=TRUE)
 
 }
 
 
+## now get the corresponding weekly mean for the historical data
+for(week_num in 1:52){
+# week_num <- 1
+
+  week <- paste0("_", week_num, ".tif")
+  
+hist_rasts_week <- grep(week, hist_rasts, value=TRUE)
+stack_week <- stack(hist_rasts_week)
+cat(week, " n= ", dim(stack_week)[3], "\n")
+fun_mean <- function(x){mean(x, na.rm=TRUE)}
+
+beginCluster(n=8)
+mean_raster <- raster::clusterR(stack_week, fun = calc, args=list(fun=fun_mean))
+endCluster()
+
+#writeRaster(quant_raster, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/historical_quant90/ref_point_week%s", week), overwrite=TRUE)
+writeRaster(mean_raster, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/historical_mean/mean_week%s", week), overwrite=TRUE)
+
+}
+
+check <-raster("/home/shares/ohi/stressors_2021/_dataprep/SST/historical_mean/mean_week_52.tif")
+plot(check)
+
+check <-terra::rast("/home/shares/ohi/stressors_2021/_dataprep/SST/historical_mean/mean_week_26.tif")
+plot(check)
+click(check)
 ```
 
-Calculate whether each week exceeds the relevant week's 90th quantile value.
+Calculate the weekly thresholds that, when exceeded, indicate extreme events.
 ```{r}
 
+for(week_num in 1:52){
+# week_num <- 1
+
+  week <- paste0("_", week_num, ".tif")
+  
+  mean_sst <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/historical_mean", pattern = week, full=TRUE)
+  sd_sst <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/historical_sd", pattern = week, full=TRUE)
+  
+
+threshold_sst <- raster(mean_sst) + 2*raster(sd_sst)
+
+writeRaster(threshold_sst, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_sd_threshold/weekly_threshold_sd%s", week), overwrite=TRUE)
+
+}
+
+
+tmp <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_sd_threshold/", full=TRUE)
+
+plot(raster(tmp[26]))
+```
+
+Calculate whether each week exceeds the relevant week's theshold value.
+(takes about 2 days to run)
+```{r}
 
 for(week_num in 1:52){ #week_num = 1
-ref_val <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/historical_quant90/", full=TRUE, pattern = sprintf("_%s.tif", week_num))
+ref_val <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_sd_threshold/", full=TRUE, pattern = sprintf("_%s.tif", week_num))
 ref_raster <- raster(ref_val)
 
 sst_week <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_mean", pattern = sprintf("_%s.tif", week_num), full=TRUE)
-for(file in sst_week){ # file <- sst_week[50]
+for(file in sst_week){ # file <- sst_week[200]
   sst_raster <- raster(file)
   save_name <- basename(file)
   save_name <- gsub(".tif", "_exceed_boolean", save_name)
   
-  fun_exceed <- function(x, y){ifelse(is.na(x) | is.na(y), 0, ifelse(x > y, 1, 0))}
+  fun_exceed <- function(x, y){ifelse(is.na(x) | is.na(y), NA, ifelse(x > y, 1, 0))}
     
     beginCluster(n=8)
     weekly_exceed <- raster::clusterR(stack(sst_raster, ref_raster),
                      overlay, 
                     arg = list(fun = fun_exceed))
     endCluster()
-
-  writeRaster(weekly_exceed, filename =  sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_exceed/quant_exceed_%s.tif", save_name), overwrite=TRUE)
+#plot(weekly_exceed)
+cat("save_name = ", save_name, "   exceeds=", cellStats(weekly_exceed, "sum", na.rm=TRUE), "\n")
+  writeRaster(weekly_exceed, filename =  sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_exceed_two_sd/sd_exceed_%s.tif", save_name), overwrite=TRUE)
 }
 }
 
+tmp <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_exceed_two_sd/", full=TRUE)
+
+plot(raster(tmp[500]))
 
 ```
 
+Stack the weeks for each year and determine total exceedances.
+```{r}
+
+# ssp 5-8.5
+for(year in c(2015:2100)){
+#year <- "2015"
+year_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_exceed_two_sd/", pattern=as.character(year), full=TRUE)
+year_list <- grep("ssp585", year_list, value=TRUE)
+
+#plot(raster(year_list[1]))
+
+week_stack <- raster::stack(year_list)
+
+total_yr_exceed <- calc(week_stack, sum)
+cat(year, cellStats(total_yr_exceed, max), "\n")
+
+writeRaster(total_yr_exceed, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/year_exceed_two_sd/total_yr_exceed_ssp585_%s", year), format='GTiff', overwrite=TRUE)
+}
+#plot(total_yr_exceed)
+
+# ssp 2-4.5
+for(year in c(2015:2100)){
+#year <- "2015"
+year_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_exceed_two_sd/", pattern=as.character(year), full=TRUE)
+year_list <- grep("ssp245", year_list, value=TRUE)
+week_stack <- raster::stack(year_list)
+
+total_yr_exceed <- calc(week_stack, sum)
+cat(year, cellStats(total_yr_exceed, max), "\n")
+
+writeRaster(total_yr_exceed, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/year_exceed_two_sd/total_yr_exceed_ssp245_%s", year), format='GTiff', overwrite=TRUE)
+}
+
+# historical
+for(year in c(1979:2014)){
+#year <- 1976
+year_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_exceed_two_sd/", pattern=as.character(year), full=TRUE)
+
+week_stack <- raster::stack(year_list)
+
+total_yr_exceed <- calc(week_stack, sum)
+cat(year, cellStats(total_yr_exceed, max), "\n")
+
+writeRaster(total_yr_exceed, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/year_exceed_two_sd/total_yr_exceed_hist_%s", year), format='GTiff', overwrite=TRUE)
+}
+
+
+check <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/SST/year_exceed_two_sd/total_yr_exceed_hist_2010.tif")
+plot(check)
+
+check <- raster("/home/shares/ohi/stressors_2021/_dataprep/SST/year_exceed_two_sd/total_yr_exceed_ssp585_2050.tif")
+plot(check)
+
+check <- raster("/home/shares/ohi/stressors_2021/_dataprep/SST/year_exceed_two_sd/total_yr_exceed_ssp585_2085.tif")
+plot(check)
+
+```
+
+Sum the total exceedences across the scenarios and year ranges.
 
 ```{r}
-tmp <- nc_open("/Users/frazier/Desktop/MARISCO/sst_test/combined.nc")
-tmp$dim$time$vals # origin 1850-1-1
+yr_range
+ssps <- c("ssp245", "ssp585")
 
-year <- "1979"
-year_list <- list.files("/Users/frazier/Desktop/MARISCO/sst_test", pattern=year, full=TRUE)
-yrs_stack <- stack(year_list, varname="tos")
-weeks <- lubridate::isoweek(ymd(gsub("X", "", names(yrs_stack))))
+## current
+year_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/year_exceed_two_sd", pattern = paste(yr_range$year[yr_range$period=="current"], collapse="|"), full=TRUE)
+year_list <- grep("hist|ssp245", year_list, value=TRUE)
 
-weekly_mean <- stackApply(yrs_stack, weeks, fun=mean, na.rm=TRUE)
-names(weekly_mean) <- gsub("index", sprintf("yr_month_%s", year), names(weekly_mean))
-writeRaster(weekly_mean, sprintf("/Users/frazier/Desktop/MARISCO/sst_test/weekly_data/%s", names(weekly_mean)), bylayer=TRUE, format='GTiff')
+year_stack <- raster::stack(year_list)
 
-plot(weekly_mean[[1]])
-plot(raster("/Users/frazier/Desktop/MARISCO/sst_test/weekly_data/yr_month_1979_1.tif"))
+prop_yr_exceed <- calc(year_stack, mean, na.rm=TRUE)
+prop_yr_exceed <- prop_yr_exceed/52
+
+writeRaster(prop_yr_exceed, "/home/shares/ohi/stressors_2021/_dataprep/SST/pressure_twoSD/sst-extreme_NA_current.tif", format='GTiff', overwrite=TRUE)
+
+
+## scenarios
+
+for(period in c("near","medium", "long")){
+  # period = "near"
+for(scenario in ssps){ #scenario = ssps[2]
+year_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/year_exceed_two_sd", pattern = paste(yr_range$year[yr_range$period==period], collapse="|"), full=TRUE)
+  
+year_list <- grep(scenario, year_list, value=TRUE)
+
+year_stack <- raster::stack(year_list)
+
+prop_yr_exceed <- calc(year_stack, mean)
+prop_yr_exceed <- prop_yr_exceed/52
+
+writeRaster(prop_yr_exceed, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/pressure_twoSD/sst-extreme_%s_%s.tif", scenario, period), format='GTiff', overwrite=TRUE)
+}
+}
+
+
 ```
+
+# final formatting
+1. gapfill to get coastline
+2. project raster to appropriate resolution
+
+```{r}
+
+rast_base_10km_file <- terra::rast(here('_spatial/rast_base_mol_10km.tif'))
+ocean_template <- terra::rast(here('_spatial/ocean_area_mol.tif'))
+ocean_template[ocean_template>0] <- 1
+plot(ocean_template)
+
+exceed_paths <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/pressure_twoSD", full=TRUE)
+
+for(exceed_path in exceed_paths){ # exceed_path = exceed_paths[1]
+exceed_path <- exceed_path
+exceed_rast <- terra::rast(exceed_path)
+
+exceed_rast <- terra::rotate(exceed_rast)
+
+terra::ext(exceed_rast) <- c(-180, 180, -90, 90)
+#plot(exceed_rast)
+#maps::map('world', col='black', fill=FALSE, border='gray80', add=TRUE, size=0.5)
+
+mol_rast <- terra::project(exceed_rast, rast_base_10km_file, method="near", over=TRUE)
+#plot(mol_rast)
+
+
+## gapfill
+gf_raster <- function(x){raster::focal(x, w = matrix(1,3,3), fun = mean, na.rm=TRUE, na.policy="only")}
+
+r = mol_rast
+  
+## Repeat 100 times (most is immediately gapfilled but the antarctic area was persistent)
+i <- 0
+while (i <= 50){
+r <- gf_raster(r)
+i <- i + 1
+print(i)
+}
+
+# plot(r)
+r <- r*ocean_template
+# diff_rast <- r - mol_rast
+#plot(diff_rast)
+
+writeRaster(r, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/final_extreme/%s", basename), overwrite = TRUE)
+
+
+```
+
+
+
