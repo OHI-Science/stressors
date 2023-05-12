@@ -36,7 +36,15 @@ ocean[ocean >0] <- 1
 ## need land area
 prop_land <- 1-ocean_raw 
 prop_land[is.na(prop_land)] <- 1
-land_area_km2 <- prop_land*100 
+land_area_km2 <- prop_land*100 # each cell is 100 km2
+
+## boundary mask
+boundary_mask <- rast(nrow=2160, ncol=4320, xmin=-180, xmax=180, ymin=-90, ymax=90)
+values(boundary_mask) <- 1
+boundary_mask_mol <- terra::project(boundary_mask, "+proj=moll", res=10000)
+
+plot(boundary_mask_mol)
+
 ```
 
 ## Defining years to use
@@ -60,6 +68,7 @@ scenarios <- c("SSP1_RCP2_6",
 
 Explore: can be skipped
 ```{r}
+
 # see what is in directory
 files <- dir("/home/shares/ohi/stressors_2021/_raw_data/olen_population", full=TRUE)
 
@@ -68,6 +77,7 @@ raster::cellStats(pop, "sum", na.rm=TRUE)
 ## world population in 2010 was 6.922 billion (worldbank)
 ## estimate here: 6.872, looks good!
 plot(log(pop+1))
+
 ```
 
 
@@ -77,7 +87,7 @@ plot(log(pop+1))
 
 #dir.create("/home/shares/ohi/stressors_2021/_dataprep/population")
 prep_rast <- function(scen = "SSP5_RCP8_5"){ # scen = scenarios[1]
-    for(yrs in years_select$year_range){ # yrs = years_select$year_range[2]
+    for(yrs in years_select$year_range){ # yrs = years_select$year_range[1]
   file_years <- eval(parse(text=paste0("c(", yrs, ")")))
   file_years <- paste0("count", file_years, collapse = "|")
   
@@ -87,23 +97,51 @@ prep_rast <- function(scen = "SSP5_RCP8_5"){ # scen = scenarios[1]
   
   stack_rasters <- terra::rast(subset_files)
   cat(scen, ", ", yrs, ",  N=", length(subset_files), "\n")
-  avg_pop <- terra::app(stack_rasters, "mean", na.rm=TRUE, progress=0)
+  
+  # get mean number of people per cell across relevant window of years
+  avg_pop <- terra::app(stack_rasters, "mean", na.rm=FALSE, progress=0)
+  
+  # aggregate the data to be similar to our target resolution
   avg_pop_agg <- terra::aggregate(avg_pop, fact=10, fun="sum", na.rm=TRUE)
-  avg_pop_density <- avg_pop_agg/cellSize(avg_pop_agg)
+  
+  # convert to density (people/km2) in order to saftly project
+  avg_pop_density <- avg_pop_agg/terra::cellSize(avg_pop_agg)
   avg_density_mol <- terra::project(avg_pop_density, ocean)
+  
+  # convert back to number of people per cell after projecting
   avg_pop_mol <- avg_density_mol*10000*10000
   
-  ##shoreline region
+  #calculate density (people per km2) using the actual land area, accounting for area of land in cells that land on ocean and land
   shoreline_density_km2 <- avg_pop_mol/land_area_km2
-  shoreline_density_km2[!is.finite(shoreline_density_km2)] <- 0
-
-  ## offshore region
-  offshore_density_km2 <- terra::focal(shoreline_density_km2, w=3, fun="mean")
-    offshore_density_km2 <- crop(offshore_density_km2, ocean) 
+  
+  # some points have people but no land, these are Infs. Checking it out here.
+  # Doesn't seem to be a large number...convert these to NA values.
+# inf_vals <- ifel(is.infinite(shoreline_density_km2), 1, NA)
+#plot(inf_vals)
+#  global(invals, sum, na.rm=TRUE)
+#  plot(ocean_moll_sf, add=TRUE, color=NA)
+#  people <- inf_vals*avg_pop_mol
+#  global(people, sum, na.rm=TRUE)
+#  global(avg_pop_mol, sum, na.rm=TRUE)
+  
+  shoreline_density_km2 <- ifel(is.infinite(shoreline_density_km2), NA, shoreline_density_km2)
+  
+  ## get the offshore density estimate, average of nearby land cells
+  offshore_density_km2 <- terra::focal(shoreline_density_km2, w=3, fun=mean, na.rm=TRUE, na.policy="only")
+      
+  offshore_density_km2 <- offshore_density_km2*ocean 
     
-  ## add shoreline and offshore regions
-    total <- offshore_density_km2 + shoreline_density_km2
-    terra::writeRaster(total, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/population/pop_density_km2_ocean_expand/human-pop-density-km2_%s_%s.tif",
+# check that things look ok!    
+#  extent <- terra::ext(1e7, 1.25e7, 3e6, 5e6)  
+#plot(terra::crop(log(shoreline_density_km2+1), extent))
+#plot(terra::crop(log(offshore_density_km2+1), extent))
+      
+  ## combine shoreline and offshore regions
+  total <- terra::ifel(is.na(shoreline_density_km2), offshore_density_km2, shoreline_density_km2)  
+    
+  #plot(terra::crop(log(total+1), extent))
+
+  terra::writeRaster(total, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/population/pop_density_km2_ocean_expand/human-pop-density-km2_%s_%s.tif",
               gsub(":", "_", yrs), scen), overwrite=TRUE)
 
   }
@@ -116,14 +154,117 @@ prep_rast <- function(scen = "SSP5_RCP8_5"){ # scen = scenarios[1]
 
 Run function on all scenarios.
 ```{r}
-for(scenario in scenarios){ #scenario= scenarios[1]
+for(scenario in scenarios[4:6]){ #scenario= scenarios[1]
   prep_rast(scen=scenario)
-  
+  }
+
+```
+
+## We interupt this program....
+Here I am going to save 2 additional iterations on the population data that will be useful for predicting other pressures (such as, light pollution).
+
+1. Population density not extended into the ocean.
+2. Population density with ocean gapfilled.
+
+```{r}
+# land only
+
+land_cells <- ifel(prop_land>0, 1, NA)
+
+file_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/population/pop_density_km2_ocean_expand/", full=TRUE)
+
+for(file in file_list){
+  # file = file_list[1]
+land_only <- terra::rast(file) 
+# check that things look ok!    
+#  extent <- terra::ext(1e7, 1.25e7, 3e6, 5e6)  
+#plot(terra::crop(log(land_only+1), extent))
+file_name <- basename(file)
+file_name <- gsub("-km2", "-km2_land", file_name)
+
+land_only <- land_cells * land_only
+#plot(terra::crop(log(land_only+1), extent))
+
+  terra::writeRaster(land_only, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/population/other_pop_files/%s", file_name), overwrite=TRUE)
 }
 
 ```
 
+Ocean only, which is gapfilled based on nearby land values (I'm not sure this will be useful for predicting other variables, but I am going to give it a try).
+
+```{r}
+
+ocean_cells <- ifel(is.na(land_cells), 1, NA)
+
+file_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/population/pop_density_km2_ocean_expand/", full=TRUE)
+
+# gapfill ocean area
+
+for(file in file_list){
+  # file = file_list[1]
+ocean_only <- terra::rast(file) 
+# check that things look ok!    
+#  extent <- terra::ext(1e7, 1.25e7, 3e6, 5e6)  
+#plot(terra::crop(log(land_only+1), extent))
+file_name <- basename(file)
+file_name <- gsub("-km2", "-km2_ocean-gf", file_name)
+
+# gapfill 10 cells out into the ocean - using a fairly large window here.
+ocean_gf <- ocean_only
+for(i in 1:10){
+  i=1+i
+ocean_gf <- terra::focal(ocean_gf, w=9, fun=mean, na.rm=TRUE, na.policy="only")
+}
+# plot(ocean_gf)
+
+# smoothing those values to help get rid of streaks and blobs.
+ocean_gf <- terra::focal(ocean_gf, w=9, fun=mean, na.rm=TRUE)
+
+# plot(ocean_gf)
+
+ocean_gf <- ocean_gf * ocean_cells
+#  extent <- terra::ext(1e7, 1.15e7, 4e6, 5e6)  
+#plot(terra::crop(log(ocean_gf+1), extent))
+
+  terra::writeRaster(ocean_gf, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/population/other_pop_files/%s", file_name), overwrite=TRUE)
+
+
+}
+
+
+```
+
+## Back to our regularly scheduled program....
+
+## Log transform data
+This paper shows how log tranforming population data is linearly correlated with several stressors.
+https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1000606
+```{r}
+files <- list.files("/home/shares/ohi/stressors_2021/_dataprep/population/pop_density_km2_ocean_expand/", full=TRUE)
+
+for(file in files){
+  # file <- files[1]
+  file_name <- basename(file)
+  file_name <- gsub("-km2", "-km2-log", file_name)
+  
+  raster <- terra::rast(file)
+  ln_raster <- log(raster + 1)
+  
+    terra::writeRaster(ln_raster, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/population/pop_density_km2_ocean_expand_log/%s",
+              file_name), overwrite=TRUE)
+  
+}
+ 
+```
+
 ## Rescaling data
+
+Ideally, we would want to rescale this based on something biologically meaningful,
+for example, the relationship between human density and biological stress.
+
+But I haven't been able to find anything. Given this, I will rescale these data based on a confidence interval.
+
+Step 1: 
 Create a mask so rescaling is based only on coastal rasters. 
 
 ```{r}
@@ -136,199 +277,74 @@ ocean_sf <- sf::read_sf(here('_spatial', 'ne_10m_ocean', 'ne_10m_ocean.shp'))
     sf::st_transform(crs = moll_crs)
 
 ocean_moll_line <- sf::st_cast(ocean_moll_sf,"MULTILINESTRING")  
-raster_coast <- rasterize(ocean_moll_line, ocean) 
+raster_coast <- terra::rasterize(ocean_moll_line, ocean, touches=TRUE) 
 plot(raster_coast, col="red") 
+#  extent <- terra::ext(1e7, 1.15e7, 4e6, 5e6)  
+# plot(terra::crop(raster_coast, extent))
 
 coastal_mask <- focal(raster_coast, w=3, "max", na.policy="only", na.rm=TRUE)
 
 plot(coastal_mask, col="red")
-zoom(coastal_mask)
+# plot(terra::crop(coastal_mask, extent))
+# plot(ocean_moll_sf, add=TRUE, color=NA)
 
 ```
-
-Will log transform data.
 
 Get scaling value from current year. 
+(use only coastal cells to determine scaling value, 
+but rescale all population data)
 
 ```{r}
+# using this value as information to determine best quantile to use.
+# how many coastal cells are there?
+global(coastal_mask, sum, na.rm=TRUE)
 
+rescale_raster <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/population/pop_density_km2_ocean_expand_log/human-pop-density-km2-log_2010_2020_SSP1_RCP2_6.tif")
+
+rescale_raster_coast <- rescale_raster*coastal_mask
+
+extent <- terra::ext(1e7, 1.15e7, 4e6, 5e6) 
+plot(terra::crop(rescale_raster_coast, extent))
+
+## determine quantile value used for rescaling
+global(rescale_raster_coast, fun= function(x) {quantile(x, probs=c(0.99, 0.999, 0.9999), na.rm=TRUE)})
+
+test1 <- terra::ifel(rescale_raster_coast >= 10.33508, 1, NA)
+plot(as.points(test1), col="red")
+plot(ocean_moll_sf, add=TRUE, color=NA)
+
+test2 <- terra::ifel(rescale_raster_coast >= 8.48, 1, NA)
+plot(as.points(test2), col="red")
+plot(ocean_moll_sf, add=TRUE, color=NA)
+
+
+# will go with the 99.9th quantile value
+rescale_value <- global(rescale_raster_coast, fun= function(x) {quantile(x, probs=c(0.999), na.rm=TRUE)})
 
 ```
 
+## rescaling the data!
 ```{r}
 
-## Exploring how to best use focal
-```{r}
-v <- vect(system.file("ex/lux.shp", package="terra"))
-r <- rast(system.file("ex/elev.tif", package="terra"))
-r[45:50, 45:50] <- 
+files <- list.files("/home/shares/ohi/stressors_2021/_dataprep/population/pop_density_km2_ocean_expand_log", full=TRUE)
 
-f1 <- focal(r, w=7, "mean", na.policy="only", na.rm=TRUE)   
-x1 <- focal(r, w=5, "mean", na.policy="only", na.rm=TRUE)   
 
-r1 <- focal(r, w=3, "mean")   
-r1 <- focal(r1, w=3, "mean")
-r1 <- focal(r1, w=3, "mean", na.policy="only", na.rm=TRUE)
-r1 <- focal(r1, w=3, "mean", na.policy="only", na.rm=TRUE)
-dif <- r1 - f1
-# the following two statements are equivalent:
-#a <- focal(r, w=matrix(1/9, nc=3, nr=3))
-#b <- focal(r, w=3, fun=mean, na.rm=FALSE)
+for(file in files){
+  #file <- files[1]
+  save_name <- basename(file)
+  save_name <- gsub("-log", "-log-rescaled", basename(file))
+  
+  tmp <- terra::rast(file)
+  rescaled <- tmp/pull(rescale_value)
+  rescaled <- ifel(rescaled > 1, 1, rescaled)
+# plot(rescaled, col=cols)
+  
+ terra::writeRaster(rescaled, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/population/pop_density_km2_ocean_expand_log_rescaled/%s",
+              save_name), overwrite=TRUE)  
+    
+}
 
-library(tidyterra)
-ggplot() +
-  geom_spatraster(data = r1) +
-  ylim(c(49.75, 49.85)) +
-  xlim(c(6.05, 6.2)) +
-  geom_rect(aes(ymin=49.775, ymax=49.825, xmin=6.1075, xmax=6.1575), col="red", fill=NA, size=0.5)
 ```
 
 ***
-
-# Methods
-
-
-## Select relevant years and rescale
-
-### Function
-The `oa_rescale` function averages the appropriate rasters for each time series and then rescales and saves. 
-
-```{r rescale,eval=F}
-
-#for each layer, all values <=1 are assigned a 1, otherwise old-new/(old-1)
-oa_rescale <- function(raster_path, stack_list=stack_list_spp, historical_avg, range = "future"){ #raster_path <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_ssp245.nc"
-
-  saveName <- basename(raster_path)
-  saveName <- gsub(".nc", "", saveName)
-  saveName <- gsub("ARAG_", "", saveName)
-  
-  raster_stack <- terra::rast(raster_path)
-  raster_stack <- raster_stack[[grep("decade", names(raster_stack))]]
-  names(raster_stack) <- stack_list$years
-  raster_stack_align <- align_rasts(raster_stack)
-
-  scenario <- if(range=="future") {c("near-term", "medium-term", "long-term")
-  } else { 
-    "current"}
-    
-
-for(select_time_frame in scenario){
-          #select_time_frame = "current"
-
-    ## Select relevant years for time period
-    select_year_range_tmp <- years_select %>%
-      filter(time_frame == select_time_frame) %>%
-      pull(year_range)
-    select_year_range <- paste(select_year_range_tmp, collapse="|")
-
-    year_range_stack <- raster_stack_align[[grep(select_year_range, names(raster_stack_align))]]
-    cat(sprintf("third dimension should be 2: observed is %s", dim(year_range_stack)[3]))
-    oa_predict <- app(year_range_stack, mean)
-
-    ## rescale
-  diff = (historical_avg - oa_predict)/(historical_avg - 1)
-  
-  oa_predict[oa_predict<=1] <- 1                                 #all values at or less than 1 are given a value of 1
-  oa_predict[oa_predict>1] <- diff[oa_predict>1]                     #all cells with values greater than 1 are swapped out with their amount of change scaled to how close to 1 
-  oa_predict[oa_predict<0] <- 0                                  #all values less than 0 (indicating a decrease in acidity) are capped at 0
-
-## format raster
-oa_predict_crs <- terra::project(oa_predict, ocean, method="bilinear")
-oa_predict_crs[is.nan(oa_predict_crs)] <- NA
-
-# gapfill coastline
-oa_predict_gf <- oa_predict_crs
-for(i in 1:200){
-  i=1+i
-oa_predict_gf <- terra::focal(oa_predict_gf, w=3, fun=mean, na.rm=TRUE, na.policy="only")
-}
-
-oa_mask <- terra::mask(oa_predict_gf, ocean)
-
-terra::writeRaster(oa_mask, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/oa/oa_%s_%s.tif",
-              select_time_frame, saveName), overwrite=TRUE)
-}
-}
-```
-
-### Run function
-
-```{r}
-## Clean
-
-#rm_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oa", full=TRUE)
-#file.remove(rm_list)
-
-
-#Associate raster layers with year intervals
-stack_list_spp <- data.frame(rasters_name = paste0("X",1:9),
-                         years=c("years_2011-2020",
-                                 "years_2021-2030",
-                                 "years_2031-2040",
-                                 "years_2041-2050",
-                                 "years_2051-2060",
-                                 "years_2061-2070",
-                                 "years_2071-2080",
-                                 "years_2081-2090",
-                                 "years_2091-2100"))
-
-ssp245_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_ssp245.nc"
-oa_rescale(raster_path = ssp245_stack, stack_list=stack_list_spp, historical_avg=historical_avg)
-plot(terra::rast(rm_list[3]))
-
-ssp119_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_ssp119.nc"
-oa_rescale(raster_path = ssp119_stack, stack_list=stack_list_spp, historical_avg=historical_avg)
-
-ssp126_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_ssp126.nc"
-oa_rescale(raster_path = ssp126_stack, stack_list=stack_list_spp, historical_avg=historical_avg)
-
-ssp370_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_ssp370.nc"
-oa_rescale(raster_path = ssp370_stack, stack_list=stack_list_spp, historical_avg=historical_avg)
-
-ssp585_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_ssp585.nc"
-oa_rescale(raster_path = ssp585_stack, stack_list=stack_list_spp, historical_avg=historical_avg)
-
-## Do current
-# have to use historical data to get these values
-
-historical_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/ARAG_historical.nc"
-#NOTE: only one layer for this
-oa_rescale(raster_path = historical_stack, stack_list=historic_stack_list, historical_avg, range = "historic")
-
-
-
-```
-
-## Some checks
-```{r plot rescale}
-rast_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oa", full=TRUE)
-plot(terra::rast(rast_list[1]),col=cols,box=F,axes=F, main = 'Rescaled Ωaragonite layer')
-```
-
-
-```{r}
-
-
-
-```
-# Gap-filled cells
-
-We want to create a raster layer that shows all cells that were gap-filled. Since they were the same cells interpolated across all years, we only need to create one raster.
-
-```{r,eval=F}
-#Rescaled data before interpolation 
-pre_int = raster(file.path(oagit_dir, 'v2017/int/annual_avg_moll_rescaled/oa_rescaled_2016.tif'))%>%
-                resample(ocean, progress='text', method = 'ngb')
-#after interpolation,
-r_int = raster(file.path(oagit_dir, 'v2017/output/oa_prs_layer_2016.tif'))
-    
-#interpolated (or gap-filled) cells    
-interp_cells = mask(r_int, pre_int, inverse=TRUE, filename = file.path(oagit_dir, 'v2017/output/oa_interpolated_cells.tif'))
-```
-
-```{r plot_interp_cells}
-plot(raster(file.path(oagit_dir, 'v2017/output/oa_interpolated_cells.tif')), col=cols, box=F, axes=F, main='Interpolated cells')
-```
-
-
 

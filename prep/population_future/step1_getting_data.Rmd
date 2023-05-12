@@ -3,6 +3,8 @@ title: "Downloading population data"
 output: html_document
 date: '2022-09-07'
 ---
+Data from here: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8762352/
+But also see: https://www.nature.com/articles/s41597-022-01675-x
 
 ```{r}
 library(curl)
