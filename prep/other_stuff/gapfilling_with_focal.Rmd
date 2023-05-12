@@ -1,0 +1,35 @@
+---
+title: "Focal function in terra"
+output: html_document
+date: "2023-05-11"
+---
+
+Exploring focal function in terra for gapfilling.
+
+```{r}
+
+## Exploring how to best use focal
+```{r}
+v <- vect(system.file("ex/lux.shp", package="terra"))
+r <- rast(system.file("ex/elev.tif", package="terra"))
+r[45:50, 45:50] <- 
+
+f1 <- focal(r, w=7, "mean", na.policy="only", na.rm=TRUE)   
+x1 <- focal(r, w=5, "mean", na.policy="only", na.rm=TRUE)   
+
+r1 <- focal(r, w=3, "mean")   
+r1 <- focal(r1, w=3, "mean")
+r1 <- focal(r1, w=3, "mean", na.policy="only", na.rm=TRUE)
+r1 <- focal(r1, w=3, "mean", na.policy="only", na.rm=TRUE)
+dif <- r1 - f1
+# the following two statements are equivalent:
+#a <- focal(r, w=matrix(1/9, nc=3, nr=3))
+#b <- focal(r, w=3, fun=mean, na.rm=FALSE)
+
+library(tidyterra)
+ggplot() +
+  geom_spatraster(data = r1) +
+  ylim(c(49.75, 49.85)) +
+  xlim(c(6.05, 6.2)) +
+  geom_rect(aes(ymin=49.775, ymax=49.825, xmin=6.1075, xmax=6.1575), col="red", fill=NA, size=0.5)
+```
