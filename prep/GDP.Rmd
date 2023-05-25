@@ -1,0 +1,246 @@
+---
+title: "GDP"
+output: html_document
+date: '2022-08-09'
+---
+
+#Data Source
+**Reference**: https://www.nature.com/articles/s41597-022-01300-x#Sec14
+**Downloaded**: 5/15/2023
+**Description**: V7 May 5 2024. Global gridded GDP under the historical and future scenarios
+**Native data resolution**: 0.25 degrees (1 km also available)
+**Time range**: projection 2010-2100 (SSP1_2.6, SSP2_3.4, SSP3_7.0, SSP4_3.4, SSP5_8.5), 5 year periods
+**Units**: PPP 2005 U.S. dollars
+**Format**:  tif
+
+https://zenodo.org/record/7898409/files/GDP_2000-2009.7z?download=1
+Global gridded GDP under the historical and future scenarios
+Wang, Tingting;  Sun, Fubao
+We have extended the time series of global GDP based on Version 5 at https://zenodo.org/record/5880037#.Yyx4lsi5fRQ, which makes the following changes:
+a) includes annual global GDP from 2000 - 2020, the unit is PPP 2005 international dollars. 
+b) updates the GDP projections for the period 2025 - 2100 at five-year intervals under five SSPs, and the unit is PPP 2005 international dollars, which allows for comparsion against the historical values mention above.
+This dataset consists of a total of 101 tif images with spatial resolutions of 1 km (in 7 zip files) and 0.25-degree, respectively. The gridded GDP are distributed over land, with Antarctica, oceans, and some non-illuminated or depopulated areas marked as zero. The spatial extents are 90S - 90N and 180E - 180W in standard WGS84 coordinate system.
+For more details, please refer to the article: Global gridded GDP data set consistent with the shared socioeconomic pathways that is consistent with Version 5 (GDP unit is PPP 2005 U.S. dollars).
+
+
+
+##Setup  
+
+```{r setup,message=FALSE,warning=FALSE,verbose=FALSE}
+#set options for all chunks in code
+knitr::opts_chunk$set(warning=FALSE, message=FALSE,fig.width=6, fig.height=6)
+#libraries
+library(maps)
+library(tidyverse)
+library(RColorBrewer)
+library(terra)
+library(here)
+
+# color
+cols = rev(colorRampPalette(brewer.pal(9, 'Spectral'))(255)) # rainbow color scheme
+
+# spatial map data
+ocean_raw <- terra::rast(here("_spatial/ocean_area_mol.tif"))
+ocean <- ocean_raw
+ocean[ocean >0] <- 1
+
+## need land area
+prop_land <- 1-ocean_raw 
+prop_land[is.na(prop_land)] <- 1
+land_area_km2 <- prop_land*100 # each cell is 100 km2
+
+## boundary mask
+boundary_mask <- rast(nrow=2160, ncol=4320, xmin=-180, xmax=180, ymin=-90, ymax=90)
+values(boundary_mask) <- 1
+boundary_mask_mol <- terra::project(boundary_mask, "+proj=moll", res=10000)
+
+plot(boundary_mask_mol)
+
+```
+
+## Defining years to use
+```{r}
+
+current_years <- "2014|2015|2016|2017|2018"
+current_years_2001_2005 <- "2001|2002|2003|2004|2005"
+current_years_2016_2020 <- "2016|2017|2018|2019|2020"
+
+years_select <- data.frame(
+  time_frame = c("near-term", "medium-term", "long-term"),
+  year_range = c("2025|2030|2035|2040",
+                 "2045|2050|2055|2060",
+                 "2085|2090|2095|2100"))
+
+scenarios <- c("ssp1", 
+               "ssp2",
+               "ssp3",
+               "ssp4",
+               "ssp5")
+
+```
+
+
+Explore: can be skipped
+```{r}
+
+# see what is in directory
+files <- dir("/home/shares/ohi/stressors_2021/_raw_data/gdp_wang/v7/v025_degree", full=TRUE)
+
+files <- dir("/Users/frazier/Desktop/gdp_wang/v7", full=TRUE)
+
+gdp <- raster::raster(files[1]) 
+raster::cellStats(gdp, "sum", na.rm=TRUE)
+plot(log(gdp+1))
+
+```
+
+
+## Function to prep raster
+```{r}
+#terraOptions(progress=0)
+
+#dir.create("/home/shares/ohi/stressors_2021/_dataprep/population")
+prep_rast <- function(scen = "SSP5_RCP8_5"){ # scen = scenarios[1]
+    for(yrs in years_select$year_range){ # yrs = years_select$year_range[1]
+  
+      time_frame <- years_select$time_frame[years_select$year_range == yrs]
+      
+  all_files <- list.files("/Users/frazier/Desktop/gdp_wang/v7", full=TRUE)
+  subset_files <- grep(scen, all_files, value=TRUE)
+  subset_files <- grep(yrs, subset_files, value=TRUE)
+  
+  stack_rasters <- terra::rast(subset_files)
+  cat(scen, ", ", yrs, ",  N=", length(subset_files), "\n")
+  
+  # get mean gdp per cell across relevant window of years
+  avg_gdp <- terra::app(stack_rasters, "mean", na.rm=FALSE, progress=0)
+  #global(avg_gdp, sum, na.rm=TRUE)
+  
+  # convert to density (gdp/km2) in order to safely project
+  avg_gdp_km2 <- avg_gdp/terra::cellSize(avg_gdp, unit="km")
+
+  gdp_per_km2 <- terra::project(avg_gdp_km2, ocean)
+  #global(gdp_per_km2, sum, na.rm=TRUE) * 100
+
+terra::writeRaster(gdp_per_km2, sprintf("/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-per-km2_%s_%s.tif", scen, time_frame), overwrite=TRUE)
+
+  ## get the nearshore gdp estimate, average of nearby land and ocean cells (these are zero gdp, following same protocol as in human population script) 
+  ## get the nearshore disturbance estimate, average population density of nearby land and ocean cells (these are zero population) 
+  offshore_gdp_km2 <- ifel(is.na(gdp_per_km2), 0, gdp_per_km2) 
+
+offshore_gdp_km2 <-   terra::focal(offshore_gdp_km2, w=3, fun=mean, na.rm=TRUE)
+      
+  offshore_gdp_km2 <- offshore_gdp_km2*ocean 
+
+    ## combine shoreline and offshore regions
+  total <- terra::ifel(is.na(gdp_per_km2), offshore_gdp_km2, gdp_per_km2)  
+
+  
+terra::writeRaster(total, sprintf("/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-per-km2-extended_%s_%s.tif", scen, time_frame), overwrite=TRUE)
+
+  }
+  }
+
+
+```
+
+Run function on all scenarios.
+```{r}
+for(scenario in scenarios){ #scenario= scenarios[1]
+  prep_rast(scen=scenario)
+  }
+```
+
+Get current years
+```{r}
+
+current_rasters <- function(years_to_include=current_years, name="current"){
+  all_files <- list.files("/Users/frazier/Desktop/gdp_wang/v7", full=TRUE)
+  subset_files <- grep(years_to_include, all_files, value=TRUE)
+  
+  stack_rasters <- terra::rast(subset_files)
+  cat(scen, ", ", yrs, ",  N=", length(subset_files), "\n")
+  
+  # get mean gdp per cell across relevant window of years
+  avg_gdp <- terra::app(stack_rasters, "mean", na.rm=FALSE, progress=0)
+  #global(avg_gdp, sum, na.rm=TRUE)
+  
+  # convert to density (gdp/km2) in order to safely project
+  avg_gdp_km2 <- avg_gdp/terra::cellSize(avg_gdp, unit="km")
+
+  gdp_per_km2 <- terra::project(avg_gdp_km2, ocean)
+  #global(gdp_per_km2, sum, na.rm=TRUE) * 100
+
+terra::writeRaster(gdp_per_km2, "/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-per-km2_current.tif", overwrite=TRUE)
+
+  ## get the nearshore gdp estimate, average of nearby land and ocean cells (these are zero gdp, following same protocol as in human population script) 
+  ## get the nearshore disturbance estimate, average population density of nearby land and ocean cells (these are zero population) 
+  offshore_gdp_km2 <- ifel(is.na(gdp_per_km2), 0, gdp_per_km2) 
+
+offshore_gdp_km2 <-   terra::focal(offshore_gdp_km2, w=3, fun=mean, na.rm=TRUE)
+      
+  offshore_gdp_km2 <- offshore_gdp_km2*ocean 
+
+    ## combine shoreline and offshore regions
+  total <- terra::ifel(is.na(gdp_per_km2), offshore_gdp_km2, gdp_per_km2)  
+
+  
+terra::writeRaster(total, sprintf("/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-per-km2-extended_%s.tif", as.character(name)), overwrite=TRUE)
+}
+
+
+current_rasters(years_to_include=current_years, name="current")
+current_rasters(years_to_include=current_years_2001_2005, 
+  name= "current_2001_2005")
+current_rasters(years_to_include=current_years_2016_2020, 
+  name= "current_2016_2020")
+
+```
+
+Ocean only, which is gapfilled based on nearby land values (I'm not sure this will be useful for predicting other variables, but I am going to give it a try).
+
+```{r}
+
+land_cells <- ifel(prop_land>0, 1, NA)
+ocean_cells <- ifel(is.na(land_cells), 1, NA)
+
+file_list <- list.files("/Users/frazier/Desktop/gdp_wang/prep/gdp/", full=TRUE)
+
+# gapfill ocean area
+
+for(file in file_list){
+  # file = file_list[1]
+ocean_only <- terra::rast(file) 
+# check that things look ok!    
+#  extent <- terra::ext(1e7, 1.25e7, 3e6, 5e6)  
+#plot(terra::crop(log(land_only+1), extent))
+file_name <- basename(file)
+file_name <- gsub("-km2", "-km2-ocean-gf", file_name)
+
+# gapfill 10 cells out into the ocean - using a fairly large window here.
+ocean_gf <- ocean_only
+for(i in 1:10){
+  i=1+i
+ocean_gf <- terra::focal(ocean_gf, w=9, fun=mean, na.rm=TRUE, na.policy="only")
+}
+# plot(log(ocean_gf+1))
+
+# smoothing those values to help get rid of streaks and blobs.
+ocean_gf <- terra::focal(ocean_gf, w=9, fun=mean, na.rm=TRUE)
+
+# plot(ocean_gf)
+
+ocean_gf <- ocean_gf * ocean_cells
+#  extent <- terra::ext(1e7, 1.15e7, 4e6, 5e6)  
+#plot(terra::crop(log(ocean_gf+1), extent))
+
+  terra::writeRaster(ocean_gf, filename=sprintf("/Users/frazier/Desktop/gdp_wang/prep/gdp/%s", file_name), overwrite=TRUE)
+
+
+}
+
+
+```
+
+
+***

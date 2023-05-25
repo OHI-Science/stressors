@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Light pollution: current and model"
 format: html
 editor: visual
 ---
@@ -15,13 +15,408 @@ Spatial resolution: 30 arc-seconds (\~1km)\
 Information about the composited images from the calibrated DMSP dataset:F10(1992-1994); F12(1995-1996); F14(1997-2003); F16(2004-2009); F18(2010-2013)\
 We suggested using pixels with DN values greater than 7.
 
-\
+# Set up
 
-For GDP:
+```{r}
+#set options for all chunks in code
+knitr::opts_chunk$set(warning=FALSE, message=FALSE,fig.width=6, fig.height=6)
+#libraries
+library(maps)
+library(tidyverse)
+library(RColorBrewer)
+library(terra)
+library(here)
 
-Not a specific stressor, but probably good for modeling:
+# color
+cols = rev(colorRampPalette(brewer.pal(9, 'Spectral'))(255)) # rainbow color scheme
 
-<https://zenodo.org/record/5880037#.YpYprpPML0o>\
-<https://www.nature.com/articles/s41597-022-01300-x#Sec14>
 
-And we have population data to use for prediction.
+```
+
+## Defining scenario years
+
+(Only defining current years for now )
+
+```{r}
+current_years <- "2014|2015|2016|2017|2018"
+current_years_2001_2005 <- "2001|2002|2003|2004|2005"
+current_years_2016_2020 <- "2016|2017|2018|2019|2020"
+
+
+```
+
+### 
+
+## Defining boundaries of model and data
+
+Want model to only include the coastal regions. This will be anything that includes land, one cell into the ocean, and 2 cells inland.
+
+```{r}
+
+## boundary mask
+boundary_mask <- rast(nrow=2160, ncol=4320, xmin=-180, xmax=180, ymin=-90, ymax=90)
+values(boundary_mask) <- 1
+boundary_mask_mol <- terra::project(boundary_mask, "+proj=moll", res=10000)
+
+plot(boundary_mask_mol)
+
+
+# spatial map data
+ocean_raw <- terra::rast(here("_spatial/ocean_area_mol.tif"))
+ocean <- ocean_raw
+ocean[ocean >0] <- 1
+
+## coastal
+pure_ocean <- ifel(ocean_raw==1, 1, NA) 
+any_land <- ifel(is.na(pure_ocean), 1, NA)
+inner_boundary1 <- boundaries(any_land, inner=TRUE, falseval=0)
+
+tmp <- ifel(inner_boundary1==1, NA, 0)
+plot(tmp)
+inner_boundary2 <- boundaries(tmp,
+  inner=TRUE, falseval=0)
+
+outer_boundary <-  boundaries(any_land, inner=FALSE, falseval=0)
+
+coastal <- app(c(inner_boundary1, inner_boundary2, outer_boundary), fun="sum", na.rm=TRUE)
+
+boundary_mask_mol_extended <- extend(boundary_mask_mol, coastal)
+ext(boundary_mask_mol_extended) <- ext(coastal)
+
+coastal <- boundary_mask_mol_extended*coastal
+coastal <- ifel(coastal==0, NA, coastal)
+
+
+
+```
+
+## Get population change data
+
+https://sedac.ciesin.columbia.edu/data/set/gpw-v4-population-count-adjusted-to-2015-unwpp-country-totals-rev11/data-downloadUN
+
+WPP-Adjusted Population Count, v4.11 (2000, 2005, 2010, 2015, 2020)
+
+2.5 arc minute
+
+Citation:
+
+Center for International Earth Science Information Network - CIESIN - Columbia University. 2018. Gridded Population of the World, Version 4 (GPWv4): Population Count Adjusted to Match 2015 Revision of UN WPP Country Totals, Revision 11. Palisades, New York: NASA Socioeconomic Data and Applications Center (SEDAC). <https://doi.org/10.7927/H4PN93PB>. Accessed 22 May 2023.
+
+```{r}
+pop_current_years_2001_2005 <- 
+rast("/Users/frazier/Desktop/gdp_wang/population/gpw-v4-population-count-adjusted-to-2015-unwpp-country-totals-rev11_2005_2pt5_min_tif/gpw_v4_population_count_adjusted_to_2015_unwpp_country_totals_rev11_2005_2pt5_min.tif")
+
+pop_current_years_2015_2020 <- rast("/Users/frazier/Desktop/gdp_wang/population/gpw-v4-population-count-adjusted-to-2015-unwpp-country-totals-rev11_2020_2pt5_min_tif/gpw_v4_population_count_adjusted_to_2015_unwpp_country_totals_rev11_2020_2pt5_min.tif")
+pop_t1_density <- pop_current_years_2001_2005/cellSize(pop_current_years_2001_2005)
+pop_t2_density <- pop_current_years_2015_2020/cellSize(pop_current_years_2015_2020) 
+
+
+# slightly inflating population, but looks reasonable.
+pop_t1 <- project(pop_t1_density, ocean, method="average")
+global(pop_current_years_2001_2005, "sum", na.rm=TRUE)
+global(pop_t1*cellSize(pop_t1), "sum", na.rm=TRUE)
+
+pop_t2 <- project(pop_t2_density, ocean, method="average")
+global(pop_current_years_2015_2020, "sum", na.rm=TRUE)
+global(pop_t2*cellSize(pop_t2), "sum", na.rm=TRUE)
+```
+
+### Explore light data
+
+```{r}
+# see what is in directory
+files <- dir("/Users/frazier/Desktop/gdp_wang/lights/raw", full=TRUE)
+
+lights <- raster::raster(files[1]) 
+lights
+plot(lights)
+
+```
+
+## Get current light
+
+Averaged values from 2014 to 2018.
+
+```{r}
+
+current_raster_lights <- function(years_to_include="current_years", name="current"){
+files <- dir("/Users/frazier/Desktop/gdp_wang/lights/raw", full=TRUE)
+files <- grep(years_to_include, files, value=TRUE)
+
+current_light <- app(terra::rast(files), fun="mean", na.rm=TRUE)
+
+# recommendation is to use pixel values >7
+# (that makes quite a large difference)
+#current_light <- ifel(current_light<=7, 0, current_light)
+
+# project raster
+plot(current_light)
+current_light_mol <- project(current_light, ocean, method="average")
+plot(current_light_mol)
+
+current_light
+current_light_mol
+
+writeRaster(current_light_mol, sprintf("/Users/frazier/Desktop/gdp_wang/lights/prep/light_%s.tif", name), overwrite=TRUE)
+}
+  
+  current_raster_lights(years_to_include=current_years, name="current")
+current_raster_lights(years_to_include=current_years_2001_2005, 
+  name= "current_2001_2005")
+current_raster_lights(years_to_include=current_years_2016_2020, 
+  name= "current_2016_2020")
+
+
+```
+
+## Model coastal lights
+
+Explore GDP: Only using GDP, there is definitely a strong correlation, but the R2 is 0.15 (so not super good at predicting).
+
+```{r}
+coastal
+current_light <- rast("/Users/frazier/Desktop/gdp_wang/lights/prep/light_current.tif") * coastal
+gdp <- rast("/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-per-km2-extended_current.tif") * coastal
+
+mod1 <- c(current_light, gdp)
+mod1_df <- as.data.frame(mod1)
+names(mod1_df) <- c("light", "gdp")
+mod1_df <- mod1_df %>%
+  filter(!is.na(light))
+
+summary(mod1_df)
+plot(light~log(gdp+1), data=mod1_df, pch=16, cex=0.1)
+
+# definitely a relationship, but a weak one.
+tmp <- lm(light ~ log(gdp+1), data=mod1_df)
+summary(tmp)
+```
+
+Determine how changes in GDP in a location affect the change in light pollution.
+
+(Light_time2 - Light_time1) \~ (GDP_time2 - GDP_time1)
+
+This does even worse!
+
+```{r}
+
+gdp_time1 <- rast("/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-per-km2-extended_current_2001_2005.tif") * coastal
+gdp_time2 <-rast("/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-per-km2-extended_current_2016_2020.tif") * coastal
+light_time1 <- rast("/Users/frazier/Desktop/gdp_wang/lights/prep/light_current_2001_2005.tif") * coastal
+light_time2 <- rast("/Users/frazier/Desktop/gdp_wang/lights/prep/light_current_2016_2020.tif") * coastal
+land <- ifel(is.na(ocean_raw), 0, ocean_raw)
+land <- 1-(land*coastal)
+regions_sf <- sf::st_read(here("_spatial/meow_rgns/meow_rgns.shp")) %>%
+  mutate(RLM_CODE = as.numeric(RLM_CODE)) %>%
+  sf::st_transform(crs = "+proj=moll")
+
+regions <- fasterize::fasterize(regions_sf, raster::raster(land), field="RLM_CODE") 
+
+regions <- rast(regions) * coastal
+
+
+stack <- c(light_time1, light_time2, gdp_time1, gdp_time2, pop_t1, pop_t2, land, regions)
+mod1_df <- as.data.frame(stack) 
+names(mod1_df) <- c("light_time1", "light_time2", "gdp_time1", "gdp_time2", "pop_time1", "pop_time2", "prop_land", "region")
+mod1_df <- mod1_df %>%
+  mutate(light_change = light_time2 - light_time1,
+         gdp_change = gdp_time2 - gdp_time1,
+         pop_change = pop_time2 - pop_time1,
+         region = as.factor(region))
+
+plot(light_change~gdp_change + pop_change, data=mod1_df, pch=16, cex=0.1)
+
+# definitely a relationship, but a weak one.
+tmp <- lm(light_change ~ gdp_change*pop_change , data=mod1_df)
+summary(tmp)
+
+rf <-randomForest(light_change ~ gdp_change + pop_change + prop_land + region + light_time1 + gdp_time2 + pop_time2, data=mod1_df, ntree=100, na.action=na.omit) 
+
+rf
+
+
+```
+
+Resample to coarser resolution:
+
+```{r}
+
+coastal_adj <- aggregate(coastal, fact=2, fun="max", na.rm=TRUE)
+plot(coastal_adj)
+ext(coastal_adj)
+
+
+gdp_time1 <- rast("/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-per-km2-extended_current_2001_2005.tif")
+gdp_time2 <-rast("/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-per-km2-extended_current_2016_2020.tif")
+light_time1 <- rast("/Users/frazier/Desktop/gdp_wang/lights/prep/light_current_2001_2005.tif")
+light_time2 <- rast("/Users/frazier/Desktop/gdp_wang/lights/prep/light_current_2016_2020.tif")
+land <- ifel(is.na(ocean_raw), 0, ocean_raw)
+land <- 1-(land)
+
+stack <- c(light_time1, light_time2, gdp_time1, gdp_time2, pop_t1, pop_t2, land)
+
+
+stack_lowres <- aggregate(stack, fact=2, fun="mean", na.rm=TRUE) * coastal_adj
+
+
+regions_sf <- sf::st_read(here("_spatial/meow_rgns/meow_rgns.shp")) %>%
+  mutate(RLM_CODE = as.numeric(RLM_CODE)) %>%
+  sf::st_transform(crs = "+proj=moll")
+
+regions <- fasterize::fasterize(regions_sf, raster::raster(land), field="RLM_CODE") 
+
+regions <- rast(regions)
+
+regions_lowres <- aggregate(regions, fact=2, fun="median", na.rm=TRUE) * coastal_adj
+
+
+stack <- c(stack_lowres, regions_lowres)
+mod1_df <- as.data.frame(stack) 
+names(mod1_df) <- c("light_time1", "light_time2", "gdp_time1", "gdp_time2", "pop_time1", "pop_time2", "prop_land", "region")
+mod1_df <- mod1_df %>%
+  mutate(light_change = light_time2 - light_time1,
+         gdp_change = gdp_time2 - gdp_time1,
+         pop_change = pop_time2 - pop_time1,
+         region = as.factor(region))
+
+
+rf <-randomForest(light_change ~ gdp_change + pop_change + prop_land + region + light_time1 + gdp_time2 + pop_time2, data=mod1_df, ntree=100, na.action=na.roughfix) 
+
+rf
+
+mod1_df$predicted_light_change <- predict(rf)
+  
+mod1_df <- mod1_df %>%
+  mutate(predicted_light = light_time1 + predicted_light_change)
+plot(mod1_df$light_time2, mod1_df$predicted_light )
+abline(0,1, col="red")
+
+check <- lm(light_time2, predicted_light, data=mod1_df)
+summary(check)
+
+plot(mod1_df$light_time1, mod1_df$light_time2)
+```
+
+```{r}
+current_light <- rast("/Users/frazier/Desktop/gdp_wang/lights/prep/light_current.tif") * coastal
+gdp <- rast("/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-per-km2-extended_current.tif") * coastal
+pop <- rast("/Users/frazier/Desktop/gdp_wang/human-pop-density-km2_2010_2020_SSP1_RCP2_6.tif") * coastal
+land <- ifel(is.na(ocean_raw), 0, ocean_raw)
+land <- 1-(land*coastal)
+
+mod1 <- c(current_light, gdp, pop, land)
+mod1_df <- as.data.frame(mod1)
+names(mod1_df) <- c("light", "gdp", "pop", "land")
+mod1_df <- mod1_df %>%
+  filter(!is.na(light)) %>%
+  mutate(pcGDP = log(gdp+1)/log(pop+1),
+         logGDP = log(gdp + 1),
+         logpop = log(pop + 1)) %>%
+  filter(!is.infinite(pcGDP))
+
+summary(mod1_df)
+
+plot(light~log(gdp+1), data=mod1_df, pch=16, cex=0.1)
+plot(light~log(pop+1), data=mod1_df, pch=16, cex=0.1)
+
+
+# definitely a relationship, but a weak one.
+tmp <- lm(light ~ logGDP + logpop + land, data=mod1_df)
+summary(tmp)
+
+tmp2 <- lm(light ~ logGDP * logpop* land , data=mod1_df)
+summary(tmp2)
+
+```
+
+Up to \>0.5 Adjusted R2. Not amazing...but more respectable. Try random forest.
+
+https://arbor-analytics.com/post/2021-09-26-random-forests-a-tutorial-with-forestry-data/
+
+https://www.listendata.com/2014/11/random-forest-with-r.html
+
+```{r}
+library(randomForest)
+
+set.seed(71)
+rf <-randomForest(light ~ gdp + pop + land, data=mod1_df, ntree=100, na.action=na.roughfix) 
+
+rf # %variance explained = 64%
+
+plot(mod1_df$light, predict(rf))
+
+rf2 <-randomForest(light ~ logGDP + logpop + pcGDP + land, data=mod1_df, ntree=100, na.action=na.omit)
+rf2
+# 64% explained here. No improvements using logged data.
+
+```
+
+Try adjusting resolution:
+
+```{r}
+coastal_adj <- aggregate(coastal, fact=2, fun="max", na.rm=TRUE)
+plot(coastal_adj)
+ext(coastal_adj)
+
+current_light_adj <- rast("/Users/frazier/Desktop/gdp_wang/lights/prep/light_current.tif") 
+current_light_adj <- aggregate(current_light_adj, fact=2, fun="mean", na.rm=TRUE) * coastal_adj
+ext(current_light_adj)
+
+gdp_adj <- rast("/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-per-km2-extended_current.tif") 
+gdp_adj <- aggregate(gdp_adj, fact=2, fun="mean", na.rm=TRUE) * coastal_adj
+ext(gdp_adj)
+
+pop_adj <- rast("/Users/frazier/Desktop/gdp_wang/human-pop-density-km2_2010_2020_SSP1_RCP2_6.tif") * coastal
+pop_adj <- aggregate(pop_adj, fact=2, fun="mean", na.rm=TRUE) * coastal_adj
+ext(pop_adj)
+
+land_adj <- ifel(is.na(ocean_raw), 0, ocean_raw)
+land_adj <- aggregate(land_adj, fact=2, fun="mean", na.rm=TRUE)
+land_adj <- 1-(land_adj*coastal_adj)
+ext(land_adj)
+
+mod1 <- c(current_light_adj, gdp_adj, pop_adj, land_adj)
+mod1_df <- as.data.frame(mod1)
+names(mod1_df) <- c("light", "gdp", "pop", "land")
+mod1_df <- mod1_df %>%
+  filter(!is.na(light)) %>%
+  mutate(pcGDP = log(gdp+1)/log(pop+1),
+         logGDP = log(gdp + 1),
+         logpop = log(pop + 1)) %>%
+  filter(!is.infinite(pcGDP))
+
+## 68% of variance explained...not a huge difference, but better. Not sure if this worth the loss in resolution, although it might ease some NA issues.
+set.seed(71)
+rf <-randomForest(light ~ gdp + pop + land , data=mod1_df, ntree=200, na.action=na.omit) 
+
+
+```
+
+## Try adding in georegion
+
+```{r}
+regions <- sf::st_read(here("_spatial/meow_rgns/meow_rgns.shp")) %>%
+  mutate(RLM_CODE = as.numeric(RLM_CODE)) %>%
+  sf::st_transform(crs = "+proj=moll")
+
+regions_adj <- fasterize::fasterize(regions, raster::raster(gdp_adj), field="RLM_CODE") 
+plot(regions_adj)
+
+regions_adj <- rast(regions_adj) * coastal_adj
+
+
+mod1 <- c(current_light_adj, gdp_adj, pop_adj, land_adj, regions_adj)
+mod1_df <- as.data.frame(mod1)
+names(mod1_df) <- c("light", "gdp", "pop", "land", "region")
+mod1_df <- mod1_df %>%
+  filter(!is.na(light)) %>%
+  mutate(pcGDP = log(gdp+1)/log(pop+1),
+         logGDP = log(gdp + 1),
+         logpop = log(pop + 1),
+         region = as.factor(region)) %>%
+  filter(!is.infinite(pcGDP))
+
+rf <-randomForest(light ~ gdp + pop + land + region, data=mod1_df, ntree=200, na.action=na.omit) 
+
+# 73% of variance explained.
+```
