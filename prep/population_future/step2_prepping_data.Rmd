@@ -33,7 +33,11 @@ ocean_raw <- terra::rast(here("_spatial/ocean_area_mol.tif"))
 ocean <- ocean_raw
 ocean[ocean >0] <- 1
 
-## need land area
+## need land area (no longer used:
+## Originally, I thought it would be better to divide the
+## population by the amount of actual land in the cell
+## (vs. the total cell area),
+## but then I realized we are calculating pressure across the entire cell...not just the land, so if we calculated density based on land area, but land occupies 25% of the cell, the pressure in the cell would then be multiplied by 0.25.)
 prop_land <- 1-ocean_raw 
 prop_land[is.na(prop_land)] <- 1
 land_area_km2 <- prop_land*100 # each cell is 100 km2
@@ -104,57 +108,48 @@ prep_rast <- function(scen = "SSP5_RCP8_5"){ # scen = scenarios[1]
   # aggregate the data to be similar to our target resolution
   avg_pop_agg <- terra::aggregate(avg_pop, fact=10, fun="sum", na.rm=TRUE)
   
-  # convert to density (people/km2) in order to saftly project
-  avg_pop_density <- avg_pop_agg/terra::cellSize(avg_pop_agg)
-  avg_density_mol <- terra::project(avg_pop_density, ocean)
-  
-  # convert back to number of people per cell after projecting
-  avg_pop_mol <- avg_density_mol*10000*10000
-  
-  #calculate density (people per km2) using the actual land area, accounting for area of land in cells that land on ocean and land
-  shoreline_density_km2 <- avg_pop_mol/land_area_km2
-  
-  # some points have people but no land, these are Infs. Checking it out here.
-  # Doesn't seem to be a large number...convert these to NA values.
-# inf_vals <- ifel(is.infinite(shoreline_density_km2), 1, NA)
-#plot(inf_vals)
-#  global(invals, sum, na.rm=TRUE)
-#  plot(ocean_moll_sf, add=TRUE, color=NA)
-#  people <- inf_vals*avg_pop_mol
-#  global(people, sum, na.rm=TRUE)
-#  global(avg_pop_mol, sum, na.rm=TRUE)
-  
-  shoreline_density_km2 <- ifel(is.infinite(shoreline_density_km2), NA, shoreline_density_km2)
-  
-  ## get the offshore density estimate, average of nearby land cells
-  offshore_density_km2 <- terra::focal(shoreline_density_km2, w=3, fun=mean, na.rm=TRUE, na.policy="only")
+  # convert to density (people/km2) in order to safely project
+  avg_pop_density <- avg_pop_agg/terra::cellSize(avg_pop_agg, unit="km")
+
+      shoreline_density_km2 <- terra::project(avg_pop_density, ocean)
+  # terra::global(shoreline_density_km2, "sum", na.rm=TRUE)*100
+#cellSize(shoreline_density_km2, unit="km")
+      
+  ## get the nearshore disturbance estimate, average population density of nearby land and ocean cells (these are zero population) 
+  offshore_density_km2 <- ifel(is.na(shoreline_density_km2), 0, shoreline_density_km2) 
+
+offshore_density_km2 <-   terra::focal(offshore_density_km2, w=3, fun=mean, na.rm=TRUE)
       
   offshore_density_km2 <- offshore_density_km2*ocean 
-    
+
 # check that things look ok!    
 #  extent <- terra::ext(1e7, 1.25e7, 3e6, 5e6)  
-#plot(terra::crop(log(shoreline_density_km2+1), extent))
-#plot(terra::crop(log(offshore_density_km2+1), extent))
-      
-  ## combine shoreline and offshore regions
+# extent <- terra::ext(1e7, 1.15e7, 4e6, 5e6) 
+  # extent <- terra::ext(1.09e7, 1.12e7, 4.4e6, 4.7e6) 
+#plot(terra::crop(log(shoreline_density_km2_cell+1), extent))
+#plot(terra::crop(log(offshore_density_km2_cell+1), extent))
+# plot(terra::crop(terra::ifel(offshore_density_km2_cell>0, 1, NA), extent))     
+# plot(terra::ifel(offshore_density_km2_cell>0, 1, NA))     
+
+    ## combine shoreline and offshore regions
   total <- terra::ifel(is.na(shoreline_density_km2), offshore_density_km2, shoreline_density_km2)  
     
+  # global(total, "sum", na.rm=TRUE)*100
   #plot(terra::crop(log(total+1), extent))
+  #plot(ocean_moll_sf, add=TRUE, color=NA) # from below
 
   terra::writeRaster(total, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/population/pop_density_km2_ocean_expand/human-pop-density-km2_%s_%s.tif",
               gsub(":", "_", yrs), scen), overwrite=TRUE)
 
   }
   }
-# this many cells at native resolution: 722520000
-# after agg: 1673*4320
-# population: 7205132735
+
 
 ```
 
 Run function on all scenarios.
 ```{r}
-for(scenario in scenarios[4:6]){ #scenario= scenarios[1]
+for(scenario in scenarios){ #scenario= scenarios[1]
   prep_rast(scen=scenario)
   }
 
@@ -207,7 +202,7 @@ ocean_only <- terra::rast(file)
 #  extent <- terra::ext(1e7, 1.25e7, 3e6, 5e6)  
 #plot(terra::crop(log(land_only+1), extent))
 file_name <- basename(file)
-file_name <- gsub("-km2", "-km2_ocean-gf", file_name)
+file_name <- gsub("-km2", "-km2-ocean-gf", file_name)
 
 # gapfill 10 cells out into the ocean - using a fairly large window here.
 ocean_gf <- ocean_only
@@ -309,11 +304,11 @@ plot(terra::crop(rescale_raster_coast, extent))
 ## determine quantile value used for rescaling
 global(rescale_raster_coast, fun= function(x) {quantile(x, probs=c(0.99, 0.999, 0.9999), na.rm=TRUE)})
 
-test1 <- terra::ifel(rescale_raster_coast >= 10.33508, 1, NA)
+test1 <- terra::ifel(rescale_raster_coast >= 10.55184, 1, NA)
 plot(as.points(test1), col="red")
 plot(ocean_moll_sf, add=TRUE, color=NA)
 
-test2 <- terra::ifel(rescale_raster_coast >= 8.48, 1, NA)
+test2 <- terra::ifel(rescale_raster_coast >= 9.24, 1, NA)
 plot(as.points(test2), col="red")
 plot(ocean_moll_sf, add=TRUE, color=NA)
 
