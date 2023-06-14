@@ -116,11 +116,10 @@ prep_rast <- function(scen = "SSP5_RCP8_5"){ # scen = scenarios[1]
 #cellSize(shoreline_density_km2, unit="km")
       
   ## get the nearshore disturbance estimate, average population density of nearby land and ocean cells (these are zero population) 
-  offshore_density_km2 <- ifel(is.na(shoreline_density_km2), 0, shoreline_density_km2) 
+  offshore_density_km2_noNA <- ifel(is.na(shoreline_density_km2), 0, shoreline_density_km2) 
 
-offshore_density_km2 <-   terra::focal(offshore_density_km2, w=3, fun=mean, na.rm=TRUE)
+offshore_density_km2_noNA_smoothed <-   terra::focal(offshore_density_km2_noNA, w=3, fun=mean, na.rm=TRUE)
       
-  offshore_density_km2 <- offshore_density_km2*ocean 
 
 # check that things look ok!    
 #  extent <- terra::ext(1e7, 1.25e7, 3e6, 5e6)  
@@ -132,7 +131,7 @@ offshore_density_km2 <-   terra::focal(offshore_density_km2, w=3, fun=mean, na.r
 # plot(terra::ifel(offshore_density_km2_cell>0, 1, NA))     
 
     ## combine shoreline and offshore regions
-  total <- terra::ifel(is.na(shoreline_density_km2), offshore_density_km2, shoreline_density_km2)  
+  total <- terra::ifel(is.na(shoreline_density_km2), offshore_density_km2_noNA_smoothed, shoreline_density_km2)  
     
   # global(total, "sum", na.rm=TRUE)*100
   #plot(terra::crop(log(total+1), extent))
@@ -217,7 +216,7 @@ ocean_gf <- terra::focal(ocean_gf, w=9, fun=mean, na.rm=TRUE)
 
 # plot(ocean_gf)
 
-ocean_gf <- ocean_gf * ocean_cells
+ocean_gf_save <- ifel(is.na(ocean_only), ocean_gf, ocean_only)
 #  extent <- terra::ext(1e7, 1.15e7, 4e6, 5e6)  
 #plot(terra::crop(log(ocean_gf+1), extent))
 

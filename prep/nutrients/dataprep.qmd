@@ -30,6 +30,18 @@ https://www.sciencedirect.com/science/article/pii/S0959378021002053#f0015
 | Nconc                |      | kg N L-1  | Nitrogen concentration                                                                                                                                             |
 | Sgd                  | 0.3  | kg N yr-1 | Nitrogen load of submarine groundwater discharge to the ocean                                                                                                      |
 
+Inputs -- \> delivery to surface waters (loading) -- \> export to ocean
+
+A B
+
+A = retention by crops, sewage treatment, etc.
+
+B = In stream retention
+
+> The difference between the nutrients delivered to surface water ([Fig. 7](https://www.sciencedirect.com/science/article/pii/S0959378021002053#f0035)) and the river export to the coastal ocean ([Fig. 3](https://www.sciencedirect.com/science/article/pii/S0959378021002053#f0015), [Fig. 4](https://www.sciencedirect.com/science/article/pii/S0959378021002053#f0020)) is caused by the in-stream retention ([Figure S2](https://www.sciencedirect.com/science/article/pii/S0959378021002053#s0125)). Global in-stream N (40--41%) and P retention (54--55%) is stable and not expected to change drastically in the future scenarios. Overall N retention in rivers in IND countries is close the global retention fraction, while that in ROW countries is lower (37--38%).
+>
+> Current global river export amounts to 43 Tg yr^−1^ of N and 5 Tg yr^−1^ of P ([Fig. 8](https://www.sciencedirect.com/science/article/pii/S0959378021002053#f0040) and [Figure S7](https://www.sciencedirect.com/science/article/pii/S0959378021002053#s0125)). Global river N export is expected to decline by 5% in SSP1 and to increase in all other scenarios, most rapidly in SSP3 (close to + 20%). Natural sources of N and P show no significant change, but SSP1 shows a decrease of agricultural N (-15%) and P (-7%), while there are major increases in river export from agricultural sources in all other scenarios (+33% for N and + 18% for P in SSP3). N originating from sewage declines in SSP1 and increases in all other SSPs, while P from sewage increases in all scenarios (up to + 49% for P in SSP2). No major changes are projected for the [Arctic ocean](https://www.sciencedirect.com/topics/earth-and-planetary-sciences/arctic-ocean "Learn more about Arctic ocean from ScienceDirect's AI-generated Topic Pages"), while in the Atlantic and Pacific Oceans there is a difference between SSP1 (no major change), and the other scenarios where sewage and agriculture have increasing trends. The most important increase of river nutrient export is projected for the Indian Ocean, where agricultural sources (highest + 60% for N and + 29% for P in SSP3) and sewage (highest + 203% for P in SSP2, \>155% for N in SSP1 and SSP4) show large increases.
+
 \*\*Native data resolution\*\*: 0.5 degree
 
 \*\*Time range\*\*: projection 1970-2070, 5 year periods (SSP1_RCP4_5, SSP2_RCP6, SSP3_RCP6, SSP4_RCP6, SSP5_RCP8_5, note: these are not typical combinations of ssp and rcp values.)
@@ -58,6 +70,10 @@ scenarios <- c("SSP1",
                "SSP5")
 
 ```
+
+Considering only direct human sources:
+
+\>Delivery is the [direct discharge](https://www.sciencedirect.com/topics/earth-and-planetary-sciences/direct-discharger "Learn more about direct discharge from ScienceDirect's AI-generated Topic Pages") to surface water from aquaculture and the from sewage in the human system, for agriculture and natural systems nutrients are delivered through groundwater discharge and surface runoff, and for natural systems including atmospheric nitrogen deposition onto surface water and nitrogen in litter from vegetation in flooded areas.
 
 ```{r}
 
@@ -119,13 +135,15 @@ cat("num rasts included: ", names(Nsewage), "\n")
 Nsewage_avg <- calc(Nsewage, mean, na.rm=TRUE)
 
 inputs <- stack(Nrun_ag_avg, Nground_ag_avg,
-                Nveg_avg, Naq_avg, Nsewage_avg)
+                Naq_avg, Nsewage_avg)
 input_n <- calc(inputs, sum, na.rm=TRUE)
 export_n <- input_n * (1 - 0.4) # general accounting for loss in waterways 
 #cellStats(input_n, sum, na.rm=TRUE)/1e9
-#plot(input_n)
+#cellStats(export_n, sum, na.rm=TRUE)/1e9 # should be about 43 Tg per year
+#plot(log(input_n + 1))
 writeRaster(export_n, sprintf("/home/shares/ohi/stressors_2021/_dataprep/nutrients/export_to_ocean/export_n_%s_%s.tif", scenario, range), overwrite=TRUE)
 }
 }
+list.files("/home/shares/ohi/stressors_2021/_dataprep/nutrients/export_to_ocean")
 
 ```

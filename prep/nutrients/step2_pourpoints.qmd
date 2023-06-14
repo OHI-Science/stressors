@@ -1,0 +1,146 @@
+---
+title: "relevant files"
+format: html
+editor: visual
+---
+
+\# Summary
+
+This document describes the location of the underlying plume data.
+
+```{r}
+## Initial set-up code
+
+library(tidyverse)
+library(raster)
+library(sf)
+library(mapview)
+library(janitor)
+library(here)
+library(parallel)
+library(doParallel)
+library(terra)
+
+
+source(here('workflow/R/common.R'))
+
+ww_raw_dir <- "/home/shares/ohi/git-annex/land-based/wastewater/data/raw"
+
+ww_intermediate_dir <- "/home/shares/ohi/git-annex/land-based/wastewater/data/interim"
+prs_int_dir <- "/home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v2022/int"
+prep <- file.path("/home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v2022")
+
+
+```
+
+\
+##Watersheds; read in, reproject to EPSG 4326, and combine into one file.
+
+DO NOT RUN! Here for reference only!
+
+```{r}
+watersheds_af <- st_read(file.path(ww_raw_dir, "basins_laea/af_bas.shp")) %>%
+  clean_names() %>%
+  dplyr::select(id, gridcode, area, basin_id) ## select columns of interest
+crs(watersheds_af) ## check CRS
+# plot(watersheds_af$geometry)
+watersheds_af <- st_transform(watersheds_af, 4326) ## change CRS to 4326
+# plot(watersheds_af$geometry)
+crs(watersheds_af)
+#st_write(watersheds_af, file.path(prs_int_dir, "watersheds/watersheds_af_4326.shp")) ## write transformed file to mazu. 
+
+watersheds_au <- st_read(file.path(ww_raw_dir, "basins_laea/au_bas.shp")) %>%
+    clean_names() %>%
+  dplyr::select(id, gridcode, area, basin_id)
+plot(watersheds_au$geometry)
+watersheds_au <- st_transform(watersheds_au, 4326)
+plot(watersheds_au$geometry)
+crs(watersheds_au)
+#st_write(watersheds_au, file.path(prs_int_dir, "watersheds/watersheds_au_4326.shp"))
+
+watersheds_eu <- st_read(file.path(ww_raw_dir, "basins_laea/eu_bas.shp")) %>%
+    clean_names() %>%
+  dplyr::select(id, gridcode, area, basin_id)
+plot(watersheds_eu$geometry)
+watersheds_eu <- st_transform(watersheds_eu, 4326) 
+crs(watersheds_eu)
+#st_write(watersheds_eu, file.path(prs_int_dir, "watersheds/watersheds_eu_4326.shp"))
+
+watersheds_na <- st_read(file.path(ww_raw_dir, "basins_laea/na_bas.shp")) %>%
+  #filter(ID == 79890) %>% 
+    clean_names() %>%
+  dplyr::select(id, gridcode, area, basin_id)
+plot(watersheds_na$geometry)
+watersheds_na <- st_transform(watersheds_na, 4326) 
+plot(watersheds_na$geometry)
+crs(watersheds_na)
+#st_write(watersheds_na, file.path(prs_int_dir, "watersheds/watersheds_na_4326.shp"))
+
+watersheds_pa <- st_read(file.path(ww_raw_dir, "basins_laea/pa_bas.shp")) %>%
+    clean_names() %>%
+  dplyr::select(id, gridcode, area, basin_id)
+plot(watersheds_pa$geometry)
+watersheds_pa <- st_transform(watersheds_pa, 4326) 
+plot(watersheds_pa$geometry)
+crs(watersheds_pa)
+#st_write(watersheds_pa, file.path(prs_int_dir, "watersheds/watersheds_pa_4326.shp"))
+
+watersheds_sa <- st_read(file.path(ww_raw_dir, "basins_laea/sa_bas.shp")) %>%
+    clean_names() %>%
+  dplyr::select(id, gridcode, area, basin_id)
+plot(watersheds_sa$geometry)
+watersheds_sa <- st_transform(watersheds_sa, 4326) 
+crs(watersheds_sa)
+#st_write(watersheds_sa, file.path(prs_int_dir, "watersheds/watersheds_sa_4326.shp"))
+
+watersheds_as <- st_read(file.path(ww_raw_dir, "basins_laea/as_bas.shp")) %>%
+    clean_names() %>%
+  dplyr::select(id, gridcode, area, basin_id)
+plot(watersheds_as$geometry)
+watersheds_as <- st_transform(watersheds_as, 4326) 
+crs(watersheds_as)
+#st_write(watersheds_as, file.path(prs_int_dir, "watersheds/watersheds_as_4326.shp"))
+
+watersheds_all <- rbind(watersheds_eu, watersheds_au, watersheds_na, watersheds_pa, watersheds_af, watersheds_sa, watersheds_as) ## bind all of these files together to make the global watershed files with CRS 4326. 
+#plot(watersheds_all$geometry)
+
+#st_write(watersheds_all, file.path(prs_int_dir, "watersheds/watersheds_all_4326.shp"))
+
+```
+
+Pourpoints
+
+```{r}
+
+global_plume <- st_read("/home/shares/ohi/git-annex/land-based/wastewater/data/raw/pour_points/global_plume_2007_2010.shp")
+
+# plot(global_plume$geometry)
+mapview(tail(global_plume, 10000))
+
+
+#st_write(global_plume, "/home/shares/ohi/stressors_2021/_dataprep/nutrients/watersheds_pourpoints/pourpoints_mol.shp")
+
+# only the coastal pourpoints
+coastal_pourpoints <- st_read("/home/shares/ohi/git-annex/land-based/wastewater/data/interim/watersheds_coastal.shp")
+
+st_write(coastal_pourpoints, "/home/shares/ohi/stressors_2021/_dataprep/nutrients/watersheds_pourpoints/coastal_pourpoints.shp")
+
+
+```
+
+Ocean mask
+
+```{r}
+ocean_mask <- rast("/home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v2022/int/ocean_masks/ocean_mask.tif")
+
+writeRaster(ocean_mask, "/home/shares/ohi/stressors_2021/_dataprep/nutrients/watersheds_pourpoints/ocean_mask.tif")
+```
+
+Final output format
+
+```{r}
+## what Gage's final output looks like
+tmp <- list.files("/home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v2022/int/pourpoints", full=TRUE)
+tmp_rast <- st_read(tmp[64])
+tmp_rast
+```

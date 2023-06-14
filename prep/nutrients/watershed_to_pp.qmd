@@ -1,0 +1,149 @@
+---
+title: "step3"
+format: html
+editor: visual
+---
+
+This script prepares the N pourpoint shapefiles, which will be fed into the plume model. Here we aggregate each N raster to the appropriate watershed, and eventually the appropriate pourpoint.
+
+\## The following data are used:
+
+\* N leaching and volatilization rasters created in previous step 1.
+
+\* Global watersheds and pourpoint datasets (associated with original plume model, locations of data described in step 2)
+
+```{r}
+library(tidyverse)
+library(raster)
+library(sf)
+library(mapview)
+library(janitor)
+library(here)
+library(parallel)
+library(doParallel)
+library(terra)
+
+```
+
+```{r}
+
+
+export_files <- list.files("/home/shares/ohi/stressors_2021/_dataprep/nutrients/export_to_ocean", full=TRUE, pattern = "_n_SSP")
+
+for(export_file in export_files){
+#export_file <- export_files[1]
+saveName = basename(export_file)
+saveName = gsub("export_n", "export_n_highres", saveName)
+N <- rast(export_file)
+  
+#plot(terra::cellSize(N, unit="km"))
+N_per_area <- N/cellSize(N, unit="km") 
+
+dis_rast <- disagg(N_per_area, fact=50, method="near", progress=TRUE)
+#plot(terra::cellSize(dis_rast, unit="km"))
+
+dis_rast_N <- dis_rast*cellSize(dis_rast, unit="km")
+
+#global(dis_rast_N, "sum", na.rm = TRUE) # 30950844300 it worked!
+#global(N, "sum", na.rm = TRUE) # 30950886799
+
+writeRaster(dis_rast_N, sprintf("/home/shares/ohi/stressors_2021/_dataprep/nutrients/export_to_ocean/%s", saveName), overwrite=TRUE)
+}
+
+
+```
+
+Sum the amount of N in each watershed and save as a csv file.
+
+```{r}
+
+watershed_all <- st_read(file.path("/home/shares/ohi/stressors_2021/_dataprep/nutrients/watersheds_pourpoints/watersheds_all_4326.shp"))
+#mapview(tail(watershed_all, 10000))
+
+library(exactextractr)
+
+rast_files <- list.files("/home/shares/ohi/stressors_2021/_dataprep/nutrients/export_to_ocean", full = TRUE, pattern="highres") ## read in disaggregated raster
+
+for(rast_file in rast_files){
+# rast_file <- rast_files[15]
+
+saveName <- gsub(".tif", "", basename(rast_file))
+saveName <- gsub("export_n_highres_", "", saveName)
+  
+rast <- raster(rast_file)
+# cellStats(rast, "sum") #39762880064 # this should match the table output below closesly
+
+zs <- exactextractr::exact_extract(rast(rast), watershed_all, 'sum', append_cols = "basin_id", progress = TRUE)
+
+write_csv(zs, sprintf("/home/shares/ohi/stressors_2021/_dataprep/nutrients/pourpoint_summary/%s.csv", saveName))
+
+}
+
+
+```
+
+Combine watersheds zonal stats with pourpoints data
+
+```{r}
+
+pourpoints <- st_read("/home/shares/ohi/stressors_2021/_dataprep/nutrients/watersheds_pourpoints/pourpoints_mol.shp")
+mapview(tail(pourpoints, 10000))
+
+# dupes occurring in the pourpoint file for some reason, all geographically close, so just selecting the first one in all cases.
+dups <- pourpoints$basin_id[duplicated(pourpoints$basin_id)]
+
+pourpoints_dups <- pourpoints %>%
+  filter(basin_id %in% dups) %>%
+  group_by(basin_id) %>%
+  slice(1)
+
+mapview(pourpoints_dups)
+
+pourpoints_no_dups <- pourpoints %>%
+  filter(!(basin_id %in% dups)) %>%
+  rbind(pourpoints_dups) %>%
+  filter(!is.na(basin_id)) %>%
+  dplyr::select(-SUM_FERTC, -SUM_PESTC,-SUM_IMPV)
+
+# all looks copecetic
+dim(pourpoints_no_dups)
+dim(watershed_all)
+setdiff(watershed_all$basin_id, pourpoints_no_dups$basin_id)
+setdiff(pourpoints_no_dups$basin_id, watershed_all$basin_id)
+
+
+coastal_pourpoints <- st_read("/home/shares/ohi/stressors_2021/_dataprep/nutrients/watersheds_pourpoints/coastal_pourpoints.shp")
+
+coastal_pp_ids <- unique(coastal_pourpoints$basin_id)
+
+
+watershed_N_files <- list.files("/home/shares/ohi/stressors_2021/_dataprep/nutrients/pourpoint_summary/", full=TRUE)
+
+for(file in watershed_N_files){             
+  # file <- watershed_N_files[1]
+  saveName <- basename(file)
+  saveName <- gsub(".csv", "", saveName) 
+
+watershed_N <- read.csv(file)  %>%
+  rename(effluent = sum)
+
+length(unique(watershed_N$basin_id)) # 142641 
+
+ws_pp_zonal_all <- left_join(watershed_N, pourpoints_no_dups, by = "basin_id") %>%
+  filter(basin_id %in% coastal_pp_ids) %>%
+  filter(effluent > 0) %>%
+  mutate(effluent = effluent/100,
+         effluent = round(effluent,0)) %>%
+  filter(effluent > 0) %>%
+  st_as_sf() # n=76190
+
+#sum(ws_pp_zonal_all$total_N)
+#sum(as.numeric(ws_pp_zonal_all$total_N))
+
+st_write(ws_pp_zonal_all, sprintf("/home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_data/%s.shp", saveName),delete_dsn = TRUE)
+}
+
+check <- list.files("/home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_data/")
+check <- st_read()
+
+```
