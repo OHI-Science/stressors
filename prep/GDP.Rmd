@@ -61,7 +61,7 @@ plot(boundary_mask_mol)
 ## Defining years to use
 ```{r}
 
-current_years <- "2014|2015|2016|2017|2018"
+current_years <- "2016|2017|2018|2019|2020"
 current_years_2001_2005 <- "2001|2002|2003|2004|2005"
 current_years_2016_2020 <- "2016|2017|2018|2019|2020"
 
@@ -105,7 +105,7 @@ prep_rast <- function(scen = "SSP5_RCP8_5"){ # scen = scenarios[1]
   
       time_frame <- years_select$time_frame[years_select$year_range == yrs]
       
-  all_files <- list.files("/Users/frazier/Desktop/gdp_wang/v7", full=TRUE)
+  all_files <- list.files("/Users/frazier/Desktop/gdp_wang/gdp_wang_v7/", full=TRUE)
   subset_files <- grep(scen, all_files, value=TRUE)
   subset_files <- grep(yrs, subset_files, value=TRUE)
   
@@ -126,14 +126,19 @@ terra::writeRaster(gdp_per_km2, sprintf("/Users/frazier/Desktop/gdp_wang/prep/gd
 
   ## get the nearshore gdp estimate, average of nearby land and ocean cells (these are zero gdp, following same protocol as in human population script) 
   ## get the nearshore disturbance estimate, average population density of nearby land and ocean cells (these are zero population) 
+  offshore_gdp_km2_NAs <- ifel(gdp_per_km2==0, NA, gdp_per_km2)
   offshore_gdp_km2 <- ifel(is.na(gdp_per_km2), 0, gdp_per_km2) 
 
+  # gapfill 3 cells out into the ocean.
+  # ocean areas with no gdp are being averaged with zero values.
+for(i in 1:3){
+  i=1+i
 offshore_gdp_km2 <-   terra::focal(offshore_gdp_km2, w=3, fun=mean, na.rm=TRUE)
-      
-  offshore_gdp_km2 <- offshore_gdp_km2*ocean 
+}
 
+  
     ## combine shoreline and offshore regions
-  total <- terra::ifel(is.na(gdp_per_km2), offshore_gdp_km2, gdp_per_km2)  
+  total <- terra::ifel(is.na(offshore_gdp_km2_NAs), offshore_gdp_km2, offshore_gdp_km2_NAs)  
 
   
 terra::writeRaster(total, sprintf("/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-per-km2-extended_%s_%s.tif", scen, time_frame), overwrite=TRUE)
@@ -154,12 +159,12 @@ for(scenario in scenarios){ #scenario= scenarios[1]
 Get current years
 ```{r}
 
-current_rasters <- function(years_to_include=current_years, name="current"){
-  all_files <- list.files("/Users/frazier/Desktop/gdp_wang/v7", full=TRUE)
+current_rasters <- function(years_to_include=current_years, name="current_years"){
+  all_files <- list.files("/Users/frazier/Desktop/gdp_wang/gdp_wang_v7", full=TRUE)
   subset_files <- grep(years_to_include, all_files, value=TRUE)
   
   stack_rasters <- terra::rast(subset_files)
-  cat(scen, ", ", yrs, ",  N=", length(subset_files), "\n")
+  cat(name, ", ", years_to_include, ",  N=", length(subset_files), "\n")
   
   # get mean gdp per cell across relevant window of years
   avg_gdp <- terra::app(stack_rasters, "mean", na.rm=FALSE, progress=0)
@@ -175,14 +180,16 @@ terra::writeRaster(gdp_per_km2, "/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-pe
 
   ## get the nearshore gdp estimate, average of nearby land and ocean cells (these are zero gdp, following same protocol as in human population script) 
   ## get the nearshore disturbance estimate, average population density of nearby land and ocean cells (these are zero population) 
+  offshore_gdp_km2_NAs <- ifel(gdp_per_km2==0, NA, gdp_per_km2)
   offshore_gdp_km2 <- ifel(is.na(gdp_per_km2), 0, gdp_per_km2) 
 
+  
+for(i in 1:3){
+  i=1+i  
 offshore_gdp_km2 <-   terra::focal(offshore_gdp_km2, w=3, fun=mean, na.rm=TRUE)
-      
-  offshore_gdp_km2 <- offshore_gdp_km2*ocean 
-
+}      
     ## combine shoreline and offshore regions
-  total <- terra::ifel(is.na(gdp_per_km2), offshore_gdp_km2, gdp_per_km2)  
+  total <- terra::ifel(is.na(offshore_gdp_km2_NAs), offshore_gdp_km2, offshore_gdp_km2_NAs)  
 
   
 terra::writeRaster(total, sprintf("/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-per-km2-extended_%s.tif", as.character(name)), overwrite=TRUE)
@@ -194,51 +201,6 @@ current_rasters(years_to_include=current_years_2001_2005,
   name= "current_2001_2005")
 current_rasters(years_to_include=current_years_2016_2020, 
   name= "current_2016_2020")
-
-```
-
-Ocean only, which is gapfilled based on nearby land values (I'm not sure this will be useful for predicting other variables, but I am going to give it a try).
-
-```{r}
-
-land_cells <- ifel(prop_land>0, 1, NA)
-ocean_cells <- ifel(is.na(land_cells), 1, NA)
-
-file_list <- list.files("/Users/frazier/Desktop/gdp_wang/prep/gdp/", full=TRUE)
-
-# gapfill ocean area
-
-for(file in file_list){
-  # file = file_list[1]
-ocean_only <- terra::rast(file) 
-# check that things look ok!    
-#  extent <- terra::ext(1e7, 1.25e7, 3e6, 5e6)  
-#plot(terra::crop(log(land_only+1), extent))
-file_name <- basename(file)
-file_name <- gsub("-km2", "-km2-ocean-gf", file_name)
-
-# gapfill 10 cells out into the ocean - using a fairly large window here.
-ocean_gf <- ocean_only
-for(i in 1:10){
-  i=1+i
-ocean_gf <- terra::focal(ocean_gf, w=9, fun=mean, na.rm=TRUE, na.policy="only")
-}
-# plot(log(ocean_gf+1))
-
-# smoothing those values to help get rid of streaks and blobs.
-ocean_gf <- terra::focal(ocean_gf, w=9, fun=mean, na.rm=TRUE)
-
-# plot(ocean_gf)
-
-ocean_gf <- ocean_gf * ocean_cells
-#  extent <- terra::ext(1e7, 1.15e7, 4e6, 5e6)  
-#plot(terra::crop(log(ocean_gf+1), extent))
-
-  terra::writeRaster(ocean_gf, filename=sprintf("/Users/frazier/Desktop/gdp_wang/prep/gdp/%s", file_name), overwrite=TRUE)
-
-
-}
-
 
 ```
 
