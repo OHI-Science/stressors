@@ -84,13 +84,18 @@ Explore: can be skipped
 ```{r}
 
 # see what is in directory
-files <- dir("/home/shares/ohi/stressors_2021/_raw_data/gdp_wang/v7/v025_degree", full=TRUE)
+files <- dir("/home/shares/ohi/stressors_2021/_raw_data/gdp_wang_v7", full=TRUE)
 
-files <- dir("/Users/frazier/Desktop/gdp_wang/v7", full=TRUE)
 
 gdp <- raster::raster(files[1]) 
 raster::cellStats(gdp, "sum", na.rm=TRUE)
 plot(log(gdp+1))
+
+current <- rast("/home/shares/ohi/stressors_2021/_raw_data/gdp_wang_v7/GDP2020.tif")
+current_2025 <- rast("/home/shares/ohi/stressors_2021/_raw_data/gdp_wang_v7/GDP2025_ssp1.tif")
+plot(log(current+1))
+plot(log(current_2025+1))
+plot(log(current_2025+1) - log(current+1))
 
 ```
 
@@ -99,13 +104,12 @@ plot(log(gdp+1))
 ```{r}
 #terraOptions(progress=0)
 
-#dir.create("/home/shares/ohi/stressors_2021/_dataprep/population")
 prep_rast <- function(scen = "SSP5_RCP8_5"){ # scen = scenarios[1]
     for(yrs in years_select$year_range){ # yrs = years_select$year_range[1]
   
       time_frame <- years_select$time_frame[years_select$year_range == yrs]
       
-  all_files <- list.files("/Users/frazier/Desktop/gdp_wang/gdp_wang_v7/", full=TRUE)
+  all_files <- list.files("/home/shares/ohi/stressors_2021/_raw_data/gdp_wang_v7", full=TRUE)
   subset_files <- grep(scen, all_files, value=TRUE)
   subset_files <- grep(yrs, subset_files, value=TRUE)
   
@@ -122,7 +126,7 @@ prep_rast <- function(scen = "SSP5_RCP8_5"){ # scen = scenarios[1]
   gdp_per_km2 <- terra::project(avg_gdp_km2, ocean)
   #global(gdp_per_km2, sum, na.rm=TRUE) * 100
 
-terra::writeRaster(gdp_per_km2, sprintf("/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-per-km2_%s_%s.tif", scen, time_frame), overwrite=TRUE)
+terra::writeRaster(gdp_per_km2, sprintf("/home/shares/ohi/stressors_2021/_dataprep/gdp/gdp-per-km2_%s_%s.tif", scen, time_frame), overwrite=TRUE)
 
   ## get the nearshore gdp estimate, average of nearby land and ocean cells (these are zero gdp, following same protocol as in human population script) 
   ## get the nearshore disturbance estimate, average population density of nearby land and ocean cells (these are zero population) 
@@ -141,7 +145,8 @@ offshore_gdp_km2 <-   terra::focal(offshore_gdp_km2, w=3, fun=mean, na.rm=TRUE)
   total <- terra::ifel(is.na(offshore_gdp_km2_NAs), offshore_gdp_km2, offshore_gdp_km2_NAs)  
 
   
-terra::writeRaster(total, sprintf("/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-per-km2-extended_%s_%s.tif", scen, time_frame), overwrite=TRUE)
+terra::writeRaster(total, sprintf("/home/shares/ohi/stressors_2021/_dataprep/gdp/gdp-per-km2-extended_%s_%s.tif", scen, time_frame), overwrite=TRUE)
+
 
   }
   }
@@ -160,7 +165,7 @@ Get current years
 ```{r}
 
 current_rasters <- function(years_to_include=current_years, name="current_years"){
-  all_files <- list.files("/Users/frazier/Desktop/gdp_wang/gdp_wang_v7", full=TRUE)
+ all_files <- list.files("/home/shares/ohi/stressors_2021/_raw_data/gdp_wang_v7", full=TRUE)
   subset_files <- grep(years_to_include, all_files, value=TRUE)
   
   stack_rasters <- terra::rast(subset_files)
@@ -176,7 +181,8 @@ current_rasters <- function(years_to_include=current_years, name="current_years"
   gdp_per_km2 <- terra::project(avg_gdp_km2, ocean)
   #global(gdp_per_km2, sum, na.rm=TRUE) * 100
 
-terra::writeRaster(gdp_per_km2, "/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-per-km2_current.tif", overwrite=TRUE)
+terra::writeRaster(gdp_per_km2, "/home/shares/ohi/stressors_2021/_dataprep/gdp/gdp-per-km2_current.tif", overwrite=TRUE)
+
 
   ## get the nearshore gdp estimate, average of nearby land and ocean cells (these are zero gdp, following same protocol as in human population script) 
   ## get the nearshore disturbance estimate, average population density of nearby land and ocean cells (these are zero population) 
@@ -192,7 +198,7 @@ offshore_gdp_km2 <-   terra::focal(offshore_gdp_km2, w=3, fun=mean, na.rm=TRUE)
   total <- terra::ifel(is.na(offshore_gdp_km2_NAs), offshore_gdp_km2, offshore_gdp_km2_NAs)  
 
   
-terra::writeRaster(total, sprintf("/Users/frazier/Desktop/gdp_wang/prep/gdp/gdp-per-km2-extended_%s.tif", as.character(name)), overwrite=TRUE)
+terra::writeRaster(total, sprintf("/home/shares/ohi/stressors_2021/_dataprep/gdp/gdp/gdp-per-km2-extended_%s.tif", as.character(name)), overwrite=TRUE)
 }
 
 

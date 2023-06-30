@@ -43,7 +43,7 @@ for file in /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/shp/*.shp
     echo "finished cleaning out old stuff"
 
     # Run the python plume script - this will create rasters in the "grass cloud"
-    python2 ./plume_buffer.py pours effluent > ./plume_buffer.log
+    python3 ./plume_buffer.py pours effluent > ./plume_buffer.log
 
     echo "ran plumes model"
 
@@ -85,7 +85,7 @@ do
    # mosaic subset 
    cd subsets/subset$i/
 
-    python2 /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/gdal_add.py -o effluent_sub$i.tif -ot Float32 plume_effluent*.tif # ALWAYS UPDATE first tif NAME to whatever you are running.. 
+    python3 /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/gdal_add.py -o effluent_sub$i.tif -ot Float32 plume_effluent*.tif # ALWAYS UPDATE first tif NAME to whatever you are running.. 
 
    printf "subset $i tif done \n"
   
@@ -100,7 +100,7 @@ printf "Done Subsets \n"
 # final mosaic
 cd subsets
 
-python2 /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/gdal_add.py -o $fileout -ot Float32 effluent_sub*.tif # ALWAYS UPDATE tif NAME
+python3 /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/gdal_add.py -o $fileout -ot Float32 effluent_sub*.tif # ALWAYS UPDATE tif NAME
 
 echo "finished mosaic"
 
