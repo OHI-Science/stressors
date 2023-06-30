@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 plume_buffer.py
 GRASS GIS model to generate plumes of material transport based on vector attributes.
@@ -13,19 +13,20 @@ import sys
 import os
 import math
 import glob
+import subprocess
 
 def getArgs():
     try:
-        vnamevname = sys.argv[1]
+        vname = sys.argv[1]
         if len(sys.argv) == 3:
             attribs = [sys.argv[2]]
         else:
             # default attributes to analyze
             #attribs = ['SUM_IMPV','SUM_PESTC','SUM_FERTC']
             attribs = ['SUM_PESTC','SUM_FERTC']
-        return vnamevname,attribs
+        return vname,attribs
     except:
-        print(sys.argv[0] + " usage: <vname name> {attribute}")
+        print(sys.argv[0], " usage: <vname name> {attribute}")
         sys.exit(1)
 
 def getCatList(vname,attribs):
@@ -33,7 +34,8 @@ def getCatList(vname,attribs):
 
     cmd = "v.db.select -c map=%s column=cat,basin_id,%s" % (vname,','.join(attribs))
     print("cmd: {}".format(cmd))
-    lines = os.popen(cmd).read().strip().split('\n')
+    lines = subprocess.check_output(cmd, shell=True).decode().strip().split('\n')
+
     for i in lines:
         pair = i.split('|')
         cat = pair[0]
@@ -60,7 +62,8 @@ def getCatList(vname,attribs):
 def cleanHouse(vname,categories):
     # Modified by jkibele April 2019 for use with grass76
     cmd = "g.remove -f type=vector pattern={}_*".format(vname)
-    os.popen(cmd)
+    lines = subprocess.check_output(cmd, shell=True).decode().strip().split('\n')
+
     
     raster_patterns = [
         "{}_*".format(vname),
@@ -221,33 +224,38 @@ def processCategory(c, c_data, vname, log):
 
     if len(plumes_create) == 0:
         print("\n Plumes exist for %s, skipping.\n" % basin_id)
-        log.write("%s: all plumes exist, skipping." % basin_id)
+        with open(log, 'w') as file:
+              file.write("%s: all plumes exist, skipping." % basin_id)
         return
 
     print("\n Processing basin %s \n" % basin_id)
-    log.write("%s,%s,%s\n" % (c, basin_id, columns))
+    with open(log, 'w') as file:
+        file.write("%s,%s,%s\n" % (c, basin_id, columns))
 
     # Initialize region to entire map
     cmd = 'g.region raster=%s' % mask
     # print "cmd: {}".format(cmd)
-    os.popen(cmd)
+    lines = subprocess.check_output(cmd, shell=True).decode().strip().split('\n')
+
 
     # Extract the single point
     pour = '%s_%s' % (vname, basin_id)
     cmd = 'v.extract input=%s output=%s where="cat = %s" new=1' % \
            (vname, pour, c)
     print("cmd: {}".format(cmd))
-    os.popen(cmd)
+    lines = subprocess.check_output(cmd, shell=True).decode().strip().split('\n')
+
 
     # Subset region down to the narrowest possible buffer map
     cmd = "g.region vector=%s align=%s" % (pour, mask)
     print("cmd: {}".format(cmd))
-    os.popen(cmd)
+    lines = subprocess.check_output(cmd, shell=True).decode().strip().split('\n')
+
 
     # Find current point region
     cmd = "g.region -gp"
     print("cmd: {}".format(cmd))
-    regionsplit = os.popen(cmd).read().rstrip().split('\n')
+    regionsplit = subprocess.check_output(cmd, shell=True, universal_newlines=True).strip().split('\n')
     region = {}
     for r in regionsplit:
        pv = r.strip().split('=')
@@ -263,13 +271,13 @@ def processCategory(c, c_data, vname, log):
     e = region['e'] + regionbuff
     cmd = "g.region n=%s s=%s w=%s e=%s align=%s" % (n, s, w, e, mask)
     print("cmd: {}".format(cmd))
-    os.popen(cmd)
+    lines = subprocess.check_output(cmd, shell=True, universal_newlines=True).strip().split('\n')
 
     # Convert to raster
     cmd = "v.to.rast input=%s output=%s use=cat" % \
            (pour, pour) 
     print("cmd: {}".format(cmd))
-    os.popen(cmd)
+    lines = subprocess.check_output(cmd, shell=True, universal_newlines=True).strip().split('\n')
 
     # Buffer point to assure pour point hits coast
     pourbuff = '%s_buff_%s' % (vname, basin_id)
@@ -277,7 +285,7 @@ def processCategory(c, c_data, vname, log):
     cmd ="r.buffer input=%s out=%s distances=3.5 units=kilometers" % \
           (pour, pourbuff)
     print("cmd: {}".format(cmd))
-    os.popen(cmd)
+    lines = subprocess.check_output(cmd, shell=True, universal_newlines=True).strip().split('\n')
 
     dw = '%s_dw_%s' % (vname, basin_id)
     cost = '%s_cost_%s' % (vname, basin_id)
@@ -286,23 +294,24 @@ def processCategory(c, c_data, vname, log):
     cmd = "r.cost -k input=%s max_cost=%s output=%s start_raster=%s" % \
           (mask, maxdist, cost, pourbuff)
     print("cmd: {}".format(cmd))
-    os.popen(cmd)
+    lines = subprocess.check_output(cmd, shell=True, universal_newlines=True).strip().split('\n')
 
     # Mask out non-ocean cells - TRY COMMENTING OUT THIS PART GAGE 
     cmd = 'r.mapcalc "%s = if( %s, %s)"' % (dw, mask, cost) 
     print("cmd: {}".format(cmd))
-    os.popen(cmd)
+    lines = subprocess.check_output(cmd, shell=True, universal_newlines=True).strip().split('\n')
 
     # Area Weighted distribution of sediment 
     cmd = 'r.stats -c %s' % dw
     print("cmd: {}".format(cmd))
-    area_info = os.popen(cmd).read().rstrip().split('\n')
+    area_info = lines = subprocess.check_output(cmd, shell=True, universal_newlines=True).strip().split('\n')
     area_list = [i.split(' ') for i in area_info][:-1]
 
     pct = 0.005  # percentage of material deposited at each buffer ring
 
     if len(area_list) == 0:
-        log.write("%s,%s,Area list is zero length, all values are null.\n" % (basin_id,c))
+        with open(log, 'w') as file:
+            file.write("%s,%s,Area list is zero length, all values are null.\n" % (basin_id,c))
         print("area list null.")
         return
 
@@ -313,15 +322,17 @@ def processCategory(c, c_data, vname, log):
         recode_table = ''
 
         plume = 'plume_%s_%s' % (col, basin_id)
-        if init == ('0' or ''):
-            log.write("%s,%s=%s has a value of 0, skipping.\n" % basin_id, col, init)
-            break
+        if init == 0.0 or init == '':s
+        with open(log, 'w') as file:
+            file.write("%s,%s=%s has a value of 0, skipping.\n" % (basin_id, col, init))
+
+        break
 
         orig = init
         for (dist,count) in area_list:
             if init * pct < limit:
                 remain = 0
-                percell = init / float(count)
+                percell = init // float(count)
             else:
                 percell = init * pct
                 sum = percell * float(count)
@@ -341,13 +352,13 @@ def processCategory(c, c_data, vname, log):
         # Reclass the dw map and recreate the plume map
         cmd = "r.recode input=%s output=%s rules=- <<EOF \n%sEOF" % (dw,plume,recode_table)
         print("cmd: {}".format(cmd))
-        os.popen(cmd)
+        lines = subprocess.check_output(cmd, shell=True, universal_newlines=True).strip().split('\n')
 
     # Clean up
     tmp = {}
     tmp[c] = c_data
     # cleanHouse(vname, tmp)
-    log.flush()
+    #log.flush()
 
 def handle(cmd):
     try:
@@ -399,20 +410,28 @@ if __name__ == '__main__':
 
     # create error log file
     logfile = "plume_%s.log" % (vname)
-    log = open(logfile,'w')
-    log.write('# plume_buffer log output\n')
-    log.write('basin_id,category,message\n')
+
+    with open(logfile, 'w') as file:
+        file.write('# plume_buffer log output\n')
+        file.write('basin_id,category,message\n')
 
     i = 1
     for (c, c_data) in list(categories.items()):
         print("========  %s of %s (%s percent) ================" % \
-               (i,len(categories),int(100 * (float(i)/float(len(categories))))))
-        processCategory(c, c_data, vname, log)
-        log.write("c_data: {}".format(c_data))
+               (i,len(categories),int(100 * (float(i)//float(len(categories))))))
+        processCategory(c, c_data, vname, logfile)
+        with open(logfile, 'a') as file:
+            file.write("c_data: {}\n".format(c_data))
         #log.write("%s,%s,%s\n" % (cat,catlist[cat][0],catlist[cat][1]))
         i = i + 1
+
     """
     for att in attrib:
         addPlumes("%s_%s_total.tif" % (vname, att), att)
     """
    # log.close()
+   
+   
+   
+   
+   

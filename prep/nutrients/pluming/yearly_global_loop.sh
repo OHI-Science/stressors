@@ -70,20 +70,19 @@ for file in /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/shp/*.shp
 ## Split the plume output .tifs (this depends on you machine but is required on Mazu @ NCEAS) 
 ## and put them together 
 
-cd output
+
 mkdir subsets
 for i in  1 
 ## the number of i's depending on how many plume_effluent.tif files were created. We will  subset in batches of 10000, so for instance, I had ~95000 .tif files, so i ran my for loop for i in 1:10
 
 do
    printf "Starting $i \n"
-   mkdir subsets/subset$i
+   mkdir subset$i
   
    # move the tif files in batches of 10000 
-   mv `ls | head -10000` subsets/subset$i/
+   mv `ls | head -10000` subset$i/
   
    # mosaic subset 
-   cd subsets/subset$i/
 
     python3 /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/gdal_add.py -o effluent_sub$i.tif -ot Float32 plume_effluent*.tif # ALWAYS UPDATE first tif NAME to whatever you are running.. 
 

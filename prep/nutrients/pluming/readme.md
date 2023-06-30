@@ -1,5 +1,11 @@
 ## Wastewater Project: Plume model 
 
+channels:
+  - conda-forge
+  - defaults
+solver: classic
+
+
 How to run the plume model! 
  
  - Download this "STEP5_plumes" folder into whatever directory you want to run it. For OHI this will be `/home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v20XX/`, and name it "plumes". **YOU WILL NEED TO UPDATE ALL THE FILEPATHS IN `readme.md` and `yearly_global_loop.sh` IF YOU WANT ANY OF THIS TO WORK.** 
@@ -35,7 +41,7 @@ If the installation was successful, it should display the version number of Cond
 Congratulations! Anaconda is now installed on your Linux server. You can start using it by running conda commands to manage your Python environments and packages.C
  
  - In your terminal, ssh into mazu.. i.e. `ssh username@mazu.nceas.ucsb.edu` and enter your password
- - Create a folder in your "anaconda3/envs" folder named "py2", this will be your python environment. This can be done with this line `conda create --name py2 python=2`
+ - Create a folder in your "anaconda3/envs" folder named "py2", this will be your python environment. This can be done with this line `conda create --name py5 python=3`
  - Type `conda activate py2` in your terminal. This will activate this py2 environment and act as your python environment. 
  - Install gdal by typing `conda install -c conda-forge gdal` to install gdal in your python environment. 
  - I recommend using [screens](http://www.kinnetica.com/2011/05/29/using-screen-on-mac-os-x/) in the terminal, so you can turn on the plumes model and leave it running.
@@ -51,6 +57,7 @@ Congratulations! Anaconda is now installed on your Linux server. You can start u
 conda activate py2
 
 mkdir /home/shares/ohi/stressors_2021/_dataprep/nutrients/grassdata
+
 ## Create a folder in your mazu home drive (or wherever you want to run the plumes... for OHI this will be `/home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v20XX`) entitled "grassdata" or something of the like.
 
 cp /home/shares/ohi/stressors_2021/_dataprep/nutrients/watersheds_pourpoints/ocean_mask.tif /home/shares/ohi/stressors_2021/_dataprep/nutrients/grassdata
@@ -89,7 +96,7 @@ mkdir /home/shares/ohi/stressors_2021/_dataprep/nutrients/output/N_plume
 
 # make sure you start the loop in plumes. location is very important for the loop to run!
 
-grass ## enter grass again
+grass  ## enter grass again
 
 # Now run yearly_global_loop.sh #this contains all the code needed. edit file paths if needed (right now they are absolute), especially "outdir" which is the directory the final tif files will be added. once finished, it should plop 15 joined tif files (1 for every year) into whatever was defined as "outdir"
 

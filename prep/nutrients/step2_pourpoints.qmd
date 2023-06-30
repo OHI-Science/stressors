@@ -112,7 +112,8 @@ Pourpoints
 
 ```{r}
 
-global_plume <- st_read("/home/shares/ohi/git-annex/land-based/wastewater/data/raw/pour_points/global_plume_2007_2010.shp")
+global_plume <- sf::st_read("/home/shares/ohi/git-annex/land-based/wastewater/data/raw/pour_points/global_plume_2007_2010.shp")
+
 
 # plot(global_plume$geometry)
 mapview(tail(global_plume, 10000))

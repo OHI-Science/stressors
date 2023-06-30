@@ -143,7 +143,11 @@ ws_pp_zonal_all <- left_join(watershed_N, pourpoints_no_dups, by = "basin_id") %
 st_write(ws_pp_zonal_all, sprintf("/home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_data/%s.shp", saveName),delete_dsn = TRUE)
 }
 
-check <- list.files("/home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_data/")
+## create a test file for this painful plume model!
+check <- list.files("/home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_data_real/", full=TRUE)
+tmp <- sf::st_read(check[1])[1:1000,]
+sf::st_write(tmp, "/home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_data/SSP1_current_short.shp")
+
 check <- st_read()
 
 ```
