@@ -1,0 +1,241 @@
+---
+title: "Downloading and prepping extreme air temperature events"
+output: html_document
+date: '2022-08-09'
+---
+
+I will be using the IPCC ensemble models for number of days >35 and >40 C. 
+
+I originally attempted to use the Xu data (used for SST data), but this will not work for this purpose.
+
+I format these data in two ways: 
+1) proportion of days within a year (based on days) in which temperature exceeds 35.
+2) proportion of months within a year in which at least 2 days exceed 35.
+
+There is no need to gapfill these data because it extends all the way into the ocean.  However, the IPCC website indicates low model agreement for global coastlines!
+
+```{r setup, include=FALSE}
+library(raster)
+library(ncdf4)
+library(here)
+library(tidyverse)
+library(foreach)
+library(doParallel)
+
+#year ranges and scenarios:
+yr_35_range <- data.frame(filename = c("TX35  days - Long Term (2081-2100) SSP1-2.6",
+                                    "TX35  days - Long Term (2081-2100) SSP3-7.0",
+                                    "TX35  days - Long Term (2081-2100) SSP5-8.5",
+                                    "TX35  days - Medium Term (2041-2060) SSP1-2.6",
+                                    "TX35  days - Medium Term (2041-2060) SSP3-7.0",
+                                    "TX35  days - Medium Term (2041-2060) SSP5-8.5",
+                                    "TX35  days - Near Term (2021-2040) SSP1-2.6",
+                                    "TX35  days - Near Term (2021-2040) SSP3-7.0",
+                                    "TX35  days - Near Term (2021-2040) SSP5-8.5"),
+                       scenario = c("ssp126", "ssp370", "ssp585", "ssp126", "ssp370", "ssp585", "ssp126", "ssp370", "ssp585"),
+                       time_frame = c("long-term", "long-term", "long-term", "medium-term", "medium-term", "medium-term",
+                                      "near-term", "near-term", "near-term"))
+
+
+yr_40_range <- data.frame(filename = c("TX40  days - Long Term (2081-2100) SSP1-2.6",
+                                    "TX40  days - Long Term (2081-2100) SSP5-8.5",
+                                    "TX40  days - Medium Term (2041-2060) SSP1-2.6",
+                                    "TX40  days - Medium Term (2041-2060) SSP5-8.5",
+                                    "TX40  days - Near Term (2021-2040) SSP1-2.6",
+                                    "TX40  days - Near Term (2021-2040) SSP5-8.5"),
+                       scenario = c("ssp126", "ssp585", "ssp126", "ssp585", "ssp126",  "ssp585"),
+                       time_frame = c("long-term", "long-term", "medium-term", "medium-term",
+                                       "near-term", "near-term"))
+
+
+
+rast_base_10km_file <- terra::rast(here('_spatial/rast_base_mol_10km.tif'))
+ocean <- terra::rast(here('_spatial/ocean_area_mol.tif'))
+land_coast <- terra::ifel(ocean<1,  1, 0)
+land <- terra::ifel(is.na(land_coast), 1, land_coast)
+plot(land)
+```
+
+
+I tried to use the Xu data, but it is not going to work for this purpose. The near ground air temperatures
+are only monthly (need higher temporal resolution to get extreme events) and the atmospheric air temperatures do not 
+align with near ground temps. So going back to the drawing board on this one.
+```{r}
+tmp <- nc_open("/home/shares/ohi/stressors_2021/_raw_data/sst_Xu/atm_hist_1979_01.nc4")
+names(tmp$var)
+tmp$dim$time$vals # origin 1850-1-1
+tmp$dim$vals
+tmp <- raster::raster("/home/shares/ohi/stressors_2021/_raw_data/sst_Xu/atm_hist_2000_01.nc4", varname="ps")
+cellStats(tmp, "mean")
+
+ocean_proj <- raster(ocean_mask)
+ocean_proj <- projectRaster(ocean_proj, tmp)
+
+tmp_mask <- ocean_proj*tmp
+cellStats(tmp_mask, "mean", na.rm=TRUE)
+plot(tmp_mask/100)
+ta_1 <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/sst_Xu/atm_hist_2000_06.nc4")
+ta_1 <- ta_1[[grep("ta_", names(ta_1))]]
+ta_1 <- ta_1[[grep("lev=100000_", names(ta_1))]]
+ta_1 <- mean(ta_1)
+
+
+
+humidity_1 <- raster::brick("/home/shares/ohi/stressors_2021/_raw_data/sst_Xu/atm_hist_2000_06.nc4", varname="hur", level=1) 
+humidity_14 <- raster::brick("/home/shares/ohi/stressors_2021/_raw_data/sst_Xu/atm_hist_2000_06.nc4", varname="hur", level=14)
+plot(humidity_1[[1]])
+plot(humidity_14[[1]])
+
+land_temp <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/land_temp_Xu/lnd.historical.200006.nc")
+land_temp <- land_temp[[grep("tas", names(land_temp))]]
+plot(land_temp - 273)
+plot(ta_1 -273)
+
+plot(land_temp - ta_1)
+
+system("ncdump -h /home/shares/ohi/stressors_2021/_raw_data/land_temp_Xu/lnd.historical.198905.nc")
+system("ncdump -h /home/shares/ohi/stressors_2021/_raw_data/land_temp_Xu/lnd.historical.198905.nc")
+
+```
+
+
+## Proportion of days
+
+35C
+```{r}
+# scenarios
+for (file in yr_35_range$filename){ #file = yr_35_range$filename[1]
+
+all_files <- list.files("/home/shares/ohi/stressors_2021/_raw_data/Tair_35d_ipcc", full=TRUE)
+
+file_path <- grep(file, all_files, fixed=TRUE, value=TRUE)
+cat("N= ", length(file_path), " raster file was discovered")
+
+raster <- terra::rast(file_path)
+scaled_raster <- raster/365
+
+proj_scaled_raster <- terra::project(scaled_raster, rast_base_10km_file, method="near")
+
+scen <- yr_35_range$scenario[yr_35_range$filename==file]
+timeframe <-  yr_35_range$time_frame[yr_35_range$filename==file]
+
+writeRaster(proj_scaled_raster, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/proportion_days_35C/days-35_%s_%s.tif", scen, timeframe), overwrite = TRUE)
+
+}
+
+#historical
+scen <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/Tair_35d_ipcc/CMIP6 - Bias Adjusted TX35  days - Near Term (2021-2040) SSP1-2.6  - Annual (24 models).tiff")
+hist_diff <- terra::rast( "/home/shares/ohi/stressors_2021/_raw_data/Tair_35d_ipcc/CMIP6 - Bias Adjusted TX35 Change days - Near Term (2021-2040) SSP1-2.6 (rel. to 1995-2014) - Annual (24 models).tiff")
+historical <- scen - hist_diff
+
+scaled_historical <- historical/365
+
+proj_scaled_historical <- terra::project(scaled_historical, rast_base_10km_file, method="near")
+writeRaster(proj_scaled_historical, "/home/shares/ohi/stressors_2021/_dataprep/T_air/proportion_days_35C/days-35_NA_historical.tif", overwrite = TRUE)
+
+```
+
+
+40C
+```{r}
+
+# scenarios
+for (file in yr_40_range$filename){ #file = yr_40_range$filename[1]
+
+all_files <- list.files("/home/shares/ohi/stressors_2021/_raw_data/Tair_40d_ipcc", full=TRUE)
+
+file_path <- grep(file, all_files, fixed=TRUE, value=TRUE)
+cat("N= ", length(file_path), " raster file was discovered")
+
+raster <- terra::rast(file_path)
+scaled_raster <- raster/365
+
+proj_scaled_raster <- terra::project(scaled_raster, rast_base_10km_file, method="near")
+
+scen <- yr_40_range$scenario[yr_40_range$filename==file]
+timeframe <-  yr_40_range$time_frame[yr_40_range$filename==file]
+
+writeRaster(proj_scaled_raster, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/proportion_days_40C/days-40_%s_%s.tif", scen, timeframe), overwrite = TRUE)
+
+}
+#historical
+scen <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/Tair_40d_ipcc/CMIP6 - Bias Adjusted TX40  days - Near Term (2021-2040) SSP1-2.6  - Annual (24 models).tiff")
+hist_diff <- terra::rast( "/home/shares/ohi/stressors_2021/_raw_data/Tair_40d_ipcc/CMIP6 - Bias Adjusted TX40 Change days - Near Term (2021-2040) SSP1-2.6 (rel. to 1995-2014) - Annual (24 models).tiff")
+historical <- scen - hist_diff
+
+scaled_historical <- historical/365
+
+proj_scaled_historical <- terra::project(scaled_historical, rast_base_10km_file, method="near")
+writeRaster(proj_scaled_historical, "/home/shares/ohi/stressors_2021/_dataprep/T_air/proportion_days_40C/days-40_NA_historical.tif", overwrite = TRUE)
+
+```
+
+## Proportion of months
+
+35C
+
+
+First calculate exceedences (>= 2 days in a month) of the historical data.  
+
+```{r}
+
+all_files <- list.files("/home/shares/ohi/stressors_2021/_raw_data/Tair_35d_ipcc/monthly", full=TRUE)
+
+month_list <- c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+
+for(month in month_list){ # month = month_list[1]
+
+# Define the directory where the files are located
+directory <- "/home/shares/ohi/stressors_2021/_raw_data/Tair_35d_ipcc/monthly"
+# Define the file name pattern
+pattern <- paste0("CMIP6 - Bias Adjusted TX35  days - Near Term \\(2021-2040\\) SSP1-2\\.6  - ", month, " \\(.*models\\)\\.tiff$")
+# List the files that match the pattern
+scen_path <- list.files(path = directory, pattern = pattern, full=TRUE)
+scen_raster <- terra::rast(scen_path)
+
+
+pattern <- paste0("CMIP6 - Bias Adjusted TX35 Change days - Near Term \\(2021-2040\\) SSP1-2\\.6 \\(rel\\. to 1995-2014\\) - ", month, " \\(.*models\\)\\.tiff$")
+hist_path <- list.files(path = directory, pattern = pattern, full=TRUE)
+hist_diff_raster <- terra::rast(hist_diff)
+
+cat("For month = ", month, ", hist_diff is = ", class(hist_diff_raster)[1], "and scen_raster is = ", class(scen_raster)[1], "\n")
+
+historical <- scen_raster - hist_diff_raster
+historical_exceed <- terra::ifel(historical>=2, 1, 0)
+
+proj_exceed_historical <- terra::project(historical_exceed, rast_base_10km_file, method="near")
+
+
+writeRaster(proj_exceed_historical, sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/proportion_months_35C/exceed_2days_monthly/month-exceed-35_%s_NA_historical.tif", month), overwrite = TRUE)
+}
+
+```
+
+
+First calculate exceedences (>= 2 days in a month) of the other data.  
+
+```{r}
+
+all_files <- list.files("/home/shares/ohi/stressors_2021/_raw_data/Tair_35d_ipcc/monthly", full=TRUE, pattern = "TX35  days")
+
+
+for(file in all_files){ # file = all_files[2]
+
+saveName <- basename(file)
+scen_raster <- terra::rast(file)
+max_scen_raster <- terra::global(scen_raster, "max")$max
+cat(saveName, " has max = ", max_scen_raster, "\n")
+
+scen_raster_exceed <- terra::ifel(scen_raster>=2, 1, 0)
+
+proj_exceed_scen <- terra::project(scen_raster_exceed, rast_base_10km_file, method="near")
+
+
+writeRaster(proj_exceed_scen, sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/proportion_months_35C/exceed_2days_monthly/month-exceed_%s", saveName), overwrite = TRUE)
+}
+
+```
+
+
+
+
