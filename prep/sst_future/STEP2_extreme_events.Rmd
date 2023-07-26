@@ -26,8 +26,8 @@ library(foreach)
 library(doParallel)
 
 #year ranges and scenarios:
-yr_range <- data.frame(period = rep(c("current", "near", "medium", "long"), each=20),
-                       year = c(2001:2020, 2021:2040, 2041:2060, 2081:2100))
+yr_range <- data.frame(period = c(rep("historical", each=15), rep("current", each=6), rep(c("near", "medium", "long"), each=20)),
+                       year = c(2000:2014, 2015:2020, 2021:2040, 2041:2060, 2081:2100))
 
 ```
 
@@ -42,7 +42,7 @@ tmp <- raster::raster("/home/shares/ohi/stressors_2021/_raw_data/sst_Xu/atm_hist
 
 ```
 
-Current data is reported every 6 hours. Average this to get the daily value. Using cdo system commands to do this.
+Data is reported every 6 hours. Average this to get the daily value. Using cdo system commands to do this.
 
 ```{r}
 file_names <- list.files("/home/shares/ohi/stressors_2021/_raw_data/sst_Xu/")
@@ -312,22 +312,22 @@ Sum the total exceedences across the scenarios and year ranges.
 yr_range
 ssps <- c("ssp245", "ssp585")
 
-## current
-year_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/year_exceed_two_sd", pattern = paste(yr_range$year[yr_range$period=="current"], collapse="|"), full=TRUE)
-year_list <- grep("hist|ssp245", year_list, value=TRUE)
+## historical
+year_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/year_exceed_two_sd", pattern = paste(yr_range$year[yr_range$period=="historical"], collapse="|"), full=TRUE)
+year_list <- grep("hist", year_list, value=TRUE)
 
 year_stack <- raster::stack(year_list)
 
 prop_yr_exceed <- calc(year_stack, mean, na.rm=TRUE)
 prop_yr_exceed <- prop_yr_exceed/52
 
-writeRaster(prop_yr_exceed, "/home/shares/ohi/stressors_2021/_dataprep/SST/pressure_twoSD/sst-extreme_NA_current.tif", format='GTiff', overwrite=TRUE)
+writeRaster(prop_yr_exceed, "/home/shares/ohi/stressors_2021/_dataprep/SST/pressure_twoSD/sst-extreme_NA_historical.tif", format='GTiff', overwrite=TRUE)
 
 
 ## scenarios
 
-for(period in c("near","medium", "long")){
-  # period = "near"
+for(period in c("current", "near","medium", "long")){
+  # period = "current"
 for(scenario in ssps){ #scenario = ssps[2]
 year_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/year_exceed_two_sd", pattern = paste(yr_range$year[yr_range$period==period], collapse="|"), full=TRUE)
   
@@ -390,8 +390,8 @@ r <- r*ocean_template
 # diff_rast <- r - mol_rast
 #plot(diff_rast)
 
-writeRaster(r, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/final_extreme/%s", basename), overwrite = TRUE)
-
+writeRaster(r, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/final_extreme/%s", basename(exceed_path)), overwrite = TRUE)
+}
 
 ```
 

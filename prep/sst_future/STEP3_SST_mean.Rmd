@@ -1,0 +1,165 @@
+---
+title: "SST average temp"
+output: html_document
+date: '2022-08-09'
+---
+
+This is another form of the SST pressure. In STEP2_extreme_events.Rmd, we calculate the extreme events.  Here we are going to calculate annual mean temperatures, this allows us to convert the raw temperatures into taxa specific pressures based on their thermal performance curves.  
+ 
+issues: 51
+
+```{r setup, include=FALSE}
+library(raster)
+library(ncdf4)
+library(here)
+library(tidyverse)
+library(foreach)
+library(doParallel)
+
+#year ranges and scenarios:
+yr_range <- data.frame(period = c(rep("historical", each=15), rep("current", each=6), rep(c("near", "medium", "long"), each=20)),
+                       year = c(2000:2014, 2015:2020, 2021:2040, 2041:2060, 2081:2100))
+
+
+yr_bundles <- data.frame(scenario = rep(c("ssp585", "ssp245"), each=17),
+                       year = c("2015:2019",  
+                                "2020:2024", 
+                                "2025:2029",
+                                "2030:2034",
+                                "2035:2039",
+                                "2040:2044",
+                                "2045:2049",
+                                "2050:2054",
+                                "2055:2059",
+                                "2060:2064",
+                                "2065:2069",
+                                "2070:2074",
+                                "2075:2079",
+                                "2080:2084",
+                                "2085:2089",
+                                "2090:2094",
+                                "2095:2099"))
+
+```
+
+In previous script, we converted the 6 hour time slots to daily values. Here we average the daily values for each year to get the yearly average.
+
+```{r}
+file_names <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/year_merge/", full=TRUE)
+
+# take care of historical data
+for(year in 1979:2014){
+  #year = 1979
+yr_stack <- stack(sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/year_merge/hist_%s.nc", year), varname="tos")
+
+
+yearly_average <- mean(yr_stack, na.rm=TRUE)
+
+writeRaster(yearly_average, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/year_average/hist_%s.tif", year), bylayer=TRUE, format='GTiff', overwrite=TRUE)
+cat(year)
+}
+
+# ssp245
+for(year in 2015:2100){
+  #year = 2015
+yr_stack <- stack(sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/year_merge/ssp245_%s.nc", year), varname="tos")
+yearly_average <- mean(yr_stack, na.rm=TRUE)
+
+writeRaster(yearly_average, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/year_average/ssp245_%s.tif", year), bylayer=TRUE, format='GTiff', overwrite=TRUE)
+cat(year)
+}
+
+# ssp585
+for(year in 2015:2100){
+  #year = 1979
+yr_stack <- stack(sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/year_merge/ssp585_%s.nc", year), varname="tos")
+yearly_average <- mean(yr_stack, na.rm=TRUE)
+
+writeRaster(yearly_average, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/year_average/ssp585_%s.tif", year), bylayer=TRUE, format='GTiff', overwrite=TRUE)
+cat(year)
+
+}
+
+tmp <- terra::rast(list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/year_average", full=TRUE)[1])
+terra::plot(tmp)
+terra::click(tmp)
+```
+
+Average for five year periods of time.
+```{r}
+list_files <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/year_average", full=TRUE)
+
+for(i in 1:dim(yr_bundles)[1]){ #i = 2
+scen = yr_bundles$scenario[i]
+yr_range = yr_bundles$year[i]
+yr_range_start= as.numeric(str_split(yr_range, pattern=":")[[1]])[1] 
+yr_range_end = as.numeric(str_split(yr_range, pattern=":")[[1]])[2]
+all_years = seq(yr_range_start, yr_range_end)
+all_years = paste(paste0(all_years, ".tif"), collapse="|")
+
+rast_yrs <- grep(all_years, list_files, value=TRUE)
+rast_scen_yrs <- grep(scen, rast_yrs, value=TRUE)
+cat("n= ", length(rast_scen_yrs), "for scenario = ", scen, "\n")
+
+sst_avg <- mean(stack(rast_scen_yrs), na.rm=TRUE)
+
+writeRaster(sst_avg, sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/five_year_average/sst_avg_%s_%s_%s.tif", scen, yr_range_start, yr_range_end), overwrite=TRUE)
+
+}
+
+check <- raster("/home/shares/ohi/stressors_2021/_dataprep/SST/five_year_average/sst_avg_ssp245_2095_2099.tif")
+plot(check)
+```
+
+
+# final formatting
+1. gapfill to get coastline
+2. project raster to appropriate resolution
+
+```{r}
+
+rast_base_10km_file <- terra::rast(here('_spatial/rast_base_mol_10km.tif'))
+ocean_template <- terra::rast(here('_spatial/ocean_area_mol.tif'))
+ocean_template[ocean_template>0] <- 1
+plot(ocean_template)
+
+avg_paths <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/five_year_average", full=TRUE)
+
+for(avg_path in avg_paths){ # avg_path = avg_paths[1]
+avg_rast <- terra::rast(avg_path)
+
+avg_rast <- terra::rotate(avg_rast)
+
+terra::ext(avg_rast) <- c(-180, 180, -90, 90)
+#plot(avg_rast)
+#maps::map('world', col='black', fill=FALSE, border='gray80', add=TRUE, size=0.5)
+
+mol_rast <- terra::project(avg_rast, rast_base_10km_file, method="near", over=TRUE)
+#plot(mol_rast)
+
+
+## gapfill
+gf_raster <- function(x){raster::focal(x, w = matrix(1,3,3), fun = mean, na.rm=TRUE, na.policy="only")}
+
+r = mol_rast
+  
+## Repeat 100 times (most is immediately gapfilled but the antarctic area was persistent)
+i <- 0
+while (i <= 50){
+r <- gf_raster(r)
+i <- i + 1
+print(i)
+}
+
+# plot(r)
+r <- r*ocean_template
+# diff_rast <- r - mol_rast
+#plot(diff_rast)
+
+writeRaster(r, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/SST/five_year_average_final/%s", basename(avg_path)), overwrite = TRUE)
+}
+
+```
+
+
+
