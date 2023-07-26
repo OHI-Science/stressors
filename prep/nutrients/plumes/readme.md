@@ -52,33 +52,65 @@ Congratulations! Anaconda is now installed on your Linux server. You can start u
 # this is all done in the shell
 # NOTE: CHANGE THE filepath to whatever you are using. 
 # After creating a new python env, I.e. py2: 
-conda activate py2
+
+# start a tmux session, so the process can run in the background (see below for more info)
+tmux new -s plumes
+
+
+conda activate py5
+
 mkdir /home/shares/ohi/stressors_2021/_dataprep/nutrients/grassdata
+
 ## Create a folder in your mazu home drive (or wherever you want to run the plumes... for OHI this will be `/home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v20XX`) entitled "grassdata" or something of the like.
+
 cp /home/shares/ohi/stressors_2021/_dataprep/nutrients/watersheds_pourpoints/ocean_mask.tif /home/shares/ohi/stressors_2021/_dataprep/nutrients/grassdata
+
 ## copy the ocean mask to YOUR grassdata folder (meaning change the filepath...). The ocean mask is a raster where the land values are set to nan and the ocean values to 1.
 rm -r /home/shares/ohi/stressors_2021/_dataprep/nutrients/grassdata/location # replace filepath with your filepath
+
 grass -c /home/shares/ohi/stressors_2021/_dataprep/nutrients/grassdata/ocean_mask.tif /home/shares/ohi/stressors_2021/_dataprep/nutrients/grassdata/location ## start a grass session and create a location folder where grass will run 
+
 exit ## exit grass, and copy ocean_mask.tif to PERMANENT folder, located in location folder
+
 cp /home/shares/ohi/stressors_2021/_dataprep/nutrients/grassdata/ocean_mask.tif /home/shares/ohi/stressors_2021/_dataprep/nutrients/grassdata/location/PERMANENT
 # Move your pourpoint files into a folder in plumes. 
+
 ##first create the folder, called "shp" 
 rm -r /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/shp # remove old shps
  
 mkdir /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/shp # make new shps folder
-## navigate to the folder they were saved to which in my case is the prs_land-based_nutrient/v2021 folder
+
+## navigate to the folder they were saved 
+
 cd /home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_data/
 ## copy files to the new shp folder you just created. These shapefiles are shapefiles with pourpoints and the associated amount of nutrient aggregated to each pourpoint.
+
 cp SSP* /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/shp
 # get back to the plumes directory
-cd /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/
-mkdir /home/shares/ohi/stressors_2021/_dataprep/nutrients/output
-mkdir /home/shares/ohi/stressors_2021/_dataprep/nutrients/output/N_plume
+
+dcd /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/
+
+#mkdir /home/shares/ohi/stressors_2021/_dataprep/nutrients/output
+#mkdir /home/shares/ohi/stressors_2021/_dataprep/nutrients/output/N_plume
 # make sure you start the loop in plumes. location is very important for the loop to run!
+
 grass  ## enter grass again
 # Now run yearly_global_loop.sh #this contains all the code needed. edit file paths if needed (right now they are absolute), especially "outdir" which is the directory the final tif files will be added. once finished, it should plop 15 joined tif files (1 for every year) into whatever was defined as "outdir"
+
 sh yearly_global_loop.sh
 exit # exit grass
+
+# To see tmux sessions: tmux ls
+# Detach from the Session: To leave the process running in the background and return to  your regular shell, you can detach from the tmux session. To do this, press Ctrl-b followed by d. This will detach your tmux session but leave your processes running.
+
+Reattach to the Session: If you want to check on your process, you can reattach to your tmux session. If you named your session (e.g., "mysession"), you can reattach with the following command:
+# tmux attach -t mysession
+# To see sessions:
+# tmux ls 
+# To kill session:
+# tmux kill-session -t my-session
+
+
 # Tips for troubleshooting
 ## create a messages.txt in your plumes folder and run this to see how far the loop got: 
 sh yearly_global_loop.sh > messages.txt

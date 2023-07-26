@@ -145,9 +145,17 @@ st_write(ws_pp_zonal_all, sprintf("/home/shares/ohi/stressors_2021/_dataprep/nut
 
 ## create a test file for this painful plume model!
 check <- list.files("/home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_data_real/", full=TRUE)
-tmp <- sf::st_read(check[1])[1:1000,]
-sf::st_write(tmp, "/home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_data/SSP1_current_short.shp")
+tmp <- sf::st_read(check[5])[1:1000,]
+sf::st_write(tmp, "/home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_data/SSP1_medium_term.shp")
 
 check <- st_read()
 
+
+tmp <- rast("/home/shares/ohi/stressors_2021/_dataprep/nutrients/output/N_plume/SSP1_current_short_joined.tif")
+plot(log(tmp+1))
+
+global(tmp, "sum")
+
+sf_tmp <- st_read("/home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_data/SSP1_current_short.shp")
+sum(sf_tmp$effluent)
 ```
