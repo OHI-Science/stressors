@@ -48,6 +48,7 @@ library(tidyverse)
 library(RColorBrewer)
 library(terra)
 library(here)
+library(ncdf4)
 
 # color
 cols = rev(colorRampPalette(brewer.pal(9, 'Spectral'))(255)) # rainbow color scheme
@@ -61,13 +62,12 @@ ocean[ocean >0] <- 1
 ## Defining years to use
 ```{r}
 years_select <- data.frame(
-  time_frame = c(rep("historic", 5), rep(c("current", "near-term", "medium-term", "long-term"), each=2)),
+  time_frame = c(rep("historic", 5), "current", rep(c("near-term", "medium-term", "long-term"), each=2)),
   year_range = c("1841-1850",
                  "1851-1860",
                  "1861-1870",
                  "1871-1880",
                  "1881-1890",
-                 "2001-2010",
                  "2011-2020",
                  "2021-2030", "2031-2040",
                  "2041-2050", "2051-2060",
@@ -209,10 +209,10 @@ oa_rescale <- function(raster_path, stack_list=stack_list_spp, historical_avg){ 
   names(raster_stack) <- stack_list$years
   raster_stack_align <- align_rasts(raster_stack)
 
-  scenario <- c("near-term", "medium-term", "long-term")
+  scenario <- c("current", "near-term", "medium-term", "long-term")
 
 for(select_time_frame in scenario){
-          #select_time_frame = "near-term"
+          #select_time_frame = "current"
 
     ## Select relevant years for time period
     select_year_range_tmp <- years_select %>%
@@ -299,65 +299,6 @@ oa_rescale(raster_path = ssp585_stack, stack_list=stack_list_spp, historical_avg
 ```
 
 
-### Calculate current years
-# have to use historical and future data to get these values
-
-```{r rescale,eval=F}
-
-historical_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/nc/median/Aragonite_median_historical.nc"
-future_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/nc/median/Aragonite_median_ssp119.nc"
-
-## get the years in historical file
-raster_stack_his <- terra::rast(historical_stack)
-  raster_stack_his <- raster_stack_his[[grep("aragonite", names(raster_stack_his))]]
-  names(raster_stack_his) <- historic_stack_list$years
-  raster_stack_align_his <- align_rasts(raster_stack_his)
-  hist_rast <- raster_stack_align_his[[grep("2001-2010", names(raster_stack_his))]]
-
-  ## get the years in scenario file
-raster_stack_future <- terra::rast(future_stack)
-  raster_stack_future <- raster_stack_future[[grep("aragonite", names(raster_stack_future))]]
-  names(raster_stack_future) <- stack_list_spp$years
-  raster_stack_align_future <- align_rasts(raster_stack_future)
-  future_rast <- raster_stack_align_future[[grep("2011-2020", names(raster_stack_future))]]
-  
-  oa_predict <- terra::app(c(future_rast, hist_rast), mean)
-
-    ## rescale
-  diff = (historical_avg - oa_predict)/(historical_avg - 1)
-  
-  oa_pressure <- terra::ifel(oa_predict<=1, 1, oa_predict)                                 #all values at or less than 1 are given a value of 1
-  
-  oa_pressure <- terra::ifel(oa_predict>3, 0, oa_pressure)                                 #all values greater than 3 are given a value of 0
-
-    
-  oa_pressure <- terra::ifel(oa_pressure>1 & oa_pressure<=3, 1-(oa_pressure-1)/(3-1), oa_pressure)                     #all cells with values between 1 and 3 are scaled linearly between 0 and 1.
-  
-    oa_pressure <- terra::ifel(historical_avg>1 & historical_avg<=3, diff, oa_pressure)  
-    # all cells where the historical values between 0 and 3 are scaled relative to the historical value.
-    
-    #all cells with values greater than 1 are capped at 1
-    oa_pressure <- terra::ifel(oa_pressure>1 , 1, oa_pressure)
-
-  
-## format raster
-oa_pressure_crs <- terra::project(oa_pressure, ocean, method="bilinear")
-oa_pressure_crs[is.nan(oa_pressure_crs)] <- NA
-
-# gapfill coastline
-oa_pressure_gf <- oa_pressure_crs
-for(i in 1:200){
-  i=1+i
-oa_pressure_gf <- terra::focal(oa_pressure_gf, w=3, fun=mean, na.rm=TRUE, na.policy="only")
-}
-
-oa_mask <- terra::mask(oa_pressure_gf, ocean)
-
-terra::writeRaster(oa_mask, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/oa/oa_current.tif",
-              saveName, select_time_frame), overwrite=TRUE)
-
-```
-
 
 ## Some checks
 ```{r plot rescale}
@@ -371,7 +312,7 @@ library(gridExtra)
 world <- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf")
 
 ggplot() +
-  geom_spatraster(data = terra::rast(rast_list[10])) +
+  geom_spatraster(data = terra::rast(rast_list[12])) +
   scale_fill_whitebox_c(
     palette = "muted",
     labels = scales::label_number(suffix = "")
@@ -379,7 +320,7 @@ ggplot() +
   geom_sf(data=world, fill="lightgray", color="white", size=0.1) +
   labs(fill = "Rescaled aragonite",
        title = "Current") +
-    geom_spatraster(data = terra::rast(rast_list[10])) +
+    geom_spatraster(data = terra::rast(rast_list[12])) +
   theme_minimal() 
 ```
 
