@@ -2,18 +2,18 @@
 # this executes all steps for creating a final, mosaiced plume raster over a series of pourpoint shapefiles 
 
 
-cd /home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v2022/plumes
+cd /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes
 
 # Load ocean mask null into grass session 
-r.in.gdal /home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v2022/grassdata/location/PERMANENT/ocean_mask.tif output='ocean'
+r.in.gdal /home/shares/ohi/stressors_2021/_dataprep/nutrients/grassdata/location/PERMANENT/ocean_mask.tif output='ocean'
 
-outdir=/home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v2022/output/N_plume
+outdir=/home/shares/ohi/stressors_2021/_dataprep/nutrients/output/N_plume
 
 j=0
 
-for file in /home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v2022/plumes/shp/*.shp ; do
+for file in /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/shp/*.shp ; do
 
-# file=/home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v2022/plumes/shp/*.shp
+# file='SSP5_near-term'
 
     fileout=${file%.shp}_joined.tif #define output filename  
     j=$(( j + 1 ))
@@ -50,8 +50,8 @@ for file in /home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v2022/
     # Export the rasters to tif files
 
     # Make output directory to export rasters in the grass cloud to
-    mkdir output 
-    cd output
+    mkdir /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/output 
+    cd /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/output
 
     # Get the list of rasters (pull down from cloud into a list)
     g.list type=raster pattern=plume_effluent* > plume_raster.list
@@ -70,45 +70,44 @@ for file in /home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v2022/
 ## Split the plume output .tifs (this depends on you machine but is required on Mazu @ NCEAS) 
 ## and put them together 
 
-cd output
-mkdir subsets
-for i in  1 2 3 4 5 6 7 8 9 10 
-## the number of i's depending on how many plume_effluent.tif files were created. We will  subset in batches of 10000, so for instance, I had ~95000 .tif files, so i ran my for loop for i in 1:10
+cd /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/output
+mkdir -p subsets
 
-do
+for i in {1..10}; do 
    printf "Starting $i \n"
-   mkdir subsets/subset$i
+   mkdir -p subsets/subset$i
   
    # move the tif files in batches of 10000 
-   mv `ls | head -10000` subsets/subset$i/
-  
+  find . -maxdepth 1 -name "*.tif" | head -10000 | while read file; do mv "$file" subsets/subset$i; done
+
    # mosaic subset 
    cd subsets/subset$i/
 
-    python2 /home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v2022/plumes/gdal_add.py -o effluent_sub$i.tif -ot Float32 plume_effluent*.tif # ALWAYS UPDATE first tif NAME to whatever you are running.. 
+    python3 /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/gdal_add.py -o effluent_sub$i.tif -ot Float32 plume_effluent*.tif
 
    printf "subset $i tif done \n"
   
    # move subset mosaic and go up
-   mv effluent_sub$i.tif ../ # ALWAYS UPDATE tif NAME
-   cd ../../
+   mv effluent_sub$i.tif ../
+   cd ../..
    
    printf "\n Ending $i \n"
 done
+
 printf "Done Subsets \n"
 
 # final mosaic
 cd subsets
 
-python2 /home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v2022/plumes/gdal_add.py -o $fileout -ot Float32 effluent_sub*.tif # ALWAYS UPDATE tif NAME
+python3 /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/gdal_add.py -o $fileout -ot Float32 effluent_sub*.tif # ALWAYS UPDATE tif NAME
 
 echo "finished mosaic"
 
 	mv $fileout $outdir #move the mosaic tif file to the output directory defined above
 
-    cd /home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v2022/plumes
+    cd /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes
     
-	mv /home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v2022/plumes/output /home/shares/ohi/git-annex/globalprep/prs_land-based_nutrient/v2022/plumes/output$j # rename output so that we can see which plumes it breaks on, if it breaks
+	mv /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/output /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/output$j # rename output so that we can see which plumes it breaks on, if it breaks
 
 done #end loop
 

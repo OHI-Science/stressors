@@ -27,7 +27,7 @@
 # Boston, MA 02111-1307, USA.
 ###############################################################################
 
-import gdal
+from osgeo import gdal
 import sys
 
 verbose = 0
