@@ -16,7 +16,7 @@ https://anderfernandez.com/en/blog/machine-learning-r-caret/
 
 We only have historic and current light pollution data, so we will be modeling the change in light pollution based on changes in GDP, changes in population, proportion land in raster cell, and ecoregion.
 
-Current light pollution data: https://figshare.com/articles/dataset/Harmonization_of_DMSP_and_VIIRS_nighttime_light_data_from_1992-2018_at_the_global_scale/9828827/2
+Current light pollution data: https://figshare.com/articles/dataset/Harmonization_of_DMSP_and_VIIRS_nighttime_light_data_from_1992-2018_at_the_global_scale/9828827/7
 
 https://www.nature.com/articles/s41597-020-0510-y
 
@@ -43,6 +43,20 @@ cols = rev(colorRampPalette(brewer.pal(9, 'Spectral'))(255)) # rainbow color sch
 
 ```
 
+### Explore light data
+
+Can skip this!
+
+```{r}
+# see what is in directory
+files <- dir("/home/shares/ohi/stressors_2021/_raw_data/light_li_2020/v7", full=TRUE)
+
+lights <- raster::raster(files[1]) 
+lights
+plot(lights)
+
+```
+
 # Develop model
 
 Define years for two time points of light pollution to understand how light changes with changes to GDP and population.
@@ -50,12 +64,8 @@ Define years for two time points of light pollution to understand how light chan
 ```{r}
 
 current <- "2016|2017|2018|2019|2020"
-current_years_2001_2005 <- "2001|2002|2003|2004|2005"
-current_years_2016_2020 <- "2016|2017|2018|2019|2020"
 
 ```
-
-### 
 
 ## Defining boundaries of analysis
 
@@ -115,34 +125,15 @@ plot(coastal)
 
 ```
 
-### Explore light data
-
-Can skip this!
-
-```{r}
-# see what is in directory
-files <- dir("/home/shares/ohi/stressors_2021/_raw_data/light_li_2020/v7", full=TRUE)
-
-lights <- raster::raster(files[1]) 
-lights
-plot(lights)
-
-```
-
 ## Get averaged light data
 
 ```{r}
 
 current_raster_lights <- function(years_to_include=current, name="current"){
 files <- dir("/home/shares/ohi/stressors_2021/_raw_data/light_li_2020/v7", full=TRUE)
-files <- grep(years_to_include, files, value=TRUE)
+files <- grep(paste0(years_to_include, "_simVIIRS"), files, value=TRUE)
 
 current_light <- app(terra::rast(files), fun="mean", na.rm=TRUE)
-
-# recommendation is to use pixel values >7
-# (that makes quite a large difference - will do later)
-#current_light <- ifel(current_light<=7, 0, current_light)
-
 
 # project raster
 #plot(current_light)
@@ -156,10 +147,6 @@ writeRaster(current_light_mol, sprintf("/home/shares/ohi/stressors_2021/_datapre
 }
   
   current_raster_lights(years_to_include=current, name="current")
-current_raster_lights(years_to_include=current_years_2001_2005, 
-  name= "current_2001_2005")
-current_raster_lights(years_to_include=current_years_2016_2020, 
-  name= "current_2016_2020")
 
 
 ```
@@ -168,7 +155,7 @@ current_raster_lights(years_to_include=current_years_2016_2020,
 
 Determine how much ocean light there is outside the boundary we have established. If there is a substantial amount, we should account for this as well.
 
-Losing less than 0.3% of the cells in the areas of the ocean beyond where we are predicting with current light in them. Plus, many of these seem to be related to the northern and southern lights.
+Accounting for 86% of ocean light. There is some region on China's coast that is not accounted for. This also helps eliminate the northern and southern lights.
 
 ```{r}
 
@@ -176,221 +163,44 @@ Losing less than 0.3% of the cells in the areas of the ocean beyond where we are
 plot(coastal)
 plot(pure_land)
 
-deeper_ocean <- app(c(coastal, pure_land), "sum", na.rm=TRUE)
-deeper_ocean <- ifel(is.na(deeper_ocean), 1, NA)
-global(deeper_ocean, "sum", na.rm=TRUE)
+land_coastal <- app(c(pure_land, coastal), "sum", na.rm=TRUE)
+deep_ocean <- ifel(is.na(land_coastal), 1, NA)
+
 
 # lights
-light <- rast("/home/shares/ohi/stressors_2021/_dataprep/light/model/light_current_2016_2020.tif")
+light <- rast("/home/shares/ohi/stressors_2021/_dataprep/light/model/light_current.tif")
 
 light <- ifel(light>7, light, 0)
+
+# coastal light
+light_coastal <- light*coastal
 # deeper light
-deeper_light <- light * deeper_ocean
+light_deep_ocean <- light * deep_ocean
 
-light_abs <- ifel(deeper_light>7, 1, 0)
-global(light_abs, "sum", na.rm=TRUE)/global(deeper_ocean, "sum", na.rm=TRUE)
-plot(light_abs)
+global(light_coastal, "sum", na.rm=TRUE)/(global(light_deep_ocean, "sum", na.rm=TRUE) + global(light_coastal, "sum", na.rm=TRUE))
 
-
-plot(log(deeper_light+1))
-```
-
-## Get population change data
-
-https://sedac.ciesin.columbia.edu/data/set/gpw-v4-population-count-adjusted-to-2015-unwpp-country-totals-rev11/data-downloadUN
-
-WPP-Adjusted Population Count, v4.11 (2000, 2005, 2010, 2015, 2020)
-
-2.5 arc minute
-
-Citation:
-
-Center for International Earth Science Information Network - CIESIN - Columbia University. 2018. Gridded Population of the World, Version 4 (GPWv4): Population Count Adjusted to Match 2015 Revision of UN WPP Country Totals, Revision 11. Palisades, New York: NASA Socioeconomic Data and Applications Center (SEDAC). <https://doi.org/10.7927/H4PN93PB>. Accessed 22 May 2023.
-
-```{r}
-pop_current_years_2001_2005 <- 
-rast("/home/shares/ohi/stressors_2021/_raw_data/population_historic_ciesin/gpw-v4-population-count-adjusted-to-2015-unwpp-country-totals-rev11_2005_2pt5_min_tif/gpw_v4_population_count_adjusted_to_2015_unwpp_country_totals_rev11_2005_2pt5_min.tif")
-
-pop_current_years_2015_2020 <- rast("/home/shares/ohi/stressors_2021/_raw_data/population_historic_ciesin/gpw-v4-population-count-adjusted-to-2015-unwpp-country-totals-rev11_2020_2pt5_min_tif/gpw_v4_population_count_adjusted_to_2015_unwpp_country_totals_rev11_2020_2pt5_min.tif")
-
-pop_t1_agg <- terra::aggregate(pop_current_years_2001_2005, fact=2, fun="sum", na.rm=TRUE)
-pop_t1_density <- pop_t1_agg/cellSize(pop_t1_agg, unit="km")
-pop_t1_density_mol <- terra::project(pop_t1_density, ocean_raw)
-
-pop_t2_agg <- terra::aggregate(pop_current_years_2015_2020, fact=2, fun="sum", na.rm=TRUE)
-pop_t2_density <- pop_t2_agg/cellSize(pop_t2_agg, unit="km") 
-pop_t2_density_mol <- project(pop_t2_density, ocean_raw, method="average")
-
-
-# check that projection went ok=
-
-pop_t1 <- pop_t1_density_mol*cellSize(pop_t1_density_mol, unit="km")
-
-raster::cellStats(raster::raster(pop_current_years_2001_2005), "sum", na.rm=TRUE)
-raster::cellStats(raster::raster(pop_t1), "sum", na.rm=TRUE)
-
-pop_t2 <- pop_t2_density_mol*cellSize(pop_t2_density_mol, unit="km")
-raster::cellStats(raster::raster(pop_current_years_2015_2020), "sum", na.rm=TRUE)
-raster::cellStats(raster::raster(pop_t2), "sum", na.rm=TRUE)
-# slightly inflating population, but looks reasonable.
-
-```
-
-### Get disturbance population estimates for the nearshore area
-
-get the nearshore pop estimate, average of nearby land and ocean cells (these are zero pop, following same protocol as in human population script).
-
-```{r}
-   
-  ## get the nearshore disturbance estimate, average population density of nearby land and ocean cells (these are zero population) 
-
-offshore_pop <- function(raster_item = pop_t1_density_mol, saveName="pop_time1.tif"){
-  #raster_item = pop_t1_density_mol
-  offshore_pop_rast_noNA <- ifel(is.na(raster_item), 0, raster_item) 
-
-  # averages all the cells around a cell, this will be used to get a general measure
-  # of human density of nearby cells
-for(i in 1:3){
-  i=1+i  
-offshore_pop_rast_noNA <-   terra::focal(offshore_pop_rast_noNA, w=3, fun=mean, na.rm=TRUE)
-}      
-    ## combine shoreline and offshore regions
-  total <- terra::ifel(is.na(raster_item), offshore_pop_rast_noNA , raster_item)  
-terra::writeRaster(total, sprintf("/home/shares/ohi/stressors_2021/_dataprep/light/model/%s", saveName), overwrite=TRUE)
-}
-
-offshore_pop(raster_item=pop_t1_density_mol, saveName="pop_time1.tif")
-offshore_pop(raster_item=pop_t2_density_mol, saveName="pop_time2.tif")
+plot(log(light_deep_ocean+1))
 ```
 
 ## Model coastal lights
 
-Here we use a random forest model to predict the change in light pollution based on changes in GDP and changes in population.
+Here we use a random forest model to predict light pollution based on GDP and population, as well as variables such as proportion land in cell, ecoregion, distance to coast.
 
-(Light_time2 - Light_time1) \~ (GDP_time2 - GDP_time1) + (pop_time2 - pop_time1)
-
-This value is used to adjust the current light value into the future.
-
-We add some additional variables to fine-tune the prediction, including absolute GDP, absolute population, current light, ecoregion, and the proportion of land in the raster cell.
-
-missRanger package for imputation
+missRanger package is used for imputation of missing data.
 
 https://cran.r-project.org/web/packages/missRanger/vignettes/missRanger.html#:\~:text=It%20can%20deal%20with%20most,destroying%20the%20original%20data%20structure.
 
 ```{r}
 
-gdp_time1 <- rast("/home/shares/ohi/stressors_2021/_dataprep/gdp/gdp-per-km2-extended_current_2001_2005.tif") * coastal
-gdp_time2 <-rast("/home/shares/ohi/stressors_2021/_dataprep/gdp/gdp-per-km2-extended_current_2016_2020.tif") * coastal
-light_time1 <- rast("/home/shares/ohi/stressors_2021/_dataprep/light/model/light_current_2001_2005.tif") * coastal
-light_time2 <- rast("/home/shares/ohi/stressors_2021/_dataprep/light/model/light_current_2016_2020.tif") * coastal
-pop_t1 <- rast("/home/shares/ohi/stressors_2021/_dataprep/light/model/pop_time1.tif") * coastal
-pop_t2 <- rast("/home/shares/ohi/stressors_2021/_dataprep/light/model/pop_time2.tif") * coastal
-land <- ifel(is.na(ocean_raw), 0, ocean_raw)
-land <- 1-(land*coastal)
-regions_sf <- sf::st_read(here("_spatial/meow_rgns/meow_rgns.shp")) %>%
-  mutate(RLM_CODE = as.numeric(RLM_CODE)) %>%
-  sf::st_transform(crs = "+proj=moll")
-
-regions <- fasterize::fasterize(regions_sf, raster::raster(land), field="RLM_CODE") 
-
-regions <- rast(regions) * coastal
-
-
-distance_to_coast <- distance(pure_land) * coastal
-
-stack <- c(light_time1, light_time2, gdp_time1, gdp_time2, pop_t1, pop_t2, land, regions, distance_to_coast)
-
-mod1_df <- as.data.frame(stack) 
-
-names(mod1_df) <- c("light_time1", "light_time2", "gdp_time1", "gdp_time2", "pop_time1", "pop_time2", "prop_land", "region", "distance_to_coast")
-
-mod1_df <- mod1_df %>%
-  mutate(light_change = light_time2 - light_time1,
-         gdp_change = gdp_time2 - gdp_time1,
-         pop_change = pop_time2 - pop_time1,
-         region = as.factor(region),
-         region = as.factor(ifelse(is.na(region), "other", region))) %>%
-  filter(!is.na(light_change))
-
-library(caret)
-library(ranger)
-library(missRanger)
-
-# gapfill missing data
-mod1_df_impute <- missRanger(
-  mod1_df, 
-  pmm.k = 3, 
-  splitrule = "extratrees", 
-  num.trees = 50
-)
-
-
-## This takes a very long time! But it provides optimization values
-
-#rf_grid <- expand.grid(mtry = c(2, 3, 4, 5), splitrule = c("variance", "extratrees"), min.node.size = c(1, 3, 5))
-#rf_grid
-#rf <- train(light_change ~ gdp_change + pop_change + prop_land + region + gdp_time2 + pop_time2, data=mod1_df_impute, method="ranger", tuneGrid = rf_grid)
-# RMSE was used to select the optimal model using the smallest value.
-#The final values used for the model were mtry = 5, splitrule = variance and min.node.size = 1.
-
-# optimized parameters used in the random forest model from the ranger package
-rf2 <- ranger(light_change ~ gdp_change + pop_change + prop_land + region + gdp_time2 + pop_time2 + distance_to_coast, data=mod1_df_impute, mtry=5, min.node.size=3, splitrule="variance", importance="permutation")
-rf2
-
-# out of bag cross validation
-mod1_df_impute$pred_change <- rf2$predictions 
-mod1_df_impute <- mod1_df_impute %>%
-  mutate(pred_light = light_time1 + pred_change)
-  
-plot(mod1_df_impute$light_time2, mod1_df_impute$pred_light)
-abline(0,1, col="red")
-
-mod_fit <- lm(mod1_df_impute$light_time2 ~ mod1_df_impute$pred_light, data=mod1_df_impute)
-summary(mod_fit)
-
-importance(rf2)
-
-# saveRDS(rf2, "/home/shares/ohi/stressors_2021/_dataprep/light/model/rf_model.rds")
-
-```
-
-Realized, I need to predict the original light from current scenario GDP and population data.
-
-```{r}
-
-#rf_grid <- expand.grid(mtry = c(2, 3, 4, 5), splitrule = c("variance", "extratrees"), min.node.size = c(1, 3, 5))
-#rf_grid
-#rf <- train(light_time2 ~ prop_land + region + gdp_time2 + pop_time2 + distance_to_coast, data=mod1_df_impute, method="ranger", tuneGrid = rf_grid)
-
-rf3 <- ranger(light_time2 ~ prop_land + region + gdp_time2 + pop_time2 + distance_to_coast, data=mod1_df_impute, mtry=5, min.node.size=5, splitrule="variance", importance="permutation")
-rf3
-
-# out of bag cross validation
-mod1_df_impute$pred_light <- rf3$predictions 
-
-plot(mod1_df_impute$light_time2, mod1_df_impute$pred_light)
-abline(0,1, col="red")
-
-mod_fit <- lm(mod1_df_impute$light_time2 ~ mod1_df_impute$pred_light, data=mod1_df_impute)
-summary(mod_fit)
-
-importance(rf3)
-
-# saveRDS(rf2, "/home/shares/ohi/stressors_2021/_dataprep/light/model/rf_model.rds")
-
-
-```
-
-Realized I should probably build the model using modeled population at this point.
-
-```{r}
-
-light <- rast("/home/shares/ohi/stressors_2021/_dataprep/light/model/light_current_2016_2020.tif") * coastal
+light <- rast("/home/shares/ohi/stressors_2021/_dataprep/light/model/light_current.tif") * coastal
 
 gdp <-rast("/home/shares/ohi/stressors_2021/_dataprep/gdp/gdp-per-km2-extended_current_2016_2020.tif") * coastal
+
 pop <-rast("/home/shares/ohi/stressors_2021/_dataprep/population/other_pop_files/extend_human-pop-density-km2_current_SSP1_RCP2_6.tif") * coastal
+
 land <- ifel(is.na(ocean_raw), 0, ocean_raw)
 land <- 1-(land*coastal)
+
 regions_sf <- sf::st_read(here("_spatial/meow_rgns/meow_rgns.shp")) %>%
   mutate(RLM_CODE = as.numeric(RLM_CODE)) %>%
   sf::st_transform(crs = "+proj=moll")
@@ -432,10 +242,10 @@ mod1_df_impute <- missRanger(
 #rf <- train(light ~ gdp + pop + prop_land + region + distance_to_coast, data=mod1_df_impute, method="ranger", tuneGrid = rf_grid)
 
 # RMSE was used to select the optimal model using the smallest value.
-#The final values used for the model were mtry = 5, splitrule = variance and min.node.size = 3.
+#The final values used for the model were mtry = 5, splitrule = variance and min.node.size = 1.
 
 # optimized parameters used in the random forest model from the ranger package
-rf2 <- ranger(light ~ gdp + pop + prop_land + region + distance_to_coast , data=mod1_df_impute, mtry=5, min.node.size=3, splitrule="variance", importance="permutation")
+rf2 <- ranger(light ~ gdp + pop + prop_land + region + distance_to_coast , data=mod1_df_impute, mtry=5, min.node.size=1, splitrule="variance", importance="permutation")
 rf2
 
 # out of bag cross validation
@@ -455,57 +265,22 @@ importance(rf2)
 
 ## capping the data
 
-The original light data is from 0-63. However, they say to ignore values \<7. If we do that, this the fit of the data.
+The original light data is from 0-63. However, they say to ignore values \<7. If we do that, this the fit of the data. Doesn't make a huge difference and we aren't generally overshooting the max, so I will not do this until later (if we do it at all).
 
 ```{r}
 mod1_df_impute <- mod1_df_impute %>%
   mutate(pred_light_cap = ifelse(pred_light >63, 63, pred_light))
 
-plot(mod1_df_impute$light_time2, mod1_df_impute$pred_light_cap)
+plot(mod1_df_impute$light, mod1_df_impute$pred_light_cap)
 abline(0,1, col="red")
 
-mod_fit <- lm(mod1_df_impute$light_time2~ mod1_df_impute$pred_light_cap, data=mod1_df_impute)
+mod_fit <- lm(mod1_df_impute$light ~ mod1_df_impute$pred_light_cap, data=mod1_df_impute)
 summary(mod_fit)
 
 
 ```
 
 # Apply model to new data!
-
-Checking that population data from two different sources is compatible.
-
-```{r}
-
-scenario <- rast("/home/shares/ohi/stressors_2021/_dataprep/population/other_pop_files/extend_human-pop-density-km2_current_SSP1_RCP2_6.tif")*coastal
-
-current <- rast("/home/shares/ohi/stressors_2021/_dataprep/light/model/pop_time2.tif")*coastal
-
-plot(log(scenario+1))
-plot(log(current+1))
-
-plot((scenario))
-plot((current))
-
-tmp <- scenario*cellSize(scenario, unit="km")
-global(tmp, "sum", na.rm=TRUE)
-tmp2 <- current*cellSize(current, unit="km")
-global(tmp2, "sum", na.rm=TRUE)
-
-stack <- c(scenario, current)
-
-df <- as.data.frame(stack)
-names(df) <- c("scenario", "current")
-df
-plot(log(df$scenario+1), log(df$current+1))
-plot(df$scenario, df$current)
-abline(0,1, col="red")
-
-mod <- lm(scenario ~ current, data=df)
-summary(mod)
-
-```
-
-Those don't match up as well I expected. The global numbers seem about right, so I don't think anything is going wrong in the analysis. Given this, I am going to see how well the model predicts current light.
 
 ```{r}
 
@@ -517,9 +292,6 @@ period = c("near-term", "medium-term", "long-term")
 
 model_predict_list <- expand_grid(scenarios, period)
 
-
-# if need to load model:
-#rf_memory <- readRDS("/Users/frazier/Desktop/gdp_wang/rf_model1.rds")
 
 for(i in 1:dim(model_predict_list)[1]){
   # i=1
@@ -574,4 +346,171 @@ x2 <- rast(mod1_df_impute, type="xyz")
 writeRaster(x2, sprintf("/home/shares/ohi/stressors_2021/_dataprep/light/light_%s_%s.tif", model_predict_list$gdp[i], model_predict_list$period[i]), overwrite=TRUE)
 
 }
+```
+
+Have to do the loop for current years a bit differently. The GDP data has current without scenarios, whereas the population data has current for various model scenarios. Interestingly, the scenario current population data does not match very well for actual current population (the global numbers are very similar, but the distribution is noticeably different). The GDP data does match up very well.
+
+```{r}
+# to versions of population SSP4, choosing only one.
+scenarios <- data.frame(
+  pop = c("SSP1", "SSP2", "SSP3", "SSP4_RCP3_4", "SSP5"),
+  gdp = c("ssp1", "ssp2", "ssp3", "ssp4", "ssp5"))
+
+period = c("near-term", "medium-term", "long-term")
+
+model_predict_list <- expand_grid(scenarios, period)
+
+
+for(i in 1:dim(model_predict_list)[1]){
+  # i=1
+
+  gdp <- rast(sprintf("/home/shares/ohi/stressors_2021/_dataprep/gdp/gdp-per-km2-extended_%s_%s.tif", model_predict_list$gdp[i], model_predict_list$period[i])) * coastal
+
+
+pop_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/population/other_pop_files", pattern=model_predict_list$pop[i], full=TRUE)
+pop_name <- grep(model_predict_list$period[i], pop_list, value=TRUE)
+pop <- rast(pop_name) * coastal
+
+land <- ifel(is.na(ocean_raw), 0, ocean_raw)
+land <- 1-(land*coastal)
+
+regions_sf <- sf::st_read(here("_spatial/meow_rgns/meow_rgns.shp")) %>%
+  mutate(RLM_CODE = as.numeric(RLM_CODE)) %>%
+  sf::st_transform(crs = "+proj=moll")
+
+regions <- fasterize::fasterize(regions_sf, raster::raster(land), field="RLM_CODE") 
+
+regions <- rast(regions) * coastal
+
+
+distance_to_coast <- distance(pure_land) * coastal
+
+stack <- c(gdp, pop, land, regions, distance_to_coast)
+
+mod1_df <- as.data.frame(stack, xy=TRUE) 
+
+names(mod1_df) <- c("x", "y", "gdp", "pop", "prop_land", "region", "distance_to_coast")
+
+mod1_df <- mod1_df %>%
+  mutate(region = as.factor(region),
+         region = as.factor(ifelse(is.na(region), "other", region))) 
+
+# gapfill missing data
+mod1_df_impute <- missRanger(
+  mod1_df, 
+  pmm.k = 3, 
+  splitrule = "extratrees", 
+  num.trees = 50
+)
+
+predictions <- predict(rf2, data=mod1_df_impute)
+
+mod1_df_impute <- mod1_df_impute %>%
+  mutate(pred_light = predictions$predictions) %>%
+  select(x, y, pred_light)
+
+x2 <- rast(mod1_df_impute, type="xyz")
+
+writeRaster(x2, sprintf("/home/shares/ohi/stressors_2021/_dataprep/light/light_%s_%s.tif", model_predict_list$gdp[i], model_predict_list$period[i]), overwrite=TRUE)
+
+}
+```
+
+Have to run a separate loop for current because current gdp doesn't have multiple ssps. This means we have to do things slightly differently.
+
+```{r}
+
+scenarios <- data.frame(
+  pop = c("SSP1", "SSP2", "SSP3", "SSP4_RCP3_4", "SSP5"))
+
+period = c("current")
+
+model_predict_list <- expand_grid(scenarios, period)
+
+
+for(i in 1:dim(model_predict_list)[1]){
+  # i=1
+
+  gdp <- rast("/home/shares/ohi/stressors_2021/_dataprep/gdp/gdp-per-km2-extended_current.tif") * coastal
+
+
+pop_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/population/other_pop_files", pattern=model_predict_list$pop[i], full=TRUE)
+pop_name <- grep(model_predict_list$period[i], pop_list, value=TRUE)
+pop <- rast(pop_name) * coastal
+
+land <- ifel(is.na(ocean_raw), 0, ocean_raw)
+land <- 1-(land*coastal)
+
+regions_sf <- sf::st_read(here("_spatial/meow_rgns/meow_rgns.shp")) %>%
+  mutate(RLM_CODE = as.numeric(RLM_CODE)) %>%
+  sf::st_transform(crs = "+proj=moll")
+
+regions <- fasterize::fasterize(regions_sf, raster::raster(land), field="RLM_CODE") 
+
+regions <- rast(regions) * coastal
+
+
+distance_to_coast <- distance(pure_land) * coastal
+
+stack <- c(gdp, pop, land, regions, distance_to_coast)
+
+mod1_df <- as.data.frame(stack, xy=TRUE) 
+
+names(mod1_df) <- c("x", "y", "gdp", "pop", "prop_land", "region", "distance_to_coast")
+
+mod1_df <- mod1_df %>%
+  mutate(region = as.factor(region),
+         region = as.factor(ifelse(is.na(region), "other", region))) 
+
+# gapfill missing data
+mod1_df_impute <- missRanger(
+  mod1_df, 
+  pmm.k = 3, 
+  splitrule = "extratrees", 
+  num.trees = 50
+)
+
+predictions <- predict(rf2, data=mod1_df_impute)
+
+mod1_df_impute <- mod1_df_impute %>%
+  mutate(pred_light = predictions$predictions) %>%
+  select(x, y, pred_light)
+
+x2 <- rast(mod1_df_impute, type="xyz")
+
+writeRaster(x2, sprintf("/home/shares/ohi/stressors_2021/_dataprep/light/raw/light_%s_%s.tif", tolower(model_predict_list$pop[i]), model_predict_list$period[i]), overwrite=TRUE)
+
+}
+```
+
+## Rescaling data
+
+We are rescaling based on this information from this paper: https://online.ucpress.edu/elementa/article/9/1/00049/119144/A-global-atlas-of-artificial-light-at-night-under
+
+At a depth of 1 m, 1.9 million km2 of the world's coastal seas are exposed to biologically important ALAN, which equates to around 3.1% of the global exclusive economic zones. This area decreases to 1.6 million km2 (2.7%) at a depth of 10 m, and to 840,000 km2 (1.4%) at 20 m.
+
+In our data, light of around \>12 units corresponds to 1.6 million km2. Given this we will use this value as the baseline scaling unit.
+
+```{r}
+
+# exploring data
+tmp <- rast("/home/shares/ohi/stressors_2021/_dataprep/light/raw/light_ssp1_current.tif")
+
+# total area we are looking at here
+tmp_all <- ifel(!is.na(tmp), 1, NA)
+global(tmp_all, "sum", na.rm=TRUE)*100
+
+# max values
+global(tmp, "max", na.rm=TRUE)
+
+tmp_12 <- ifel(tmp>12, 1, NA)
+global(tmp_12, "sum", na.rm=TRUE)*100
+
+tmp_60 <- ifel(tmp>63, 1, NA)
+global(tmp_60, "sum", na.rm=TRUE)*100
+
+```
+
+```{r}
+s
 ```
