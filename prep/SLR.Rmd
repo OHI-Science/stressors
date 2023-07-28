@@ -1,0 +1,81 @@
+---
+title: "SLR"
+output: html_document
+date: "2023-07-26"
+---
+
+```{r setup, include=FALSE}
+library(terra)
+library(tidyverse)
+library(here)
+
+rast_base_10km_file <- terra::rast(here('_spatial/rast_base_mol_10km.tif'))
+
+ocean <- terra::rast(here('_spatial/ocean_area_mol.tif'))
+ocean_coast <- terra::ifel(ocean > 0,  1, 0)
+#ocean_coast_zero <- terra::ifel(is.na(ocean_coast), 0, ocean_coast)
+global(ocean_coast, "sum", na.rm=TRUE)
+
+one_inland <- boundaries(ocean_coast, falseval=NA, inner=FALSE)
+#one_inland <- ifel(is.na(one_inland), 0, one_inland)
+global(one_inland, "sum", na.rm=TRUE)
+
+total_area <- ifel(is.na(ocean_coast), one_inland, ocean_coast)
+global(total_area, "sum", na.rm=TRUE) # making sure there is more coastline!
+global(ocean_coast, "sum", na.rm=TRUE) + global(one_inland, "sum", na.rm=TRUE)
+plot(total_area)
+
+```
+
+
+```{r}
+
+file_rename <-data.frame(filename = c(
+  "CMIP6 - Sea level rise (SLR) Change meters - Long Term (2081-2100) SSP1-2.6 (rel. to 1995-2014) - Annual.tiff", 
+  "CMIP6 - Sea level rise (SLR) Change meters - Long Term (2081-2100) SSP2-4.5 (rel. to 1995-2014) - Annual .tiff", 
+  "CMIP6 - Sea level rise (SLR) Change meters - Long Term (2081-2100) SSP3-7.0 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Long Term (2081-2100) SSP5-8.5 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Medium Term (2041-2060) SSP1-2.6 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Medium Term (2041-2060) SSP2-4.5 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Medium Term (2041-2060) SSP3-7.0 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Medium Term (2041-2060) SSP5-8.5 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Near Term (2021-2040) SSP1-2.6 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Near Term (2021-2040) SSP2-4.5 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Near Term (2021-2040) SSP3-7.0 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Near Term (2021-2040) SSP5-8.5 (rel. to 1995-2014) - Annual .tiff"),
+  scenario = c("ssp126", "ssp245", "ssp370", "ssp585", "ssp126", "ssp245", "ssp370", "ssp585", "ssp126", "ssp245", "ssp370", "ssp585"),
+  timeframe = rep(c("long-term", "medium-term", "near-term"), each=4))
+
+#raw_data <- "/home/shares/ohi/stressors_2021/_raw_data/slr_ipcc"
+raw_data <- "/Users/frazier/Desktop/slr_ipcc"
+#save_data_location <- "/home/shares/ohi/stressors_2021/_dataprep/slr"
+save_data_location <- "/Users/frazier/Desktop/slr"
+file_list <- list.files(raw_data, pattern="tif", full=TRUE)
+
+for(file in file_rename$filename){ # file = file_rename$filename[1]
+  
+  save_name <- paste0("slr_", file_rename$scenario[file_rename$filename==file], "_",
+                    file_rename$timeframe[file_rename$filename==file], ".tif")
+  
+  tmp <- rast(file.path(raw_data, file))
+  tmp_proj <- project(tmp, rast_base_10km_file, method="near")
+
+  tmp_proj_gf <- tmp_proj
+
+for(i in 1:20){
+  i=1+i
+tmp_proj_gf <- terra::focal(tmp_proj_gf, w=3, fun=mean, na.rm=TRUE, na.policy="only")
+cat(i, "\n")
+}
+
+masked_gf <- tmp_proj_gf*total_area
+    ## plot(masked_gf - tmp_proj)
+
+writeRaster(masked_gf, file.path(save_data_location, "raw", save_name), overwrite=TRUE)
+
+rescaled <- ifel(masked_gf > 1, 1, masked_gf)
+writeRaster(rescaled, file.path(save_data_location, "rescaled", save_name), overwrite=TRUE)
+}
+
+
+```
