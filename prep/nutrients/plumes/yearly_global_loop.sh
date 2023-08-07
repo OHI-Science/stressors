@@ -73,7 +73,7 @@ for file in /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/shp/*.shp
 cd /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/output
 mkdir -p subsets
 
-for i in {1..10}; do 
+for i in $(seq 1 10); do
    printf "Starting $i \n"
    mkdir -p subsets/subset$i
   

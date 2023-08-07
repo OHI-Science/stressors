@@ -148,14 +148,38 @@ check <- list.files("/home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_d
 tmp <- sf::st_read(check[5])[1:1000,]
 sf::st_write(tmp, "/home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_data/SSP1_medium_term.shp")
 
-check <- st_read()
 
+```
 
-tmp <- rast("/home/shares/ohi/stressors_2021/_dataprep/nutrients/output/N_plume/SSP1_current_short_joined.tif")
-plot(log(tmp+1))
+Checking the plume runs!
 
-global(tmp, "sum")
+```{r}
 
-sf_tmp <- st_read("/home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_data/SSP1_current_short.shp")
+## Check output to see that it basically sums
+tmp <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/output_ssp5_medium-term/subsets/effluent_sub7.tif")
+#terra::plot(log(tmp+1))
+
+tmp <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/nutrients/output/N_plume/SSP5_medium-term_joined.tif")
+#terra::plot(log(tmp+1))
+
+raster::cellStats(raster::raster(tmp), "sum", na.rm=TRUE)
+
+sf_tmp <- sf::st_read("/home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_data/SSP5_medium-term.shp")
 sum(sf_tmp$effluent)
+
+
+
+## mosaic in R:
+to_mosaic <- list.files("/home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/output_ssp5_near-term/subsets", pattern=".tif", full=TRUE)
+
+ic <- terra::sprc(to_mosaic, terra::rast("/home/shares/ohi/stressors_2021/_dataprep/nutrients/grassdata/ocean_mask.tif"))
+
+output <- terra::mosaic(ic, fun="sum")
+raster::cellStats(raster::raster(output), "sum", na.rm=TRUE)
+terra::plot(log(output+1))
+terra::writeRaster(output, "/home/shares/ohi/stressors_2021/_dataprep/nutrients/output/N_plume/SSP5_near-term_joined.tif", overwrite=TRUE)
+
+check <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/nutrients/output/N_plume/SSP5_near-term_joined.tif")
+terra::global(check, "sum", na.rm=TRUE)
+
 ```
