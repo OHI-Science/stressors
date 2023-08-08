@@ -1,0 +1,218 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+## NPP
+
+The NPP data are NOAA data from here:
+
+https://psl.noaa.gov/ipcc/cmip6/
+
+The rasters are organized like this:
+
+**Caption:** Primary Organic Carbon Production by All Types of Phytoplankton for ENSMN interpolated on a 1x1 grid for the entire year; **First panel:** ssp126 future climate for the period (2020-2049); **Second panel:** difference in the mean climate in the future time period (ssp126: 2020-2049) compared to the historical reference period (1985-2014); **Third panel:** inter-annual (de-trended) standard deviation for the historical reference period (1985-2014); **Fourth panel:** ratio of the de-trended variance in the future (2020-2049) divided by the past (1985-2014).
+
+```{r}
+library(tidyverse)
+library(terra)
+library(ncdf4)
+```
+
+Exploring the data (can skip):
+
+```{r}
+library(ncdf4)
+tmp1 <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models/npp_ssp126_2020_2049_v1.nc")
+test1 <- tmp1[[1]]
+
+tmp2 <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models/npp_ssp126_2040_2069_v1.nc")
+test2 <- tmp2[[1]]
+
+plot(test2-test1) # good! these are the same data, which makes sense (but I wanted to check)
+
+
+tmp <- nc_open("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models/npp_ssp126_2020_2049_v1.nc")
+names(tmp[['var']])
+ncatt_get(tmp, attributes(tmp$var)$names[1])$info
+
+library(metR)
+tmp <- ReadNetCDF("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models/npp_ssp126_2020_2049_v1.nc")
+
+```
+
+```{r}
+
+nc_files <- list.files("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models/", full=TRUE)
+
+for(nc in nc_files){ # nc = nc_files[1]
+  
+  nc_rast <- terra::rast(nc)
+  n_layers <- dim(nc_rast)[3]/4
+
+file_names <- nc_open(nc)
+
+    
+  for(layer in 1:n_layers){#layer=1
+    
+    historical <- nc_rast[[layer]]
+    future_anomoly <- nc_rast[[layer+n_layers]]
+    future <- historical + future_anomoly
+  
+
+ fileName_his <- ncatt_get(file_names, attributes(file_names$var)$names[layer+n_layers])$info
+ fileName_his <- sub("anomaly \\(.*\\)", "historical", fileName_his)
+ fileName_his <- gsub(" ", "_", fileName_his)
+ 
+ fileName_future <- ncatt_get(file_names, attributes(file_names$var)$names[layer+n_layers])$info
+ fileName_future <- gsub("anomaly ", "", fileName_future)
+ fileName_future <- gsub(" ", "_", fileName_future)
+ fileName_future <- gsub("-\\(1985-2014\\)", "", fileName_future)
+
+  
+ writeRaster(historical, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/extracted_files/%s.tif", fileName_his), overwrite=TRUE)
+  writeRaster(future, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/extracted_files/%s.tif", fileName_future), overwrite=TRUE)
+
+ 
+ #plot(terra::rast(list.files("/home/shares/ohi/stressors_2021/_dataprep/npp/extracted_files", full=TRUE)[1]))
+ 
+ 
+  }
+  
+}
+
+tmp <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models/npp_ssp126_2020_2049_v1.nc")
+terra::plot(tmp[[2]])
+
+tmp <- nc_open("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models/npp_ssp126_2020_2049_v1.nc")
+names(tmp[['var']])
+ncatt_get(tmp, attributes(tmp$var)$names[1])$info
+
+
+```
+
+```{r}
+
+ssp126_mods <- c("ACCESS-ESM1-5", "CanESM5", "CanESM5-CanOE", "CESM2", "CESM2-WACCM", "CMCC-ESM2", "CNRM-ESM2-1", "GFDL-ESM4", "MIROC-ES2L", "MPI-ESM1-2-HR", "MPI-ESM1-2-LR", "NorESM2-LM", "NorESM2-MM", "UKESM1-0-LL")
+
+ssp245_mods <- c("ACCESS-ESM1-5", "CanESM5", "CanESM5-CanOE", "CESM2-WACCM", "CMCC-ESM2", "CNRM-ESM2-1", "EC-Earth3-CC", "GFDL-CM4", "GFDL-ESM4", "MPI-ESM1-2-HR", "MPI-ESM1-2-LR", "NorESM2-LM",  "NorESM2-MM", "UKESM1-0-LL")
+
+ssp370_mods <- c("ACCESS-ESM1-5", "CanESM5", "CanESM5-CanOE", "CESM2", "CESM2-WACCM", "CMCC-ESM2", "MPI-ESM1-2-HR", "MIROC-ES2L", "IPSL-CM6A-LR", "IPSL-CM5A2-INCA", "GFDL-ESM4", "CNRM-ESM2-1", "UKESM1-0-LL", "NorESM2-MM", "MPI-ESM1-2-LR", "NorESM2-LM")
+
+ssp585_mods <- c("ACCESS-ESM1-5", "CanESM5", "CanESM5-CanOE", "CESM2", "CESM2-WACCM", "CMCC-ESM2", "CNRM-ESM2-1", "EC-Earth3-CC", "GFDL-CM4", "GFDL-ESM4", "IPSL-CM6A-LR", "MIROC-ES2L", "UKESM1-0-LL", "NorESM2-MM", "NorESM2-LM", "MRI-ESM2-0", "MPI-ESM1-2-LR", "MPI-ESM1-2-HR")
+                 
+ensemble_models <- intersect(ssp126_mods, ssp245_mods)
+ensemble_models <- intersect(ensemble_models, ssp370_mods)
+ensemble_models <- intersect(ensemble_models, ssp585_mods)
+ensemble_models <- paste(ensemble_models, collapse="|")
+
+ensemble_combos <- expand.grid(scenario=c("ssp126", "ssp245", "ssp370", "ssp585"),
+            time = c("historical", "(2020-2049)", "(2040-2069)", "(2070-2099)"))
+""
+```
+
+```{r}
+
+
+for(i in 1:dim(ensemble_combos)[1]){ # i=4
+
+  ensemble_params = ensemble_combos[i,]
+  
+  raster_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/npp/extracted_files", full=TRUE)
+  
+  raster_list <- grep(ensemble_models, raster_list, value=TRUE)
+  raster_list <- grep(ensemble_params$scenario, raster_list, value=TRUE)
+  raster_list <- grep(ensemble_params$time, raster_list, value=TRUE)
+  
+  cat("ensemble: ", as.character(ensemble_params$scenario), " and ", as.character(ensemble_params$time), " has N = ", length(raster_list), "\n")
+
+  ensemble_rasts <- terra::rast(raster_list)  
+  ensemble_mean <- mean(ensemble_rasts)
+  
+  writeRaster(ensemble_mean, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/ensembles/npp_%s_%s.tif", as.character(ensemble_params$scenario), as.character(ensemble_params$time)), overwrite=TRUE)
+  
+}
+
+# all scenarios had 12 models!
+
+```
+
+rescaling the data:
+
+```{r}
+
+
+
+scenarios <- c("ssp126", "ssp245", "ssp370", "ssp585")
+
+for(scenario in scenarios){ #scenario = scenarios[1]
+  ensemble_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/npp/ensembles", full=TRUE)
+  
+  scenario_rasters <- grep(scenario, ensemble_list, value=TRUE)
+  
+  historical <- rast(grep("historical", scenario_rasters, value=TRUE))
+  near <- rast(grep("2020-2049", scenario_rasters, value=TRUE))
+  medium <- rast(grep("2040-2069", scenario_rasters, value=TRUE))
+  long <- rast(grep("2070-2099", scenario_rasters, value=TRUE))
+  
+  writeRaster(historical, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_raw_%s_current.tif", scenario), overwrite=TRUE)
+    writeRaster(near, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_raw_%s_near-term.tif", scenario), overwrite=TRUE)
+    writeRaster(medium, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_raw_%s_medium-term.tif", scenario), overwrite=TRUE)
+    writeRaster(long, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_raw_%s_long-term.tif", scenario), overwrite=TRUE)
+    
+      
+  near_rescaled <- near/historical
+  near_rescaled <- ifel(near_rescaled>1, 1, near_rescaled)
+  medium_rescaled <- medium/historical
+  medium_rescaled <- ifel(medium_rescaled>1, 1, medium_rescaled)
+  long_rescaled <- long/historical
+   long_rescaled <- ifel(long_rescaled>1, 1, long_rescaled)  
+   
+    writeRaster(near_rescaled, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_rescaled_%s_near-term.tif", scenario), overwrite=TRUE)
+    writeRaster(medium_rescaled, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_rescaled_%s_medium-term.tif", scenario), overwrite=TRUE)
+    writeRaster(long_rescaled, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_rescaled_%s_long-term.tif", scenario), overwrite=TRUE)   
+   
+}
+```
+
+Final formatting
+
+```{r}
+rast_base_10km_file <- terra::rast(here('_spatial/rast_base_mol_10km.tif'))
+ocean_template <- terra::rast(here('_spatial/ocean_area_mol.tif'))
+ocean_template[ocean_template>0] <- 1
+plot(ocean_template)
+
+npp_paths <- list.files("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled", full=TRUE)
+
+for(npp_path in npp_paths){ # npp_path = npp_paths[1]
+npp_rast <- terra::rast(npp_path)
+
+
+mol_rast <- terra::project(npp_rast, rast_base_10km_file, method="near", over=TRUE)
+#plot(mol_rast)
+
+
+## gapfill
+gf_raster <- function(x){raster::focal(x, w = matrix(1,3,3), fun = mean, na.rm=TRUE, na.policy="only")}
+
+r = mol_rast
+  
+## Repeat 100 times (most is immediately gapfilled but the antarctic area was persistent)
+i <- 0
+while (i <= 50){
+r <- gf_raster(r)
+i <- i + 1
+print(i)
+}
+
+# plot(r)
+r <- r*ocean_template
+# diff_rast <- r - mol_rast
+#plot(diff_rast)
+
+writeRaster(r, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled_mol/%s", basename(npp_path)), overwrite = TRUE)
+}
+
+```
