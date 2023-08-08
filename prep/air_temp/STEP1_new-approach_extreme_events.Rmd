@@ -18,6 +18,7 @@ I format these data in two ways:
 
 raw data save here: /home/shares/ohi/stressors_2021/_raw_data/NOAA_cmip6_land_downscale
 information: https://www.nccs.nasa.gov/services/data-collections/land-based-products/nex-gddp-cmip6
+https://www.nccs.nasa.gov/sites/default/files/NEX-GDDP-CMIP6-Tech_Note.pdf
 temporal resolution: daily
 spatial resolution: 0.25 degrees
 Variables:
@@ -59,7 +60,7 @@ library(doParallel)
 
 
 #year ranges and scenarios:
-yr_range <- data.frame(time_frame = c("historical", "near-term",  "medium-term", "long-term"),
+yr_range <- data.frame(time_frame = c("current", "near-term",  "medium-term", "long-term"),
                        years = c("1995:2014", "2021:2040", "2041:2060", "2081:2100"))
 
 years <- c(1995:2014, 2021:2040, 2021:2040, 2041:2060, 2081:2100)
@@ -68,7 +69,8 @@ rast_base_10km_file <- terra::rast(here('_spatial/rast_base_mol_10km.tif'))
 ocean <- terra::rast(here('_spatial/ocean_area_mol.tif'))
 land_coast <- terra::ifel(ocean<1,  1, 0)
 land <- terra::ifel(is.na(land_coast), 1, land_coast)
-plot(land)
+land_mask <- terra::ifel(land==1, 1, NA)
+plot(land_mask)
 ```
 
 
@@ -82,7 +84,28 @@ data_list <- read.csv("/home/shares/ohi/stressors_2021/_raw_data/NOAA_cmip6_land
   filter(grepl(paste(paste0("_", years, ".nc"), collapse="|"), fileURL)) %>%
   pull(fileURL)
 
-for(data in data_list){ # data=data_list[1]
+# tasmax_day_CNRM-ESM2-1_ssp126_r1i1p1f2_gr_2043.nc
+# tasmax_day_UKESM1-0-LL_ssp245_r1i1p1f2_gn_2040.nc
+for(data in data_list[1:length(data_list)]){ # data=data_list[1]
+
+cmip_url <- trimws(data)
+save_loc <- file.path(raw_data_loc, basename(cmip_url))
+
+download.file(cmip_url, save_loc)
+cat("finished = ", cmip_url, "\n")
+
+}
+
+# check file sizes. If any look weird, resave:
+
+
+weirds <- c("tasmax_day_CNRM-ESM2-1_ssp126_r1i1p1f2_gr_2043.nc", "tasmax_day_UKESM1-0-LL_ssp245_r1i1p1f2_gn_2040.nc")
+weirds <- paste0(weirds, collapse = "|")
+data_list <- read.csv("/home/shares/ohi/stressors_2021/_raw_data/NOAA_cmip6_land_downscale/gddp-cmip6-files.csv") %>%
+    filter(grepl(weirds, fileURL)) %>%
+  pull(fileURL)
+
+for(data in data_list[1:length(data_list)]){ # data=data_list[1]
 
 cmip_url <- trimws(data)
 save_loc <- file.path(raw_data_loc, basename(cmip_url))
@@ -94,29 +117,21 @@ cat("finished = ", cmip_url, "\n")
 
 ```
 
+
+The following code chunk is saved as Rscript (days25.R) so it can be run as a background job.
 ```{r}
 
 raw_data_loc <- "/home/shares/ohi/stressors_2021/_raw_data/NOAA_cmip6_land_downscale/data"
-
-data_list <- read.csv("/home/shares/ohi/stressors_2021/_raw_data/NOAA_cmip6_land_downscale/gddp-cmip6-files.csv") %>%
-  filter(grepl("tasmax", fileURL))
-
-cmip_url <- trimws(data_list$fileURL[1])
-save_loc <- file.path(raw_data_loc, basename(cmip_url))
-
-download.file(cmip_url, save_loc)
-
-list.files(raw_data_loc)
-
-tmp <- nc_open(file.path(raw_data_loc, "tasmax_day_ACCESS-CM2_historical_r1i1p1f1_gn_1950.nc"))
-names(tmp$var)
-tmp$dim$time$vals # origin 1850-1-1
-
-tmp <- terra::rast(file.path(raw_data_loc, "tasmax_day_ACCESS-CM2_historical_r1i1p1f1_gn_1950.nc"))
+nc_file_list <- list.files(raw_data_loc, full=TRUE)
 
 threshold <- 273.15 + 35  # Change this to your desired threshold
 
+
+for(nc_file in nc_file_list){ #nc_file = nc_file_list[1]
 # Use lapply to apply a function to each layer of the raster
+
+  tmp <- terra::rast(nc_file)  
+  
 layers <- lapply(1:dim(tmp)[3], function(i) { # i=1
   layer <- tmp[[i]]
   
@@ -133,61 +148,35 @@ r_threshold <- rast(layers)
 
 # Sum the layers
 r_sum <- sum(r_threshold)
-r_sum
-plot(r_sum)
+#r_sum
+#plot(r_sum)
   
-  
+sum_proj <- project(r_sum, rast_base_10km_file)
 
-ocean_proj <- raster(ocean_mask)
-ocean_proj <- projectRaster(ocean_proj, tmp)
+  sum_proj_gf <- sum_proj
 
-tmp_mask <- ocean_proj*tmp
-cellStats(tmp_mask, "mean", na.rm=TRUE)
-plot(tmp_mask/100)
-ta_1 <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/sst_Xu/atm_hist_2000_06.nc4")
-ta_1 <- ta_1[[grep("ta_", names(ta_1))]]
-ta_1 <- ta_1[[grep("lev=100000_", names(ta_1))]]
-ta_1 <- mean(ta_1)
+for(i in 1:20){
+  i=1+i
+sum_proj_gf <- terra::focal(sum_proj_gf, w=3, fun=mean, na.rm=TRUE, na.policy="only")
+cat(i, "\n")
+}
+
+sum_proj_gf <- land_mask*sum_proj_gf
+
+prop_days <- sum_proj_gf/365
+prop_days <- ifel(prop_days>1, 1, prop_days)
+
+saveName <-  gsub(".nc", ".tif", basename(nc_file))
+writeRaster(prop_days, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/proportion_days_35C/%s", saveName), overwrite = TRUE)
 
 
 
-humidity_1 <- raster::brick("/home/shares/ohi/stressors_2021/_raw_data/sst_Xu/atm_hist_2000_06.nc4", varname="hur", level=1) 
-humidity_14 <- raster::brick("/home/shares/ohi/stressors_2021/_raw_data/sst_Xu/atm_hist_2000_06.nc4", varname="hur", level=14)
-plot(humidity_1[[1]])
-plot(humidity_14[[1]])
+}
 
-land_temp <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/land_temp_Xu/lnd.historical.200006.nc")
-land_temp <- land_temp[[grep("tas", names(land_temp))]]
-plot(land_temp - 273)
-plot(ta_1 -273)
-
-plot(land_temp - ta_1)
-
-system("ncdump -h /home/shares/ohi/stressors_2021/_raw_data/land_temp_Xu/lnd.historical.198905.nc")
-system("ncdump -h /home/shares/ohi/stressors_2021/_raw_data/land_temp_Xu/lnd.historical.198905.nc")
 
 ```
 
 
-## Proportion of days
-
-35C
-```{r}
-# scenarios
-for (file in yr_35_range$filename){ #file = yr_35_range$filename[1]
-
-all_files <- list.files("/home/shares/ohi/stressors_2021/_raw_data/Tair_35d_ipcc", full=TRUE)
-
-file_path <- grep(file, all_files, fixed=TRUE, value=TRUE)
-cat("N= ", length(file_path), " raster file was discovered")
-
-raster <- terra::rast(file_path)
-scaled_raster <- raster/365
-
-proj_scaled_raster <- terra::project(scaled_raster, rast_base_10km_file, method="near")
-
-scen <- yr_35_range$scenario[yr_35_range$filename==file]
-timeframe <-  yr_35_range$time_frame[yr_35_range$filename==file]
 
 writeRaster(proj_scaled_raster, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/proportion_days_35C/days-35_%s_%s.tif", scen, timeframe), overwrite = TRUE)
 
