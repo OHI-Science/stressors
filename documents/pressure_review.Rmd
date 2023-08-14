@@ -52,10 +52,11 @@ Shared socioeconomic pathways (SSPs, https://www.cell.com/trends/ecology-evoluti
 
 * SSP5 Fossil-fuelled Development: the push for economic and social development is linked to the exploitation of fossil fuels and the adoption of resource- and energy-intensive lifestyles around the world, leading to rapid growth and rampant greenhouse gas emissions.
 
-![](RCPs.jpg)
+![](figs/RCPs.jpg)
 
-![](cmip6_scenarios.jpg)
+![](figs/cmip6_scenarios.jpg)
 ## Pressures
+
 We attempted to find data for 27 pressure categories. We generally attempted to map pressures (e.g., biomass extraction) rather than activities (e.g., fishing) because organisms most directly respond to pressures. Furthermore, cumulative impact studies are easier when looking at pressures because the units are equivalent. One complication of this approach is that activities, and not pressures, are often mapped (e.g., shipping, mariculture). In these cases, we can attempt to model the pressure from the activity or, alternatively, use it as a proxy for the pressure.
 
 One of the limits of the data is that often the pressures do not include all the activities that contribute to the pressure. For this reason it is good to understand the linkages between activities and pressures (https://docs.google.com/spreadsheets/d/1VijDWMGrtXnGYEzj4t9nUKO0h5wh4amO/edit#gid=186939138).
@@ -90,7 +91,7 @@ Habitat change/loss: coastal structures | built structures (ports, windmills), m
 Habitat change/loss: erosion | sea level rise, storms, sand harvesting
 Non-indigenous species | marine vessel transport, mariculture, aquarium trade
 
-* includes categories of SST (average and extreme events), change in bottom temperature, change in water column temperature
+\* includes categories of SST (average and extreme events), change in bottom temperature, change in water column temperature
 
 ** includes categories of extreme events (number of days > 35 or 40 C, dry and wet bulb temperatures)
 
@@ -104,10 +105,10 @@ We were able to get current and future estimates for 11 of the pressure categori
 More work could be done to understand pathways of land-based pollution (garbage, sewage, runoff) into the ocean. Current dispersal models are very simplistic.
 
 Scenarios available for each pressure:
-![](scenarios.jpg)
+![](figs/scenarios.jpg)
 
-We analyzed three general time categories:
-![](time-series)
+We analyzed four general time categories:
+![](figs/year_ranges.jpg)
 
 ## Pressures
 
@@ -168,6 +169,8 @@ plot_d
 
 #### Coastal air temperature
 
+NOTE: Have data for wetbulb air temp..but it takes forever to run. Is this worth it? Probably more relevant than absolute temperature?
+
 ##### Data
 [IPCC WGI Interactive Atlas] (https://interactive-atlas.ipcc.ch/regional-information#eyJ0eXBlIjoiQVRMQVMiLCJjb21tb25zIjp7ImxhdCI6OTc3MiwibG5nIjo0MDA2OTIsInpvb20iOjQsInByb2oiOiJFUFNHOjU0MDMwIiwibW9kZSI6ImNvbXBsZXRlX2F0bGFzIn0sInByaW1hcnkiOnsic2NlbmFyaW8iOiJzc3A1ODUiLCJwZXJpb2QiOiIyIiwic2Vhc29uIjoieWVhciIsImRhdGFzZXQiOiJDTUlQNiIsInZhcmlhYmxlIjoiVFgzNWJjIiwidmFsdWVUeXBlIjoiQU5PTUFMWSIsImhhdGNoaW5nIjoiU0lNUExFIiwicmVnaW9uU2V0IjoiYXI2IiwiYmFzZWxpbmUiOiJBUjUiLCJyZWdpb25zU2VsZWN0ZWQiOltdfSwicGxvdCI6eyJhY3RpdmVUYWIiOiJwbHVtZSIsIm1hc2siOiJub25lIiwic2NhdHRlcllNYWciOm51bGwsInNjYXR0ZXJZVmFyIjpudWxsLCJzaG93aW5nIjpmYWxzZX19)
 
@@ -175,18 +178,16 @@ Number of days with maximum temperature above 35 or 40 degrees Celsius (bias adj
 
 Units: days
 
-Rescaled to values between 0-1 by dividing by 365 days and then subtracting the historical value.
-
 ensemble averages:
 ssp1-2.6 = 24 models
 ssp3-7.0 = 19 models (only 35C)
 ssp5-8.5 = 25 models
 
 ##### Pressure description
-* Proportion of extreme days >35C minus proportion of historical (1995-2014) days >35C
-* Proportion of extreme days >40C minus proportion of historical (1995-2014) days >40C
+Data were rescaled to values between 0 and why by determining the yearly proportion of extreme days (>35C or > 40C) minus the yearly proportion of historical (1995-2014) days >35C/40C
 
 ##### Overview
+
 Marine environments are complex because some taxa are affected by both air and water temperature. The environmental temperatures experienced by organisms in shallower, near coastal regions might be a combination of water and air temperatures. This is especially true if working with coarser resolution temperature data that does not do a great job of capturing coastal phenomenon.Organisms in intertidal zones or those associated with land will directly experience air temperatures.    
 
 
@@ -257,8 +258,6 @@ For population data, see direct human disturbance description which uses the sam
 To rescale the light pollution between 0 and 1 we used information about the biological sensitivity of marine copepods to light (https://doi.pangaea.de/10.1594/PANGAEA.929749?format=html#download, https://online.ucpress.edu/elementa/article/9/1/00049/119144/A-global-atlas-of-artificial-light-at-night-under). According to one study, at a depth of 1 m, 1.9 million km2 of the world's coastal oceans and this area decreases to 1.6 million km2 at a depth of 10m. 
 
 In our data, light values of around >12 units corresponds to 1.6 million km2. Given this we we used this value as the baseline scaling unit, such that a light values <= 12 have a pressure of zero. The maximum value (>=63) was used for an upper pressure of 1. We used the maximum value because these data were not particularly skewed.   
-
-##### Pressure description
 
 ##### Overview
 Light pollution can disrupt many behaviors including nesting, navigation, and diurnal patterns. Sources of light pollution include: Coastal/land lights, marine lights, and oil/gas rig flaring.
@@ -715,6 +714,18 @@ We aggregated the total amount of N exported to the ocean by summing the raster 
 The plume model is still running on most of the scenarios, and I have not yet had a chance to think about rescaling. But I am open to ideas.
 
 ##### Overview
+
+Many inputs of nutrient pollution: 
+
+Human wastewater (land and ocean vessels): wastewater treatment, population, protein consumption, phosphates
+
+Agriculture, manure: manure management, number of animals (dietary shifts, increases in population), efficiency of N conversion (has been improving over the years)
+
+Agriculture, synthetic fertilizer: increased use/N demand (more crops for increasing population, changing styles of production, dietary changes, etc.), N use efficiency (how much is absorbed by plants, which has been improving over the years due to agricultural practices, technological advances). N management
+
+Agriculture, aquaculture of fed organisms: increasing production of fresh and marine reared fish, crustaceans, etc. (dietary shifts, increases in production), efficiency of N conversion (has been improving over the years). 
+
+
 Increased nutrients in marine environments, for the most part, are not known to directly threaten most organisms.  There are exceptions to this, for example, coral can be damaged by the generation of reactive oxygen species by a photosynthetic symbiote.  However, the addition of excess nitrogen and phosphorus into marine environments can cause some plants and algae to rapidly grow and reproduce, which is part of process known as eutrophication. These algal blooms can trigger massive disruptions to marine environments by displacing other species, reducing light, and altering ocean pH. In some cases, they can deplete dissolved oxygen and generate toxic chemicals (i.e., harmful algal blooms). These pressures can directly and interactively impact organisms and communities, with the most dramatic consequence being the creation of dead zones that have little marine life. 
 
 The likelihood of eutrophication events increases when excess nitrogen and phosphorous is added to the environment. This can be caused by many human activities, including: human waste (sewage and direct discharge), land-based agricultural inputs (runoff from nitrogen fixing crops, fertilizers, manure), aquaculture, and ship discharges (particularly cruise ships).
@@ -782,4 +793,31 @@ levelplot(china_raster, col.regions=color_ramp, margin=FALSE,
 
 
 ```
+
+#### Biomass removal (fishing/harvesting)
+
+I am still working on this pressure. But here is the general plan:
+
+![](figs/biomass_plan.fig)
+
+And, here is a link to a more extensive description: https://docs.google.com/document/d/1OHx_xKQoXBk6ZonO0MQWF2OX6HhIq-_hDnKuc1oj6ns/edit
+
+And, this: https://github.com/OHI-Science/stressors_issues/issues/36
+
+#### Organic chemical pollution
+There are many inputs for organic chemical pollution. We do have projected data for sewage inputs of microplastics and triclosan (probably a decent indicator of overall sewage inputs).  We have current land-based agriculture inputs (but not future). 
+
+Sources/activities for organic marine pollution:
+
+source/activity | current data | scenario/future data
+--------------- | ------------- | ----------------------
+extraction: oil spills, mining | ? | no
+marine vessels: operational discharges/ antifouling | proxy: vessel traffic | no
+marine vessels: spills | no | no
+urban runoff | maybe land use? | maybe land use?
+land-based agricultural runoff (pesticides/herbicides/etc.) | yes | no (but ask Ale if she found anything)
+aquaculture | proxy: intensity of aquaculture | no
+human wastewater: cleaners, clothing, medications, etc. | proxy: triclosan | yes (if the triclosan proxy is adequate)
+manufacturing point sources | no | no
+microplastics | yes: sewage | yes
 
