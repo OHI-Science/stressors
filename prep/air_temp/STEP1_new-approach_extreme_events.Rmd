@@ -61,9 +61,9 @@ library(doParallel)
 
 #year ranges and scenarios:
 yr_range <- data.frame(time_frame = c("current", "near-term",  "medium-term", "long-term"),
-                       years = c("1995:2014", "2021:2040", "2041:2060", "2081:2100"))
+                       years = c("2015:2020", "2021:2040", "2041:2060", "2081:2100"))
 
-years <- c(1995:2014, 2021:2040, 2021:2040, 2041:2060, 2081:2100)
+years <- c(1995:2014, 2015:2020, 2021:2040, 2041:2060, 2081:2100)
 
 rast_base_10km_file <- terra::rast(here('_spatial/rast_base_mol_10km.tif'))
 ocean <- terra::rast(here('_spatial/ocean_area_mol.tif'))
@@ -79,6 +79,7 @@ Download relevant datasets
 
 raw_data_loc <- "/home/shares/ohi/stressors_2021/_raw_data/NOAA_cmip6_land_downscale/data"
 
+#years = 2015:2020 
 data_list <- read.csv("/home/shares/ohi/stressors_2021/_raw_data/NOAA_cmip6_land_downscale/gddp-cmip6-files.csv") %>%
   filter(grepl("tasmax", fileURL)) %>%
   filter(grepl(paste(paste0("_", years, ".nc"), collapse="|"), fileURL)) %>%
@@ -117,8 +118,201 @@ cat("finished = ", cmip_url, "\n")
 
 ```
 
+## mean of climate models 
 
-The following code chunk is saved as Rscript (days25.R) so it can be run as a background job.
+### max temp
+```{r}
+raw_data_loc <- "/home/shares/ohi/stressors_2021/_raw_data/NOAA_cmip6_land_downscale/data"
+raw_data_list <- list.files(raw_data_loc, full=TRUE)
+
+file_list_basename <- list.files("/home/shares/ohi/stressors_2021/_raw_data/NOAA_cmip6_land_downscale/data")
+
+combos <- data.frame(stringr::str_split_fixed(file_list_basename, "_", 7))[,c(3,4,7)] 
+
+names(combos) <- (c("model", "scenario", "year"))
+
+
+combos <- combos %>%
+  mutate(year = gsub(".tif", "", year)) %>%
+  filter(model %in% unique(model[scenario=="ssp370"]))
+
+table(combos$scenario)
+table(combos$model, combos$scenario)
+
+included_models <- unique(combos$model)
+
+scenario_list = c("ssp126", "ssp245", "ssp370", "ssp585")
+year_list = paste0(c(2015:2020, 2021:2040, 2041:2060, 2081:2100), ".nc")
+
+for(scenario in scenario_list){ # scenario = scenario_list[4]
+
+scenario_files <- grep(scenario, raw_data_list, value=TRUE)
+scenario_files <- grep("HadGEM3-GC31-LL|HadGEM3-GC31-MM|KACE|UKESM1", scenario_files, value=TRUE, invert=TRUE) # didn't have at least 365 days!
+  
+for(year in year_list){ #year = "2020.nc"
+  ensemble_files <- grep(year, scenario_files, value=TRUE)
+    n_ensemble_files <- length(ensemble_files)
+  ensemble_files <- paste(ensemble_files, collapse=" ")
+
+  saveFile <- sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/tasmax_ensemble/tasmax_%s_%s_%s", n_ensemble_files, scenario, year)
+  
+cdo_command <- sprintf("cdo ensmean %s  %s", ensemble_files, saveFile)
+
+system(cdo_command)
+}
+}
+
+check <- terra::rast(list.files("/home/shares/ohi/stressors_2021/_dataprep/T_air/tasmax_ensemble", full=TRUE)[1])
+
+
+
+# now add in historical
+scenario_list = c("historical")
+year_list = paste0(c(1995:2014), ".nc")
+
+for(scenario in scenario_list){ # scenario = scenarios[1]
+
+scenario_files <- grep(scenario, raw_data_list, value=TRUE)
+scenario_files <- grep("HadGEM3-GC31-LL|HadGEM3-GC31-MM|KACE|UKESM1", scenario_files, value=TRUE, invert=TRUE) # didn't have at least 365 days!
+  
+for(year in year_list){ #year = "2020.nc"
+  ensemble_files <- grep(year, scenario_files, value=TRUE)
+    n_ensemble_files <- length(ensemble_files)
+  ensemble_files <- paste(ensemble_files, collapse=" ")
+
+  saveFile <- sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/tasmax_ensemble/tasmax_%s_%s_%s", n_ensemble_files, scenario, year)
+  
+cdo_command <- sprintf("cdo ensmean %s  %s", ensemble_files, saveFile)
+
+system(cdo_command)
+}
+}
+
+```
+
+### humidity
+```{r}
+raw_data_loc <- "/home/shares/ohi/stressors_2021/_raw_data/NOAA_cmip6_land_downscale/humidity"
+raw_data_list <- list.files(raw_data_loc, full=TRUE)
+
+file_list_basename <- list.files("/home/shares/ohi/stressors_2021/_raw_data/NOAA_cmip6_land_downscale/humidity")
+
+combos <- data.frame(stringr::str_split_fixed(file_list_basename, "_", 7))[,c(3,4,7)] 
+
+names(combos) <- (c("model", "scenario", "year"))
+
+combos <- combos %>%
+  mutate(year = gsub(".tif", "", year)) %>%
+  filter(model %in% unique(model[scenario=="ssp370"]))
+
+table(combos$scenario)
+table(combos$model, combos$scenario)
+
+included_models <- paste(unique(combos$model), collapse="|")
+
+scenario_list = c("ssp126", "ssp245", "ssp370", "ssp585")
+year_list = paste0(c(2015:2020, 2021:2040, 2041:2060, 2081:2100), ".nc")
+
+for(scenario in scenario_list){ # scenario = scenarios[1]
+
+scenario_files <- grep(scenario, raw_data_list, value=TRUE)
+scenario_files <- grep(included_models, scenario_files, value=TRUE)
+scenario_files <- grep("HadGEM3-GC31-LL|HadGEM3-GC31-MM|KACE|UKESM1", scenario_files, value=TRUE, invert=TRUE) # didn't have at least 365 days!
+  
+for(year in year_list){ #year = "2020.nc"
+  ensemble_files <- grep(year, scenario_files, value=TRUE)
+    n_ensemble_files <- length(ensemble_files)
+  ensemble_files <- paste(ensemble_files, collapse=" ")
+
+  saveFile <- sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/relhumidity_ensemble/humidity_%s_%s_%s", n_ensemble_files, scenario, year)
+  
+cdo_command <- sprintf("cdo ensmean %s  %s", ensemble_files, saveFile)
+
+system(cdo_command)
+}
+}
+
+check <- terra::rast(list.files("/home/shares/ohi/stressors_2021/_dataprep/T_air/tasmax_ensemble", full=TRUE)[1])
+
+
+
+# now add in historical
+scenario_list = c("historical")
+year_list = paste0(c(1995:2014), ".nc")
+
+for(scenario in scenario_list){ # scenario = scenarios[1]
+
+scenario_files <- grep(scenario, raw_data_list, value=TRUE)
+scenario_files <- grep("HadGEM3-GC31-LL|HadGEM3-GC31-MM|KACE|UKESM1", scenario_files, value=TRUE, invert=TRUE) # didn't have at least 365 days!
+  
+for(year in year_list){ #year = "2020.nc"
+  ensemble_files <- grep(year, scenario_files, value=TRUE)
+    n_ensemble_files <- length(ensemble_files)
+  ensemble_files <- paste(ensemble_files, collapse=" ")
+
+  saveFile <- sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/tasmax_ensemble/tasmax_%s_%s_%s", n_ensemble_files, scenario, year)
+  
+cdo_command <- sprintf("cdo ensmean %s  %s", ensemble_files, saveFile)
+
+system(cdo_command)
+}
+}
+
+```
+
+### max temp
+```{r}
+raw_data_loc <- "/home/shares/ohi/stressors_2021/_raw_data/NOAA_cmip6_land_downscale/data"
+raw_data_list <- list.files(raw_data_loc, full=TRUE)
+
+file_list_basename <- list.files("/home/shares/ohi/stressors_2021/_raw_data/NOAA_cmip6_land_downscale/data")
+
+combos <- data.frame(stringr::str_split_fixed(file_list_basename, "_", 7))[,c(3,4,7)] 
+
+names(combos) <- (c("model", "scenario", "year"))
+
+
+combos <- combos %>%
+  mutate(year = gsub(".tif", "", year)) %>%
+  filter(model %in% unique(model[scenario=="ssp370"]))
+
+table(combos$scenario)
+table(combos$model, combos$scenario)
+
+included_models <- unique(combos$model)
+
+scenario_list = c("ssp126", "ssp245", "ssp370", "ssp585")
+year_list = paste0(c(2015:2020, 2021:2040, 2041:2060, 2081:2100), ".nc")
+
+for(scenario in scenario_list){ # scenario = scenarios[1]
+
+scenario_files <- grep(scenario, raw_data_list, value=TRUE)
+scenario_files <- grep("HadGEM3-GC31-LL|HadGEM3-GC31-MM|KACE|UKESM1", scenario_files, value=TRUE, invert=TRUE) # didn't have at least 365 days!
+  
+for(year in year_list){ #year = "2020.nc"
+  ensemble_files <- grep(year, scenario_files, value=TRUE)
+    n_ensemble_files <- length(ensemble_files)
+  ensemble_files <- paste(ensemble_files, collapse=" ")
+
+  saveFile <- sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/tasmax_ensemble/tasmax_%s_%s_%s", n_ensemble_files, scenario, year)
+  
+cdo_command <- sprintf("cdo ensmean %s  %s", ensemble_files, saveFile)
+
+system(cdo_command)
+}
+}
+
+check <- terra::rast(list.files("/home/shares/ohi/stressors_2021/_dataprep/T_air/tasmax_ensemble", full=TRUE)[1])
+
+```
+
+
+
+## 35 degree exceedance
+
+The following code chunk is saved as Rscript (days35.R) so it can be run as a background job.
+If I rerun this, alter so the files are not reprojected and gapfilled (that should be done at a later step
+to speed processing.)
 ```{r}
 
 raw_data_loc <- "/home/shares/ohi/stressors_2021/_raw_data/NOAA_cmip6_land_downscale/data"
@@ -169,132 +363,58 @@ prop_days <- ifel(prop_days>1, 1, prop_days)
 saveName <-  gsub(".nc", ".tif", basename(nc_file))
 writeRaster(prop_days, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/proportion_days_35C/%s", saveName), overwrite = TRUE)
 
-
-
 }
-
 
 ```
 
-
-
-writeRaster(proj_scaled_raster, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/proportion_days_35C/days-35_%s_%s.tif", scen, timeframe), overwrite = TRUE)
-
-}
-
-#historical
-scen <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/Tair_35d_ipcc/CMIP6 - Bias Adjusted TX35  days - Near Term (2021-2040) SSP1-2.6  - Annual (24 models).tiff")
-hist_diff <- terra::rast( "/home/shares/ohi/stressors_2021/_raw_data/Tair_35d_ipcc/CMIP6 - Bias Adjusted TX35 Change days - Near Term (2021-2040) SSP1-2.6 (rel. to 1995-2014) - Annual (24 models).tiff")
-historical <- scen - hist_diff
-
-scaled_historical <- historical/365
-
-proj_scaled_historical <- terra::project(scaled_historical, rast_base_10km_file, method="near")
-writeRaster(proj_scaled_historical, "/home/shares/ohi/stressors_2021/_dataprep/T_air/proportion_days_35C/days-35_NA_historical.tif", overwrite = TRUE)
-
-```
-
-
-40C
-```{r}
-
-# scenarios
-for (file in yr_40_range$filename){ #file = yr_40_range$filename[1]
-
-all_files <- list.files("/home/shares/ohi/stressors_2021/_raw_data/Tair_40d_ipcc", full=TRUE)
-
-file_path <- grep(file, all_files, fixed=TRUE, value=TRUE)
-cat("N= ", length(file_path), " raster file was discovered")
-
-raster <- terra::rast(file_path)
-scaled_raster <- raster/365
-
-proj_scaled_raster <- terra::project(scaled_raster, rast_base_10km_file, method="near")
-
-scen <- yr_40_range$scenario[yr_40_range$filename==file]
-timeframe <-  yr_40_range$time_frame[yr_40_range$filename==file]
-
-writeRaster(proj_scaled_raster, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/proportion_days_40C/days-40_%s_%s.tif", scen, timeframe), overwrite = TRUE)
-
-}
-#historical
-scen <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/Tair_40d_ipcc/CMIP6 - Bias Adjusted TX40  days - Near Term (2021-2040) SSP1-2.6  - Annual (24 models).tiff")
-hist_diff <- terra::rast( "/home/shares/ohi/stressors_2021/_raw_data/Tair_40d_ipcc/CMIP6 - Bias Adjusted TX40 Change days - Near Term (2021-2040) SSP1-2.6 (rel. to 1995-2014) - Annual (24 models).tiff")
-historical <- scen - hist_diff
-
-scaled_historical <- historical/365
-
-proj_scaled_historical <- terra::project(scaled_historical, rast_base_10km_file, method="near")
-writeRaster(proj_scaled_historical, "/home/shares/ohi/stressors_2021/_dataprep/T_air/proportion_days_40C/days-40_NA_historical.tif", overwrite = TRUE)
-
-```
-
-## Proportion of months
-
-35C
-
-
-First calculate exceedences (>= 2 days in a month) of the historical data.  
+Next average the models for each year and climate projection.
 
 ```{r}
 
-all_files <- list.files("/home/shares/ohi/stressors_2021/_raw_data/Tair_35d_ipcc/monthly", full=TRUE)
+file_list_basename <- list.files("/home/shares/ohi/stressors_2021/_dataprep/T_air/proportion_days_35C/")
 
-month_list <- c("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+combos <- data.frame(stringr::str_split_fixed(file_list_basename, "_", 7))[,c(3,4,7)] 
 
-for(month in month_list){ # month = month_list[1]
-
-# Define the directory where the files are located
-directory <- "/home/shares/ohi/stressors_2021/_raw_data/Tair_35d_ipcc/monthly"
-# Define the file name pattern
-pattern <- paste0("CMIP6 - Bias Adjusted TX35  days - Near Term \\(2021-2040\\) SSP1-2\\.6  - ", month, " \\(.*models\\)\\.tiff$")
-# List the files that match the pattern
-scen_path <- list.files(path = directory, pattern = pattern, full=TRUE)
-scen_raster <- terra::rast(scen_path)
+names(combos) <- (c("model", "scenario", "year"))
 
 
-pattern <- paste0("CMIP6 - Bias Adjusted TX35 Change days - Near Term \\(2021-2040\\) SSP1-2\\.6 \\(rel\\. to 1995-2014\\) - ", month, " \\(.*models\\)\\.tiff$")
-hist_path <- list.files(path = directory, pattern = pattern, full=TRUE)
-hist_diff_raster <- terra::rast(hist_diff)
+combos <- combos %>%
+  mutate(year = gsub(".tif", "", year)) %>%
+  filter(model %in% unique(model[scenario=="ssp370"]))
 
-cat("For month = ", month, ", hist_diff is = ", class(hist_diff_raster)[1], "and scen_raster is = ", class(scen_raster)[1], "\n")
+table(combos$scenario)
+table(combos$model, combos$scenario)
 
-historical <- scen_raster - hist_diff_raster
-historical_exceed <- terra::ifel(historical>=2, 1, 0)
+included_models <- unique(combos$model)
 
-proj_exceed_historical <- terra::project(historical_exceed, rast_base_10km_file, method="near")
+yr_scenarios <- combos %>%
+  select("year", "scenario") %>%
+  unique()
+
+file_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/T_air/proportion_days_35C/", full=TRUE)
+file_list <- grep(paste(included_models, collapse="|"), file_list, value=TRUE)
 
 
-writeRaster(proj_exceed_historical, sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/proportion_months_35C/exceed_2days_monthly/month-exceed-35_%s_NA_historical.tif", month), overwrite = TRUE)
+for(i in 1:dim(yr_scenarios)[1]){ # i = 1
+  year <- paste0(yr_scenarios$year[i], ".tif")
+  scenario <- yr_scenarios$scenario[i]
+  ensemble<- grep(scenario, file_list, value=TRUE)
+  ensemble <- grep(year, ensemble, value=TRUE)
+  cat("scenario = ", scenario, "  year = ", year, "  N = ", length(ensemble), "\n")
+  ensemble_rasts <- terra::rast(ensemble)
+  ensemble_mean <- mean(ensemble_rasts)
+  writeRaster(ensemble_mean, sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/ensemble_prop_days_35C/days35_%s_%s", scenario, year), overwrite=TRUE)
 }
 
 ```
 
-
-First calculate exceedences (>= 2 days in a month) of the other data.  
-
+Now average for the year ranges:
 ```{r}
 
-all_files <- list.files("/home/shares/ohi/stressors_2021/_raw_data/Tair_35d_ipcc/monthly", full=TRUE, pattern = "TX35  days")
+yr_range
+expand.grid(time_frame = c(yr_range$time_frame), 
+            years = yr_range$years,
+            scenario = c("ssp126", "ssp245", "ssp370", "ssp585"))
 
-
-for(file in all_files){ # file = all_files[2]
-
-saveName <- basename(file)
-scen_raster <- terra::rast(file)
-max_scen_raster <- terra::global(scen_raster, "max")$max
-cat(saveName, " has max = ", max_scen_raster, "\n")
-
-scen_raster_exceed <- terra::ifel(scen_raster>=2, 1, 0)
-
-proj_exceed_scen <- terra::project(scen_raster_exceed, rast_base_10km_file, method="near")
-
-
-writeRaster(proj_exceed_scen, sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/proportion_months_35C/exceed_2days_monthly/month-exceed_%s", saveName), overwrite = TRUE)
-}
-
+scen_times <- list.files("/home/shares/ohi/stressors_2021/_dataprep/T_air/ensemble_prop_days_35C")
 ```
-
-
-
-

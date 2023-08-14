@@ -88,7 +88,7 @@ cd /home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_data/
 cp SSP* /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/shp
 # get back to the plumes directory
 
-dcd /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/
+cd /home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/
 
 #mkdir /home/shares/ohi/stressors_2021/_dataprep/nutrients/output
 #mkdir /home/shares/ohi/stressors_2021/_dataprep/nutrients/output/N_plume

@@ -139,7 +139,7 @@ rescaling the data:
 
 scenarios <- c("ssp126", "ssp245", "ssp370", "ssp585")
 
-for(scenario in scenarios){ #scenario = scenarios[1]
+for(scenario in scenarios){ #scenario = scenarios[2]
   ensemble_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/surface/ensembles", full=TRUE)
   
   scenario_rasters <- grep(scenario, ensemble_list, value=TRUE)
@@ -149,10 +149,10 @@ for(scenario in scenarios){ #scenario = scenarios[1]
   medium <- rast(grep("2040-2069", scenario_rasters, value=TRUE))
   long <- rast(grep("2070-2099", scenario_rasters, value=TRUE))
   
-  writeRaster(historical, sprintf("/home/shares/ohi/stressors_2021/_dataprep/oxygen/surface/raw_rescaled/surface_oxygen_raw_%s_current.tif", scenario), overwrite=TRUE)
-    writeRaster(near, sprintf("/home/shares/ohi/stressors_2021/_dataprep/oxygen/surface/raw_rescaled/surface_oxygen_raw_%s_near-term.tif", scenario), overwrite=TRUE)
-    writeRaster(medium, sprintf("/home/shares/ohi/stressors_2021/_dataprep/oxygen/surface/raw_rescaled/surface_oxygen_raw_%s_medium-term.tif", scenario), overwrite=TRUE)
-    writeRaster(long, sprintf("/home/shares/ohi/stressors_2021/_dataprep/oxygen/surface/raw_rescaled/surface_oxygen_raw_%s_long-term.tif", scenario), overwrite=TRUE)
+  writeRaster(historical, sprintf("/home/shares/ohi/stressors_2021/_dataprep/oxygen/surface/raw/surface_oxygen_raw_%s_current.tif", scenario), overwrite=TRUE)
+    writeRaster(near, sprintf("/home/shares/ohi/stressors_2021/_dataprep/oxygen/surface/raw/surface_oxygen_raw_%s_near-term.tif", scenario), overwrite=TRUE)
+    writeRaster(medium, sprintf("/home/shares/ohi/stressors_2021/_dataprep/oxygen/surface/raw/surface_oxygen_raw_%s_medium-term.tif", scenario), overwrite=TRUE)
+    writeRaster(long, sprintf("/home/shares/ohi/stressors_2021/_dataprep/oxygen/surface/raw/surface_oxygen_raw_%s_long-term.tif", scenario), overwrite=TRUE)
     
       
   near_rescaled <- near/historical

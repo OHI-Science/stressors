@@ -506,11 +506,21 @@ global(tmp, "max", na.rm=TRUE)
 tmp_12 <- ifel(tmp>12, 1, NA)
 global(tmp_12, "sum", na.rm=TRUE)*100
 
-tmp_60 <- ifel(tmp>63, 1, NA)
-global(tmp_60, "sum", na.rm=TRUE)*100
+raster_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/light/raw/", full=TRUE) 
 
-```
+for(raster_file in raster_list){ # raster_file = raster_list[[1]]
+  saveName <- basename(raster_file)
+  saveName <- gsub("light_", "light_rescaled_", saveName)
 
-```{r}
-s
+  raster_data <- rast(raster_file)
+  raster_data <- ifel(raster_data < 12, 12, raster_data)
+  raster_data <- ifel(raster_data > 63, 63, raster_data)
+  
+  rescaled_raster_data <- (raster_data-12)/(63-12)
+  crs(rescaled_raster_data) <- crs(rast_base_10km_file)
+  
+  writeRaster(rescaled_raster_data, sprintf("/home/shares/ohi/stressors_2021/_dataprep/light/rescale/%s", saveName))
+}
+
+
 ```
