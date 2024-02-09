@@ -159,12 +159,12 @@ Checking the plume runs!
 tmp <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/nutrients/plumes/output_ssp5_medium-term/subsets/effluent_sub7.tif")
 #terra::plot(log(tmp+1))
 
-tmp <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/nutrients/output/N_plume/SSP5_near-term_joined.tif")
+tmp <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/nutrients/output/N_plume/SSP5_medium-term_joined.tif")
 #terra::plot(log(tmp+1))
 
 raster::cellStats(raster::raster(tmp), "sum", na.rm=TRUE)
 
-sf_tmp <- sf::st_read("/home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_data/SSP5_current.shp")
+sf_tmp <- sf::st_read("/home/shares/ohi/stressors_2021/_dataprep/nutrients/plume_data/SSP5_medium-term.shp")
 sum(sf_tmp$effluent)
 
 

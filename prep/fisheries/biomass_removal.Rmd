@@ -1,0 +1,231 @@
+---
+title: "Biomass removal"
+output: html_document
+date: "2023-10-20"
+---
+
+
+```{r setup, include=FALSE}
+library(terra)
+library(tidyverse)
+library(here)
+```
+
+# extraction of biomass through fisheries
+Prepare the catch data from Watson et al. 2018 (version 5.0). We will calculate total catch and FOFM catch for industrial and non-industrial catch (landings + IUU + discards). 
+
+We use the data from:
+
+1. Watson, R. A. and Tidd, A. 2018. Mapping nearly a century and a half of global marine fishing: 1869–2015. Marine Policy, 93, pp. 171-177. [(Paper URL)](https://doi.org/10.1016/j.marpol.2018.04.023)
+
+```{r}
+r <- rast(ncol=720, nrow=360)
+values(r) <- 1:259200
+
+catch <- read_csv("/home/shares/ohi/stressors_2021/_raw_data/watson_fisheries/v5.0/Catch2015_2019.csv")
+
+
+test <- catch %>%
+  mutate(biomass = ReportedIND + 
+           ReportedNIND) %>%
+  select(IYear, Cell, biomass) %>%
+  group_by(IYear, Cell) %>%
+  summarise(biomass = sum(biomass)) %>%
+  filter(IYear == 2017)   
+sum(test$biomass)
+# NOTE: in 2017 total was 126,256,514 tonnes of catch. Higher than what is reported by SAU,
+# but on the high end of what is considered reasonable based on uncertainty around unreported and discards.
+# Reported is 82,612,263, and SAUP reports 80,000,000
+all_catch_average <- catch %>%
+  mutate(biomass = ReportedIND + IUUIND + DiscardsIND + 
++            ReportedNIND + IUUNIND + DiscardsNIND) %>%
+  select(IYear, Cell, biomass) %>%
+  group_by(IYear, Cell) %>%
+  summarise(biomass = sum(biomass)) %>%
+  group_by(Cell) %>%
+  summarise(biomass = mean(biomass))
+
+
+# Create an empty raster based on the template
+all_catch_raster <- r
+values(all_catch_raster) <- NA
+
+# Fill the raster with biomass values
+values(all_catch_raster)[all_catch_average$Cell] <- all_catch_average$biomass
+
+plot(all_catch_raster)
+global(all_catch_raster, "sum", na.rm=TRUE)
+
+```
+
+
+getting the data behind figure 2.
+```{r testing something}
+
+m_map_path <- "/home/shares/ohi/stressors_2021/_raw_data/Bianchi_fish_biomass/MAKE_FIGURES/datasets"
+
+fig2 <- readMat(file.path(m_map_path, 'fig2_workspace.mat'))
+str(fig2)
+
+
+# Install the 'rhdf5' package
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("rhdf5")
+
+# Load the 'rhdf5' package
+library(rhdf5)
+
+# Read the .mat file
+file_contents <- h5ls(file.path(m_map_path, 'LME_mask.mat'))
+file_contents
+lmemask <- h5read(file.path(m_map_path, 'LME_mask.mat'), 'LME_mask')
+lmemask[lmemask == 0] <- NA
+lmemask[!is.na(lmemask)] <- 1
+
+
+lmemask_rep <- array(lmemask, dim = c(dim(lmemask), length(fig2$saup10.year)))
+## Saup time series data
+saup <- readMat(file.path(m_map_path, 'LME_mask.mat'))
+str(biomass_rast)
+
+lme_rast <- readMat(file.path(m_map_path, 'saup10.mat'))
+str(biomass_rast)
+
+## saup time data
+iio <- which.max(fig2$saup10.time)
+mean_maxh_year <- mean(fig2$composite["other", , ][[1]][[1]][[1]])
+saup10_year1 = fig2$saup10.year - fig2$saup10.year[iio] + mean_maxh_year
+saup10_year2 = fig2$saup10.year - fig2$saup10.year[iio]  
+npoints <- ncol((fig2$composite["year", , ])$year)
+composite.elist.nrun = fig2$composite["elist", , ][[1]][[2]]
+afish <- matrix(0, nrow=121, ncol=composite.elist.nrun) ##matrix(0, nrow = npoints*2+1, ncol = composite.elist.nrun)
+acntr = npoints+1
+stime <- seq(from = -npoints, to = npoints, by = 1)
+
+#1: ??
+for (indr in 1:31) { #indr=1
+    ypeak = mean(fig2$composite["other", , ][[1]][[1]][[1]])[indr]
+   start_idx <- ypeak -100  #max(acntr - ypeak + 1, 1)
+    end_idx <- ypeak + 20 # min(acntr, length(fish[, indr]))
+    num_elements <- end_idx - start_idx 
+    # Assign values to afish
+   afish[, indr] <- fish[start_idx:end_idx, indr]
+}
+
+fish_mean <- rowMeans(afish)
+
+# fish and harvest data
+dim(fig2$composite)
+time_element <- fig2$composite["time", , ]
+
+fish <- time_element$time[[1]][[1]]
+fish <- apply(fish, c(1, 3), sum)/1e15
+
+harvest <- time_element$time[[1]][[2]]
+s2y = 365*86400
+hfact = s2y/1e12
+harvest <- apply(harvest, c(1,3), sum)*hfact
+
+fish <- fish[1:420, ]
+harvest <- harvest[1:420, ]
+rowMeans(fish)
+
+other_element <- fig2$composite["other", , ]
+year <- other_element$other[[1]][[1]]
+mean_maxh_year = mean(composite.other.glo_lme.year)
+
+# end of testing something
+
+```
+
+
+
+# Fish biomass preindustrial and max catch
+ 
+peak catch is 1996
+```{r}
+# Install and load the R.matlab package
+#install.packages("R.matlab")
+library(R.matlab)
+
+m_map_path <- "/home/shares/ohi/stressors_2021/_raw_data/Bianchi_fish_biomass/MAKE_FIGURES/datasets"
+biomass_rast <- readMat(file.path(m_map_path, 'comp3_p10_r10_fvar6_ks24_p50_c7.mat'))
+str(biomass_rast)
+
+
+  # function to format the raster data
+
+format_mat <- function(unfished = FALSE){
+
+if(unfished==TRUE){  
+  mean_biomass <- biomass_rast$comp3["y200.fish.mean", , ]$y200.fish.mean}else{         
+  mean_biomass <- biomass_rast$comp3["yglo.fish.mean", , ]$yglo.fish.mean
+}
+  lat <- biomass_rast$comp3["lat", , ]$lat
+  lon <- biomass_rast$comp3["lon", , ]$lon
+  lon <- ifelse(lon > 180, lon - 360, lon) # adjust longitude display
+  
+# Define extent and empty SpatRaster
+ext <- ext(min(lon), max(lon), min(lat), max(lat))
+biomass_raster <- rast(ncol=length(lon), nrow=length(lat), ext=ext)
+biomass_matrix <- as.matrix(mean_biomass)
+biomass_matrix <- biomass_matrix[nrow(biomass_matrix):1, ] # turn right side up!
+# Now adjust longitude!
+left_half <- biomass_matrix[, which(lon <= 0)]
+right_half <- biomass_matrix[, which(lon > 0)]
+
+# Combine the two halves in the right order
+biomass_matrix_adjusted <- cbind(left_half, right_half)
+values(biomass_raster) <- biomass_matrix_adjusted
+biomass_raster
+}
+
+fished_biomass <- format_mat(unfished=FALSE)
+unfished_biomass <- format_mat(unfished=TRUE)
+
+
+# stop fishing when biomass < 2.5 tonnes/km2
+
+# Assume raster_stack is your RasterStack with 50 layers
+# Calculate the percent change from year to year
+pct_change <- terra::app(c(fished_biomass, unfished_biomass), fun = function(x) {
+  # Calculate average percent change
+  ((x[1]/x[2])^(1/50)) - 1
+  
+})
+
+plot(pct_change)
+# pct_change now contains the average annual percent change for each cell
+
+change_2050 <- app(c(fished_biomass, pct_change), function(x){
+  x[1] * (1 + x[2]) ** 54
+})
+
+pressure_2050 <- 1- change_2050/unfished_biomass
+plot(pressure_2050)
+# Plot the SpatRaster
+plot(biomass_raster, main="Mean Biomass", xlab="Longitude", ylab="Latitude")
+
+```
+
+
+Combine the rasters to determine proportion removed on yearly basis:
+
+```{r}
+biomass_raster <- terra::resample(biomass_raster, all_catch_raster, method="bilinear")
+# convert from tonnes per km2 to tonnes per cell
+
+# get area of cell (terra returns raster side)
+cell_area <- cellSize(biomass_raster, unit="km")
+biomass_tonnes <- biomass_raster * cell_area
+biomass_tonnes <- biomass_tonnes * 2 #estimate of all biomass, not just targeted
+prop <- all_catch_raster/biomass_tonnes
+prop[prop>1] <- 1 
+
+writeRaster(all_catch_raster, here("prep/fisheries/data/tonnes_catch.tif"))
+writeRaster(prop, here("prep/fisheries/data/prop_catch_biomass.tif"))
+writeRaster(biomass_tonnes, here("prep/fisheries/data/tonnes_biomass.tif"))
+
+```
+

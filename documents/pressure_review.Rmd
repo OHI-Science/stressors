@@ -10,6 +10,9 @@ library(tidyverse)
 library(rasterVis)
 library(here)
 library(lattice)
+
+options(jpeg = list(antialias = "none"))
+
 color_ramp <- c("#87BCC5", "#90A2B6", "#978BA8", "#9F769B", "#A85B8B", 
   "#B14274", "#C13827", "#DA5B27", "#FCEF18")
 
@@ -502,7 +505,25 @@ Units: Change in meters relative to a recent historic period  from 1995-2014.
 
 See IPCC report for details: (https://report.ipcc.ch/ar6/wg1/IPCC_AR6_WGI_FullReport.pdf, p1215)
 ##### Pressure description
-We rescaled the data to have values from 0 to 1 such that pressure scores and sea level changes between 0 and 1 m are the same, and sea level changes greater than 1 m have a pressure value of 1. 
+
+From: https://www.nature.com/articles/s41586-023-06448-z
+ > A deficit between tidal marsh and mangrove adjustment and RSLR is likely at 4 mm yr−1 and highly likely at 7 mm yr−1 of RSLR. As rates of RSLR exceed 7 mm yr−1, the probability that reef islands destabilize through increased shoreline erosion and wave over-topping increases.
+ 
+ > Many of the most important coastal ecosystems show biogenic responses to RSLR that enhance their physical resilience11. The potential for high rates of sedimentation, productivity and organic matter preservation in mangroves and tidal marshes and the productivity of coral reefs have enabled them to grow vertically with RSLR over millennia12. We refer to this process as ‘vertical adjustment’. Vertical adjustment can maintain a wetland above a drowning threshold, a buffer referred to as ‘elevation capital’13. For reef island systems, vertical adjustment maintains the uppermost portions of a reef near mean sea level. Where the rate of vertical adjustment falls behind the rate of RSLR, an elevation deficit emerges, and the surface is exposed to increasing depth and duration of inundation. This change in inundation may enhance vertical adjustment3, but if a deficit is sustained for a sufficiently long period, elevation capital is exhausted. For wetlands, retreat and a transition to open water may occur, and in reef islands, submergence of reef crests will increase wave exposure and wave over-topping frequency. Whether the areal extent of the habitat expands or contracts over time depends on the rate of loss and the rate of new habitat formation, both both of which are influenced by RSLR14.
+ 
+ > First, we review the behaviour of these ecosystems over the range of sea-level histories encountered following the Last Glacial Maximum 19 thousand years ago (ka), and particularly since 10 ka. Second, for mangroves and tidal marshes, we document elevation trends in relation to contemporary rates of RSLR using a global network of survey benchmarks, the surface elevation table-marker horizon (SET-MH) network. Third, we analyse the extent to which contemporary coastal ecosystems show conversion to open water (hereafter referred to as ‘retreat’) under a range of settings with varying rates of RSLR. From these three lines of evidence, we estimate the probability of coastal ecosystem retreat in relation to RSLR rates and model the response of the world’s existing coastal ecosystems under the RSLR projections of the Intergovernmental Panel on Climate Change (IPCC) Sixth Assessment Report17, including potential compensation through conversion of terrestrial uplands (hereafter ‘landward migration’). From these analyses a picture emerges of the narrowing boundaries of the ‘safe operating space’20 for coastal ecosystems: the climate futures expected to be of low risk to existing ecosystems.
+ 
+ > However, there is consistent evidence that vertical adjustment and habitat extent are greatly reduced12,23 as RSLR approaches 7 to 8 mm yr−1.
+ 
+ > The results were consistent with those for tidal marshes. We found that an elevation deficit at mangrove sites is very likely (P > 0.9) at RSLR between 7 and 8 mm yr−1 (Fig. 2f), consistent with tidal marshes monitored using the same method (Fig. 2e). These observations concur with the limits of tidal marsh and mangrove stability in relation to palaeo-RSLR as inferred from the stratigraphic record29 and described previously (Fig. 2a–c).
+ 
+ > We found that tidal marsh sites were likely to show a trend towards increased presence of surface water (P > 0.66) once RSLR exceeded 2.3 mm yr−1 (Extended Data Fig. 3). 
+
+> For each of the modelled scenarios, we determined the proportion of mangrove, tidal marsh and coral reef island habitat occurring where RSLR is projected to rise to levels for which eventual retreat of mangroves and tidal marshes is likely (4 mm yr−1) or very likely (7 mm yr−1), the best estimate from our combined palaeo and instrumental observations. For reef islands (a subset of mapped reefs), contraction or increasing island instability by RSLR of 7 mm yr−1 is likely (Extended Data Fig. 2c), although we cannot yet specify a rate of RSLR at which contraction is highly likely, given the scarcity of contemporary observations at higher rates of RSLR, and because this threshold will vary with the rate of surrounding reef vertical growth, reef flat width, wave exposure, island size and height, and reef-derived sediment supply.
+
+Plan to 
+ 
+
 ##### Overview
 Sea level rise due to loss of glaciers (41%) and ocean thermal expansion (38%).   (https://report.ipcc.ch/ar6/wg1/IPCC_AR6_WGI_FullReport.pdf, p1215)
 
@@ -640,6 +661,48 @@ Individual climate models were downloaded from NOAA and a subset of climate 8 mo
 NOTE: realized this scaling is probably not adequate. 1 should probably occur sometime before 0 oxygen!
 We rescaled the data as:
 1 - projected oxygen/ historical(1985-2014) oxygen.
+
+Some ideas:
+https://www.vims.edu/research/topics/dead_zones/impacts/index.php
+The concentration of dissolved oxygen in ocean water is typically between 7 and 8 milligrams per liter (mg/L). If concentrations fall below 4 mg/L, organisms will begin to react, with mobile forms either avoiding or migrating out of the area. Waters with less than 0.2 mg/L of dissolved oxygen are called anoxic and are unable to support most forms of life. Waters with no measurable dissolved oxygen are called hypoxic.
+
+https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2556360/
+
+A consequence of ocean warming is an increase in vertical density gradients and enhanced stratification. This results in a reduction in the supply of nutrients to the euphotic zone, with enhanced nutrient limitation generally leading to observed declines in net primary production (Behrenfeld et al., 2001; Behrenfeld et al., 2006). Earth system model projections consistently show enhanced stratification and associated reductions in euphotic zone nutrient concentrations under scenarios of climate change (Bopp et al., 2001; Sarmiento et al., 2004; Cabré et al., 2014; Fu et al., 2016). This generally results in projected global reductions in net primary production that are driven by enhanced phytoplankton nutrient limitation in the low-latitude oceans (Steinacher et al., 2010; Bopp et al., 2013; Krumhardt et al. 2017; Kwiatkowski et al., 2017; Moore et al., 2018). The projected magnitude of net primary production declines is highly uncertain across model ensembles (Bopp et al., 2013; Krumhardt et al., 2017), in part due to concurrent changes in phytoplankton light and temperature limitation, as well as altered top-down grazing, all of which can compensate for nutrient-driven production declines (Taucher and Oschlies, 2011; Laufkötter et al., 2015). However, declines in phytoplankton primary production are consistently amplified in higher trophic levels such as zooplankton (Chust et al., 2014; Stock et al., 2014; Kwiatkowski et al., 2018) and fish (Lotze et al., 2019).
+Dissolved oxygen in the ocean exerts a strong control on marine ecosystems. At low O2 levels, marine animals are unable to sustain aerobic metabolism, which can lead to mortality (Vaquer-Sunyer and Duarte, 2008). Oxygen levels also affect many oceanic biogeochemical cycles through an impact on redox reactions and microbial metabolism (e.g. on the nitrogen cycle, Gruber, 2004). Global warming is driving a global decline of dissolved oxygen in the ocean, referred to as ocean deoxygenation, because of a warming-induced reduction in O2 solubility and increased stratification and reduced ventilation (Keeling et al., 2010; Oschlies et al., 2018). A recent assessment, based on three different analyses (Helm et al., 2011; Schmidtko et al., 2017; Ito et al., 2017), concluded that the oxygen content over the first 1000 m of the ocean has decreased by 0.5 to 3.3 % (or 0.7 to 3.5 % between 100 and 600 m) over 1970–2010 (Bindoff, et al., in press). In coastal systems, this warming effect is exacerbated by the effects of increased loading of nutrients and organic matter, which also lead to oxygen decline and an increase in coastal ocean dead zones (Breitburg et al., 2018). Earth System model projections consistently show continuing declines in oxygen over the twenty-first century as a function of the employed scenario (Bopp et al., 2013; Cocco et al., 2013), with large uncertainties in the tropics and for the evolution of oxygen minimum zones (Cabré et al., 2015).
+
+https://www.frontiersin.org/articles/10.3389/fmars.2021.642372/full
+Global dissolved oxygen levels have decreased by 4.8 petamoles or 2% in the last 5 decades, with profound impacts on local and basin scale habitats. Regional trends are varying due to multiple processes impacting dissolved oxygen: solubility change, respiration changes, ocean circulation changes and multidecadal variability.
+
+Oxygen is the basis of life for the vast majority of all oceanic organisms and thus oceanic oxygen levels define habitat boundaries for marine life. Still oxygen can only be gained in the upper most waterlayers by photosynthesis or air sea gas exchange. Once a water mass has left the surface, oxygen is decreasing due to consumption. Global warming does reduce oxygen solubility at the surface, reducing the initial amount of subducted and convected oxygen. Furthermore, upper ocean warming has an impact on biological activity, oceanic stratification and overturning and other processes, which all in turn have the potential to decrease oceanic oxygen levels (Schmidtko et al., 2017; Stramma and Schmidtko, 2021).
+
+The ocean can only gain oxygen at the surface by air sea gas exchange and photosynthesis. Subsurface dissolved oceanic oxygen (DO) is advected along water mass distribution pathways and mixed into adjacent water masses while being consumed by respiration. Therefore, any change in solubility at the surface (due to warming), decrease of ventilation (due to stratification increase) and increase in deep ocean respiration (due to increased surface primary production and enhanced particle flux) can lead to oceanic deoxygenation. Thus, changes in deep ocean DO can be seen as an integrative long-term indicator for profound changes in physical or biogeochemical ocean dynamics.
+
+Coastal changes in DO are impacted on a very local scale by regional physical, biogeochemical and anthropogenic changes. These regional changes range from riverine run-off of nutrients, deposits of organic matter over heatwaves and tides, just to name a few. An observational study (Diaz and Rosenberg, 2008) reports an increased occurrence of coastal dead zones, with consequences for regional ecology and economy. While the occurrence of most of these coastal dead zones is locally driven, some low-oxygen events may have been affected by open ocean deoxygenation, making these events more likely by lowering background DO levels.
+The long term monitoring stations support the findings of three major studies of global DO changes, covering the time period from the sixties to today (Helm et al., 2011; Ito et al., 2017; Schmidtko et al., 2017). Figure 4 shows an overview of the relevant changes. Despite diverging methods all studies agree that the global ocean is losing oxygen at a significant rate. The rate of decrease does vary over depth and method but is on the order of 2% over 50 years (Schmidtko et al., 2017). This accumulates to a loss of 4.8 ± 2.1 petamoles since 1960. This loss is not homogeneously distributed in the global ocean. Oceanic oxygen loss varies with depth and region, resembling the several processes involved in oxygen distribution and consumption. All the works generally agree on the large scale deoxygenation patterns with most pronounced deoxygenation in the north Pacific and Southern Oceans with some smaller disagreement regarding the intensity of deoxygenation in the tropical oceans.
+
+The long term monitoring stations support the findings of three major studies of global DO changes, covering the time period from the sixties to today (Helm et al., 2011; Ito et al., 2017; Schmidtko et al., 2017). Figure 4 shows an overview of the relevant changes. Despite diverging methods all studies agree that the global ocean is losing oxygen at a significant rate. The rate of decrease does vary over depth and method but is on the order of 2% over 50 years (Schmidtko et al., 2017). This accumulates to a loss of 4.8 ± 2.1 petamoles since 1960. This loss is not homogeneously distributed in the global ocean. Oceanic oxygen loss varies with depth and region, resembling the several processes involved in oxygen distribution and consumption. All the works generally agree on the large scale deoxygenation patterns with most pronounced deoxygenation in the north Pacific and Southern Oceans with some smaller disagreement regarding the intensity of deoxygenation in the tropical oceans.
+
+https://www.nature.com/articles/s41559-020-01370-3
+We excluded oxygen treatment concentrations <1 mg l−1 (extreme hypoxic conditions in coastal systems), since these values are often lethal for marine taxa (see Fig. 3 in ref. 27), or >3.5 mg l−1, which defines limitations for the most active fishes28.
+The prevalence and magnitude of HE impacts demonstrated across traits and taxa indicate that current global change-related research efforts should pay far more attention to the role of oxygen concentration as a stressor. The lack of studies using IPCC projections to address the biological impacts of (average) OD represents an important knowledge gap in climate change research.
+
+https://www.nature.com/articles/nclimate1304
+Here, habitat loss associated with OMZs (termed hypoxia-based habitat compression) is characterized as the diminishing of the oxygenated shallow surface mixed layer above a threshold of cold hypoxic water. As a reference benchmark, we defined the OMZ as the areas where subthermocline dissolved oxygen levels are ≤3.5 ml l−1 (∼150 μmol kg−1; ref. 8) with regard to this species grouping15,16,17. This threshold has been reported8,9,16,17 as a plausible lower habitat boundary for billfishes, tropical tunas and other tropical pelagic fishes, but occasional short-duration deeper dives occur9. Although dissolved oxygen requirements of individual species vary depending on their mode of respiration, metabolic and physiological requirements18, dissolved oxygen levels ≤3.5 ml l−1 may induce stress symptoms reaching lethality over prolonged exposure for high-oxygen-demand billfishes and tunas 15,19, thus potentially restricting their depth distribution to the oxygenated near-surface layer8,9.
+
+https://pubmed.ncbi.nlm.nih.gov/28202958/
+Ocean models predict a decline in the dissolved oxygen inventory of the global ocean of one to seven per cent by the year 2100, caused by a combination of a warming-induced decline in oxygen solubility and reduced ventilation of the deep ocean. It is thought that such a decline in the oceanic oxygen content could affect ocean nutrient cycles and the marine habitat, with potentially detrimental consequences for fisheries and coastal economies. Regional observational data indicate a continuous decrease in oceanic dissolved oxygen concentrations in most regions of the global ocean, with an increase reported in a few limited areas, varying by study. Prior work attempting to resolve variations in dissolved oxygen concentrations at the global scale reported a global oxygen loss of 550 ± 130 teramoles (1012 mol) per decade between 100 and 1,000 metres depth based on a comparison of data from the 1970s and 1990s. Here we provide a quantitative assessment of the entire ocean oxygen inventory by analysing dissolved oxygen and supporting data for the complete oceanic water column over the past 50 years. We find that the global oceanic oxygen content of 227.4 ± 1.1 petamoles (1015 mol) has decreased by more than two per cent (4.8 ± 2.1 petamoles) since 1960, with large variations in oxygen loss in different ocean basins and at different depths. We suggest that changes in the upper water column are mostly due to a warming-induced decrease in solubility and biological consumption. Changes in the deeper ocean may have their origin in basin-scale multi-decadal variability, oceanic overturning slow-down and a potential increase in biological consumption.
+
+https://www.frontiersin.org/articles/10.3389/fmars.2021.724913/full
+Global distribution of low O2 areas (i.e., O2 < 62 μmol kg–1)
+
+FIGURE 2. Projected global ocean O2 content change from various models (IPCC AR5, taken from Bopp et al., 2013). Models indicate a 0.6% decrease (1960–2000s) whereas compilations of observations, such as Schmidtko et al. (2017) indicate greater changes, by a factor of about 3. Figure from Oschlies (2018) and discussed in Oschlies et al. (2018).
+
+
+
+https://www.epa.gov/national-aquatic-resource-surveys/indicators-dissolved-oxygen
+While each organism has its own DO tolerance range, generally, DO levels below 3 milligrams per liter (mg/L) are of concern and waters with levels below 1 mg/L are considered hypoxic and usually devoid of life.
+
 
 ##### Overview
 Taxa become oxygen stressed when their metabolic demand for oxygen exceeds availability. Climate change is driving ocean deoxygenation because warmer water holds less oxygen.  To compound the problem, ectothermic organisms (i.e., most marine species), require more oxygen at warmer temperatures due to dramatic increases in their metabolic rates.
@@ -798,7 +861,7 @@ levelplot(china_raster, col.regions=color_ramp, margin=FALSE,
 
 I am still working on this pressure. But here is the general plan:
 
-![](figs/biomass_plan.fig)
+![](figs/biomass_plan.jpg)
 
 And, here is a link to a more extensive description: https://docs.google.com/document/d/1OHx_xKQoXBk6ZonO0MQWF2OX6HhIq-_hDnKuc1oj6ns/edit
 
@@ -820,4 +883,3 @@ aquaculture | proxy: intensity of aquaculture | no
 human wastewater: cleaners, clothing, medications, etc. | proxy: triclosan | yes (if the triclosan proxy is adequate)
 manufacturing point sources | no | no
 microplastics | yes: sewage | yes
-

@@ -24,11 +24,11 @@ Exploring the data (can skip):
 
 ```{r}
 library(ncdf4)
-tmp1 <- terra::rast("//home/shares/ohi/stressors_2021/_raw_data/oxygen_noaa/surface/surface-oxygen_ssp126_2020-2049_v1.nc")
-test1 <- tmp1[[1]]
+tmp1 <- terra::rast("//home/shares/ohi/stressors_2021/_raw_data/oxygen_noaa/surface/surface-oxygen_ssp585_2020-2049_v1.nc")
+test1 <- tmp1[[7]]
 
 tmp2 <- terra::rast("//home/shares/ohi/stressors_2021/_raw_data/oxygen_noaa/surface/surface-oxygen_ssp126_2020-2049_v1.nc")
-test2 <- tmp2[[1]]
+test2 <- tmp2[[7]]
 
 plot(test2-test1) # good! these are the same data, which makes sense (but I wanted to check)
 
@@ -141,6 +141,7 @@ scenarios <- c("ssp126", "ssp245", "ssp370", "ssp585")
 
 for(scenario in scenarios){ #scenario = scenarios[2]
   ensemble_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/surface/ensembles", full=TRUE)
+  plot(rast(ensemble_list[1]))
   
   scenario_rasters <- grep(scenario, ensemble_list, value=TRUE)
   
@@ -208,4 +209,15 @@ r <- r*ocean_template
 writeRaster(r, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/oxygen/surface/raw_rescaled_mol/%s", basename(oxy_path)), overwrite = TRUE)
 }
 
+```
+
+Checking to see if these levels fall below a level that is considered biologically important.
+
+```{r}
+raws <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/surface/raw/", full=TRUE)
+
+i=17
+tmp <- rast(raws[i])
+tmp <- terra::ifel(tmp < 192, 1, NA)
+plot(tmp, col="red")
 ```

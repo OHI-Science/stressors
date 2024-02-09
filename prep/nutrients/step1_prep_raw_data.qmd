@@ -15,7 +15,7 @@ https://www.sciencedirect.com/science/article/pii/S0959378021002053#f0015
 \*\*Description\*\*:
 
 | name                 | sum  | units     | longname                                                                                                                                                           |
-|----------------------|------|-----------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|---------|---------|---------|----------------------------------------------|
 | Nsurface_runoff_nat  | 1.6  | kg N yr-1 | Nitrogen load from surface runoff from natural land                                                                                                                |
 | Nsurface_runoff_agri | 14.1 | kg N yr-1 | Nitrogen load from surface runoff from agricultural land                                                                                                           |
 | Ngroundwater_nat     | 12.6 | kg N yr-1 | Nitrogen load from groundwater from natural land                                                                                                                   |
