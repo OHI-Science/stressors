@@ -1,0 +1,622 @@
+---
+title: "Untitled"
+output: html_document
+date: "2024-03-20"
+---
+
+```{r setup, include=FALSE}
+
+library(sf)
+library(terra)
+library(countrycode)
+library(broom)
+
+effort_data_files <- "/home/shares/ohi/stressors_2021/_raw_data/Bianchi_fish_biomass/BOATS_effort"
+
+
+zones_shp <- sf::st_read("/home/shares/ohi/git-annex/globalprep/spatial/v2017/regions_2017_update.shp") 
+zones_lat_lon <- sf::st_transform(zones_shp, 4326)
+rgn_data <- read.csv("/home/shares/ohi/git-annex/globalprep/spatial/d2014/data/rgn_mol_raster_1km/regionData.csv") %>%
+  select(rgn_id, ant_typ, rgn_nam) %>% 
+  unique()
+
+
+```
+
+# BOATS: effort data
+The data.
+
+```{r}
+biomass <- rast(file.path(effort_data_files, "boats-v2_gfdl-mom6-cobalt2_none_obsclim_histsoc_onedeg_tcb_global_annually_1841-2010.nc"))
+
+```
+
+Explore change since 1950.
+
+```{r}
+t0 <- which(as.Date(time(biomass)) > as.Date("1900-01-01") & as.Date(time(biomass)) < as.Date("1911-01-01")) 
+biomass_t0 <- subset(biomass, t0)
+biomass_t0 <- mean(biomass_t0)
+biomass_t0 <- cellSize(biomass_t0) * biomass_t0 * 1e-6
+
+
+t1 <- which(as.Date(time(biomass)) > as.Date("2006-01-01") & as.Date(time(biomass)) < as.Date("2010-01-01")) 
+biomass_t1 <- subset(biomass, t1)
+biomass_t1 <- mean(biomass_t1)
+biomass_t1 <- cellSize(biomass_t1) * biomass_t1 * 1e-6
+
+prop <- biomass_t1/biomass_t0
+prop <- ifel(prop > 1, 1, prop)
+plot(prop)
+
+
+country_biomass <- terra::zonal(c(biomass_t0, biomass_t1), terra::rast(zones_raster), fun = sum, na.rm=TRUE)
+
+country_biomass <- country_biomass %>% 
+  rename(rgn_id = layer) %>%
+  left_join(rgn_data, by="rgn_id") %>%
+  rowwise() %>%
+  mutate(prop_remaining = area.1/area) %>%
+  arrange(prop_remaining) %>% print(n=300)
+
+histogram(country_biomass$prop_remaining[country_biomass$prop_remaining<2])
+
+tmp <- country_biomass %>%
+  select(rgn_nam.x, prop_remaining)
+
+tmp[1:20,]
+sum(country_biomass$area.1, na.rm=TRUE)/sum(country_biomass$area, na.rm=TRUE)
+```
+
+## Get biomass across years 1950:2010 for each country
+```{r}
+biomass_current_times <- which(as.Date(time(biomass)) > as.Date("1950-01-01")) 
+biomass_current <- subset(biomass, biomass_current_times)
+
+tonnes_biomass <- (cellSize(biomass_current) * biomass_current) * 1e-6
+names(tonnes_biomass) <- paste0("year", 1951:2010)
+
+global(tonnes_biomass[[1]], "sum", na.rm=TRUE) # 2 billion tonnes, in line with predictions
+
+zones_raster <- fasterize::fasterize(zones_lat_lon, raster::raster(tonnes_biomass), field="rgn_id")
+
+country_biomass <- terra::zonal(tonnes_biomass, terra::rast(zones_raster), fun = sum, na.rm=TRUE)
+
+country_biomass <- country_biomass %>% 
+  rename(rgn_id = layer) %>%
+  left_join(rgn_data, by="rgn_id")
+
+sum(country_biomass$year1951, na.rm=TRUE) # matches above closely!
+
+
+```
+
+## Determine percent change from previous year for each year.
+```{r}
+country_biomass_long <- country_biomass %>%
+  pivot_longer(cols=contains("year"), names_to = "year", values_to = "biomass_tonnes") %>%
+  mutate(year = as.numeric(gsub("year", "", year))) 
+
+country_biomass_long <- country_biomass_long %>%
+  arrange(rgn_nam, year) %>%
+  group_by(rgn_nam) %>%
+  mutate(percent_change = (biomass_tonnes - lag(biomass_tonnes)) / lag(biomass_tonnes) * 100) %>%
+  filter(!is.na(biomass_tonnes)) # Albania, Bosnia, Cameroon, Iraq, Jordan, Slovenia, NA
+
+ggplot(filter(country_biomass_long, rgn_nam=="United States"), aes(y=percent_change, x=year)) +
+  geom_point() +
+  geom_line() + 
+  geom_smooth()
+
+tmp <- filter(country_biomass_long, rgn_nam=="United States" & year > 2000)
+mean(tmp$percent_change)
+
+summary(lm(percent_change ~ year, data = filter(country_biomass_long, rgn_nam=="United States" & year > 2000)))
+
+yrly <- country_biomass_long %>%
+  group_by(year) %>%
+  summarize(biomass_tonnes = sum(biomass_tonnes, na.rm=TRUE)) %>%
+  mutate(percent_change = (biomass_tonnes - lag(biomass_tonnes)) / lag(biomass_tonnes) * 100) 
+
+ggplot(yrly, aes(y=biomass_tonnes, x=year)) +
+  geom_point() +
+  geom_line()
+
+ggplot(yrly, aes(y=percent_change, x=year)) +
+  geom_point() +
+  geom_line() + 
+  geom_smooth()
+
+trends <- country_biomass_long %>%
+  filter(year >= 1989) %>%
+  filter(!is.na(percent_change)) %>%
+  group_by(rgn_id, ant_typ, rgn_nam) %>%
+  do(tidy(lm(percent_change ~ year, data = .))) %>%
+  ungroup() %>%
+  filter(term == "year") %>%
+  select(rgn_nam, slope_estimate = estimate)
+
+percent_avg <- country_biomass_long %>%
+  filter(year >=2001) %>%
+  group_by(rgn_id, ant_typ, rgn_nam) %>%
+  summarize(avg_pct_change = mean(percent_change, na.rm=TRUE)) %>%
+  left_join(trends, by="rgn_nam")
+
+```
+
+Add in variables
+```{r}
+pressure_eez <- avg_pressure_change %>%
+  select(rgn_nam, rgn_id, ant_typ, difference) %>%
+  filter(ant_typ == "eez")
+
+pressure_eez$iso3c <- countrycode(pressure_eez$rgn_nam, "country.name", "iso3c")
+
+# cut out territories and such with no iso3c and uninhabited (or, mostly uninhabited) islands. These have
+# fisheries and should be modeled, but will need a different model.
+pressure_eez <- pressure_eez %>%
+  filter(!is.na(iso3c),
+         iso3c!= "ATA", 
+         rgn_nam != "Bassas da India", 
+         iso3c != "IOT",  # British Indian Ocean Territory
+         iso3c != "SGS",  # South Georgia and the South Sandwich Islands 
+         iso3c != "HMD",  # Heard and McDonald Islands
+         iso3c != "BVT")  # Bouvet Island
+sum(duplicated(pressure_eez$iso3c)) 
+
+
+gdp <- read_csv("/home/shares/ohi/stressors_2021/_raw_data/country_pop_gini_IIASA/SspDb_country_data_2013-06-12.csv") %>%
+  filter(VARIABLE == "GDP|PPP") %>%
+  filter(MODEL == "OECD Env-Growth") %>%
+  filter(SCENARIO == "SSP1_v9_130325") %>%
+  rowwise() %>%
+  mutate(gdp_ppp = mean(c(`2000`, `2005`, `2010`), na.rm=TRUE)) %>%
+  dplyr::select(iso3c = REGION, gdp_ppp)
+
+pop <- read_csv("/home/shares/ohi/stressors_2021/_raw_data/country_pop_gini_IIASA/SspDb_country_data_2013-06-12.csv") %>%
+  filter(VARIABLE == "Population") %>%
+  filter(SCENARIO == "SSP1_v9_130115") %>%
+  rowwise() %>%
+  mutate(avg_pop = mean(c(`2000`, `2005`, `2010`), na.rm=TRUE)) %>%
+  select(MODEL, SCENARIO, REGION, avg_pop) %>%
+  pivot_wider(names_from = MODEL, values_from = avg_pop) %>%
+  mutate(NCAR = ifelse(is.na(NCAR), `IIASA-WiC POP`, NCAR)) %>% # estimates from two models are nearly the same, will use NCAR, but gapfill with IIASA 
+  select(iso3c = REGION, population = NCAR)
+
+pressure_eez2 <- left_join(pressure_eez, gdp, by="iso3c") %>%
+         left_join(pop, by="iso3c") 
+
+gini <- read_csv("/home/shares/ohi/stressors_2021/_raw_data/country_pop_gini_IIASA/NRao_et_al_GiniProjections_2018/Gini_projections_SSPs.csv") %>%
+  filter(year == c(2011)) %>%
+  filter(scenario == "SSP1") %>%
+  pivot_longer( cols = -c(scenario, year),  
+  names_to = "iso3c",
+  values_to = "gini") %>%
+  select(iso3c, gini)
+
+pressure_eez3 <- left_join(pressure_eez2, gini, by="iso3c") 
+
+gov <- read_csv("/home/shares/ohi/stressors_2021/_raw_data/governance_andrijevic/governance2019/data/master_proj_obs.csv") %>%
+  filter(year%in% c(1996:2008) & scenario=="Observed") %>%
+  group_by(countrycode, country, scenario) %>%
+  summarize(governance = mean(governance, na.rm=TRUE)) %>%
+  rename("iso3c" = "countrycode") %>%
+  ungroup() %>%
+  select(iso3c, governance)
+
+
+pressure_eez4 <- left_join(pressure_eez3, gov, by="iso3c")
+
+eez_area <- read_csv("https://raw.githubusercontent.com/OHI-Science/ohiprep_v2023/gh-pages/globalprep/spatial/v2017/output/rgn_area.csv")
+
+pressure_eez5 <- left_join(pressure_eez4, eez_area, by="rgn_id")
+
+
+
+gf_regions <- read_csv(here("prep/fisheries/data/country_pop_gf.csv")) %>%
+  select(iso3c, pop_gf = population, gdp_gf = gdp_current_USD) %>%
+  mutate(pop_gf = pop_gf/1000000,
+         gdp_gf = gdp_gf/1000000000)
+
+pressure_eez6 <- left_join(pressure_eez5, gf_regions, by="iso3c") %>%
+  mutate(population = ifelse(is.na(population), pop_gf, population),
+         gdp_ppp = ifelse(is.na(gdp_ppp), gdp_gf, gdp_ppp)) %>%
+         mutate(pc_gdp = gdp_ppp/population) %>%
+  select(-pop_gf, -gdp_gf)
+
+georgns <- read_csv("https://raw.githubusercontent.com/OHI-Science/ohiprep_v2023/gh-pages/globalprep/spatial/v2017/output/georegion_labels.csv")
+
+pressure_eez7 <- left_join(pressure_eez6, georgns, by="rgn_id")
+
+###
+mod_gov1 <- lm(governance ~ pc_gdp + r2_label, data=pressure_eez7, na.action=na.exclude)
+summary(mod_gov1)
+
+pressure_eez7$gov_gf1 <- predict(mod_gov1, newdata = pressure_eez7 %>%
+                                               mutate(r2_label = ifelse(r2_label == "Micronesia", NA, r2_label)))
+
+mod_gov2 <- lm(governance ~ pc_gdp + r1_label, data=pressure_eez7, na.action=na.exclude)
+summary(mod_gov2)
+
+pressure_eez7$gov_gf2 <- predict(mod_gov2, newdata = pressure_eez7)
+
+pressure_eez7 <- pressure_eez7 %>%
+  mutate(governance = ifelse(is.na(governance), gov_gf1, governance),
+         governance = ifelse(is.na(governance), gov_gf2, governance))
+
+mod_gini1 <- lm(gini ~ pc_gdp + governance + r2_label, data=pressure_eez7, na.action=na.exclude)
+summary(mod_gini1)
+
+pressure_eez7$gini_gf1 <- predict(mod_gini1, newdata = pressure_eez7 %>%
+                                               mutate(r2_label = ifelse(r2_label == "Micronesia", NA, r2_label)))
+
+mod_gini2 <- lm(gini ~ pc_gdp + governance + r1_label, data=pressure_eez7, na.action=na.exclude)
+summary(mod_gini2)
+
+pressure_eez7$gini_gf2 <- predict(mod_gini2, newdata = pressure_eez7)
+
+pressure_eez7 <- pressure_eez7 %>%
+  mutate(gini = ifelse(is.na(gini), gini_gf1, gini),
+           gini = ifelse(is.na(gini), gini_gf2, gini)) %>%
+  select(-gini_gf1, -gini_gf2, -gov_gf1, -gov_gf2, -ant_typ)
+
+pressure_eez7 <- pressure_eez7  %>% 
+  mutate(ln_gdp_ppp = log(gdp_ppp+1),
+         ln_population = log(population + 1),
+         ln_pop_ln_area = log(population)/log(area_km2),
+         ln_pc_gdp = log(pc_gdp),
+         ln_area = log(area_km2)) 
+
+```
+
+
+## some predictions
+```{r}
+
+library(ranger)
+
+library(caret)
+# Set up training control
+train_control <- trainControl(method = "LOOCV", savePredictions=TRUE)
+
+# Train the model with leave-one-out cross-validation
+data8 <- na.omit(pressure_eez7)
+
+model <- train(difference ~  ln_pop_ln_area + gini + governance , 
+               data = na.omit(data8), 
+               method = "lm", 
+               trControl = train_control)
+model
+plot(model$pred$pred ~ model$pred$obs)
+abline(0,1)
+
+##
+rf_model <- ranger(
+  formula         = difference ~ ln_pop_ln_area + gini + ln_area + ln_gdp_ppp + ln_pc_gdp + ln_population + governance + area_km2, 
+  data            = na.omit(data8),
+  num.trees       = 500,  # Number of trees to grow - can be adjusted
+  importance      = 'impurity', # Variable importance based on impurity
+  write.forest    = TRUE # If you want to make predictions later
+)
+
+rf_model
+
+
+ggplot(pressure_eez7, aes(y=difference, x=gini)) + 
+  geom_point()
+ggplot(pressure_eez7, aes(y=difference, x=log(gdp_ppp))) + 
+  geom_point()
+ggplot(pressure_eez7, aes(y=difference, x=log(pc_gdp))) + 
+  geom_point()
+ggplot(pressure_eez7, aes(y=difference, x=governance)) + 
+  geom_point()
+ggplot(pressure_eez7, aes(y=difference, x=ln_population)) + 
+  geom_point()
+ggplot(pressure_eez7, aes(y=difference, x=ln_pop_ln_area)) + 
+  geom_point()
+ggplot(pressure_eez7, aes(y=gini, x=ln_pop_ln_area, color=difference)) + 
+  geom_point() + 
+  scale_color_gradientn(colors = rainbow(7))
+ggplot(pressure_eez7, aes(y=governance, x=ln_pop_ln_area, color=difference)) + 
+  geom_point() + 
+  scale_color_gradientn(colors = rainbow(7))
+
+ggplot(pressure_eez7, aes(y=gini, x=governance)) + 
+  geom_point()
+
+
+```
+
+
+
+This is the method we are using:
+```{r}
+t0 <- which(as.Date(time(biomass)) > as.Date("1993-01-01") & as.Date(time(biomass)) < as.Date("1997-01-01")) 
+biomass_t0 <- subset(biomass, t0)
+biomass_t0 <- mean(biomass_t0)
+biomass_t0 <- cellSize(biomass_t0) * biomass_t0 * 1e-6
+
+t1 <- which(as.Date(time(biomass)) > as.Date("2006-01-01") & as.Date(time(biomass)) < as.Date("2010-01-01")) 
+biomass_t1 <- subset(biomass, t1)
+biomass_t1 <- mean(biomass_t1)
+biomass_t1 <- cellSize(biomass_t1) * biomass_t1 * 1e-6
+
+change <- c(biomass_t0, biomass_t1)
+names(change) <- c("t0", "t1")
+
+country_biomass <- terra::zonal(change, terra::rast(zones_raster), fun = sum, na.rm=TRUE)
+
+country_biomass <- country_biomass %>% 
+  rename(rgn_id = layer) %>%
+  left_join(rgn_data, by="rgn_id")
+
+sum(country_biomass$t0, na.rm=TRUE) # matches above closely!
+
+country_biomass <- country_biomass %>%
+  rowwise() %>%
+  mutate(pct_change = (((t1/t0)^(1/14))-1)*100)
+
+```
+
+## compare to governance and such
+
+```{r}
+
+pressure_eez <- country_biomass %>%
+  select(rgn_nam, rgn_id, ant_typ, pct_change) %>%
+  filter(ant_typ == "eez")
+
+pressure_eez$iso3c <- countrycode(pressure_eez$rgn_nam, "country.name", "iso3c")
+
+# cut out territories and such with no iso3c and uninhabited (or, mostly uninhabited) islands. These have
+# fisheries and should be modeled, but will need a different model.
+pressure_eez <- pressure_eez %>%
+  filter(!is.na(iso3c),
+         iso3c!= "ATA", 
+         rgn_nam != "Bassas da India", 
+         iso3c != "IOT",  # British Indian Ocean Territory
+         iso3c != "SGS",  # South Georgia and the South Sandwich Islands 
+         iso3c != "HMD",  # Heard and McDonald Islands
+         iso3c != "BVT")  # Bouvet Island
+sum(duplicated(pressure_eez$iso3c)) 
+
+
+gdp <- read_csv("/home/shares/ohi/stressors_2021/_raw_data/country_pop_gini_IIASA/SspDb_country_data_2013-06-12.csv") %>%
+  filter(VARIABLE == "GDP|PPP") %>%
+  filter(MODEL == "OECD Env-Growth") %>%
+  filter(SCENARIO == "SSP1_v9_130325") %>%
+  rowwise() %>%
+  mutate(gdp_ppp = mean(c(`2000`, `2005`, `2010`), na.rm=TRUE)) %>%
+  dplyr::select(iso3c = REGION, gdp_ppp)
+
+pop <- read_csv("/home/shares/ohi/stressors_2021/_raw_data/country_pop_gini_IIASA/SspDb_country_data_2013-06-12.csv") %>%
+  filter(VARIABLE == "Population") %>%
+  filter(SCENARIO == "SSP1_v9_130115") %>%
+  rowwise() %>%
+  mutate(avg_pop = mean(c(`2000`, `2005`, `2010`), na.rm=TRUE)) %>%
+  select(MODEL, SCENARIO, REGION, avg_pop) %>%
+  pivot_wider(names_from = MODEL, values_from = avg_pop) %>%
+  mutate(NCAR = ifelse(is.na(NCAR), `IIASA-WiC POP`, NCAR)) %>% # estimates from two models are nearly the same, will use NCAR, but gapfill with IIASA 
+  select(iso3c = REGION, population = NCAR)
+
+pressure_eez2 <- left_join(pressure_eez, gdp, by="iso3c") %>%
+         left_join(pop, by="iso3c") 
+
+gini <- read_csv("/home/shares/ohi/stressors_2021/_raw_data/country_pop_gini_IIASA/NRao_et_al_GiniProjections_2018/Gini_projections_SSPs.csv") %>%
+  filter(year == c(2011)) %>%
+  filter(scenario == "SSP1") %>%
+  pivot_longer( cols = -c(scenario, year),  
+  names_to = "iso3c",
+  values_to = "gini") %>%
+  select(iso3c, gini)
+
+pressure_eez3 <- left_join(pressure_eez2, gini, by="iso3c") 
+
+gov <- read_csv("/home/shares/ohi/stressors_2021/_raw_data/governance_andrijevic/governance2019/data/master_proj_obs.csv") %>%
+  filter(year%in% c(1996:2008) & scenario=="Observed") %>%
+  group_by(countrycode, country, scenario) %>%
+  summarize(governance = mean(governance, na.rm=TRUE)) %>%
+  rename("iso3c" = "countrycode") %>%
+  ungroup() %>%
+  select(iso3c, governance)
+
+
+pressure_eez4 <- left_join(pressure_eez3, gov, by="iso3c")
+
+eez_area <- read_csv("https://raw.githubusercontent.com/OHI-Science/ohiprep_v2023/gh-pages/globalprep/spatial/v2017/output/rgn_area.csv")
+
+pressure_eez5 <- left_join(pressure_eez4, eez_area, by="rgn_id")
+
+
+
+gf_regions <- read_csv(here("prep/fisheries/data/country_pop_gf.csv")) %>%
+  select(iso3c, pop_gf = population, gdp_gf = gdp_current_USD) %>%
+  mutate(pop_gf = pop_gf/1000000,
+         gdp_gf = gdp_gf/1000000000)
+
+pressure_eez6 <- left_join(pressure_eez5, gf_regions, by="iso3c") %>%
+  mutate(population = ifelse(is.na(population), pop_gf, population),
+         gdp_ppp = ifelse(is.na(gdp_ppp), gdp_gf, gdp_ppp)) %>%
+         mutate(pc_gdp = gdp_ppp/population) %>%
+  select(-pop_gf, -gdp_gf)
+
+georgns <- read_csv("https://raw.githubusercontent.com/OHI-Science/ohiprep_v2023/gh-pages/globalprep/spatial/v2017/output/georegion_labels.csv")
+
+pressure_eez7 <- left_join(pressure_eez6, georgns, by="rgn_id")
+
+###
+mod_gov1 <- lm(governance ~ pc_gdp + r2_label, data=pressure_eez7, na.action=na.exclude)
+summary(mod_gov1)
+
+pressure_eez7$gov_gf1 <- predict(mod_gov1, newdata = pressure_eez7 %>%
+                                               mutate(r2_label = ifelse(r2_label == "Micronesia", NA, r2_label)))
+
+mod_gov2 <- lm(governance ~ pc_gdp + r1_label, data=pressure_eez7, na.action=na.exclude)
+summary(mod_gov2)
+
+pressure_eez7$gov_gf2 <- predict(mod_gov2, newdata = pressure_eez7)
+
+pressure_eez7 <- pressure_eez7 %>%
+  mutate(governance = ifelse(is.na(governance), gov_gf1, governance),
+         governance = ifelse(is.na(governance), gov_gf2, governance))
+
+mod_gini1 <- lm(gini ~ pc_gdp + governance + r2_label, data=pressure_eez7, na.action=na.exclude)
+summary(mod_gini1)
+
+pressure_eez7$gini_gf1 <- predict(mod_gini1, newdata = pressure_eez7 %>%
+                                               mutate(r2_label = ifelse(r2_label == "Micronesia", NA, r2_label)))
+
+mod_gini2 <- lm(gini ~ pc_gdp + governance + r1_label, data=pressure_eez7, na.action=na.exclude)
+summary(mod_gini2)
+
+pressure_eez7$gini_gf2 <- predict(mod_gini2, newdata = pressure_eez7)
+
+pressure_eez7 <- pressure_eez7 %>%
+  mutate(gini = ifelse(is.na(gini), gini_gf1, gini),
+           gini = ifelse(is.na(gini), gini_gf2, gini)) %>%
+  select(-gini_gf1, -gini_gf2, -gov_gf1, -gov_gf2, -ant_typ)
+
+pressure_eez7 <- pressure_eez7  %>% 
+  mutate(ln_gdp_ppp = log(gdp_ppp+1),
+         ln_population = log(population + 1),
+         ln_pop_ln_area = log(population)/log(area_km2),
+         ln_pc_gdp = log(pc_gdp),
+         ln_area = log(area_km2)) 
+
+
+
+```
+
+
+## some predictions
+```{r}
+
+library(ranger)
+
+library(caret)
+# Set up training control
+train_control <- trainControl(method = "LOOCV", savePredictions=TRUE)
+
+# Train the model with leave-one-out cross-validation
+data8 <- na.omit(pressure_eez7)
+
+model <- train(pct_change ~  ln_pop_ln_area*ln_area + gini, 
+               data = na.omit(data8), 
+               method = "lm", 
+               trControl = train_control)
+model
+plot(model$pred$pred ~ model$pred$obs)
+abline(0,1)
+
+##
+rf_model <- ranger(
+  formula         = pct_change ~ ln_pop_ln_area + gini + area_km2, 
+  data            = na.omit(data8),
+  num.trees       = 500,  # Number of trees to grow - can be adjusted
+  importance      = 'impurity', # Variable importance based on impurity
+  write.forest    = TRUE # If you want to make predictions later
+)
+
+rf_model
+
+
+ggplot(pressure_eez7, aes(y=pct_change, x=gini)) + 
+  geom_point()
+ggplot(pressure_eez7, aes(y=pct_change, x=log(gdp_ppp))) + 
+  geom_point()
+ggplot(pressure_eez7, aes(y=pct_change, x=log(pc_gdp))) + 
+  geom_point()
+ggplot(pressure_eez7, aes(y=pct_change, x=governance)) + 
+  geom_point()
+ggplot(pressure_eez7, aes(y=pct_change, x=ln_population)) + 
+  geom_point()
+ggplot(pressure_eez7, aes(y=pct_change, x=ln_pop_ln_area)) + 
+  geom_point()
+ggplot(pressure_eez7, aes(y=gini, x=ln_pop_ln_area, color=pct_change)) + 
+  geom_point() + 
+  scale_color_gradientn(colors = rainbow(7))
+ggplot(filter(pressure_eez7, pct_change >-3), aes(y=governance, x=ln_pop_ln_area, color=pct_change)) + 
+  geom_point() + 
+  scale_color_gradientn(colors = rainbow(7))
+
+ggplot(pressure_eez7, aes(y=gini, x=governance)) + 
+  geom_point()
+
+
+pressure_eez7 <- pressure_eez7 %>%
+  mutate(class = ifelse(ln_pop_ln_area<0.05, 1, 
+                        ifelse(ln_pop_ln_area>0.2, 2, 3)))
+
+pressure_eez7 %>%
+  group_by(class) %>%
+  summarize(mean_change = mean(pct_change, na.rm=TRUE),
+            sd_change = sd(pct_change, na.rm=TRUE))
+
+```
+# historical patterns
+```{r}
+
+nat <- rast(file.path(data_files, "ecoocean_gfdl-esm4_nobasd_historical_nat_default_tcb_global_monthly_1950_2014.nc"))
+
+fish <- rast(file.path(data_files, "ecoocean_gfdl-esm4_nobasd_historical_histsoc_default_tcb_global_monthly_1950_2014.nc"))
+
+pressure <- fish[[779]]/nat[[779]]
+pressure[pressure > 1] <- 1 
+plot(pressure)
+
+global(fish[[700]]*cellSize(fish[[1]]^2), "sum", na.rm=TRUE)
+global(nat[[700]]*cellSize(fish[[1]]^2), "sum", na.rm=TRUE)
+
+catch <- rast(file.path(data_files,"ecoocean_gfdl-esm4_nobasd_historical_histsoc_default_tc_global_monthly_1950_2014.nc"))
+
+global(catch[[700]]*cellSize(fish[[1]]^2), "sum", na.rm=TRUE)
+global(fish[[700]]*cellSize(fish[[1]]^2), "sum", na.rm=TRUE)
+
+
+
+## BOATS
+nat <- rast(file.path(data_files, "boats_gfdl-esm4_nobasd_historical_nat_default_tcb_global_monthly_1950_2014.nc"))
+
+fish <- rast(file.path(data_files, "boats_gfdl-esm4_nobasd_historical_histsoc_default_tcb_global_monthly_1950_2014.nc"))
+
+catch <- rast(file.path(data_files,
+"boats_gfdl-esm4_nobasd_historical_histsoc_default_tc_global_monthly_1950_2014.nc"))
+
+plot(fish[[349]]/fish[[1]])
+plot(nat[[769]]/nat[[1]])
+plot(catch[[700]]/nat[[700]])
+plot(fish[[780]]/nat[[780]])
+plot(catch[[780]])
+
+global(catch[[1]]*cellSize(fish[[1]]^2), "sum", na.rm=TRUE) +
+global(catch[[2]]*cellSize(fish[[1]]^2), "sum", na.rm=TRUE) +
+global(catch[[3]]*cellSize(fish[[1]]^2), "sum", na.rm=TRUE) +
+global(catch[[4]]*cellSize(fish[[1]]^2), "sum", na.rm=TRUE) +
+global(catch[[5]]*cellSize(fish[[1]]^2), "sum", na.rm=TRUE) +
+global(catch[[6]]*cellSize(fish[[1]]^2), "sum", na.rm=TRUE) +
+global(catch[[7]]*cellSize(fish[[1]]^2), "sum", na.rm=TRUE) +
+global(catch[[8]]*cellSize(fish[[1]]^2), "sum", na.rm=TRUE) +
+global(catch[[9]]*cellSize(fish[[1]]^2), "sum", na.rm=TRUE) +
+global(catch[[10]]*cellSize(fish[[1]]^2), "sum", na.rm=TRUE) +
+global(catch[[11]]*cellSize(fish[[1]]^2), "sum", na.rm=TRUE) +
+global(catch[[12]]*cellSize(fish[[1]]^2), "sum", na.rm=TRUE) 
+
+catch_2008 <- catch[[697]]*cellSize(fish[[1]]^2) +
+catch[[698]]*cellSize(fish[[1]]^2) +
+catch[[699]]*cellSize(fish[[1]]^2) +
+catch[[700]]*cellSize(fish[[1]]^2) +
+catch[[701]]*cellSize(fish[[1]]^2) +
+catch[[702]]*cellSize(fish[[1]]^2) +
+catch[[703]]*cellSize(fish[[1]]^2) +
+catch[[704]]*cellSize(fish[[1]]^2) +
+catch[[705]]*cellSize(fish[[1]]^2) +
+catch[[706]]*cellSize(fish[[1]]^2) +
+catch[[707]]*cellSize(fish[[1]]^2) +
+catch[[708]]*cellSize(fish[[1]]^2) 
+
+
+basins <- rast("/home/shares/ohi/stressors_2021/_raw_data/fishmip/basins/ddm30_basins_cru_neva.nc")
+flow <- rast("/home/shares/ohi/stressors_2021/_raw_data/fishmip/basins/ddm30_flowdir_cru_neva.nc")
+slope <- rast("/home/shares/ohi/stressors_2021/_raw_data/fishmip/basins/ddm30_slopes_cru_neva.nc")
+
+```

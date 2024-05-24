@@ -1,0 +1,749 @@
+---
+title: "RAM_spatial"
+output: html_document
+date: "2024-02-16"
+---
+We have the original spatial data from Chris Free, but many RAM stocks no longer match.
+
+Here we are determining which stocks we have spatial data for, and working to get spatial data for the remaining.
+
+RAM regions are from this source (lots of weirdness, so check carefully):
+https://zenodo.org/records/834755
+
+```{r}
+
+library(leaflet)
+library(sf)
+library(tidyverse)
+library(here)
+
+## ram data (area and metadata)
+load(file.path("/home/shares/ohi/stressors_2021/_raw_data/fisheries_RAMLDBv4_64/R Data/DBdata[asmt][v4.64].RData"))
+
+## created in ram_prep_gf.Rmd
+ram_biomass_gf2 <- read_csv(here("prep/fisheries/data/RAM_gapfilled.csv"))
+
+## eez regions
+eez <- st_read("/home/shares/ohi/stressors_2021/_raw_data/eez/eez_v12.shp")
+plot(st_geometry(eez))
+#eez <- st_read("/home/shares/ohi/git-annex/globalprep/spatial/v2017/regions_2017_update.shp")
+#eez <- st_transform(eez, crs = 4326)
+
+map <- leaflet(filter(eez, GEONAME=="United States Exclusive Economic Zone (Alaska)")) %>%
+  addProviderTiles("OpenStreetMap") %>%
+  addPolygons(    
+    fillColor = "orange", # Example: color by 'AREA' column
+    weight = 2,
+    opacity = 1,
+    color = 'blue',
+    dashArray = '3',
+    fillOpacity = 0.7,
+    highlightOptions = highlightOptions(
+      weight = 5,
+      color = "#666",
+      dashArray = '',
+      fillOpacity = 0.7,
+      bringToFront = TRUE),
+    popup = ~paste("<strong>SP_ID:</strong>",  GEONAME) # And this one as per your data
+  )
+map
+
+### meow regions
+meow <- st_read(here("_spatial/meow_rgns/meow_rgns.shp"))
+
+# ### ram regions:  (don't think this is proving to be useful)
+# ram_rgns <- st_read("/home/shares/ohi/stressors_2021/_raw_data/RAM_spatial/RAM_Geography/results/ram.shp") %>%
+#   mutate(SP_ID = as.numeric(SP_ID))
+# #I created this data frame:
+# ram_rgns_names <- read_csv(here("prep/fisheries/data/reglocs_updated.csv")) %>%
+#   select(names, size = sizes, lat=lats, lon=lons, SP_ID)
+# 
+# ram_rgns <- left_join(ram_rgns, ram_rgns_names, by = "SP_ID")
+# 
+# map <- leaflet(ram_rgns) %>%
+#   addProviderTiles("OpenStreetMap") %>%
+#   addPolygons(    
+#     fillColor = "orange", # Example: color by 'AREA' column
+#     weight = 2,
+#     opacity = 1,
+#     color = 'blue',
+#     dashArray = '3',
+#     fillOpacity = 0.7,
+#     highlightOptions = highlightOptions(
+#       weight = 5,
+#       color = "#666",
+#       dashArray = '',
+#       fillOpacity = 0.7,
+#       bringToFront = TRUE),
+#     popup = ~paste("<strong>SP_ID:</strong>",  SP_ID) # And this one as per your data
+#   )
+# map
+# Print the map
+iho <- st_read(here("_spatial/World_Seas_IHO_v3/World_Seas_IHO_v3.shp"))
+##
+
+ices <- st_read("/home/shares/ohi/stressors_2021/_raw_data/ICES_areas/ICES_Areas_20160601_cut_dense_3857.shp")
+ices <- st_transform(ices, crs = 4326)
+ices <- st_make_valid(ices)
+mapview::mapview(ices)
+
+nafo <- st_read("/home/shares/ohi/stressors_2021/_raw_data/NAFO_areas/NAFO_Divisions_2021.gdb")
+nafo <- st_cast(nafo, "POLYGON")
+nafo <- st_transform(nafo, crs = 4326)
+mapview::mapview(nafo)
+```
+
+## Copy over RAM stocks
+
+https://existencia.org/pro/?p=60
+
+```{r}
+
+## copy RAM spatial data to our folders
+#RAM_spatial_dir <- file.path("/home/shares/ohi/git-annex/globalprep/_raw_data/RAM/d2017/ramldb_boundaries/ramldb_boundaries") 
+
+#find missing spatial
+#ram_sf <- list.files(RAM_spatial_dir, full=TRUE)
+
+#dest_dir <- "/home/shares/ohi/stressors_2021/_raw_data/RAM_spatial/free_org/"
+#file.copy(from=ram_sf, to=dest_dir)
+
+tmp <- st_read("/home/shares/ohi/stressors_2021/_raw_data/RAM_spatial/free_org/CCSBT-SC-SBT-1952-2014-PONS.shp")
+plot(tmp)
+
+map <- leaflet(tmp) %>%
+  addProviderTiles("OpenStreetMap") %>%
+  addPolygons(    
+    fillColor = "orange", # Example: color by 'AREA' column
+    weight = 2,
+    opacity = 1,
+    color = 'blue',
+    dashArray = '3',
+    fillOpacity = 0.7,
+    highlightOptions = highlightOptions(
+      weight = 5,
+      color = "#666",
+      dashArray = '',
+      fillOpacity = 0.7,
+      bringToFront = TRUE),
+    popup = ~paste("<strong>name:</strong>",  comm_name1) # And this one as per your data
+  )
+map
+
+```
+
+## Identify missing files
+1. Determine which stocks we need spatial data for:
+```{r}
+
+# these are the current Chris Free spatial data files
+free_loc <- file.path("/home/shares/ohi/stressors_2021/_raw_data/RAM_spatial/free_org") 
+## put spatial data into one file
+#find missing spatial
+free_sf <- list.files(free_loc, pattern = "shp", full=TRUE)
+free_sf <- grep(".xml", free_sf, value=TRUE, invert=TRUE)
+tmp <- st_read(free_sf[1])
+
+#Initialize an empty list to store sf objects
+free_sf_objects <- list()
+
+# Loop through the list of shapefile paths
+for (shp_path in free_sf) {
+  # Read the shapefile into an sf object
+  sf_obj <- st_read(shp_path)
+  sf_obj <- st_set_crs(sf_obj, 4326)
+  # Add the sf object to the list
+  free_sf_objects[[length(free_sf_objects) + 1]] <- sf_obj
+}
+
+# Combine all sf objects into one
+free_ram <- bind_rows(free_sf_objects) %>%
+  filter(!is.na(stockid))
+dim(free_ram) # n = 664
+length(unique(free_ram$stockid)) # n= 664
+
+
+free_ram_df <- st_drop_geometry(free_ram)
+
+length(unique(free_ram$stockid)) #n=664
+length(unique(ram_biomass_gf2$stockid)) #n = 387
+intersect(ram_biomass_gf2$stockid, free_ram$stockid) # N=261
+# these are the ones I need to find (n = 126):
+missing_area <- data.frame(stockid = setdiff(ram_biomass_gf2$stockid, free_ram$stockid)) %>%
+  left_join(metadata, by="stockid") %>%  # n = 126
+  left_join(area, by="areaname")  # n = 151
+#write_csv(missing_area, here("prep/fisheries/data/ram_missing_boundary.csv"))
+
+```
+
+2. Determine the regions we have based on the Chris Free data
+```{r}
+
+intersect(ram_biomass_gf2$stockid, free_ram$stockid) # N=261
+# these are the ones I need to find (n = 126):
+with_area <- filter(free_ram, stockid %in% intersect(ram_biomass_gf2$stockid, free_ram$stockid)) %>%
+  left_join(metadata, by="stockid") %>%  # n = 261
+  left_join(area, by="areaname")  # n = 296
+
+with_area$stockid[duplicated(with_area$stockid)]
+filter(with_area, stockid=="AFLONCH")
+
+plot(st_geometry(filter(with_area, stockid == "AFLONCH")))
+plot(st_geometry(filter(ram_rgns, SP_ID == 126)), add=TRUE)
+```
+
+
+## Go through each missing stock
+1. See if the region is available in Chris Free's ranges for another stock with the same location 
+2. See if the region is available from the other data source.
+
+
+```{r}
+
+##SARDNWAZAB
+## boundaries: https://firms.fao.org/firms/resource/10086/en#:~:text=In%20the%20north%20zone%2C%20the,by%20traditional%20coastal%20purse%20seiners.
+
+rgn1 <- filter(eez, GEONAME %in% c("Portuguese Exclusive Economic Zone (Madeira)",
+                                   "Spanish Exclusive Economic Zone (Canary Islands)",
+                                   "Moroccan Exclusive Economic Zone", 
+                                   "Overlapping claim Western Sahara: Western Sahara / Morocco", 
+                                   "Mauritanian Exclusive Economic Zone"))
+
+##RSROCKBCWS
+can <- filter(eez, GEONAME == "Canadian Exclusive Economic Zone")
+can_map <- mapview::mapview(can)
+subset <- mapedit::editMap(can_map)
+bc_south <- st_intersection(subset$drawn, st_make_valid(can_eez))
+mapview::mapview(bc_south)
+
+st_write(bc_south, here("prep/fisheries/data/maps/Canada-DFO-BCWS.shp"), append=FALSE)
+
+##RSROCKBCWN
+can <- filter(eez, GEONAME == "Canadian Exclusive Economic Zone")
+can_map <- mapview::mapview(can) + mapview::mapview(bc_south)
+subset <- mapedit::editMap(can_map)
+bc_north <- st_intersection(subset$drawn, st_make_valid(can_eez))
+mapview::mapview(bc_north)
+
+st_write(bc_north, here("prep/fisheries/data/maps/Canada-DFO-BCWN.shp"), append=FALSE)
+
+
+## REDFEAUS
+# https://en.wikipedia.org/wiki/Eastern_states_of_Australia
+tmp <- filter(eez, GEONAME == "Australian Exclusive Economic Zone")
+tmp <- st_make_valid(tmp)
+plot_tmp <- mapview::mapview(tmp) 
+subset <- mapedit::editMap(plot_tmp)
+aus_east <- st_intersection(subset$drawn, tmp)
+mapview::mapview(aus_east)
+st_write(aus_east, here("prep/fisheries/data/maps/Australia-AFMA-EAUS.shp"), append=FALSE)
+
+
+## PLAIC2123
+rgn1 <- filter(ices, SubDivisio %in% c("21","22", "23"))
+region <- st_union(rgn1)
+mapview::mapview(region)
+st_write(region, here("prep/fisheries/data/maps/multinational-ICES-2123.shp"), append=FALSE)
+
+
+##PHFLOUNSOJ
+# sea of japan
+js <- filter(iho, NAME == "Japan Sea")
+mapview::mapview(js)
+st_write(js, here("prep/fisheries/data/maps/Japan-FAJ-SOJ.shp"), overwrite=TRUE)
+
+## PCODAI
+ak_eez <-filter(eez, GEONAME=="United States Exclusive Economic Zone (Alaska)")
+meow_ai <- filter(meow, ECOREGION %in% c("Aleutian Islands"))
+
+mapview::mapview(meow_ai) + 
+  mapview::mapview(ak_eez)
+ai <- st_intersection(meow_ai, ak_eez)
+mapview::mapview(ai)
+
+st_write(ai, here("prep/fisheries/data/maps/USA-NMFS-AI.shp"), overwrite=TRUE)
+  
+# PCODAI
+ak_eez <-filter(eez, GEONAME=="United States Exclusive Economic Zone (Alaska)")
+meow_bs <- filter(meow, ECOREGION %in% c("Eastern Bering Sea"))
+
+mapview::mapview(meow_bs) + 
+  mapview::mapview(ak_eez)
+bs <- st_intersection(meow_bs, ak_eez)
+mapview::mapview(bs)
+st_write(bs, here("prep/fisheries/data/maps/USA-NMFS-BS.shp"), overwrite=TRUE)
+
+
+
+##PCOD5ABCD
+# https://publications.gc.ca/collections/collection_2018/mpo-dfo/fs70-6/Fs70-6-2018-020-eng.pdf
+can_eez <- filter(eez, GEONAME == "Canadian Exclusive Economic Zone")
+can_eez <- st_make_valid(can_eez)
+can_map <- mapview::mapview(can_eez)
+subset <- mapedit::editMap(can_map)
+rgn5 <- st_intersection(subset$drawn, st_make_valid(can_eez))
+mapview::mapview(rgn5)
+
+st_write(rgn5, here("prep/fisheries/data/maps/Canada-DFO-5ABCD.shp"), append=FALSE)
+
+
+
+## PCEELSCH
+tmpCS <- st_read(here("prep/fisheries/data/maps/Chile-SUBPESCA-CH-CS.shp"))
+tmpC <- st_read(here("prep/fisheries/data/maps/Chile-SUBPESCA-CH-C.shp"))
+map_chile <- mapview::mapview(tmpCS) + mapview::mapview(tmpC)
+subset <- mapedit::editMap(map_chile)
+chile_s <- st_intersection(subset$drawn, tmpCS)
+mapview::mapview(chile_s)
+
+st_write(chile_s, here("prep/fisheries/data/maps/Chile-SUBPESCA-CH-S.shp"), append=FALSE)
+
+##PANDALIIIaW-IVaE
+rgn1 <- filter(ices, SubArea == "3" & Division %in% c("a"))
+rgn2 <- filter(ices, SubArea == "4" & Division %in% c("a"))
+region <- rbind(rgn1, rgn2)
+region <- st_union(region)
+map_region <- mapview::mapview(region)
+
+subset <- mapedit::editMap(map_region)
+ices34 <- st_intersection(subset$drawn, region)
+mapview::mapview(ices34)
+st_write(ices34, here("prep/fisheries/data/maps/multinational-ICES-IIIaW-IVaE.shp"), append=FALSE)
+
+
+## PANCHNCHSP
+# Northern Chile Southern Peru
+# https://en.wikipedia.org/wiki/Central_Chile
+peru_eez <- filter(eez, GEONAME == "Peruvian Exclusive Economic Zone")
+meow_south <- filter(meow, ECOREGION == "Humboldtian")
+s_peru <- st_intersection(peru_eez, meow_south)
+
+tmpN <- st_read(here("prep/fisheries/data/maps/Chile-SUBPESCA-CH-N.shp"))
+sp_nc <- st_union(st_geometry(s_peru), st_geometry(tmpN))
+mapview::mapview(sp_nc)
+st_write(sp_nc, here("prep/fisheries/data/maps/Chile-SUBPESCA-NCH-SP.shp"), append=FALSE)
+
+
+## PANCHCCH
+# https://en.wikipedia.org/wiki/Central_Chile
+chile_eez <- filter(eez, GEONAME == "Chilean Exclusive Economic Zone")
+tmpCS <- st_read(here("prep/fisheries/data/maps/Chile-SUBPESCA-CH-CS.shp"))
+tmpN <- st_read(here("prep/fisheries/data/maps/Chile-SUBPESCA-CH-N.shp"))
+CS_map <- mapview::mapview(tmpCS)
+subset <- mapedit::editMap(CS_map)
+c <- st_intersection(subset$drawn, tmpCS)
+mapview::mapview(c)
+st_write(c, here("prep/fisheries/data/maps/Chile-SUBPESCA-CH-C.shp"), append=FALSE)
+
+
+
+## NEPHMEDGSA17-18
+# https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A52017SC0064
+rgn <- filter(iho, NAME == "Adriatic Sea")
+mapview::mapview(rgn)
+st_write(rgn, here("prep/fisheries/data/maps/multinational-GFCM-GSA17-18.shp"), append=FALSE)
+
+
+## NPOUTIIIa-IV
+rgn1 <- filter(ices, SubArea == "4")
+rgn2 <- filter(ices, SubArea == "3" & Division %in% c("a"))
+region <- rbind(rgn1, rgn2)
+region <- st_union(region)
+mapview::mapview(region)
+st_write(region, here("prep/fisheries/data/maps/NPOUTIIIa-IV.shp"), append=FALSE)
+
+
+
+##MUTSNAPSATLCGM
+satlc <- st_read(here("prep/fisheries/data/maps/USA-NMFS-SATLC.shp"))
+gom <- st_read(here("prep/fisheries/data/maps/USA-NMFS-GM.shp"))
+mapview::mapview(satlc) + mapview::mapview(gom)
+satlcgom <- st_union(st_geometry(satlc), st_geometry(gom))
+mapview::mapview(satlcgom)
+st_write(satlcgom, here("prep/fisheries/data/maps/USA-NMFS-SATLCGM.shp"), append=FALSE)
+
+## MORWONGWSE
+# https://www.frdc.com.au/sites/default/files/products/2002-223-Marine%20Matters-%20Atlas%20of%20Australian%20Marine%20Fishing%20and%20Costal%20Communities.pdf
+tmp <- filter(eez, GEONAME == "Australian Exclusive Economic Zone")
+plot_tmp <- mapview::mapview(tmp) + 
+  mapview::mapview(meow)
+subset <- mapedit::editMap(plot_tmp)
+wse <- st_intersection(subset$drawn, tmp)
+mapview::mapview(wse)
+st_write(wse, here("prep/fisheries/data/maps/Australia-AFMA-WSE.shp"), append=FALSE)
+st_write(wse, here("prep/fisheries/data/maps/Australia-SARDI-WSE.shp"), append=FALSE)
+
+## MORWONGESE
+tmp <- filter(eez, GEONAME == "Australian Exclusive Economic Zone")
+plot_tmp <- mapview::mapview(wse) + 
+  mapview::mapview(meow)
+subset <- mapedit::editMap(plot_tmp)
+ese <- st_intersection(subset$drawn, tmp)
+mapview::mapview(ese)
+st_write(ese, here("prep/fisheries/data/maps/Australia-AFMA-ESE.shp"), append=FALSE)
+
+## MEGVII-VIIIabd
+rgn1 <- filter(ices, SubArea == "7")
+rgn2 <- filter(ices, SubArea == "8" & Division %in% c("a", "b", "d"))
+region <- rbind(rgn1, rgn2)
+region <- st_union(region)
+mapview::mapview(region)
+st_write(region, here("prep/fisheries/data/maps/multinational-ICES-VII-VIIIabd.shp"), append=FALSE)
+
+
+## LINGVa
+rgn1 <- filter(ices, SubArea == "5" & Division %in% c("a"))
+rgn1 <- st_union(rgn1)
+mapview::mapview(rgn1)
+st_write(rgn1, here("prep/fisheries/data/maps/multinational-ICES-Va.shp"), append=FALSE)
+
+
+## KCROCKNPAC
+iho_pac <- filter(iho, NAME == "North Pacific Ocean") 
+iho_pac <- st_make_valid(iho_pac)
+st_write(iho_pac, here("prep/fisheries/data/maps/Japan-FAJ-NPAC.shp"), append=FALSE)
+
+
+## JPUFFIMKB
+jpn_eez <- filter(eez, GEONAME == "Japanese Exclusive Economic Zone")
+jpn_eez <- st_make_valid(jpn_eez)
+jpn_map <- mapview::mapview(jpn_eez)
+subset <- mapedit::editMap(jpn_map)
+imb <- st_intersection(subset$drawn, jpn_eez)
+mapview::mapview(imb)
+st_write(imb, here("prep/fisheries/data/maps/Japan-FAJ-IMKB.shp"), append=FALSE)
+
+## JMACKPJPN
+jpn_eez <- filter(eez, GEONAME == "Japanese Exclusive Economic Zone")
+jpn_eez <- st_make_valid(jpn_eez)
+iho_pac <- filter(iho, NAME == "North Pacific Ocean") 
+iho_pac <- st_make_valid(iho_pac)
+jpn_pc <- st_intersection(iho_pac, jpn_eez)
+mapview::mapview(jpn_pc)
+st_write(jpn_pc, here("prep/fisheries/data/maps/Japan-FAJ-PJPN.shp"), append=FALSE)
+
+
+## JAMBERJPN
+grep("Japan", eez$GEONAME, value=TRUE)
+tmp <- filter(eez, GEONAME == "Japanese Exclusive Economic Zone")
+mapview::mapview(tmp)
+st_write(tmp, here("prep/fisheries/data/maps/Japan-FAJ-JPN.shp"), append=FALSE)
+st_write(tmp, here("prep/fisheries/data/maps/Japan-FAJ-JPNAR.shp"), append=FALSE)
+st_write(tmp, here("prep/fisheries/data/maps/Japan-FAJ-JPNWR.shp"), append=FALSE)
+
+## HMACKIIa-IVa-Vb-VIa-VII-VIII
+rgn1 <- filter(ices, SubArea == "2" & Division %in% c("a"))
+rgn2 <- filter(ices, SubArea == "4" & Division %in% c("a"))
+rgn3 <- filter(ices, SubArea == "5" & Division %in% c("b"))
+rgn4 <- filter(ices, SubArea == "6" & Division %in% c("a"))
+rgn5 <- filter(ices, SubArea %in% c("7"))
+rgn6 <- filter(ices, SubArea %in% c("8"))
+region <- rbind(rgn1, rgn2, rgn3, rgn4, rgn5, rgn6)
+region <- st_union(region)
+mapview::mapview(region)
+st_write(region, here("prep/fisheries/data/maps/multinational-ICES-IIa-IVa-Vb-VIa-VII-VIII.shp"), append=FALSE)
+
+
+## HERRNS-IIIa-VIId
+rgn1 <- filter(ices, SubArea == "3" & Division %in% c("a"))
+rgn2 <- filter(ices, SubArea %in% c("4"))
+rgn3 <- filter(ices, SubArea == "7" & Division %in% c("d"))
+region <- rbind(rgn1, rgn2, rgn3)
+region <- st_union(region)
+mapview::mapview(region)
+st_write(region, here("prep/fisheries/data/maps/multinational-ICES-IIIa-IV-VIId.shp"), append=FALSE)
+
+
+
+## HERRHG
+# https://www.pac.dfo-mpo.gc.ca/fm-gp/maps-cartes/areas-secteurs/index-eng.html#area-table
+can_eez <- filter(eez, GEONAME == "Canadian Exclusive Economic Zone")
+can_eez <- st_make_valid(can_eez)
+can <- mapview::mapview(can_eez)
+subset <- mapedit::editMap(can)
+hg <- st_intersection(subset$drawn, can_eez)
+mapview::mapview(hg)
+st_write(hg, here("prep/fisheries/data/maps/Canada-DFO-HG.shp"), append=FALSE)
+
+
+## HERR2529-32
+rgn1 <- filter(ices, SubDivisio %in% c("30", "31"))
+region <- st_union(rgn1)
+mapview::mapview(region)
+st_write(region, here("prep/fisheries/data/maps/multinational-ICES-30-31.shp"), append=FALSE)
+
+
+## HERR2529-32
+rgn1 <- filter(ices, SubDivisio %in% c("25", "27", "28", "29", "32"))
+region <- st_union(rgn1)
+mapview::mapview(region)
+st_write(region, here("prep/fisheries/data/maps/multinational-ICES-2529-32.shp"), append=FALSE)
+
+## DVANGSASC
+grep("Namibia", eez$GEONAME, value=TRUE)
+tmp <- filter(eez, GEONAME == "Namibian Exclusive Economic Zone")
+mapview::mapview(tmp)
+st_write(tmp, here("prep/fisheries/data/maps/Namibia-NMFMR-SAF.shp"), append=FALSE)
+
+
+
+## HADNS-IIIa-VIa
+rgn1 <- filter(ices, SubArea == "3" & Division %in% c("a"))
+rgn2 <- filter(ices, SubArea %in% c("4"))
+rgn3 <- filter(ices, SubArea == "6" & Division %in% c("a"))
+region <- rbind(rgn1, rgn2, rgn3)
+region <- st_union(region)
+mapview::mapview(region)
+st_write(region, here("prep/fisheries/data/maps/multinational-ICES-NS-IIIa-VIa.shp"), append=FALSE)
+
+
+## GOLDREDV-VI-XII-XIV
+rgn1 <- filter(ices, SubArea %in% c("5", "6", "12", "14"))
+region <- st_union(rgn1)
+mapview::mapview(region)
+st_write(region, here("prep/fisheries/data/maps/multinational-ICES-V-VI-XII-XIV.shp"), append=FALSE)
+
+
+## EBASSIVbc-VII
+rgn1 <- filter(ices, SubArea == "4" & Division %in% c("b", "c"))
+rgn2 <- filter(ices, SubArea %in% c("7"))
+region <- rbind(st_make_valid(rgn1), st_make_valid(rgn2))
+region <- st_union(region)
+mapview::mapview(region)
+st_write(region, here("prep/fisheries/data/maps/multinational-ICES-IVbc-VII.shp"), append=FALSE)
+
+
+## DVANGSASC
+grep("South Africa", eez$GEONAME, value=TRUE)
+tmp <- filter(eez, GEONAME == "South African Exclusive Economic Zone")
+south <- filter(meow, ECOREGION == "Agulhas Bank")
+south_af <- st_intersection(tmp, south)
+mapview::mapview(south_af)
+st_write(south_af, here("prep/fisheries/data/maps/South Africa-DEFF-SASC.shp"), append=FALSE)
+st_write(south_af, here("prep/fisheries/data/maps/South Africa-DETMCM-SASC.shp"), append=FALSE)
+
+
+
+## DVANGSAWC
+grep("South Africa", eez$GEONAME, value=TRUE)
+tmp <- filter(eez, GEONAME == "South African Exclusive Economic Zone")
+west <- filter(meow, ECOREGION == "Namaqua")
+west_af <- st_intersection(tmp, west)
+mapview::mapview(west_af)
+st_write(west_af, here("prep/fisheries/data/maps/South Africa-DEFF-SAWC.shp"), append=FALSE)
+st_write(west_af, here("prep/fisheries/data/maps/South Africa-DETMCM-SAWC.shp"), append=FALSE)
+
+
+## CUSKVa-XIV
+tmp <- filter(ices, SubArea %in% c("5") & Division =="a")
+tmp2 <- filter(ices, SubArea %in% c("14"))
+region <- rbind(st_make_valid(tmp), st_make_valid(tmp2))
+region <- st_union(region)
+mapview::mapview(region)
+st_write(region, here("prep/fisheries/data/maps/multinational-ICES-Va-XIV.shp"), append=FALSE)
+
+
+## CODIIIaW-IV-VIId
+tmp <- filter(ices, SubArea %in% c("4"))
+tmp2 <- filter(ices, SubArea %in% c("3") & Division %in% c("a"))
+tmp3 <- filter(ices, SubArea %in% c("7") & Division %in% c("d"))
+region <- rbind(st_make_valid(tmp), st_make_valid(tmp2), st_make_valid(tmp3))
+region <- st_union(region)
+mapview::mapview(region)
+st_write(region, here("prep/fisheries/data/maps/multinational-ICES-IIIaW-IV-VIId.shp"), append=FALSE)
+
+
+## COD1IN
+tmp <- filter(nafo, NAFO_SubArea == "1")
+tmp <- st_union(tmp)
+mapview::mapview(tmp)
+st_write(tmp, here("prep/fisheries/data/maps/multinational-ICES-1IN.shp"), append=FALSE)
+
+
+##COD1F-XIV
+tmp <- filter(ices, SubArea %in% c("14"))
+tmp2 <- filter(nafo, Label == "1F")
+area <- c(st_geometry(tmp), st_geometry(tmp2))
+area <- st_union(area)
+mapview::mapview(area)
+st_write(area, here("prep/fisheries/data/maps/multinational-ICES-1F-XIV.shp"), append=FALSE)
+
+## COBGMT
+tmp <- filter(eez, GEONAME == "United States Exclusive Economic Zone")
+tmp_iho <- filter(iho, NAME == "Gulf of Mexico")
+mapview::mapview(tmp) + 
+  mapview::mapview(tmp_iho)
+gm <- st_intersection(st_geometry(tmp_iho), st_geometry(tmp))
+mapview::mapview(gm)
+st_write(gm, here("prep/fisheries/data/maps/USA-NMFS-GM.shp"), append=FALSE)
+
+
+## CMACKPJPN
+tmp <- filter(eez, GEONAME == "Japanese Exclusive Economic Zone")
+np <- filter(iho, NAME == "North Pacific Ocean")
+np <- st_make_valid(np)
+pac_japan <- st_intersection(tmp, np)
+mapview::mapview(pac_japan)
+st_write(pac_japan, here("prep/fisheries/data/maps/Japan-FAJ-PJPN.shp"), append=FALSE)
+
+
+## CHROCKNPCOAST
+tmp <- filter(eez, GEONAME == "United States Exclusive Economic Zone")
+plot_tmp <- mapview::mapview(tmp) + 
+  mapview::mapview(meow)
+subset <- mapedit::editMap(plot_tmp)
+npc <- st_intersection(subset$drawn, tmp)
+mapview::mapview(npc)
+st_write(npc, here("prep/fisheries/data/maps/USA-NMFS-NPCOAST.shp"), append=FALSE)
+
+## CHROCKNPCOAST
+tmp <- filter(eez, GEONAME == "United States Exclusive Economic Zone")
+plot_tmp <- mapview::mapview(tmp) + 
+  mapview::mapview(meow)
+subset <- mapedit::editMap(plot_tmp)
+spc <- st_intersection(subset$drawn, tmp)
+mapview::mapview(spc)
+st_write(spc, here("prep/fisheries/data/maps/USA-NMFS-SPCOAST.shp"), append=FALSE)
+
+## CHROCKCPCOAST
+tmp <- filter(eez, GEONAME == "United States Exclusive Economic Zone")
+plot_tmp <- mapview::mapview(tmp) + 
+  mapview::mapview(npc) + 
+  mapview::mapview(spc)
+subset <- mapedit::editMap(plot_tmp)
+cpc <- st_intersection(subset$drawn, tmp)
+mapview::mapview(cpc)
+st_write(cpc, here("prep/fisheries/data/maps/USA-NMFS-CPCOAST.shp"), append=FALSE)
+
+## BSQLOBSTERCSCH
+grep("Chile", eez$GEONAME, value = TRUE)
+tmp <- filter(eez, GEONAME == "Chilean Exclusive Economic Zone")
+meow_plot <- mapview::mapview(tmp) +
+  mapview::mapview(meow)
+subset <- mapedit::editMap(meow_plot)
+schile <- st_intersection(subset$drawn, tmp)
+mapview::mapview(schile)
+st_write(schile, here("prep/fisheries/data/maps/Chile-SUBPESCA-CH-CS.shp"), append=FALSE)
+
+## BSQLOBSTERNCH
+tmp <- filter(eez, GEONAME == "Chilean Exclusive Economic Zone")
+meow_plot <- mapview::mapview(tmp) +
+  mapview::mapview(schile)
+subset <- mapedit::editMap(meow_plot)
+nchile <- st_intersection(subset$drawn, tmp)
+mapview::mapview(nchile)
+st_write(nchile, here("prep/fisheries/data/maps/Chile-SUBPESCA-CH-N.shp"), append=FALSE)
+
+
+## BRNROCKPCOAST
+tmp <- filter(eez, GEONAME == "United States Exclusive Economic Zone")
+plot_tmp <- mapview::mapview(tmp)
+subset <- mapedit::editMap(plot_tmp)
+uswc <- st_intersection(subset$drawn, tmp)
+mapview::mapview(uswc)
+st_write(uswc, here("prep/fisheries/data/maps/USA-NMFS-PCOAST.shp"), append=FALSE)
+
+
+## NMPHS SATLC
+tmp <- filter(eez, GEONAME == "United States Exclusive Economic Zone")
+plot_tmp <- mapview::mapview(tmp)
+subset <- mapedit::editMap(plot_tmp)
+segm <- st_intersection(subset$drawn, tmp)
+mapview::mapview(segm)
+
+st_write(segm, here("prep/fisheries/data/maps/USA-NMFS-SATLC.shp"), append=FALSE)
+st_write(segm, here("prep/fisheries/data/maps/USA-NMFS-SATL.shp"), append=FALSE)
+
+
+
+## BLSHARIO
+tmp <- filter(iho, NAME == "Indian Ocean")
+mapview::mapview(tmp)
+st_write(tmp, here("prep/fisheries/data/maps/multinational-IOTC-IO.shp"))
+
+## BLACKROCKWASH
+tmp <- filter(eez, GEONAME == "United States Exclusive Economic Zone")
+plot_tmp <- mapview::mapview(tmp)
+#subset <- mapedit::editMap(plot_tmp)
+wa <- st_intersection(subset$drawn, tmp)
+mapview::mapview(wa)
+st_write(wa, here("prep/fisheries/data/maps/USA-NMFS-WASH.shp"), append=FALSE)
+
+
+## BLACKROCKCAL
+tmp <- filter(eez, GEONAME == "United States Exclusive Economic Zone")
+mapview::mapview(tmp)
+#subset <- mapedit::editMap()
+ca <- st_intersection(subset, tmp)
+mapview::mapview(ca)
+st_write(ca, here("prep/fisheries/data/maps/USA-NMFS-CAL.shp"))
+
+## BLACKROCKORECOAST
+eez <- filter(eez, GEONAME == "United States Exclusive Economic Zone")
+mapview::mapview(eez)
+m <- mapview::mapview(eez) +
+  mapview::mapview(wa) + 
+  mapview::mapview(ca)
+tmp <- mapedit::editMap(m)
+or <- st_intersection(eez, tmp$drawn)
+
+mapview::mapview(or)
+st_write(or, here("prep/fisheries/data/maps/USA-NMFS-ORECOAST.shp"))
+
+
+## BIGSKAGA
+
+goa <- filter(meow, ECOREGION %in% c("Gulf of Alaska"))
+
+mapview::mapview(goa)
+
+st_write(goa, here("prep/fisheries/data/maps/USA-NMFS-GA.shp"), overwrite=TRUE)
+
+
+
+## BGRDRNSWWA
+
+boundary <- filter(eez, GEONAME == "Australian Exclusive Economic Zone")
+mapview::mapview(boundary)
+st_write(boundary, here("prep/fisheries/data/maps/Australia-AFMA-NSWWA.shp"))
+
+
+
+# AUROCKPCOAST
+tmp <- filter(eez, GEONAME == "United States Exclusive Economic Zone")
+mapview::mapview(tmp)
+#subset <- mapedit::editMap()
+pacific_coast <- st_intersection(subset, tmp)
+mapview::mapview(pacific_coast)
+st_write(pacific_coast, here("prep/fisheries/data/maps/USA-NMFS-PCOAST.shp"))
+
+## APOLLNSJ
+boundary <- filter(with_area, areaid =="Japan-FAJ-NSJ")
+mapview::mapview(boundary)
+st_write(boundary, here("prep/fisheries/data/maps/Japan-FAJ-NSJ.shp"))
+
+## ANCHONWA
+boundary <- filter(meow, ECOREGION %in% c("Azores Canaries Madeira", "Saharan Upwelling", "Sahelian Upwelling", "Cape Verde"))
+boundary <- st_union(boundary)
+mapview::mapview(boundary)
+st_write(boundary, here("prep/fisheries/data/maps/multinational-FAO-NWA.shp"))
+
+## ACMACKSARG
+boundary <- filter(with_area, areaid =="Argentina-CFP-ARG-S")
+plot(st_geometry(boundary))
+st_write(boundary[1, ], here("prep/fisheries/data/maps/Argentina-CFP-ARG-S.shp"))
+
+# ALSKABSAI
+
+ak_eez <-filter(eez, GEONAME=="United States Exclusive Economic Zone (Alaska)")
+meow_bsai <- filter(meow, ECOREGION %in% c("Aleutian Islands", "Eastern Bering Sea"))
+
+mapview::mapview(meow_bsai) + 
+  mapview::mapview(ak_eez)
+bsai <- st_intersection(meow_bsai, ak_eez)
+bsai <- st_union(bsai)
+mapview::mapview(bsai)
+
+st_write(bsai, here("prep/fisheries/data/maps/USA-NMFS-BSAI.shp"), overwrite=TRUE)
+  
+
