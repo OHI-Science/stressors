@@ -101,8 +101,7 @@ country_biomass_change <- country_biomass %>%
 country_biomass_change <- country_biomass_change %>%
   group_by(ant_typ, rgn_id, rgn_nam, iso3c, uninhabited) %>%
   arrange(year) %>%
-  mutate(yearly_percent_change = (biomass - lag(biomass))/lag(biomass)) %>%
-  filter(year != 2000)
+  mutate(yearly_percent_change = (biomass - lag(biomass))/lag(biomass)) 
 
 write_csv(country_biomass_change, here("prep/fisheries/data/country_biomass_2000_2010.csv"))
 
@@ -132,10 +131,13 @@ country_avg_change <- country_biomass_change %>%
             end_biomass = first(biomass[year == max(year)]),
             start_year = min(year),
             end_year = max(year),
-            avg_biomass = mean(biomass)) %>%
+            avg_biomass = mean(biomass),
+            biomass_2005 = biomass[year==2005],
+            biomass_2010 = biomass[year==2010]) %>%
   mutate(duration = end_year - start_year,
          avg_percent_change = ((end_biomass / start_biomass)^(1 / duration) - 1)) %>%
-  select(rgn_id, ant_typ, rgn_nam, iso3c, uninhabited, avg_biomass, avg_percent_change)
+  select(rgn_id, ant_typ, rgn_nam, iso3c, uninhabited, avg_biomass, biomass_2005, biomass_2010, avg_percent_change) %>%
+  ungroup()
   
 # calculate mean biomass: another way of calculating
 # should be similar to above approach, and it is (just wanted to check)
@@ -148,7 +150,7 @@ country_avg_change <- country_biomass_change %>%
 country_avg_change <- country_avg_change %>%
   left_join(country_slopes, by=c("rgn_id", "ant_typ", "rgn_nam", "iso3c", "uninhabited")) %>%
 #  left_join(country_avg_change2, by=c("rgn_id", "ant_typ", "rgn_nam")) %>%
-  select(rgn_id, ant_typ, rgn_nam, iso3c, uninhabited, avg_biomass, avg_percent_change, slope=estimate)
+  select(rgn_id, ant_typ, rgn_nam, iso3c, uninhabited, avg_biomass, biomass_2005, biomass_2010, avg_percent_change, slope=estimate)
   
 ## look at all countries
 ggplot(country_avg_change, aes(x=avg_percent_change, y=slope, col=uninhabited)) +
@@ -177,19 +179,9 @@ ggplot(country_avg_change, aes(x=avg_percent_change, y=prop_biomass, col=ant_typ
   geom_point()
 
 
-## add in most recent biomass
-biomass_historic_times <- which(as.Date(time(biomass)) == as.Date("2010-01-01")) 
-biomass_h <- subset(biomass, biomass_historic_times)
-biomass_h <- cellSize(biomass_h) * biomass_h * 1e-6
-# extract current yearly biomass for each eez
-country_current_biomass <- terra::zonal(biomass_h, zones_raster, fun = sum, na.rm=TRUE)
-
-names(country_current_biomass) <- c("rgn_id", "current_biomass")
-
-country_current_avg <- left_join(country_avg_change, country_current_biomass, by="rgn_id")
 
 ## save data
-write_csv(country_current_avg, here("prep/fisheries/data/region_biomass_trends.csv"))
+write_csv(country_avg_change, here("prep/fisheries/data/region_biomass_trends.csv"))
 
 
 ```

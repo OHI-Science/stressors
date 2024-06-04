@@ -70,7 +70,7 @@ gov_gf <- pressure_eez %>%
 
 gov_raw <- read_csv("/home/shares/ohi/stressors_2021/_raw_data/governance_andrijevic/governance2019/data/master_proj_obs.csv") %>%
   filter(scenario == "Observed") %>%
-  filter(year >= 2000) %>%
+  filter(year >= 2000 & year <= 2010) %>%
   select(iso3c = countrycode, year, governance)
 
 gov_gf <- left_join(gov_gf, gov_raw, by="iso3c")
@@ -78,6 +78,7 @@ gov_gf <- left_join(gov_gf, gov_raw, by="iso3c")
 ## first couple years of Tonga missing, fill with closest year
 gov_gf <- gov_gf %>%
   mutate(governance = ifelse(iso3c=="TON" & is.na(governance), gov_gf$governance[gov_gf$iso3c=="TON" & gov_gf$year==2003], governance))
+summary(gov_gf)
 # N = 61 (of 184) countries with no governance, included general disputed regions
 
 ## will be working with the avg. governance from 2000 to 2010
@@ -136,7 +137,8 @@ new <- setdiff(gf_regions$iso3c, gdp_pc$iso3c)
 
 gdp_pc <- rbind(gdp_pc, gf_regions[gf_regions$iso3c %in% new,])
 
-gov_gf_avg2 <- left_join(gov_gf_avg, gdp_pc, by="iso3c")  # N=37 of 61 have gdp data
+gov_gf_avg2 <- left_join(gov_gf_avg, gdp_pc, by="iso3c")  # N=41 of 61 have gdp data
+filter(gov_gf_avg2, is.na(governance)) %>% print(n=100)
 
 ## Fill in disputed regions with low governance score
 gov_gf_avg2$rgn_nam[gov_gf_avg2$iso3c == "DIS"] <- "Disputed"
@@ -152,10 +154,11 @@ gov_gf_avg3 <- left_join(gov_gf_avg2, georgns, by="rgn_id") %>%
   mutate(log_gdp = log(pcGDP))
 plot(gov_gf_avg3$governance, log(gov_gf_avg3$pcGDP))
 plot(gov_gf_avg3$governance, gov_gf_avg3$pcGDP)
+summary(gov_gf_avg3)
 
 ### gapfill all regions (except Micronesia) that have gdp data
 mod_gov1 <- lm(governance ~ log_gdp + r2_label, na.action=na.exclude, data=gov_gf_avg3)
-summary(mod_gov1) # R2= 0.71
+summary(mod_gov1) # R2= 0.72
 
 
 gov_gf_avg3$gov_gf1 <- predict(mod_gov1, newdata = gov_gf_avg3 %>%
@@ -163,21 +166,21 @@ gov_gf_avg3$gov_gf1 <- predict(mod_gov1, newdata = gov_gf_avg3 %>%
 
 gov_gf_avg4 <- gov_gf_avg3 %>%
   mutate(gapfilled = ifelse(is.na(governance), "gapfilled", NA)) %>%
-  mutate(governance = ifelse(is.na(governance), gov_gf1, governance))
+  mutate(governance = ifelse(is.na(governance), gov_gf1, governance)) # n missing now N= 24
 
 
 ### gapfill the Micronesia region
 mod_gov2 <- lm(governance ~ log_gdp + r1_label, data=gov_gf_avg4, na.action=na.exclude)
-summary(mod_gov2) # R2 = 0.68
+summary(mod_gov2) # R2 = 0.70
 
 gov_gf_avg4$gov_gf2 <- predict(mod_gov2, newdata = gov_gf_avg4)
 gov_gf_avg5 <- gov_gf_avg4 %>%
-  mutate(governance = ifelse(is.na(governance), gov_gf2, governance))
+  mutate(governance = ifelse(is.na(governance), gov_gf2, governance)) # n missing n= 19
 
 
 ### gapfill remaining regions based on georegion, r2 label
 mod_gov3 <- lm(governance ~ r2_label, data=gov_gf_avg5, na.action=na.exclude)
-summary(mod_gov3) # R2 = 0.64
+summary(mod_gov3) # R2 = 0.63
 
 gov_gf_avg5$gov_gf3 <- predict(mod_gov3, newdata = gov_gf_avg5)
 gov_gf_avg6 <- gov_gf_avg5 %>%
@@ -225,19 +228,19 @@ Now estimate the 2000 to 2015 years based on GDP and georegion:
 
 
 # Fetch data
- indicator <- "NY.GDP.PCAP.PP.CD"
-gdp_pc <- WDI(
-  indicator = indicator,
-  start = 2000,  # Adjust the starting year as needed
-  end = 2015,    # Adjust the ending year as needed
-  extra = TRUE   # Include additional country metadata
-)
+# indicator <- "NY.GDP.PCAP.PP.CD"
+#gdp_pc <- WDI(
+#  indicator = indicator,
+#  start = 2000,  # Adjust the starting year as needed
+#  end = 2015,    # Adjust the ending year as needed
+#  extra = TRUE   # Include additional country metadata
+#)
 
 #write_csv(gdp_pc, here("prep/fisheries/data/inputs/world_bank_pcgdp_2000_2015.csv"))
 
 gdp_pc <- read_csv(here("prep/fisheries/data/inputs/world_bank_pcgdp_2000_2015.csv"))
 
-# a few countries don't have all years of gdp data, gapfill here:
+# a few countries don't have all years of gdp data (NA N = 405 to N = 304), gapfill here:
 gdp_pc <- gdp_pc %>%
   select(iso3c, year, pcGDP=NY.GDP.PCAP.PP.CD) %>%
   group_by(iso3c) %>%
@@ -246,11 +249,11 @@ gdp_pc <- gdp_pc %>%
   tidyr::fill(pcGDP, .direction = "downup") %>%
   ungroup()
 
-gov_gf2 <- left_join(gov_gf, gdp_pc, by=c("iso3c", "year"))  # N=23 of 61 have gdp data
+gov_gf2 <- left_join(gov_gf, gdp_pc, by=c("iso3c", "year")) # n=640 pcGDp
 
 
 
-# Add in the values I looked up from other sources
+# Add in the values I looked up from other sources # n = 352 pcGDP
 ## rough estimate from google searches (Wikipedia and such)
 gf_regions <- read_csv(here("prep/fisheries/data/country_pop_gf.csv")) %>%
   filter(population > 0) %>%
@@ -267,7 +270,7 @@ gov_gf3 <- left_join(gov_gf2, gf_regions, by="iso3c") %>%
 georgns <- read_csv("https://raw.githubusercontent.com/OHI-Science/ohiprep_v2023/gh-pages/globalprep/spatial/v2017/output/georegion_labels.csv") %>%
   select(rgn_id, r1_label, r2_label)
 
-
+## NA = N 1101
 gov_gf4 <- left_join(gov_gf3, georgns, by="rgn_id") %>%
   mutate(log_gdp = log(pcGDP))
 plot(gov_gf4$governance, log(gov_gf4$pcGDP))
@@ -276,12 +279,13 @@ plot(gov_gf4$governance, gov_gf4$pcGDP)
 ### gapfill all regions (except Micronesia) that have gdp data
 # tried including year, but was not significant
 mod_gov1 <- lm(governance ~ log_gdp + r2_label, na.action=na.exclude, data=gov_gf4)
-summary(mod_gov1) # R2= 0.76
+summary(mod_gov1) # R2= 0.73
 
 gov_gf4$gov_gf1 <- predict(mod_gov1, 
                           newdata = gov_gf4 %>%
                           mutate(r2_label = ifelse(r2_label == "Micronesia", NA, r2_label)))
 
+# NA gov = 402
 gov_gf5 <- gov_gf4 %>%  
   mutate(gapfilled = ifelse(is.na(governance), "gapfilled", NA)) %>%
   mutate(governance = ifelse(is.na(governance), gov_gf1, governance))
@@ -289,20 +293,22 @@ gov_gf5 <- gov_gf4 %>%
 
 ### gapfill the Micronesia region
 mod_gov2 <- lm(governance ~ log_gdp + r1_label, data=gov_gf5, na.action=na.exclude)
-summary(mod_gov2) # R2 = 0.68
+summary(mod_gov2) # R2 = 0.69
 
 gov_gf5$gov_gf2 <- predict(mod_gov2, newdata = gov_gf5)
 
+#NA gov = 322
 gov_gf6 <- gov_gf5 %>%  
   mutate(governance = ifelse(is.na(governance), gov_gf2, governance))
 
 
 ### gapfill remaining regions based on georegion
 mod_gov3 <- lm(governance ~ r2_label, data=gov_gf6, na.action=na.exclude)
-summary(mod_gov3) # R2 = 0.66
+summary(mod_gov3) # R2 = 0.68
 
 gov_gf6$gov_gf3 <- predict(mod_gov3, newdata = gov_gf6)
 
+## NA gov N = 16 (disputed areas)
 gov_gf7 <- gov_gf6 %>%  
   mutate(governance = ifelse(is.na(governance), gov_gf3, governance))
 
@@ -368,10 +374,11 @@ avg_yearly_change <- yearly_change %>%
   group_by(scenario) %>%
   mutate(cumulative_avg_change = cumsum(avg_change))
 
-no_data_ids <- setdiff(governance_gf_2010_2015$iso3c, bias_corrected_future$iso3c)
+## figure out what is missing in the >2015 data
+no_data_ids <- setdiff(governance_gf_2000_2015$iso3c, bias_corrected_future$iso3c)
 
 scenario = c("SSP1", "SSP2", "SSP3", "SSP4", "SSP5")
-governance_2015 <- filter(governance_gf_2010_2015, iso3c %in% no_data_ids) %>%
+governance_2015 <- filter(governance_gf_2000_2015, iso3c %in% no_data_ids) %>%
   filter(year == 2015) %>%
   select(iso3c, rgn_id, rgn_nam, governance_2015 = governance) %>%
   crossing(scenario = scenario)
@@ -383,6 +390,7 @@ gov_future_gf <- full_join(avg_yearly_change, governance_2015, by=c("scenario"))
   mutate(gapfilled = "gapfilled") %>%
   select(iso3c, scenario, year, rgn_id, rgn_nam, governance, gapfilled)
 
+## Now getting the observed data for 2000-2015 (duplicating for each scenario)
 scenario <- c("SSP1", "SSP2", "SSP3", "SSP4", "SSP5")
 scenario_governance_gf_2000_2015 <- governance_gf_2000_2015 %>%
   select(-scenario) %>%
@@ -390,7 +398,6 @@ scenario_governance_gf_2000_2015 <- governance_gf_2000_2015 %>%
   select(iso3c, scenario, year, rgn_id, rgn_nam, governance, gapfilled)
 
 
-  governance_gf_2000_2015
 
 future_governance_gf <- rbind(bias_corrected_future, gov_future_gf) %>%
   filter(year != 2015) %>%
