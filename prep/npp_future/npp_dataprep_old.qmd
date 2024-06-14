@@ -14,7 +14,7 @@ The rasters are organized like this:
 
 **Caption:** Primary Organic Carbon Production by All Types of Phytoplankton for ENSMN interpolated on a 1x1 grid for the entire year; **First panel:** ssp126 future climate for the period (2020-2049); **Second panel:** difference in the mean climate in the future time period (ssp126: 2020-2049) compared to the historical reference period (1985-2014); **Third panel:** inter-annual (de-trended) standard deviation for the historical reference period (1985-2014); **Fourth panel:** ratio of the de-trended variance in the future (2020-2049) divided by the past (1985-2014).
 
-units: 1.E-9 mol m-2 s-1 
+units: 1.E-9 mol m-2 s-1
 
 ```{r}
 library(tidyverse)
@@ -217,7 +217,6 @@ writeRaster(r, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp
 }
 
 ```
-
 
 Take a look:
 

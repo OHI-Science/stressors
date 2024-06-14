@@ -71,6 +71,7 @@ expected_slopes <- intercept + governance_coeff * gov_data$governance
 simulated_slopes <- sweep(random_errors, 2, expected_slopes, '+')
 
 simulated_data <- as.data.frame(t(simulated_slopes))
+simulated_data_tmp <- as.data.frame(t(expected_slopes))
 
 ## region, scenario, year (2005:2100), and simulated slopes
 simulated_data2 <- cbind(gov_data, simulated_data) %>% 
@@ -80,7 +81,8 @@ simulated_data2 <- cbind(gov_data, simulated_data) %>%
 ## summarized data for each region (slope, avg_percent_change, etc.)
 simulated_biomass <- fish_pressure %>%
   filter(iso3c %in% simulated_data2$iso3c) %>%
-  select(rgn_id, rgn_nam, iso3c, avg_biomass, avg_percent_change, historic_1900, biomass_2005)
+  mutate(starting_prop = biomass_2005/historic_1900) %>%
+  select(rgn_id, rgn_nam, iso3c, avg_biomass, avg_percent_change, historic_1900, biomass_2005, starting_prop)
 
 ```
 
@@ -88,100 +90,82 @@ simulated_biomass <- fish_pressure %>%
 This is used in the next code chunk
 ```{r}
 
-
 update_biomass <- function(df, random_column) {
-  # Initialize the first year's values
-  df$prop[1] <- df$biomass_2005[1] / df$historic_1900[1]
-  df$avg_percent_change[1] <- 0
-  df$avg_biomass[1] <- df$biomass_2005[1] # starting value is 2005
+  # df <- new_data_sim
+  #print(df)
   
-  # Save the starting prop for each row to ensure it does not get worse for props < 0.2
-  starting_prop <- rep(0, nrow(df))
-  starting_prop[1] <- df$prop[1]
-  
-  ## then run this for the rest of the rows:
-  for (i in 2:nrow(df)) {
-    # Save starting prop if it's below 0.2
-    if (df$prop[i-1] < 0.2) {
-      starting_prop[i] <- max(starting_prop[i-1], df$prop[i-1])
-    } else {
-      starting_prop[i] <- df$prop[i-1]
-    }
-    
-    new_percent_change <- df$avg_percent_change[i - 1] + df[[random_column]][i]
-
-    # Calculate potential next year's biomass and prop for decision making
-    potential_biomass <- df$avg_biomass[i - 1] * (1 + new_percent_change)
-    potential_prop <- potential_biomass / df$historic_1900[i]
-
-    # Determine the multiplier based on the proportion constraints from the previous year
-    if (df$prop[i - 1] >= 0.7) {
-      multiplier <- ifelse(new_percent_change > 0, 0, 1)  # Only allow decreases
-    } elseif (df$prop[i - 1] < 0.2) {
-      # Prevent prop from getting worse than the start of the year for these cases
-      multiplier <- ifelse(potential_prop < starting_prop[i], 0, 1)
-    } else {
-      # Ensure prop stays within [0.2, 0.7] range if it starts between [0.2, 0.7]
-      multiplier <- 1
-      if (potential_prop < 0.2) {
-        multiplier <- 0  # Prevent decrease beyond 0.2
-      } elseif (potential_prop > 0.7) {
-        multiplier <- 0  # Prevent increase beyond 0.7
-      }
-    }
-    
-    # Apply multiplier to the change
-    df$avg_percent_change[i] <- new_percent_change * multiplier
-
-    # Update the avg_biomass and prop for the current year
-    df$avg_biomass[i] <- df$avg_biomass[i - 1] * (1 + df$avg_percent_change[i])
-    df$prop[i] <- df$avg_biomass[i] / df$historic_19090[i]  # Update proportion for the new year
-  }
-  
-  return(df)
-}
-
-
-
-# Define the function to update biomass with dynamic scaling
-## running this one!
-update_biomass <- function(df, random_column) {
-  # Initialize the first year's values
   df$prop[1] <- df$biomass_2005[1] / df$historic_1900[1]
   df$avg_percent_change[1] <- df$avg_percent_change[1]
   df$avg_biomass[1] <- df$biomass_2005[1]  # starting value is 2005
+  df[[random_column]][1] <- 0 ## starting value is zero for change
   
-  ## then run this for the rest of the rows:
-  for (i in 2:nrow(df)) { #i=2
-    new_percent_change <- df$avg_percent_change[i - 1] + df[[random_column]][i]
+  scenario <- df$scenario2[1]
+  
+  # print(scenario)
 
-    # Calculate potential next year's biomass and prop
+    if (scenario == "SSP1") {
+      nudge <- 1
+      upper_threshold <- 0.65
+      lower_threshold <- 0.3
+    } else if (scenario == "SSP2") {
+      nudge <- 1
+      upper_threshold <- 0.45
+      lower_threshold <- 0.2
+    } else if (scenario == "SSP3" || scenario == "SSP4") {
+      nudge <- 0.9 
+      upper_threshold <- 0.45
+      lower_threshold <- 0.15
+    } else if (scenario == "SSP5") {
+      nudge <- 0.9
+      upper_threshold <- 0.45
+      lower_threshold <- 0.2
+    } else {
+    stop("Error: Unrecognized scenario value.")
+    }
+   
+  for (i in 2:nrow(df)) { # i=2
+    
+    new_percent_change <- df$avg_percent_change[i - 1] + df[[random_column]][i - 1] 
     potential_biomass <- df$avg_biomass[i - 1] * (1 + new_percent_change)
     potential_prop <- potential_biomass / df$historic_1900[i]
 
-    # Determine the multiplier based on the proportion constraints from the previous year
-    if (df$prop[i - 1] > 0.7) {
-      if (new_percent_change > 0) {
-        multiplier <- 0  # Prevent increases entirely
-      } else if (potential_prop < 0.7) {
-        multiplier <- 0  # Prevent decrease if it would go below 0.7
-      } else {
-        multiplier <- 1  # Allow decrease but not below 0.7
-      }
-    } else if (df$prop[i - 1] < 0.2) {
-      multiplier <- ifelse(new_percent_change < 0, 0, 1)  # No decrease if new change is negative
-    } else {
-      multiplier <- 1  # No restrictions on change
+
+    # Adjust new_percent_change based on positive random_column values if potential_prop > 0.7
+    # this only applies to regions starting above the upper threshold, because later one
+    # ones that start in the middle and go above the theshold are throttled down.
+     if (potential_prop > upper_threshold) {
+      new_percent_change <- df$avg_percent_change[i - 1] + ifelse(df[[random_column]][i] > 0, df[[random_column]][i] * nudge, df[[random_column]][i])
+      potential_biomass <- df$avg_biomass[i - 1] * (1 + new_percent_change)
+      potential_prop <- potential_biomass / df$historic_1900[i]
     }
+    
+     # Initialize adjusted_percent_change with new_percent_change
+    adjusted_percent_change <- new_percent_change
 
-    # Apply multiplier to the change
-    df$avg_percent_change[i] <- new_percent_change * multiplier
+    # Constraints
+    # this first one is for countries starting with props greater than the upper threshold!
+    if (df$prop[1] > upper_threshold && potential_prop > df$prop[1]) {  # If the starting proportion was greater than 0.7
+            adjusted_percent_change <- 0} # Prevent increase above starting proportion
+    if (df$prop[1] < lower_threshold) {  # If the starting proportion was less than 0.2
+      if (potential_prop < df$prop[1]) {
+        adjusted_percent_change <- 0  # Prevent decrease below starting proportion
+      } else if (potential_prop > upper_threshold) { 
+        adjusted_percent_change <- 0  # prevent from going above upper threshold
+    }}
 
-    # Update the avg_biomass for the current year using the previous year's biomass and the adjusted percent change
+    # This is for all countries:
+    if (potential_prop < lower_threshold && df$prop[1] > lower_threshold) {
+      adjusted_percent_change <- 0
+      }  # Prevent going below 0.2
+    if (potential_prop > upper_threshold && df$prop[1] > lower_threshold && df$prop[1] < upper_threshold) {
+      adjusted_percent_change <- 0 
+      } # for regions starting in the middle, they will not go above the upper_threshold 
+    # Apply the adjusted percent change and update yearly values
+    df$avg_percent_change[i] <- adjusted_percent_change
     df$avg_biomass[i] <- df$avg_biomass[i - 1] * (1 + df$avg_percent_change[i])
-    df$prop[i] <- df$avg_biomass[i] / df$historic_1900[i]  # Update proportion for the new year
+    df$prop[i] <- df$avg_biomass[i] / df$historic_1900[i]
   }
-  
+
   return(df)
 }
 
@@ -207,8 +191,9 @@ new_data <- simulated_data2 %>%
 
 # Apply the function to each group
 new_data_sim <- new_data %>%
+  mutate(scenario2 = scenario) %>%
   group_by(iso3c, rgn_id, rgn_nam, scenario) %>%
-  arrange(iso3c, scenario, year) %>%  # Ensure the data is sorted by year
+  arrange(iso3c, rgn_id, rgn_nam, scenario, year) %>%  # Ensure the data is sorted by year
   group_modify(~ update_biomass(.x, random_column = random_column)) %>%
   ungroup() %>% # Remove grouping for final dataframe
   rename_with(~ paste0("biomass_", i), avg_biomass) %>%
@@ -225,7 +210,7 @@ data_long <- simulated_data %>%
   pivot_longer(cols = starts_with("biomass_"), names_to = "biomass_type", values_to = "biomass") %>%
   filter(biomass_type != "biomass_2005")
 
-usa_biomass_stats <- data_long %>%
+usa_biomass_stats <- data_long %>% # tza, brb ,chn
   filter(iso3c=="CHN") %>%
   group_by(year, scenario) %>%
   summarize(
@@ -245,8 +230,9 @@ ggplot(usa_biomass_stats, aes(x = year, y = median_biomass, color = scenario)) +
        x = "Year",
        y = "Biomass") +
   geom_hline(yintercept = thresholds$historic_1900, col="blue") + 
-  geom_hline(yintercept = thresholds$historic_1900 * 0.7, col="purple") + 
-  geom_hline(yintercept = thresholds$historic_1900 * 0.2, col="red") + 
+  geom_hline(yintercept = thresholds$historic_1900 * 0.65, col="green") + 
+  geom_hline(yintercept = thresholds$historic_1900 * 0.45, col="purple") + 
+  geom_hline(yintercept = thresholds$historic_1900 * 0.15, col="red") + 
   theme_minimal()
 
 #global
@@ -299,7 +285,7 @@ observed <- country_biomass_change %>%
   summarize(observed_biomass = sum(biomass, na.rm=TRUE))
 
 ggplot() + 
-  geom_line(data=simulation, aes(x=year, y=total_biomass, group=biomass_type), alpha=0.2) +
+  geom_line(data=filter(simulation, scenario == "SSP2"), aes(x=year, y=total_biomass, group=biomass_type), alpha=0.2) +
   geom_point(data=filter(observed, year>=2005), aes(x=year, y=observed_biomass), col="red")
 
 

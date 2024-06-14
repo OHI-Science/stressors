@@ -10,16 +10,16 @@ The net primary productivity data are bio-oracle data from here:
 
 https://bio-oracle.org/downloads-to-email.php
 
-units: mmol . m-3		
+units: mmol . m-3
 
 average of a given decade, and long-term average of the yearly maxima and minima of a given decade (e.g., the average temperature of the warmest month in the period 2000-2010).
 
 Resolution: 0.05 degree resolution
 
-For benthic:  because focal cells at 0.05 degree resolution comprise a wide range of depth values, the benthic layers were developed for the minimum, average and maximum depth within focal cells.
+For benthic: because focal cells at 0.05 degree resolution comprise a wide range of depth values, the benthic layers were developed for the minimum, average and maximum depth within focal cells.
 
+Downloaded June 11 2024.
 
-Downloaded April 2.
 ```{r}
 library(tidyverse)
 library(terra)
