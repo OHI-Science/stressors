@@ -32,7 +32,8 @@ pressure_data <- left_join(governance, fish_pressure, by=c("rgn_id", "rgn_nam", 
   filter(!(is.na(slope))) # average country data
 
 # yearly scenario governance
-gov_data <- read_csv(here("prep/fisheries/data/governance_2000_2100.csv")) 
+gov_data <- read_csv(here("prep/fisheries/data/governance_2000_2100.csv")) %>%
+  mutate(governance = ifelse(governance < 0.2, 0.2, governance))
 ```
 
 ## Develop model to randomly sample from
@@ -59,19 +60,20 @@ This collects the random error and the expected slope based on governance.
 ```{r}
 
 # Number of simulations
-n_sims <- 100
+n_sims <- 500
 
-# Create a matrix of random errors (one row per simulation, one column per row of original data)
-random_errors <- matrix(rnorm(n_sims * nrow(gov_data), mean = 0, sd = residual_sd), nrow = n_sims, ncol = nrow(gov_data))
+# Create a matrix of random errors (one column per simulation)
+random_errors <- matrix(rnorm(n_sims * nrow(gov_data), mean = 0, sd = residual_sd), ncol = n_sims, nrow = nrow(gov_data))
+
 
 # Calculate the expected slopes for all rows in one operation
 expected_slopes <- intercept + governance_coeff * gov_data$governance
 
-# Add the random errors to the expected slopes to get the simulated slopes
-simulated_slopes <- sweep(random_errors, 2, expected_slopes, '+')
 
-simulated_data <- as.data.frame(t(simulated_slopes))
-simulated_data_tmp <- as.data.frame(t(expected_slopes))
+# Add the random errors to the expected slopes to get the simulated slopes
+simulated_slopes <- sweep(random_errors, 1, expected_slopes, '+')
+
+simulated_data <- as.data.frame(simulated_slopes)
 
 ## region, scenario, year (2005:2100), and simulated slopes
 simulated_data2 <- cbind(gov_data, simulated_data) %>% 
@@ -104,19 +106,19 @@ update_biomass <- function(df, random_column) {
   # print(scenario)
 
     if (scenario == "SSP1") {
-      nudge <- 1
+      nudge <- 0.95
       upper_threshold <- 0.65
       lower_threshold <- 0.3
     } else if (scenario == "SSP2") {
-      nudge <- 1
+      nudge <- 0.95
       upper_threshold <- 0.45
       lower_threshold <- 0.2
     } else if (scenario == "SSP3" || scenario == "SSP4") {
-      nudge <- 0.9 
+      nudge <- 0.8 
       upper_threshold <- 0.45
       lower_threshold <- 0.15
     } else if (scenario == "SSP5") {
-      nudge <- 0.9
+      nudge <- 0.8
       upper_threshold <- 0.45
       lower_threshold <- 0.2
     } else {
@@ -125,7 +127,7 @@ update_biomass <- function(df, random_column) {
    
   for (i in 2:nrow(df)) { # i=2
     
-    new_percent_change <- df$avg_percent_change[i - 1] + df[[random_column]][i - 1] 
+    new_percent_change <- df$avg_percent_change[i - 1] + df[[random_column]][i] 
     potential_biomass <- df$avg_biomass[i - 1] * (1 + new_percent_change)
     potential_prop <- potential_biomass / df$historic_1900[i]
 
@@ -203,15 +205,17 @@ simulated_data <- left_join(simulated_data, new_data_sim)
 cat("simulation = ", i, "\n")
 
 }
-
+write_csv(simulated_data, sprintf("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/random_eez_%s.csv", Sys.Date()))
+simulated_data <- read_csv("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/random_eez_2024-06-21.csv")
 
 # Pivot the biomass columns into a long format
 data_long <- simulated_data %>%
   pivot_longer(cols = starts_with("biomass_"), names_to = "biomass_type", values_to = "biomass") %>%
   filter(biomass_type != "biomass_2005")
 
-usa_biomass_stats <- data_long %>% # tza, brb ,chn
-  filter(iso3c=="CHN") %>%
+rgn <- "USA"
+rgn_biomass_stats <- data_long %>% # tza, brb ,chn
+  filter(iso3c==rgn) %>%
   group_by(year, scenario) %>%
   summarize(
     median_biomass = median(biomass),
@@ -220,13 +224,13 @@ usa_biomass_stats <- data_long %>% # tza, brb ,chn
     .groups = 'drop'
   )
 
-thresholds <- filter(simulated_biomass, iso3c=="CHN")
+thresholds <- filter(simulated_biomass, iso3c==rgn)
 
-ggplot(usa_biomass_stats, aes(x = year, y = median_biomass, color = scenario)) +
+ggplot(rgn_biomass_stats, aes(x = year, y = median_biomass, color = scenario)) +
   geom_line() +
   geom_point() +
-# geom_ribbon(aes(ymin = p10, ymax = p90, fill = scenario), alpha = 0.2) +
-  labs(title = "China Median Biomass for Global by Scenario",
+ geom_ribbon(aes(ymin = p10, ymax = p90, fill = scenario), alpha = 0.2) +
+  labs(title = sprintf("%s Median Biomass for Global by Scenario", rgn),
        x = "Year",
        y = "Biomass") +
   geom_hline(yintercept = thresholds$historic_1900, col="blue") + 
@@ -275,6 +279,9 @@ simulation <- data_long %>%
   ungroup() %>%
   filter(year %in% 2005:2010)
 
+ggplot() + 
+  geom_line(data=filter(data_long, iso3c== "USA", year<2050, biomass_type == "biomass_3"), aes(x=year, y=biomass, group=scenario), alpha=0.2) 
+
 
 # observed data: this file created in step1
 country_biomass_change <- read_csv("prep/fisheries/data/country_biomass_2000_2010.csv") %>%
@@ -285,7 +292,7 @@ observed <- country_biomass_change %>%
   summarize(observed_biomass = sum(biomass, na.rm=TRUE))
 
 ggplot() + 
-  geom_line(data=filter(simulation, scenario == "SSP2"), aes(x=year, y=total_biomass, group=biomass_type), alpha=0.2) +
+  geom_line(data=filter(simulation, scenario == "SSP1"), aes(x=year, y=total_biomass, group=biomass_type), alpha=0.2) +
   geom_point(data=filter(observed, year>=2005), aes(x=year, y=observed_biomass), col="red")
 
 

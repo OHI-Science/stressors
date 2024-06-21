@@ -1,0 +1,248 @@
+---
+title: "High Seas fishery pressures"
+output: html_document
+date: "2024-03-20"
+---
+
+step1: extract biomass data for regions.
+step2: Modeling fishing pressure on the high seas. 
+
+```{r setup, include=FALSE}
+
+library(countrycode)
+library(tidyverse)
+library(here)
+
+
+## plotting high seas against EEZs to compare patterns
+pressure_avg <- read_csv(here("prep/fisheries/data/region_biomass_trends.csv")) %>%
+  mutate(ant_typ = ifelse(!is.na(uninhabited), "eez_uninhabited", ant_typ))
+
+biomass_rgn <- read_csv(here("prep/fisheries/data/country_biomass_2000_2010.csv"))
+
+## some general patterns:
+ggplot(pressure_avg, aes(x=avg_percent_change, group=ant_typ, fill=ant_typ)) +
+  geom_histogram()
+ggplot(pressure_avg, aes(x=slope, group=ant_typ, fill=ant_typ)) +
+  geom_histogram()
+ggplot(filter(pressure_avg, prop_biomass<2), aes(x=prop_biomass, group=ant_typ, fill=ant_typ)) +
+  geom_histogram()
+
+pressure_avg %>% 
+  group_by(ant_typ) %>%
+  summarize(historic_biomass = sum(biomass_2010, na.rm=TRUE))
+
+## image of overall high seas biomass
+hs_biomass_mean <- biomass_rgn %>%
+  filter(ant_typ %in% c("fao", "eez-ccamlr")) %>%
+  select(year, biomass) %>%
+  group_by(year) %>%
+  summarize(biomass=sum(biomass, na.rm=TRUE))
+
+ggplot(hs_biomass_mean, aes(x=year, y=biomass)) + 
+  geom_line() 
+
+check <- hs_biomass_mean %>%
+  arrange(year) %>%
+  mutate(yearly_percent_change = (biomass - lag(biomass))/lag(biomass)) 
+
+ggplot(check, aes(x=year, y=yearly_percent_change)) + 
+  geom_line() 
+
+
+```
+
+
+Parameters for future predictions.
+The mean and sd of the annual rate of change in biomass across fao regions is used for random sampling future change.
+```{r}
+
+hs_rgn_avg <- pressure_avg %>%
+  filter(ant_typ %in% c("fao", "eez-ccamlr"))
+
+```
+
+
+Creating the high seas, region specific data:
+```{r}
+
+nsims <- 500
+
+hs_biomass_rgn <- biomass_rgn %>%
+  filter(ant_typ %in% c("fao", "eez-ccamlr"))
+  
+scenario_year_template <- expand.grid(scenario = c("SSP1", "SSP2", "SSP3", "SSP4", "SSP5"),
+                                      year = 2000:2100,
+                                      rgn_id = unique(hs_biomass_rgn$rgn_id),
+                                      simulation = paste0("V", 1:nsims))
+
+hs_average <- pressure_avg %>%
+  select(rgn_id, iso3c, rgn_nam, biomass_2005, biomass_2010, avg_percent_change, historic_1900)
+
+hs_scenario <- left_join(scenario_year_template, hs_average, by=c("rgn_id")) %>%
+  mutate(biomass = NA, prop=NA)
+
+## add in random annual change
+hs_scenario$rate_change <- rnorm(dim(hs_scenario)[1], mean = mean(hs_rgn_avg$avg_percent_change), sd = sd(hs_rgn_avg$avg_percent_change))
+hs_scenario <- hs_scenario %>%
+  mutate(rate_change = ifelse(scenario == "SSP1", 0.001, rate_change)) 
+```
+
+Function to update yearly biomass based on randomized sample:
+```{r}
+
+update_biomass <- function(df) {
+  # df <- new_data_sim
+  #print(df)
+  
+  df$prop[1] <- df$biomass_2010[1] / df$historic_1900[1]
+  df$biomass[1] <- df$biomass_2005[1]  # starting value is 2005
+
+  scenario <- df$scenario2[1]
+  
+  # print(scenario)
+
+    if (scenario == "SSP1") {
+        upper_threshold <- 0.99
+      } else if (scenario == "SSP2") {
+      lower_threshold <- 0.75
+    } else if (scenario == "SSP3" || scenario == "SSP4" || scenario == "SSP5") {
+      lower_threshold <- 0.60
+    } else {
+    stop("Error: Unrecognized scenario value.")
+    }
+   
+  for (i in 2:nrow(df)) { # i=2
+    
+    potential_biomass <- df$biomass[i - 1] * (1 + df$rate_change[i-1])
+    potential_prop <- potential_biomass / df$historic_1900[i]
+
+
+     adjusted_rate_change <- df$rate_change[i-1]
+
+     
+    # Constraints
+     if (scenario == "SSP1" && potential_prop > upper_threshold) {
+      adjusted_rate_change <- 0 
+         }
+      if (scenario != "SSP1" && potential_prop < lower_threshold) {
+      adjusted_rate_change <- 0         
+        }
+   
+     ## Make the biomass approach thresholds more slowly  
+  #      if (scenario == "SSP1") {
+  #    adjust_factor <- (potential_prop/upper_threshold - 1) * (-1)
+  #   }
+  #    if (scenario != "SSP1") {
+  #    adjust_factor <- (potential_prop/lower_threshold - 1) * (-1)
+  #  }
+    adjust_factor <- 1
+    # Apply the adjusted percent change and update yearly values
+    df$biomass[i] <- df$biomass[i - 1] * (1 + adjusted_rate_change * adjust_factor)
+    df$prop[i] <- df$biomass[i] / df$historic_1900[i]
+  }
+
+  return(df)
+}
+
+```
+
+Run function
+```{r}
+
+# Apply the function to each group
+new_data_sim <- hs_scenario %>%
+  filter(year>=2005) %>%
+  mutate(scenario2 = scenario) %>%
+  arrange(rgn_id, rgn_nam, simulation, scenario, year) %>%
+  group_by(iso3c, rgn_id, rgn_nam, simulation, scenario) %>%
+  group_modify(~ update_biomass(.x)) %>%
+  ungroup()  %>%
+  select(iso3c, rgn_id, rgn_nam, scenario, simulation, year, biomass)
+
+write_csv(new_data_sim, sprintf("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/random_hs_%s.csv", Sys.Date()))
+new_data_sim <- read_csv(sprintf("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/random_hs_%s.csv", "2024-06-18"))
+```
+
+
+Plot the data
+```{r}
+
+rgn <- 273
+
+rgn_biomass_stats <- new_data_sim %>% 
+  filter(rgn_id==rgn) %>%
+  group_by(year, scenario) %>%
+  summarize(
+    median_biomass = median(biomass),
+    p10 = quantile(biomass, 0.1),
+    p90 = quantile(biomass, 0.9),
+    .groups = 'drop'
+  )
+
+thresholds <- filter(pressure_avg, rgn_id==rgn)
+name <- pressure_avg$rgn_nam[pressure_avg$rgn_id==rgn]
+  
+ggplot(rgn_biomass_stats, aes(x = year, y = median_biomass, color = scenario)) +
+  geom_line() +
+  geom_point() +
+# geom_ribbon(aes(ymin = p10, ymax = p90, fill = scenario), alpha = 0.2) +
+  labs(title = paste(name, "Median Biomass by scenario"),
+       x = "Year",
+       y = "Biomass") +
+  geom_hline(yintercept = thresholds$historic_1900, col="blue") + 
+  geom_hline(yintercept = thresholds$historic_1900 * 0.75, col="green") + 
+  geom_hline(yintercept = thresholds$historic_1900 * 0.60, col="purple") + 
+  theme_minimal()
+
+#global
+global_biomass_stats <- new_data_sim %>%
+  group_by(year, scenario, simulation) %>%
+  summarize(total_biomass = sum(biomass)) %>%
+  ungroup() %>%
+  group_by(year, scenario) %>%
+  summarize(
+    median_biomass = median(total_biomass),
+    p10 = quantile(total_biomass, 0.1),
+    p90 = quantile(total_biomass, 0.9),
+    .groups = 'drop'
+  )
+
+ggplot(filter(global_biomass_stats, year <= 2100), aes(x = year, y = median_biomass, color = scenario)) +
+  geom_line() +
+  geom_point() +
+# geom_ribbon(aes(ymin = p10, ymax = p90, fill = scenario), alpha = 0.2) +
+  labs(title = "Global: Median Biomass for Global by Scenario",
+       x = "Year",
+       y = "Biomass") +
+  theme_minimal()
+
+
+```
+
+
+compare to observed
+```{r}
+simulation <- new_data_sim %>%
+  group_by(year, scenario, simulation) %>%
+  summarize(total_biomass = sum(biomass)) %>%
+  ungroup() %>%
+  filter(year %in% 2005:2010)
+
+
+# observed data: this file created in step1
+country_biomass_change <- read_csv("prep/fisheries/data/country_biomass_2000_2010.csv") %>%
+  filter(rgn_id %in% unique(new_data_sim$rgn_id))
+
+observed <- country_biomass_change %>%
+  group_by(year) %>%
+  summarize(observed_biomass = sum(biomass, na.rm=TRUE))
+
+ggplot() + 
+  geom_line(data=filter(simulation, scenario == "SSP4"), aes(x=year, y=total_biomass, group=simulation), alpha=0.2) +
+  geom_point(data=filter(observed, year>=2005), aes(x=year, y=observed_biomass), col="red")
+
+
+
+
+```

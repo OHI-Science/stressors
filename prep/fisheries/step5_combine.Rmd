@@ -1,0 +1,55 @@
+---
+title: "combining_regions"
+output: html_document
+date: "2024-06-21"
+---
+
+This script combines the fishing pressure data for the three categories of regions:
+habited EEZ, uninhabited EEZ, high seas.
+
+The fishing pressures are then mapped by region and the data is formatted to align with the other pressures.
+
+```{r setup, include=FALSE}
+
+library(sf)
+library(terra)
+library(countrycode)
+library(broom)
+library(tidyverse)
+library(here)
+library(rnaturalearth)
+
+```
+
+## Get the data
+```{r}
+
+# eez
+eez_sim <- read_csv("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/random_eez_2024-06-21.csv")
+eez_sim <- eez_sim %>%
+  pivot_longer(cols = starts_with("biomass_"), names_to = "biomass_type", values_to = "biomass") %>%
+  filter(biomass_type != "biomass_2005") %>%
+  group_by(iso3c, rgn_id, scenario, year) %>%
+  summarize(biomass = median(biomass))
+
+## uninhabited
+unin_sim <- read_csv("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/random_uninhabited_2024-06-21.csv") %>%
+  group_by(iso3c, rgn_id, scenario, year) %>%
+  summarize(biomass = median(biomass))
+
+## high seas
+hs_sim <- read_csv("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/random_hs_2024-06-18.csv") %>%
+  group_by(iso3c, rgn_id, scenario, year) %>%
+  summarize(biomass = median(biomass))
+
+
+fish_data <- rbind(eez_sim, unin_sim, hs_sim)
+
+scenario <- "SSP1"
+years <- 
+
+
+
+```
+
+

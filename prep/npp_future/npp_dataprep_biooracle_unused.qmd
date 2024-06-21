@@ -1,0 +1,217 @@
+---
+title: "NPP pressure"
+format: html
+editor: visual
+---
+
+## NPP
+
+The net primary productivity data are bio-oracle data from here:
+
+https://bio-oracle.org/downloads-to-email.php
+
+units: mmol . m-3
+
+average of a given decade, and long-term average of the yearly maxima and minima of a given decade (e.g., the average temperature of the warmest month in the period 2000-2010).
+
+Resolution: 0.05 degree resolution
+
+For benthic: because focal cells at 0.05 degree resolution comprise a wide range of depth values, the benthic layers were developed for the minimum, average and maximum depth within focal cells.
+
+Downloaded June 11 2024.
+
+```{r}
+library(tidyverse)
+library(terra)
+library(ncdf4)
+library(biooracler)
+library(here)
+# devtools::install_github("bio-oracle/biooracler")
+```
+
+Downloading the data (https://github.com/bio-oracle/biooracler):
+
+```{r}
+data.frame(list_layers())
+
+list_layers("Phytoplankton")$dataset_id
+dataset_id <- "phyc_baseline_2000_2020_depthsurf"
+info_layer(dataset_id)
+
+
+# make a function to download the data from site
+# (called by getdata function after this)
+layer_download <- function(time, latitude, longitude, dataset_id){
+constraints = list(time, latitude, longitude)
+names(constraints) = c("time", "latitude", "longitude")
+variables = paste0(variable, "_ltmin")
+layers <- download_layers(dataset_id, variables, constraints)
+return(layers)
+}
+
+# make a function to get oxygen and depth data for each time period.
+getdata <- function(variable = "o2", depth = "depthmean"){
+
+latitude = c(-89.975, 89.975)
+longitude = c(-179.975, 179.975)
+
+ scenarios = c("ssp119", "ssp126", "ssp245", "ssp370", "ssp460", "ssp585")
+
+#historical
+dataset_id <- paste0(variable, "_baseline_2000_2018_", depth)
+time = c('2000-01-01T00:00:00Z', '2000-01-01T00:00:00Z')
+
+layers <- layer_download(time=time, latitude=latitude, longitude = longitude, dataset_id = dataset_id)
+
+writeRaster(layers, filename = file.path("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw", paste0(variable, "-", depth, "_hist_hist.tif")), overwrite=TRUE)
+
+#current
+dataset_id <- paste0(variable, "_baseline_2000_2018_", depth)
+time = c('2010-01-01T00:00:00Z', '2010-01-01T00:00:00Z')
+
+layers <- layer_download(time=time, latitude=latitude, longitude = longitude, dataset_id = dataset_id)
+
+writeRaster(layers, filename = file.path("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw", paste0(variable, "-", depth, "_current_current.tif")), overwrite=TRUE)
+
+# scenarios
+for(scenario in scenarios){ # scenario=scenarios[3]
+  
+dataset_id <- paste0(variable, "_", scenario, "_2020_2100_", depth)
+
+##near
+time = c('2020-01-01T00:00:00Z', '2030-01-01T00:00:00Z')
+layers <- layer_download(time=time, latitude=latitude, longitude = longitude, dataset_id = dataset_id)
+rmean <- app(layers, mean)
+writeRaster(rmean, filename = file.path("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw", paste0(variable, "-", depth, "_", scenario, "_near.tif")), overwrite=TRUE)
+  
+##medium
+time = c('2040-01-01T00:00:00Z', '2050-01-01T00:00:00Z')
+layers <- layer_download(time=time, latitude=latitude, longitude = longitude, dataset_id = dataset_id)
+rmean <- app(layers, mean)
+writeRaster(rmean, filename = file.path("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw", paste0(variable, "-", depth, "_", scenario, "_medium.tif")), overwrite=TRUE)
+
+##long
+time = c('2080-01-01T00:00:00Z', '2090-01-01T00:00:00Z')
+layers <- layer_download(time=time, latitude=latitude, longitude = longitude, dataset_id = dataset_id)
+rmean <- app(layers, mean)
+writeRaster(rmean, filename = file.path("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw", paste0(variable, "-", depth, "_", scenario, "_long.tif")), overwrite=TRUE)
+  
+}
+}
+
+
+#### This will update the data in the folder!
+# surface data
+#getdata(variable = "o2", depth="depthsurf")
+# benthic (average depth) data
+#getdata(variable = "o2", depth="depthmean")
+
+```
+
+# Rescaling
+
+```{r}
+min_threshold <- 61 
+max_threshold <- 183
+
+# min_threshold <- 2 
+# max_threshold <- 6
+
+o2rescale <- function(fp_current = files2scale[20], 
+                      historic = historic_rast){
+  current <- rast(fp_current)
+  
+  #. current = 3
+  # historic = 7
+  stress_1_boolean <- ifel(current <= min_threshold, 1, 0)
+  stress_2_boolean <- ifel(current >min_threshold & current<max_threshold, 1, 0)
+  stress_3_boolean <- ifel(current >=max_threshold, 1, 0)
+  
+  stress_2_c_rescale <- (current - min_threshold)/(max_threshold - min_threshold)
+  stress_2_h_rescale <- (historic - min_threshold)/(max_threshold - min_threshold)
+  stress_2 <- (1 - stress_2_c_rescale/stress_2_h_rescale)*stress_2_boolean
+  stress_2 <- ifel(stress_2<0, 0, stress_2)
+  stress_2 <- ifel(stress_2>1, 1, stress_2)
+  
+  stress_3 <- (1 - current/historic) * stress_3_boolean
+  stress_3 <- ifel(stress_3<0, 0, stress_3)
+  stress_3 <- ifel(stress_3>1, 1, stress_3)
+
+  stress <- stress_1_boolean + stress_2 + stress_3
+  return(stress)
+} 
+
+
+# deep water
+files2scale <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw", pattern = "depthmean", full=TRUE)
+
+for(file2scale in files2scale){ # file2scale <- files2scale[1]
+historic_rast <- rast("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw/o2-depthmean_hist_hist.tif")
+stress_rescale <- o2rescale(fp_current = file2scale, 
+          historic = historic_rast)
+writeRaster(stress_rescale, file.path("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled", basename(file2scale)), overwrite=TRUE)
+}
+
+# surface water
+files2scale <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw", pattern = "depthsurf", full=TRUE)
+
+for(file2scale in files2scale){ # file2scale <- files2scale[1]
+historic_rast <- rast("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw/o2-depthsurf_hist_hist.tif")
+stress_rescale <- o2rescale(fp_current = file2scale, 
+          historic = historic_rast)
+writeRaster(stress_rescale, file.path("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled", basename(file2scale)), overwrite=TRUE)
+}
+
+```
+
+Final formatting
+
+```{r}
+rast_base_10km_file <- terra::rast(here('_spatial/rast_base_mol_10km.tif'))
+ocean_template <- terra::rast(here('_spatial/ocean_area_mol.tif'))
+ocean_template[ocean_template>0] <- 1
+plot(ocean_template)
+
+oxy_paths <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled", full=TRUE)
+
+for(oxy_path in oxy_paths){ # oxy_path = oxy_paths[1]
+oxy_rast <- terra::rast(oxy_path)
+
+mol_rast <- terra::project(oxy_rast, rast_base_10km_file, method="bilinear", over=TRUE)
+#plot(mol_rast)
+
+## gapfill
+gf_raster <- function(x){raster::focal(x, w = matrix(1,3,3), fun = mean, na.rm=TRUE, na.policy="only")}
+
+r = mol_rast
+  
+## Repeat 50 times (most is immediately gapfilled but the antarctic area was persistent)
+i <- 0
+while (i <= 50){
+r <- gf_raster(r)
+i <- i + 1
+print(i)
+}
+
+# plot(r)
+r <- r*ocean_template
+# diff_rast <- r - mol_rast
+#plot(diff_rast) # should be 0 
+
+writeRaster(r, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled_mol/%s", basename(oxy_path)), overwrite = TRUE)
+}
+
+```
+
+Quick look at some!
+
+```{r}
+raws <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled_mol", full=TRUE)
+
+tmp <- rast(oxy_paths[10]) - rast(oxy_paths[1])
+tmp <- ifel(tmp>0.5, 0.5, tmp)
+plot(tmp[tmp<1])
+
+
+
+```
