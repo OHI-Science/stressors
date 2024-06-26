@@ -46,10 +46,8 @@ file_rename <-data.frame(filename = c(
   scenario = c("ssp126", "ssp245", "ssp370", "ssp585", "ssp126", "ssp245", "ssp370", "ssp585", "ssp126", "ssp245", "ssp370", "ssp585"),
   timeframe = rep(c("long-term", "medium-term", "near-term"), each=4))
 
-#raw_data <- "/home/shares/ohi/stressors_2021/_raw_data/slr_ipcc"
-raw_data <- "/Users/frazier/Desktop/slr_ipcc"
-#save_data_location <- "/home/shares/ohi/stressors_2021/_dataprep/slr"
-save_data_location <- "/Users/frazier/Desktop/slr"
+raw_data <- "/home/shares/ohi/stressors_2021/_raw_data/slr_ipcc"
+save_data_location <- "/home/shares/ohi/stressors_2021/_dataprep/slr"
 file_list <- list.files(raw_data, pattern="tif", full=TRUE)
 
 for(file in file_rename$filename){ # file = file_rename$filename[1]
@@ -58,7 +56,7 @@ for(file in file_rename$filename){ # file = file_rename$filename[1]
                     file_rename$timeframe[file_rename$filename==file], ".tif")
   
   tmp <- rast(file.path(raw_data, file))
-  tmp_proj <- project(tmp, rast_base_10km_file, method="near")
+  tmp_proj <- project(tmp, rast_base_10km_file, method="bilinear")
 
   tmp_proj_gf <- tmp_proj
 
@@ -74,8 +72,44 @@ masked_gf <- tmp_proj_gf*total_area
 writeRaster(masked_gf, file.path(save_data_location, "raw", save_name), overwrite=TRUE)
 
 rescaled <- ifel(masked_gf > 1, 1, masked_gf)
+rescaled <- ifel(rescaled < 0, 0, rescaled)
 writeRaster(rescaled, file.path(save_data_location, "rescaled", save_name), overwrite=TRUE)
 }
 
+
+```
+
+Crop the rescaled rasters to within 10 km from shoreline
+```{r}
+
+ocean_raw <- terra::rast(here('_spatial/ocean_area_mol.tif'))
+ocean_template <- ocean_raw
+ocean_template[ocean_template>0] <- 1
+terra::plot(ocean_template)
+
+coast <- ifel(ocean_raw >0 & ocean_raw<1, 1, NA)
+global(coast, "sum", na.rm=TRUE)
+
+## masking out that outer ring!
+boundary_mask <- rast(nrow=1814, ncol=3617, xmin=-180, xmax=180, ymin=-90, ymax=90)
+values(boundary_mask) <- 1
+boundary_mask_mol <- terra::project(boundary_mask, "+proj=moll", res=10000)
+ext(boundary_mask_mol2) <- ext(coast)
+inner_boundary <-  boundaries(boundary_mask_mol2, inner=TRUE, falseval=0)
+global_mask <- ifel(inner_boundary==0, 1, NA)
+
+
+files_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/slr/rescaled", full=TRUE)
+
+for(file in files_list){ # file = files_list[1]
+  tmp_name <- basename(file)
+  tmp <- rast(file) *coast 
+  tmp <- tmp * global_mask
+#  check <- ifel(!is.na(tmp), 1, NA)
+#  global(check, "sum", na.rm=TRUE)
+  writeRaster(tmp, sprintf("/home/shares/ohi/stressors_2021/_dataprep/slr/rescaled_crop/%s",
+                           tmp_name), overwrite=TRUE)
+  
+}
 
 ```

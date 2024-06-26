@@ -24,6 +24,10 @@ library(rnaturalearth)
 ## Get the data
 ```{r}
 
+## historic data
+historic <- read_csv(here("prep/fisheries/data/region_biomass_trends.csv")) %>%
+  select(rgn_id, historic_1900)
+
 # eez
 eez_sim <- read_csv("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/random_eez_2024-06-21.csv")
 eez_sim <- eez_sim %>%
@@ -43,13 +47,81 @@ hs_sim <- read_csv("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/
   summarize(biomass = median(biomass))
 
 
-fish_data <- rbind(eez_sim, unin_sim, hs_sim)
+fish_data <- rbind(eez_sim, unin_sim, hs_sim) %>%
+  left_join(historic, by= "rgn_id") %>%
+  mutate(pressure = 1- biomass/historic_1900) %>%
+  mutate(pressure = ifelse(pressure < 0, 0, pressure))
 
-scenario <- "SSP1"
-years <- 
+```
 
+Get the maps
+```{r}
+## EEZ regions
+eez_shp <- sf::st_read("/home/shares/ohi/git-annex/globalprep/spatial/v2017/regions_2017_update.shp") 
+#eez <- sf::st_transform(eez_shp, 4326)
+eez_data <- read_csv(here("prep/fisheries/data/region_id.csv"))
+
+rast_base_10km_file <- terra::rast(here('_spatial/rast_base_mol_10km.tif'))
+ocean_template <- terra::rast(here('_spatial/ocean_area_mol.tif'))
+ocean_template[ocean_template>0] <- 1
+terra::plot(ocean_template)
 
 
 ```
 
+Associate the data and make the maps
+```{r}
+
+# all the iterations I need
+pressure_maps <- data.frame(scenarios = rep(c("SSP1", "SSP2", "SSP3", "SSP4", "SSP5"), each=4),
+                            time_frame = rep(c("current", "near-term", "medium-term", "long-term"), 5),
+                            years = rep(c("2010", "2021:2040", "2041:2060", "2080:2100"),5))
+
+# function to make maps
+mapping_fish_pressure <- function(scenarios, time_frame, years){
+#scenarios = pressure_maps$scenarios[2]
+#time_frame = pressure_maps$time_frame[2]
+#years = eval(parse(text = pressure_maps$years[2]))
+
+  tmp_data <- fish_data %>%
+  filter(scenario %in% scenarios) %>%
+  filter(year %in% years) %>%
+  group_by(rgn_id) %>%
+  summarize(pressure = mean(pressure))
+  
+eez_tmp <- left_join(eez_shp, tmp_data, by="rgn_id")
+
+# Rasterize the biomass data using the raster template
+pressure_rast <- terra::rasterize(eez_tmp, ocean_template, field = "pressure", fun = mean, background = NA)
+#terra::plot(pressure_rast)
+
+pressure_rast_mask <- pressure_rast*ocean_template
+#plot(pressure_rast_mask)
+terra::writeRaster(pressure_rast_mask, sprintf("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure/fisheries_%s_%s.tif", tolower(scenarios), time_frame), overwrite=TRUE)
+cat(i, "\n")
+}
+
+## loop through iterations
+for(i in 1:dim(pressure_maps)[1]){ #i=1
+
+tmp <- pressure_maps[i,]
+  
+scenarios_tmp = tmp$scenarios
+time_frame_tmp = tmp$time_frame
+years_tmp = eval(parse(text = tmp$years))  
+ 
+mapping_fish_pressure(scenarios=scenarios_tmp, time_frame=time_frame_tmp, years=years_tmp) 
+}
+
+```
+
+Look at some of the results
+```{r}
+
+list.files("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure/", full=TRUE)
+plot(rast("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure//fisheries_ssp1_medium-term.tif"), main="SSP1, 2040-2060")
+plot(rast("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure//fisheries_ssp2_medium-term.tif"), main="SSP2, 2040-2060")
+plot(rast("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure//fisheries_ssp3_medium-term.tif"), main="SSP3, 2040-2060")
+plot(rast("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure//fisheries_ssp4_medium-term.tif"), main="SSP4, 2040-2060")
+plot(rast("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure//fisheries_ssp5_medium-term.tif"), main="SSP5, 2040-2060")
 

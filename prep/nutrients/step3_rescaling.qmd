@@ -1,0 +1,94 @@
+---
+title: "step4"
+format: html
+editor: visual
+---
+
+This script rescales the plumed nutrient data.
+
+```{r}
+library(tidyverse)
+library(terra)
+library(sf)
+library(mapview)
+library(here)
+
+rast_base_10km_file <- terra::rast(here('_spatial/rast_base_mol_10km.tif'))
+ocean_raw <- terra::rast(here('_spatial/ocean_area_mol.tif'))
+ocean_template <- ocean_raw
+ocean_template[ocean_template>0] <- 1
+terra::plot(ocean_template)
+
+
+pure_ocean <- ifel(ocean_raw==1, 1, NA) 
+global(pure_ocean, "sum", na.rm=TRUE)
+coast <- ifel(ocean_raw >0 & ocean_raw<1, 1, 0)
+
+outer_boundary1 <-  boundaries(pure_ocean, inner=TRUE, falseval=0)
+
+nearshore <- app(c(coast, outer_boundary1), fun="sum", na.rm=TRUE)
+nearshore <- ifel(nearshore==0, NA, nearshore)
+
+global(nearshore, "sum", na.rm=TRUE)
+
+```
+
+Project final combined plume models:
+
+```{r}
+
+plumed_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/nutrients/output/N_plume", full=TRUE)
+
+for(plume in plumed_list){ # plume = plumed_list[1]
+filename <- tolower(gsub("_joined", "", basename(plume)))
+plumed_proj <- project(rast(plume), ocean_template, method="sum")
+plumed_proj_mask <- plumed_proj*ocean_template
+
+writeRaster(plumed_proj_mask, sprintf("/home/shares/ohi/stressors_2021/_dataprep/nutrients/projected/%s", filename), overwrite=TRUE)
+
+}
+```
+
+## Get the rescaling value
+
+Rescale: I am only going to use the nearshore values to determine the rescaling point. I will use the mean of the scenarios for the current timeframe.
+
+Using area of deadzones to base rescaling on: https://www.wri.org/news/new-web-based-map-tracks-marine-dead-zones-worldwide 530 dead zones 95,000 miles 2 or \~ 250,000 km2
+
+```{r}
+250000/17863100
+# area of dead zones and area of marine coastal area (shoreline and 10km offshore)
+# 1.4%
+
+# Will use the value associated with the 98.6th quantile as reference point
+global(nearshore, "sum", na.rm=TRUE)*0.014
+
+file_paths <- list.files("/home/shares/ohi/stressors_2021/_dataprep/nutrients/projected/", full=TRUE, pattern = "current")
+
+current_plumes <- rast(file_paths)
+avg_current_plumes <- mean(current_plumes)
+
+ref_raster <- avg_current_plumes*nearshore
+values <- values(ref_raster)
+values <- na.omit(values)
+hist(log(values+1))
+
+percentile_98_6 <- quantile(values, probs = 0.986, na.rm = TRUE)
+
+```
+
+## Rescale the rasters using the reference value
+
+```{r}
+
+file_paths <- list.files("/home/shares/ohi/stressors_2021/_dataprep/nutrients/projected/", full=TRUE)
+
+for(file in file_paths){ #file= file_paths[1]
+clamped_raster <- clamp(rast(file), lower = 0, upper = percentile_98_6)
+rescaled_raster <- (clamped_raster - 0) / (percentile_98_6 - 0)
+writeRaster(rescaled_raster, sprintf("/home/shares/ohi/stressors_2021/_dataprep/nutrients/rescaled/%s", basename(file)))
+            }
+
+list.files("/home/shares/ohi/stressors_2021/_dataprep/nutrients/rescaled", full=TRUE)
+
+```
