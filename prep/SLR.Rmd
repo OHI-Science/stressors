@@ -11,20 +11,6 @@ library(here)
 
 rast_base_10km_file <- terra::rast(here('_spatial/rast_base_mol_10km.tif'))
 
-ocean <- terra::rast(here('_spatial/ocean_area_mol.tif'))
-ocean_coast <- terra::ifel(ocean > 0,  1, 0)
-#ocean_coast_zero <- terra::ifel(is.na(ocean_coast), 0, ocean_coast)
-global(ocean_coast, "sum", na.rm=TRUE)
-
-one_inland <- boundaries(ocean_coast, falseval=NA, inner=FALSE)
-#one_inland <- ifel(is.na(one_inland), 0, one_inland)
-global(one_inland, "sum", na.rm=TRUE)
-
-total_area <- ifel(is.na(ocean_coast), one_inland, ocean_coast)
-global(total_area, "sum", na.rm=TRUE) # making sure there is more coastline!
-global(ocean_coast, "sum", na.rm=TRUE) + global(one_inland, "sum", na.rm=TRUE)
-plot(total_area)
-
 ```
 
 
@@ -87,29 +73,45 @@ ocean_template <- ocean_raw
 ocean_template[ocean_template>0] <- 1
 terra::plot(ocean_template)
 
-coast <- ifel(ocean_raw >0 & ocean_raw<1, 1, NA)
-global(coast, "sum", na.rm=TRUE)
+coast <- terra::ifel(ocean_raw >0 & ocean_raw<1, 1, NA)
+terra::global(coast, "sum", na.rm=TRUE)
 
 ## masking out that outer ring!
 boundary_mask <- rast(nrow=1814, ncol=3617, xmin=-180, xmax=180, ymin=-90, ymax=90)
 values(boundary_mask) <- 1
 boundary_mask_mol <- terra::project(boundary_mask, "+proj=moll", res=10000)
-ext(boundary_mask_mol2) <- ext(coast)
-inner_boundary <-  boundaries(boundary_mask_mol2, inner=TRUE, falseval=0)
+boundary_mask_mol <- extend(boundary_mask_mol, ext(coast), fill=NA)
+boundary_mask_mol <- resample(boundary_mask_mol, coast, method="near")
+inner_boundary <-  boundaries(boundary_mask_mol, inner=TRUE, falseval=0)
 global_mask <- ifel(inner_boundary==0, 1, NA)
-
+coast <- coast*global_mask
 
 files_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/slr/rescaled", full=TRUE)
 
 for(file in files_list){ # file = files_list[1]
   tmp_name <- basename(file)
   tmp <- rast(file) *coast 
-  tmp <- tmp * global_mask
 #  check <- ifel(!is.na(tmp), 1, NA)
 #  global(check, "sum", na.rm=TRUE)
   writeRaster(tmp, sprintf("/home/shares/ohi/stressors_2021/_dataprep/slr/rescaled_crop/%s",
                            tmp_name), overwrite=TRUE)
   
 }
+
+```
+
+
+## make current
+Current is all zero values, which probably isn't correct because sea level has risen in recent years.
+
+```{r}
+current <- coast
+plot(current)
+current <- ifel(current == 1, 0, NA)
+plot(current)
+ writeRaster(current, "/home/shares/ohi/stressors_2021/_dataprep/slr/rescaled_crop/slr_ssp126_current.tif", overwrite=TRUE)
+ writeRaster(current, "/home/shares/ohi/stressors_2021/_dataprep/slr/rescaled_crop/slr_ssp245_current.tif", overwrite=TRUE)
+writeRaster(current, "/home/shares/ohi/stressors_2021/_dataprep/slr/rescaled_crop/slr_ssp370_current.tif", overwrite=TRUE)
+writeRaster(current, "/home/shares/ohi/stressors_2021/_dataprep/slr/rescaled_crop/slr_ssp585_current.tif", overwrite=TRUE)
 
 ```

@@ -17,7 +17,7 @@ library(foreach)
 library(doParallel)
 
 #year ranges and scenarios:
-yr_range <- data.frame(period = c(rep("historical", each=15), rep("current", each=6), rep(c("near", "medium", "long"), each=20)),
+yr_range <- data.frame(period = c(rep("historical", each=15), rep("current", each=6), rep(c("near-term", "medium-term", "long-term"), each=20)),
                        year = c(2000:2014, 2015:2020, 2021:2040, 2041:2060, 2081:2100))
 
 

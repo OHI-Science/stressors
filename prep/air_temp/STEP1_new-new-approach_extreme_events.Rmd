@@ -1,0 +1,258 @@
+---
+title: "Downloading and prepping extreme air temperature events"
+output: html_document
+date: '2022-08-09'
+---
+
+https://wbg-cckp.s3.amazonaws.com/data/cmip6-x0.25/hi41/ensemble-all-ssp119/timeseries-hi41-annual-mean_cmip6-x0.25_ensemble-all-ssp119_timeseries_median_2015-2100.nc
+
+I will be using Heat Index data from the World Bank Climate Change Knowledge Portal!!
+
+Heat Index data is calculated using:
+Steadman R.G., 1979: The assessment of sultriness, Part I: A temperature-humidity index based on human
+physiology and clothing science. J. Appl. Meteorol., 18, 861-873, doi: http://dx.doi.org/10.1175/1520-0450
+
+I will format these data in two ways: 
+1) a measure of heat index stress calculated as, where Chi is the heat index in degrees C. :
+
+NOTE: days>XXChi are calculated as future - historic.
+extreme_stress = (days>41Chi) x 1
+high_stress = (days>39Chi - days>41Chi) x 0.75
+moderate_stress = (days>37Chi - days>39Chi - days>41Chi) x 0.50
+low_stress = (days>35Chi -days>37Chi - days>39Chi - days>41Chi) x 0.25
+
+heat_index_stress = (extreme_stress + high_stress + moderate_stress + low_stress)/365
+
+2) Number of days for each heat category, averaged over time period. 
+
+
+source data save here: /home/shares/ohi/stressors_2021/_raw_data/WorldBank_HeatIndex
+
+information: https://climateknowledgeportal.worldbank.org/media/document/metatag.pdf
+climateknowledgeportal.worldbank.org/netcdf-browser?prefix=data/cmip6-x0.25/
+
+temporal resolution: annual
+spatial resolution: 0.5 degrees
+hi35, hi37, hi39, hi41
+The number of days where the Heat Index >= 35°C over a year. The Heat Index is a measure of
+apparent temperature that includes the influence of atmospheric moisture. High
+temperatures with high moisture lead to high Heat Index
+Heat Index as defined by US-National Weather Service, C, Steadman, R.G (1979)
+
+
+```{r setup, include=FALSE}
+library(raster)
+library(ncdf4)
+library(here)
+library(tidyverse)
+library(foreach)
+library(doParallel)
+
+
+rast_base_10km_file <- terra::rast(here('_spatial/rast_base_mol_10km.tif'))
+
+
+
+```
+
+
+Download relevant datasets
+```{r}
+
+raw_data_loc <- "/home/shares/ohi/stressors_2021/_raw_data/WorldBank_HeatIndex/"
+
+data_variables <- c("hi35", "hi37", "hi39", "hi41")
+
+for(data_variable in data_variables){ #data_variable = data_variables[1]
+  scenarios <- c("ssp119", "ssp126", "ssp245", "ssp370", "ssp585")
+ for(scenario in scenarios) { # scenario = scenarios[1]
+
+   tmp_url <- sprintf("https://wbg-cckp.s3.amazonaws.com/data/cmip6-x0.25/%s/ensemble-all-%s/timeseries-%s-annual-mean_cmip6-x0.25_ensemble-all-%s_timeseries_median_2015-2100.nc", data_variable, scenario, data_variable, scenario)
+ 
+   download.file(tmp_url, paste0(raw_data_loc, sprintf("days_%s_%s.nc", data_variable, scenario)), mode = "wb")   
+
+   }
+}
+
+```
+
+
+Split data into our defined time periods.
+NOTE: This is also the raw data.
+ 
+```{r}
+
+yr_range <- data.frame(time_frame = c("current", "near-term",  "medium-term", "long-term"),
+                       years = c("2015:2020", "2021:2040", "2041:2060", "2081:2100"))
+ 
+
+data_files <- list.files(raw_data_loc, full=TRUE, pattern = "ssp")
+
+for(file in data_files) { # file = data_files[1]
+
+tmp_rast <- terra::rast(file)
+time_info <- terra::time(tmp_rast)
+years <- as.integer(format(time_info, "%Y"))
+
+for(i in 1:4){ #i=1
+
+tmp_data <- yr_range[i, ]  
+tmp_yr_range <- str_split(tmp_data$years, ":")[[1]]
+start_year <- as.numeric(tmp_yr_range[1])
+end_year <- as.numeric(tmp_yr_range[2])
+
+# Find the indices of the layers that correspond to the desired year range
+layer_indices <- which(years >= start_year & years <= end_year)
+
+# Subset the raster to include only those layers
+subset_raster <- subset(tmp_rast, layer_indices)
+mean_raster <- mean(subset_raster)
+terra::ext(mean_raster) <- c(-180, 180, -90, 90) # small adjustment of boundaries
+mean_raster_proj <- terra::project(mean_raster, ocean, method="bilinear")
+
+writeRaster(mean_raster_proj, sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/time_frame_average/%s_%s.tif",
+                                 gsub(".nc", "", basename(file)),
+                                 tmp_data$time_frame), overwrite =TRUE)  
+  
+}
+}
+
+## get the historical data into order
+hist_list <- list.files(raw_data_loc, full=TRUE, pattern = "historical")
+for(hist in hist_list){ # hist = hist_list[1]
+  hist_tmp <- terra::rast(hist)
+terra::ext(hist_tmp) <- c(-180, 180, -90, 90) # small adjustment of boundaries
+hist_raster_proj <- terra::project(hist_tmp, ocean, method="bilinear")
+
+fileSave <- gsub(".nc", ".tif", basename(hist))
+writeRaster(hist_raster_proj, sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/time_frame_average/%s",
+fileSave), overwrite=TRUE)    
+
+}
+
+```
+
+
+Calculate rescaled pressure score.
+
+Use historical data to determine a reasonable rescaling point:
+```{r}
+  hist_hi_35 <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/time_frame_average/climatology-hi35-annual-mean_cmip6-x0.25_ensemble-all-historical_climatology_median_1995-2014.tif")
+    hist_hi_37 <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/time_frame_average/climatology-hi37-annual-mean_cmip6-x0.25_ensemble-all-historical_climatology_median_1995-2014.tif")
+    hist_hi_39 <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/time_frame_average/climatology-hi39-annual-mean_cmip6-x0.25_ensemble-all-historical_climatology_median_1995-2014.tif")
+    hist_hi_41 <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/time_frame_average/climatology-hi41-annual-mean_cmip6-x0.25_ensemble-all-historical_climatology_median_1995-2014.tif")
+
+extreme_stress <- hist_hi_41 * 1
+  high_stress <- (hist_hi_39 - hist_hi_41) * 0.75
+  moderate_stress <- (hist_hi_37 - hist_hi_39 - hist_hi_41) * 0.5
+  low_stress <- (hist_hi_35 - hist_hi_37 - hist_hi_39 - hist_hi_41) * 0.25
+
+  heat_index_stress <- (extreme_stress + high_stress + moderate_stress + low_stress)
+  heat_index_stress <- mask * heat_index_stress # mask code is below
+  terra::quantile(values(heat_index_stress), probs=c(0.9999), na.rm=TRUE)
+  # decided to use the max of 65
+```
+
+```{r}
+
+scenarios <- c("ssp119", "ssp126", "ssp245", "ssp370", "ssp585")
+time_periods <- c("current", "near-term", "medium-term", "long-term")
+
+layers <- expand.grid(period = time_periods, scenario=scenarios)
+
+files_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/time_frame_average", full=TRUE)
+
+for(i in 1:dim(layers)[1]){ #i = 1
+  layers_tmp <- layers[i,]
+  period_tmp <- layers_tmp$period
+  scenario_tmp <- layers_tmp$scenario
+  
+  hi_tmp <- grep(scenario_tmp, files_list, value=TRUE)
+  hi_tmp <- grep(period_tmp, hi_tmp, value=TRUE)
+  
+  hi_35_tmp <- grep("hi35", hi_tmp, value=TRUE)
+  hi_37_tmp <- grep("hi37", hi_tmp, value=TRUE)
+  hi_39_tmp <- grep("hi39", hi_tmp, value=TRUE)
+  hi_41_tmp <- grep("hi41", hi_tmp, value=TRUE)
+  
+  hi_35_rast <- terra::rast(hi_35_tmp)
+  hi_37_rast <- terra::rast(hi_37_tmp)
+  hi_39_rast <- terra::rast(hi_39_tmp)
+  hi_41_rast <- terra::rast(hi_41_tmp)
+  
+  hist_hi_35 <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/time_frame_average/climatology-hi35-annual-mean_cmip6-x0.25_ensemble-all-historical_climatology_median_1995-2014.tif")
+    hist_hi_37 <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/time_frame_average/climatology-hi37-annual-mean_cmip6-x0.25_ensemble-all-historical_climatology_median_1995-2014.tif")
+    hist_hi_39 <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/time_frame_average/climatology-hi39-annual-mean_cmip6-x0.25_ensemble-all-historical_climatology_median_1995-2014.tif")
+    hist_hi_41 <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/time_frame_average/climatology-hi41-annual-mean_cmip6-x0.25_ensemble-all-historical_climatology_median_1995-2014.tif")
+
+  hi_35_anomoly <- hi_35_rast - hist_hi_35
+  hi_37_anomoly <- hi_37_rast - hist_hi_37
+  hi_39_anomoly <- hi_39_rast - hist_hi_39
+  hi_41_anomoly <- hi_41_rast - hist_hi_41
+
+  extreme_stress <- hi_41_anomoly * 1
+  high_stress <- (hi_39_anomoly - hi_41_anomoly) * 0.75
+  moderate_stress <- (hi_37_anomoly - hi_39_anomoly - hi_41_anomoly) * 0.5
+  low_stress <- (hi_35_anomoly - hi_37_anomoly - hi_39_anomoly - hi_41_anomoly) * 0.25
+
+  heat_index_stress <- (extreme_stress + high_stress + moderate_stress + low_stress)/65
+  heat_index_stress <- terra::ifel(heat_index_stress < 0, 0, heat_index_stress)
+  heat_index_stress <- terra::ifel(heat_index_stress >1, 1, heat_index_stress)
+    
+  writeRaster(heat_index_stress, sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/pressure/heat-index_%s_%s.tif",  scenario_tmp, period_tmp), overwrite=TRUE)
+}
+
+
+```
+
+## clip to area 1 cell inland, coastline and 1 cell offshore
+```{r}
+
+## prepare raster mask
+ocean <- terra::rast(here('_spatial/ocean_area_mol.tif'))
+
+## get coastline
+coastline <- terra::ifel(ocean<1 & ocean > 0,  1, 0)
+coastline <- terra::ifel(coastline ==1, 1, NA)
+global(coastline, "sum", na.rm=TRUE)
+
+## get one cell inland
+land <- terra::ifel(is.na(ocean) , 1, NA)
+one_inland <- boundaries(land, falseval=NA, inner=TRUE)
+global(one_inland, "sum", na.rm=TRUE)
+
+## get one cell offshore
+full_ocean <- terra::ifel(ocean==1, 1, NA)
+one_offshore<- boundaries(full_ocean, falseval=NA, inner=TRUE)
+global(one_offshore, "sum", na.rm=TRUE)
+
+mask <- app(c(coastline, one_inland, one_offshore), "sum", na.rm=TRUE)
+plot(mask)
+
+# get rid of outer boundary
+boundary_mask <- rast(nrow=1814, ncol=3617, xmin=-180, xmax=180, ymin=-90, ymax=90)
+values(boundary_mask) <- 1
+boundary_mask_mol <- terra::project(boundary_mask, "+proj=moll", res=10000)
+boundary_mask_mol <- extend(boundary_mask_mol, ext(ocean), fill=NA)
+boundary_mask_mol <- resample(boundary_mask_mol, ocean, method="near")
+inner_boundary <-  boundaries(boundary_mask_mol, inner=TRUE, falseval=0)
+inner_boundary <- ifel(inner_boundary==0, 1, NA) # cuts off out layer
+inner_inner_boundary <- boundaries(inner_boundary, inner=TRUE, falseval=0)
+inner_inner_boundary <- ifel(inner_inner_boundary==0, 1, NA) # cuts off next outer layer
+i_i_i_boundary <- boundaries(inner_inner_boundary, inner=TRUE, falseval=0)
+boundary_mask <- ifel(i_i_i_boundary==0, 1, NA) # one more layer removed!
+
+mask <- mask*boundary_mask
+plot(mask)
+
+raster_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/pressure/", full=TRUE)
+
+for(rstr in raster_list){ # rstr <- raster_list[20]
+  save_name <- basename(rstr)
+  rstr_tmp <- terra::rast(rstr)
+  rstr_tmp <- rstr_tmp * mask
+  
+  writeRaster(rstr_tmp, sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/pressure_crop/%s", save_name), overwrite=TRUE)
+  
+}
+

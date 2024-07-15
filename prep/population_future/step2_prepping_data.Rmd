@@ -256,6 +256,7 @@ but rescale all population data)
 # using this value as information to determine best quantile to use.
 # how many coastal cells are there?
 global(coastal_mask, sum, na.rm=TRUE)
+#255352
 
 rescale_raster <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/population/pop_density_km2_ocean_expand_log/human-pop-density-km2-log_current_SSP1_RCP2_6.tif")
 
@@ -278,7 +279,7 @@ plot(ocean_moll_sf, add=TRUE, color=NA)
 
 # will go with the 99.9th quantile value
 rescale_value <- global(rescale_raster_coast, fun= function(x) {quantile(x, probs=c(0.999), na.rm=TRUE)})
-
+# rescale_value <- 9.169315
 ```
 
 ## rescaling the data!
@@ -290,7 +291,11 @@ files <- list.files("/home/shares/ohi/stressors_2021/_dataprep/population/pop_de
 for(file in files){
   #file <- files[1]
   save_name <- basename(file)
-  save_name <- gsub("-log", "-log-rescaled", basename(file))
+  save_name <- gsub("human-pop-density-km2-log", "disturbance", basename(file))
+  save_name <- tolower(save_name)
+  save_name <- gsub("_rcp", "", save_name)
+  save_name <- gsub("([0-9])_([0-9])", "\\1\\2", save_name)
+  save_name <- gsub("_ssp37", "_ssp370", save_name)
   
   tmp <- terra::rast(file)
   rescaled <- tmp/pull(rescale_value)

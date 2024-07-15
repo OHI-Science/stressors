@@ -25,7 +25,6 @@ library(ncdf4)
 Exploring the data (can skip):
 
 ```{r}
-library(ncdf4)
 tmp1 <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models/npp_ssp126_2020_2049_v1.nc")
 test1 <- tmp1[[1]]
 
@@ -111,7 +110,7 @@ ensemble_models <- paste(ensemble_models, collapse="|")
 
 ensemble_combos <- expand.grid(scenario=c("ssp126", "ssp245", "ssp370", "ssp585"),
             time = c("historical", "(2020-2049)", "(2040-2069)", "(2070-2099)"))
-""
+
 ```
 
 ```{r}
@@ -165,15 +164,22 @@ for(scenario in scenarios){ #scenario = scenarios[1]
       
   near_rescaled <- 1 - near/historical
   near_rescaled <- ifel(near_rescaled>1, 1, near_rescaled)
+  near_rescaled <- ifel(near_rescaled<0, 0, near_rescaled)
   medium_rescaled <- 1 - medium/historical
   medium_rescaled <- ifel(medium_rescaled>1, 1, medium_rescaled)
+  medium_rescaled <- ifel(medium_rescaled<0, 0, medium_rescaled)
   long_rescaled <- 1 - long/historical
-   long_rescaled <- ifel(long_rescaled>1, 1, long_rescaled)  
+  long_rescaled <- ifel(long_rescaled>1, 1, long_rescaled)  
+  long_rescaled <- ifel(long_rescaled<0, 0, long_rescaled)  
    
     writeRaster(near_rescaled, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_rescaled_%s_near-term.tif", scenario), overwrite=TRUE)
     writeRaster(medium_rescaled, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_rescaled_%s_medium-term.tif", scenario), overwrite=TRUE)
     writeRaster(long_rescaled, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_rescaled_%s_long-term.tif", scenario), overwrite=TRUE)   
-   
+ 
+    ## current have pressure of 0, with current method
+    current <- terra::ifel(!is.na(historical), 0, NA)
+      writeRaster(current, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_rescaled_%s_current.tif", scenario), overwrite=TRUE)
+  
 }
 ```
 
@@ -223,4 +229,7 @@ Take a look:
 ```{r}
 
 list.files("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled_mol/", full=TRUE, pattern = "rescaled")
+tmp <- rast("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled_mol/npp_rescaled_ssp126_long-term.tif")
+plot(tmp)
+
 ```

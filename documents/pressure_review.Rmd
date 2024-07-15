@@ -754,7 +754,7 @@ https://www.sciencedirect.com/science/article/pii/S0959378021002053#f0015
 **Downloaded**: 10/2022
 
 **Description**:
-These data describe the total amount of nutrients, in each 0.5 degree raster cell, that are delivered to the ocean after accounting for inputs, retention by crops and treatment, delivery to surface waters, and in-stream retention. 
+These data describe the total amount of excess nutrients, in each 0.5 degree raster cell, that are delivered to the ocean after accounting for inputs, retention by crops and treatment, delivery to surface waters, and in-stream retention. 
 
 Inputs - A – > delivery to surface waters (loading) - B – > export to ocean
 
@@ -774,7 +774,9 @@ Current global river export amounts to 43 Tg yr−1 of N and 5 Tg yr−1 of P (F
 ##### Pressure description
 We aggregated the total amount of N exported to the ocean by summing the raster cells in each watershed (OHI paper reference) to the watersheds corresponding pourpoint where the freshwater enters the ocean. We then used a simple pluming model to estimate the distribution of nutrients into the ocean from each pourpoint.
 
-The plume model is still running on most of the scenarios, and I have not yet had a chance to think about rescaling. But I am open to ideas.
+Rescaling is based on the amount of ocean that is considered highly eutrophic or a dead zone: https://www.nature.com/articles/s41467-021-26391-9
+https://www.science.org/doi/full/10.1126/science.1156401
+
 
 ##### Overview
 

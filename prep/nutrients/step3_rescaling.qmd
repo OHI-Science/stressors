@@ -74,7 +74,7 @@ values <- na.omit(values)
 hist(log(values+1))
 
 percentile_98_6 <- quantile(values, probs = 0.986, na.rm = TRUE)
-
+#11602
 ```
 
 ## Rescale the rasters using the reference value
@@ -86,7 +86,7 @@ file_paths <- list.files("/home/shares/ohi/stressors_2021/_dataprep/nutrients/pr
 for(file in file_paths){ #file= file_paths[1]
 clamped_raster <- clamp(rast(file), lower = 0, upper = percentile_98_6)
 rescaled_raster <- (clamped_raster - 0) / (percentile_98_6 - 0)
-writeRaster(rescaled_raster, sprintf("/home/shares/ohi/stressors_2021/_dataprep/nutrients/rescaled/%s", basename(file)))
+writeRaster(rescaled_raster, sprintf("/home/shares/ohi/stressors_2021/_dataprep/nutrients/rescaled/nutrient_%s", basename(file)))
             }
 
 list.files("/home/shares/ohi/stressors_2021/_dataprep/nutrients/rescaled", full=TRUE)
