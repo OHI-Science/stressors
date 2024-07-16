@@ -18,7 +18,7 @@ Resolution: 0.05 degree resolution
 
 For benthic: because focal cells at 0.05 degree resolution comprise a wide range of depth values, the benthic layers were developed for the minimum, average and maximum depth within focal cells.
 
-Downloaded March 28.
+Downloaded July 15 2024.
 
 ```{r}
 library(tidyverse)
@@ -62,7 +62,7 @@ time = c('2000-01-01T00:00:00Z', '2000-01-01T00:00:00Z')
 
 layers <- layer_download(time=time, latitude=latitude, longitude = longitude, dataset_id = dataset_id)
 
-writeRaster(layers, filename = file.path("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw", paste0(variable, "-", depth, "_hist_hist.tif")), overwrite=TRUE)
+writeRaster(layers, filename = file.path("//home/shares/ohi/stressors_2021/_raw_data/biooracle_oxygen", paste0(variable, "-", depth, "_hist_hist.tif")), overwrite=TRUE)
 
 #current
 dataset_id <- paste0(variable, "_baseline_2000_2018_", depth)
@@ -70,7 +70,7 @@ time = c('2010-01-01T00:00:00Z', '2010-01-01T00:00:00Z')
 
 layers <- layer_download(time=time, latitude=latitude, longitude = longitude, dataset_id = dataset_id)
 
-writeRaster(layers, filename = file.path("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw", paste0(variable, "-", depth, "_current_current.tif")), overwrite=TRUE)
+writeRaster(layers, filename = file.path("/home/shares/ohi/stressors_2021/_raw_data/biooracle_oxygen", paste0(variable, "-", depth, "_current_current.tif")), overwrite=TRUE)
 
 # scenarios
 for(scenario in scenarios){ # scenario=scenarios[3]
@@ -81,19 +81,19 @@ dataset_id <- paste0(variable, "_", scenario, "_2020_2100_", depth)
 time = c('2020-01-01T00:00:00Z', '2030-01-01T00:00:00Z')
 layers <- layer_download(time=time, latitude=latitude, longitude = longitude, dataset_id = dataset_id)
 rmean <- app(layers, mean)
-writeRaster(rmean, filename = file.path("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw", paste0(variable, "-", depth, "_", scenario, "_near.tif")), overwrite=TRUE)
+writeRaster(rmean, filename = file.path("/home/shares/ohi/stressors_2021/_raw_data/biooracle_oxygen", paste0(variable, "-", depth, "_", scenario, "_near-term.tif")), overwrite=TRUE)
   
 ##medium
 time = c('2040-01-01T00:00:00Z', '2050-01-01T00:00:00Z')
 layers <- layer_download(time=time, latitude=latitude, longitude = longitude, dataset_id = dataset_id)
 rmean <- app(layers, mean)
-writeRaster(rmean, filename = file.path("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw", paste0(variable, "-", depth, "_", scenario, "_medium.tif")), overwrite=TRUE)
+writeRaster(rmean, filename = file.path("/home/shares/ohi/stressors_2021/_raw_data/biooracle_oxygen", paste0(variable, "-", depth, "_", scenario, "_medium-term.tif")), overwrite=TRUE)
 
 ##long
 time = c('2080-01-01T00:00:00Z', '2090-01-01T00:00:00Z')
 layers <- layer_download(time=time, latitude=latitude, longitude = longitude, dataset_id = dataset_id)
 rmean <- app(layers, mean)
-writeRaster(rmean, filename = file.path("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw", paste0(variable, "-", depth, "_", scenario, "_long.tif")), overwrite=TRUE)
+writeRaster(rmean, filename = file.path("/home/shares/ohi/stressors_2021/_raw_data/biooracle_oxygen", paste0(variable, "-", depth, "_", scenario, "_long-term.tif")), overwrite=TRUE)
   
 }
 }
@@ -142,24 +142,50 @@ o2rescale <- function(fp_current = files2scale[20],
 
 
 # deep water
-files2scale <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw", pattern = "depthmean", full=TRUE)
+
+files2scale <- list.files("/home/shares/ohi/stressors_2021/_raw_data/biooracle_oxygen", pattern = "depthmean", full=TRUE)
 
 for(file2scale in files2scale){ # file2scale <- files2scale[1]
-historic_rast <- rast("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw/o2-depthmean_hist_hist.tif")
+historic_rast <- rast("/home/shares/ohi/stressors_2021/_raw_data/biooracle_oxygen/o2-depthmean_hist_hist.tif")
 stress_rescale <- o2rescale(fp_current = file2scale, 
           historic = historic_rast)
 writeRaster(stress_rescale, file.path("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled", basename(file2scale)), overwrite=TRUE)
 }
 
 # surface water
-files2scale <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw", pattern = "depthsurf", full=TRUE)
+files2scale <- list.files("/home/shares/ohi/stressors_2021/_raw_data/biooracle_oxygen", pattern = "depthsurf", full=TRUE)
 
 for(file2scale in files2scale){ # file2scale <- files2scale[1]
-historic_rast <- rast("/home/shares/ohi/stressors_2021/_dataprep/oxygen/raw/o2-depthsurf_hist_hist.tif")
+historic_rast <- rast("/home/shares/ohi/stressors_2021/_raw_data/biooracle_oxygen/o2-depthsurf_hist_hist.tif")
 stress_rescale <- o2rescale(fp_current = file2scale, 
           historic = historic_rast)
 writeRaster(stress_rescale, file.path("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled", basename(file2scale)), overwrite=TRUE)
 }
+
+
+# delete the historical ones
+file_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled", full=TRUE)
+delete_files <- grep("hist", file_list, value=TRUE)
+file.remove(delete_files)
+
+# expand the current ones
+scenarios <- c("ssp119", "ssp126", "ssp245", "ssp370", "ssp460", "ssp585")
+file_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled", full=TRUE)
+current_files <- grep("current", file_list, value=TRUE)
+
+for(current_file in current_files){ #current_file <- current_files[1]
+  tmp <- rast(current_file)
+  for(scenario in scenarios){ # scenario = scenarios[1]
+    saveName <- basename(current_file)
+    saveName <- gsub("_current_", sprintf("_%s_", scenario), saveName)
+  writeRaster(tmp, sprintf("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled/%s", saveName))
+  }}
+
+# delete the current ones
+file_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled", full=TRUE)
+delete_files <- grep("current_current", file_list, value=TRUE)
+file.remove(delete_files)
+
 
 ```
 
@@ -196,6 +222,8 @@ print(i)
 r <- r*ocean_template
 # diff_rast <- r - mol_rast
 #plot(diff_rast) # should be 0 
+
+saveName <- basename(oxy_path)
 
 writeRaster(r, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled_mol/%s", basename(oxy_path)), overwrite = TRUE)
 }
