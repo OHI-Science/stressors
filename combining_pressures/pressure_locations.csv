@@ -1,0 +1,11 @@
+﻿raw_data,pressure,filepath,file_pressure,file_scenario,file_timeframe
+,SST extreme events,/home/shares/ohi/stressors_2021/_dataprep/SST/final_extreme,sst_extreme,"ssp245, ssp585","current, near-term, medium-term, long-term"
+,OA,/home/shares/ohi/stressors_2021/_dataprep/oa,oa,"ssp119, ssp126, ssp245, ssp370, ssp585","current, near-term, medium-term, long-term"
+,Excess nutrients,/home/shares/ohi/stressors_2021/_dataprep/nutrients/rescaled,nutrient,"ssp1, ssp2, ssp3, ssp4, ssp5","current, near-term, medium-term"
+,SLR,/home/shares/ohi/stressors_2021/_dataprep/slr/rescaled_crop,slr,"ssp126, ssp245, ssp370, ssp585","current, near-term, medium-term, long-term"
+,direct human disturbance,/home/shares/ohi/stressors_2021/_dataprep/population/pop_density_km2_ocean_expand_log_rescaled,disturbance,"ssp126, ssp245, ssp370,  ssp460, ssp585","current, near-term, medium-term, long-term"
+x,npp,/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled_mol,npp_rescaled,"ssp126, ssp245, ssp370, ssp585","current, near-term, medium-term, long-term"
+,light pollution,/home/shares/ohi/stressors_2021/_dataprep/light/rescale,light_rescaled,"ssp1, ssp2, ssp3, ssp4, ssp5","current, near-term, medium-term, long-term"
+,fisheries targeted biomass removal,/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure,fisheries,"ssp1, ssp2, ssp3, ssp4, ssp5","current, near-term, medium-term, long-term"
+,extreme air heat index,/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/pressure_crop,heat-index,"ssp119, ssp126, ssp245, ssp370, ssp585","current, near-term, medium-term, long-term"
+,surface oxygen,home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled_mol,o2-depthsurf,"ssp119, ssp126, ssp245, ssp370, ssp460, ssp585","current, near-term, medium-term, long-term"

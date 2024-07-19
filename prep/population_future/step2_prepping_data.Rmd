@@ -296,9 +296,16 @@ for(file in files){
   save_name <- gsub("_rcp", "", save_name)
   save_name <- gsub("([0-9])_([0-9])", "\\1\\2", save_name)
   save_name <- gsub("_ssp37", "_ssp370", save_name)
-  
+
+  # Function to switch the 2nd and 3rd sections
+swap_sections <- function(filename) {
+  sub("^([^_]+)_([^_]+)_([^_]+)(\\..*)$", "\\1_\\3_\\2\\4", filename)
+}
+save_name <- swap_sections(save_name)
+
   tmp <- terra::rast(file)
-  rescaled <- tmp/pull(rescale_value)
+#  rescaled <- tmp/pull(rescale_value)
+    rescaled <- tmp/rescale_value
   rescaled <- ifel(rescaled > 1, 1, rescaled)
 # plot(rescaled, col=cols)
   
@@ -308,6 +315,59 @@ for(file in files){
 }
 
 ```
+
+## clip to area 1 cell inland, coastline and 1 cell offshore
+```{r}
+
+## prepare raster mask
+ocean <- terra::rast(here('_spatial/ocean_area_mol.tif'))
+
+## get coastline
+coastline <- terra::ifel(ocean<1 & ocean > 0,  1, 0)
+coastline <- terra::ifel(coastline ==1, 1, NA)
+global(coastline, "sum", na.rm=TRUE)
+
+## get one cell inland
+land <- terra::ifel(is.na(ocean) , 1, NA)
+one_inland <- boundaries(land, falseval=NA, inner=TRUE)
+global(one_inland, "sum", na.rm=TRUE)
+
+## get one cell offshore
+full_ocean <- terra::ifel(ocean==1, 1, NA)
+one_offshore<- boundaries(full_ocean, falseval=NA, inner=TRUE)
+global(one_offshore, "sum", na.rm=TRUE)
+
+mask <- app(c(coastline, one_inland, one_offshore), "sum", na.rm=TRUE)
+plot(mask)
+
+# get rid of outer boundary
+boundary_mask <- rast(nrow=1814, ncol=3617, xmin=-180, xmax=180, ymin=-90, ymax=90)
+values(boundary_mask) <- 1
+boundary_mask_mol <- terra::project(boundary_mask, "+proj=moll", res=10000)
+boundary_mask_mol <- extend(boundary_mask_mol, ext(ocean), fill=NA)
+boundary_mask_mol <- resample(boundary_mask_mol, ocean, method="near")
+inner_boundary <-  boundaries(boundary_mask_mol, inner=TRUE, falseval=0)
+inner_boundary <- ifel(inner_boundary==0, 1, NA) # cuts off out layer
+inner_inner_boundary <- boundaries(inner_boundary, inner=TRUE, falseval=0)
+inner_inner_boundary <- ifel(inner_inner_boundary==0, 1, NA) # cuts off next outer layer
+i_i_i_boundary <- boundaries(inner_inner_boundary, inner=TRUE, falseval=0)
+boundary_mask <- ifel(i_i_i_boundary==0, 1, NA) # one more layer removed!
+
+mask <- mask*boundary_mask
+plot(mask)
+
+raster_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/population/pop_density_km2_ocean_expand_log_rescaled/", full=TRUE)
+
+for(rstr in raster_list){ # rstr <- raster_list[20]
+  save_name <- basename(rstr)
+  rstr_tmp <- terra::rast(rstr)
+  rstr_tmp <- rstr_tmp * mask
+  
+  writeRaster(rstr_tmp, sprintf("/home/shares/ohi/stressors_2021/_dataprep/population/pop_density_km2_ocean_expand_log_rescaled_crop/%s", save_name), overwrite=TRUE)
+  
+}
+
+
 
 ***
 

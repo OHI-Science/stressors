@@ -517,9 +517,10 @@ for(raster_file in raster_list){ # raster_file = raster_list[[1]]
   raster_data <- ifel(raster_data > 63, 63, raster_data)
   
   rescaled_raster_data <- (raster_data-12)/(63-12)
-  crs(rescaled_raster_data) <- crs(rast_base_10km_file)
-  
-  writeRaster(rescaled_raster_data, sprintf("/home/shares/ohi/stressors_2021/_dataprep/light/rescale/%s", saveName))
+  crs(rescaled_raster_data) <- crs(ocean_raw)
+  rescaled_raster_data <- project(rescaled_raster_data, ocean_raw)
+   
+    writeRaster(rescaled_raster_data, sprintf("/home/shares/ohi/stressors_2021/_dataprep/light/rescale/%s", saveName), overwrite=TRUE)
 }
 
 

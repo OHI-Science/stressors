@@ -1,0 +1,195 @@
+---
+title: "Untitled"
+output: html_document
+date: "2024-07-17"
+---
+
+```{r setup, include=FALSE}
+
+library(tidyverse)
+library(terra)
+library(here)
+
+```
+
+Save final pressure files to consistent file location and adjust filenaming.
+```{r}
+
+pressure_save <- "/home/shares/ohi/stressors_2021/combining_pressures/rescaled_pressures"
+pressure_list <- read_csv(here("combining_pressures/pressure_list.csv"))
+
+files_to_save <- paste0(pressure_list$f_path, "/", pressure_list$fn_pressure, "_",  pressure_list$fn_scenario, "_", pressure_list$fn_time, ".tif")
+files_new_loc <- paste0(pressure_save, "/", pressure_list$new_fn_pressure, "_", pressure_list$fn_scenario, "_", pressure_list$fn_time, ".tif")
+for (i in seq_along(files_to_save)) { # i = 178
+  file.copy(from = files_to_save[i], to = files_new_loc[i], overwrite = TRUE)
+}
+
+length(list.files(pressure_save)) # currently should be 203
+
+```
+
+
+Calculate raster differences
+```{r}
+
+files_df <- data.frame(fp = list.files("/home/shares/ohi/stressors_2021/combining_pressures/rescaled_pressures", full=TRUE))
+files_df$fn <- basename(files_df$fp) 
+files_df <- files_df %>%
+  tidyr::separate(fn, into=c("df_pressure", "df_scenario", "df_time_frame"), extra="merge", sep="_") %>%
+  mutate(df_time_frame = gsub(".tif", "", df_time_frame))
+
+pressure_list = unique(files_df$df_pressure)
+
+for(pressure in pressure_list){ # pressure = pressure_list[1]
+  tmp_list <- filter(files_df, df_pressure  == pressure)
+  
+  tmp_scenarios = unique(tmp_list$df_scenario)
+  for(scenario in tmp_scenarios){ #scenario = tmp_scenarios[1]
+    tmp_list_scenario = filter(tmp_list, df_scenario == scenario)
+    current_path <- grep("current", tmp_list_scenario$fp, value=TRUE)
+    current_rast <- terra::rast(current_path)
+    near_path <- grep("near-term", tmp_list_scenario$fp, value=TRUE)
+    near_rast <- terra::rast(near_path)
+    medium_path <- grep("medium-term", tmp_list_scenario$fp, value=TRUE)
+    medium_rast <- terra::rast(medium_path)
+    near_change <- near_rast-current_rast
+    writeRaster(near_change, sprintf("/home/shares/ohi/stressors_2021/combining_pressures/change/%s_%s_near-change.tif", pressure, scenario), overwrite=TRUE)
+    medium_change <- medium_rast-current_rast
+    writeRaster(medium_change, sprintf("/home/shares/ohi/stressors_2021/combining_pressures/change/%s_%s_medium-change.tif", pressure, scenario), overwrite=TRUE)
+    
+    if(length(grep("long-term", tmp_list_scenario$fp, value=TRUE))>0){
+    long_path <- grep("long-term", tmp_list_scenario$fp, value=TRUE)
+    long_rast <- terra::rast(long_path)  
+    long_change <- long_rast-current_rast
+    writeRaster(long_change, sprintf("/home/shares/ohi/stressors_2021/combining_pressures/change/%s_%s_long-change.tif", pressure, scenario), overwrite=TRUE)
+    }
+  }
+}
+
+```
+
+
+Obtain cumulative pressures
+```{r}
+
+files_df <- data.frame(fp = list.files("/home/shares/ohi/stressors_2021/combining_pressures/rescaled_pressures", full=TRUE))
+files_df$fn <- basename(files_df$fp) 
+files_df <- files_df %>%
+  tidyr::separate(fn, into=c("df_pressure", "df_scenario", "df_time_frame"), extra="merge", sep="_") %>%
+  mutate(df_time_frame = gsub(".tif", "", df_time_frame))
+
+cumulative_list <- expand.grid(scenario = c("ssp245", "ssp585"),
+                               time_frame = c("current", "near-term", "medium-term"))
+
+for (i in 1:dim(cumulative_list)[1]){ # i = 1
+  scenario_time <- cumulative_list[i,]
+  scenario = scenario_time$scenario
+  scenario2 = substring(scenario, 1, 4)
+  timeframe = scenario_time$time_frame
+  file_list <- filter(files_df, 
+                      df_scenario == scenario | df_scenario == scenario2,
+                      df_time_frame == timeframe)
+  #file_list <- filter(df_pressure != "oxygen-deep") # decided to keep for now, question about this!
+   cat(as.character(scenario), " ", as.character(timeframe), " ", length(file_list$df_pressure), "\n")
+  stack <- rast(file_list$fp)
+  cumulative <- app(stack, "sum", na.rm=TRUE)
+  writeRaster(cumulative, sprintf("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/%s_%s.tif", scenario, timeframe))
+  
+}
+
+#check that all outputs have N=11 (or, whatever!)
+
+list.files("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/", full=TRUE)
+
+ssp245_t1 <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative//ssp245_near-term.tif") - 
+  rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative//ssp245_current.tif")
+plot(ssp245_t1)
+writeRaster(ssp245_t1, "/home/shares/ohi/stressors_2021/combining_pressures/cumulative_change/cumulative_ssp245_near-change.tif")
+
+ssp245_t2 <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative//ssp245_medium-term.tif") - 
+  rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative//ssp245_current.tif")
+plot(ssp245_t2)
+writeRaster(ssp245_t2, "/home/shares/ohi/stressors_2021/combining_pressures/cumulative_change/cumulative_ssp245_medium-change.tif")
+
+
+ssp585_t1 <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative//ssp585_near-term.tif") - 
+  rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative//ssp585_current.tif")
+plot(ssp585_t1)
+writeRaster(ssp585_t1, "/home/shares/ohi/stressors_2021/combining_pressures/cumulative_change/cumulative_ssp585_near-change.tif")
+
+ssp585_t2 <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative//ssp585_medium-term.tif") - 
+  rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative//ssp585_current.tif")
+plot(ssp585_t2)
+writeRaster(ssp585_t2, "/home/shares/ohi/stressors_2021/combining_pressures/cumulative_change/cumulative_ssp585_medium-change.tif")
+
+
+```
+
+Make cumulative figures
+```{r}
+
+library(paletteer)
+library(png)
+
+cols_palette <- c(paletteer_c("ggthemes::Sunset-Sunrise Diverging", 100), "#D14644FF")
+
+upperscale <- 6
+
+tmp <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/cumulative", full=TRUE)
+stack <- rast(tmp)
+stack_capped <- ifel(stack>upperscale, upperscale, stack)
+
+for(i in 1:dim(stack_capped)[3]){ #i = 1
+
+png(filename = here(sprintf("combining_pressures/figs_cumulative/%s.png", 
+             basename(tmp[i]))), width = 800, height = 600)
+
+par(mar = c(0, 0, 0, 0))
+
+plot(stack_capped[[i]], col=cols_palette, main=gsub(".tif", "", basename(tmp[i])),
+     axes=FALSE, box=FALSE, zlim=c(0,upperscale), breaks = seq(0, upperscale, length.out = 101), legend=FALSE)
+#legend_image <- as.raster(matrix(cols_palette, ncol=1))
+ # par(new = TRUE, mar = c(5, 5, 5, 7), xpd = TRUE)
+  #plot(c(0, 1), c(0, 6), type = "n", xaxs = "i", yaxs = "i", xaxt = "n", yaxt = "n", xlab = "", ylab = "")
+  #rasterImage(legend_image, 1.05, 0, 1.15, 6)
+  #axis(4, at = seq(0, 6, length.out = 6), labels = seq(0, 6, length.out = 6), las = 1)
+dev.off()
+}
+
+
+```
+
+Make cumulative difference raster plots.
+
+```{r}
+
+tmp <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/cumulative", full=TRUE)
+
+ssp245_near_change <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp245_near-term.tif") - rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp245_current.tif")
+ssp245_medium_change <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp245_medium-term.tif") - rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp245_current.tif")
+ssp585_near_change <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp585_near-term.tif") - rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp585_current.tif")
+ssp585_medium_change <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp585_medium-term.tif") - rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp585_current.tif")
+
+diff_function <- function(diff_raster, filename){
+  # diff_raster = ssp245_near_change
+  # filename = "ssp585_medium-change"
+  
+  diff_raster <- ifel(diff_raster>3, 3, diff_raster)
+  png(filename = here(sprintf("combining_pressures/figs_cumulative_diff/%s.png", 
+             filename)), width = 800, height = 600)
+
+par(mar = c(0, 0, 0, 0))
+
+cols_palette <- c(paletteer_c("grDevices::BluGrn", 100),
+                  rev(paletteer_c("grDevices::Inferno", 301)))
+
+plot(diff_raster, col=cols_palette, main=filename, zlim=c(-1, 3),
+     axes=FALSE, box=FALSE, breaks = seq(-1, 3, length.out = 401), legend=FALSE)
+
+dev.off()
+}
+
+diff_function(ssp245_near_change, filename="ssp245_near-change")
+diff_function(ssp245_medium_change, filename="ssp245_medium-change")
+diff_function(ssp585_near_change, filename="ssp585_near-change")
+diff_function(ssp585_medium_change, filename="ssp585_medium-change")

@@ -1,0 +1,70 @@
+---
+title: "Pressure plots"
+output: html_document
+date: "2024-07-17"
+---
+
+```{r setup, include=FALSE}
+library(terra)
+library(here)
+library(tidyverse)
+library(paletteer)
+library(png)
+library(rmarkdown)
+library(knitr)
+
+cols_palette <- paletteer_c("ggthemes::Sunset-Sunrise Diverging", 30)
+```
+
+```{r, include = FALSE, echo=FALSE}
+# make the pngs of the data
+files <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/change/", full=TRUE)
+
+
+for(file in files) { # file = files[5]
+tmp <- rast(file)
+
+if(length(grep("nutrient", file))>0){
+  tmp <- ifel(tmp==0, NA, tmp)
+}
+
+savename <- gsub(".tif", "", basename(file))
+png(filename = here(sprintf("combining_pressures/figs_difference_floating_scale/%s.png", savename)), width = 800, height = 600)
+plot(tmp, col=cols_palette, main=savename)
+dev.off()
+}
+
+```
+
+```{r, results='asis', echo=FALSE}
+figs <- list.files(here("combining_pressures/figs_difference_floating_scale"), full=TRUE)
+
+# Define the desired order of terms
+order_terms <- c("near-change", "medium-change", "long-change")
+
+# Create a function to extract the order term from the filename
+extract_parts <- function(filename) { #filename=figs[1]
+  parts <- strsplit(basename(filename), "_")[[1]]
+  list(
+    first_part = parts[1],
+    ssp_part = parts[2],
+    term_part = match(gsub(".png", "", parts[3]), order_terms)
+  )
+}
+
+# Sort the filenames based on the defined order
+parts_list <- lapply(figs, extract_parts)
+figs_sorted <- figs[order(
+  sapply(parts_list, function(x) x$first_part),
+  sapply(parts_list, function(x) x$ssp_part),
+  sapply(parts_list, function(x) x$term_part)
+)]
+
+for (fig in figs_sorted) {
+  cat("### ", basename(fig), "\n\n")
+  cat("![", basename(fig), "](", fig, ")\n\n")
+}
+
+
+```
+
