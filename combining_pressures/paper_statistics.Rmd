@@ -1,0 +1,494 @@
+---
+title: "Untitled"
+output: html_document
+date: "2024-07-31"
+---
+
+
+
+Paper statistics
+Figs 1 and 2
+```{r}
+library(terra)
+library(tidyverse)
+library(here)
+library(cowplot)
+library(ggplot2)
+library(paletteer)
+
+```
+
+Global change in pressures.
+```{r setup, include=FALSE}
+
+cumulative <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/", full=TRUE)
+
+cum_stack <- rast(cumulative)
+source_info <- gsub(".tif", "", basename(sources(cum_stack)))
+names(cum_stack) <- source_info
+tmp <- global(cum_stack, "sum", na.rm=TRUE)
+
+ocean_cells <- rast(here("_spatial/ocean_area_mol.tif"))
+ocean_cells <- ifel(ocean_cells>0, 1, 0)
+ocean_cells_num <- global(ocean_cells, "sum", na.rm=TRUE)
+
+
+cum_stack <- as.data.frame(tmp) %>%
+mutate(cells = ocean_cells_num) %>%
+  mutate(average = sum/cells)
+
+# ssp245 medium-term
+1.1547098/0.5065751
+
+# ssp585 medium-term
+1.3837631/0.5030932
+
+
+
+```
+
+Get the absolute global pressure values 
+```{r}
+pressure_files <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/rescaled_pressures", full=TRUE)
+
+p_stack <- rast(pressure_files)
+source_info <- gsub(".tif", "", basename(sources(p_stack)))
+names(p_stack) <- source_info
+global_stats <- global(p_stack, "sum", na.rm=TRUE)
+global_df <- data.frame(global_stats) 
+global_df$filename <- rownames(global_df)
+row.names(global_df) <- NULL
+
+names(global_df) <- c("value", "filename")
+global_df <- global_df %>%
+  separate(filename, into=c("pressure", "scenario", "timeframe"), sep="_")
+
+ocean_cells <- rast(here("_spatial/ocean_area_mol.tif"))
+ocean_cells <- ifel(ocean_cells>0, 1, 0)
+ocean_cells_num <- global(ocean_cells, "sum", na.rm=TRUE)
+
+global_df <- global_df %>%
+  mutate(cells = ocean_cells_num$sum) %>%
+  mutate(average = value/cells) %>%
+  select(-value, -cells)
+
+df_wide_global <- global_df %>%
+  pivot_wider(names_from = timeframe, values_from = average)
+
+# Calculate changes
+df_wide_global <- df_wide_global %>%
+  mutate(
+    near_term_change = `near-term` - current,
+    medium_term_change = `medium-term` - current,
+    long_term_change = `long-term` - current
+  ) %>%
+  mutate(region = "global")
+
+
+df_wide_global %>%
+  filter(scenario %in% c("ssp245", "ssp2")) %>%
+  select(pressure, current, "medium-term", medium_term_change) %>%
+  arrange(medium_term_change)
+
+df_wide_global %>%
+  filter(scenario %in% c("ssp585", "ssp5")) %>%
+  select(pressure, current, "medium-term", medium_term_change) %>%
+  arrange(medium_term_change)
+
+
+```
+
+
+
+Get the absolute coastal pressure values 
+
+```{r}
+
+eez_coast <- rast(here("_spatial/coastal_country_mol.tif"))
+eez_coast <- ifel(eez_coast>0, 1, NA)
+
+cumulative <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/", full=TRUE)
+
+cum_stack <- rast(cumulative)
+source_info <- gsub(".tif", "", basename(sources(cum_stack)))
+names(cum_stack) <- source_info
+cum_stack <- cum_stack*eez_coast
+tmp <- global(cum_stack, "sum", na.rm=TRUE)
+
+coast_cells <- ifel(eez_coast>0, 1, 0)
+coast_cells_num <- global(coast_cells, "sum", na.rm=TRUE)
+
+cum_stack <- as.data.frame(tmp) %>%
+mutate(cells = coast_cells_num) %>%
+  mutate(average = sum/cells)
+
+
+# ssp245 medium-term
+1.988194/1.071853
+
+# ssp585 medium-term
+2.241990/1.065441
+5098115/1853516
+5098115-1853516
+
+```
+
+
+```{r}
+
+eez_coast <- rast(here("_spatial/coastal_country_mol.tif"))
+eez_coast <- ifel(eez_coast>0, 1, NA)
+
+pressure_files <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/rescaled_pressures", full=TRUE)
+
+p_stack <- rast(pressure_files)
+source_info <- gsub(".tif", "", basename(sources(p_stack)))
+names(p_stack) <- source_info
+
+p_stack_mask <- p_stack*eez_coast
+
+coastal_stats <- global(p_stack_mask, "sum", na.rm=TRUE)
+coastal_df <- data.frame(coastal_stats) 
+coastal_df$filename <- rownames(coastal_df)
+row.names(coastal_df) <- NULL
+
+names(coastal_df) <- c("value", "filename")
+coastal_df <- coastal_df %>%
+  separate(filename, into=c("pressure", "scenario", "timeframe"), sep="_")
+
+coast_cells <- ifel(eez_coast>0, 1, 0)
+coast_cells_num <- global(coast_cells, "sum", na.rm=TRUE)
+
+coastal_df <- coastal_df %>%
+  mutate(cells = coast_cells_num$sum) %>%
+  mutate(average = value/cells) %>%
+  select(-value, -cells)
+
+
+df_wide_coast <- coastal_df %>%
+  pivot_wider(names_from = timeframe, values_from = average)
+
+# Calculate changes
+df_wide_coast <- df_wide_coast %>%
+  mutate(
+    near_term_change = `near-term` - current,
+    medium_term_change = `medium-term` - current,
+    long_term_change = `long-term` - current
+  ) %>%
+  mutate(region = "coastal")
+
+df_wide_coast %>%
+  filter(scenario %in% c("ssp245", "ssp2")) %>%
+  select(pressure, current, "medium-term", medium_term_change) %>%
+  arrange(medium_term_change)
+
+df_wide_coast %>%
+  filter(scenario %in% c("ssp585", "ssp5")) %>%
+  select(pressure, current, "medium-term", medium_term_change) %>%
+  arrange(medium_term_change)
+
+```
+
+Combine the data
+```{r}
+
+change_data <- rbind(df_wide_coast, df_wide_global) %>%
+  mutate(short_scenario = substr(scenario, 1, 4))
+write_csv(change_data, here("combining_pressures/data/pressure_summary.csv"))
+
+```
+
+Bar plots of individual pressures.
+```{r}
+p_data <- read_csv(here("combining_pressures/data/pressure_summary.csv"))
+
+p_absolute <- p_data %>%
+  filter(short_scenario == "ssp2") %>%
+  select(pressure, scenario, `medium-term`, region)
+
+pressure_order <- p_absolute %>%
+  group_by(pressure) %>%
+  summarize(avg_pressure = mean(`medium-term`)) %>%
+  arrange(avg_pressure) %>%
+  pull(pressure)
+
+# Arrange by pressure and medium-term descending order
+p_absolute <- p_absolute %>%
+  mutate(pressure = factor(pressure, levels=pressure_order)) %>%
+  arrange(pressure, region) %>%
+  mutate(pressure_region = paste(pressure, region, sep = "_"),
+         pressure_region = factor(pressure_region, levels = unique(pressure_region)))
+
+# Extract factor levels from p_absolute
+pressure_region_levels <- levels(p_absolute$pressure_region)
+
+## add in column variable
+# Get the Tableau_20 color palette
+palette_colors <- c(paletteer_d("ggthemes::manyeys")[3], paletteer_d("ggthemes::manyeys")[1], paletteer_d("ggthemes::Tableau_20"))
+p_absolute$color <- palette_colors
+
+## save color palette
+color_pressures <- select(p_absolute, pressure, region, color) %>%
+  unique()
+write_csv(color_pressures, here("combining_pressures/data/pressure_colors.csv"))
+
+# Plot the data
+pressure_abs <- ggplot(p_absolute, aes(x = `medium-term`, y=pressure, fill = color)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
+  scale_fill_identity() +
+  labs(x = "Average pressure", y = NULL) + # Remove y-axis label
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    axis.title.x = element_text(size = 12),
+    axis.title.y = element_blank(), # Another way to remove y-axis label
+    axis.text.x = element_text(size = 10),
+    axis.text.y = element_text(size = 10)
+  )
+
+ggsave(here("combining_pressures/paper_figs/avg_pressure_plot.png"), plot = pressure_abs, width = 5, height = 3.5, dpi = 300)
+
+```
+
+Bar plots of individual pressures and change.
+```{r}
+p_data <- read_csv(here("combining_pressures/data/pressure_summary.csv"))
+
+p_change <- p_data %>%
+  filter(short_scenario == "ssp2") %>%
+  select(pressure, scenario, `medium_term_change`, region)
+
+# Arrange by pressure and medium-term descending order
+p_change <- p_change %>%
+  mutate(pressure = factor(pressure, levels=pressure_order)) %>%
+  arrange(pressure, region) %>%
+  mutate(pressure_region = paste(pressure, region, sep = "_"),
+         pressure_region = factor(pressure_region, levels = unique(pressure_region)))
+
+
+## add in column variable
+# Get the Tableau_20 color palette
+palette_colors <- c(paletteer_d("ggthemes::manyeys")[3], paletteer_d("ggthemes::manyeys")[1], paletteer_d("ggthemes::Tableau_20"))
+p_change$color <- palette_colors
+
+change_plot <- ggplot(p_change, aes(x = medium_term_change, y=pressure, fill = color)) +
+  geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
+  scale_fill_identity() +
+  labs(x = "Average pressure change", y = NULL) + # Remove y-axis label
+  theme_minimal() +
+  theme(
+    legend.position = "none",
+    axis.title.x = element_text(size = 12),
+    axis.title.y = element_blank(), # Another way to remove y-axis label
+    axis.text.x = element_text(size = 10),
+    axis.text.y = element_text(size = 10)
+  )
+
+
+ggsave(here("combining_pressures/paper_figs/avg_change_pressure_plot.png"), plot = change_plot, width = 5, height = 3.5, dpi = 300)
+
+```
+
+
+
+
+Maps of cumulative pressures
+```{r}
+
+# Define the zoom areas (extent: xmin, xmax, ymin, ymax)
+zooms <- list(
+  c(-8000000, -7121282, 3000000, 3700000), #gulf of mexico, US
+  c(729000, 1700000, 4400000, 5200000), # Italy
+    c(7200000, 8300000, 625000, 1530000)  # India
+)
+
+
+list.files("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/", full=TRUE)
+
+pressure <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp245_medium-term.tif")
+quantile(values(pressure), c(0.999), na.rm=TRUE)
+
+pressure_cap <- ifel(pressure > 4, 4, pressure)
+
+cum_pressure_plot <- function(pressure_raster=pressure_cap, zoom_areas=zooms, saveName="cumulative_ssp245_medium-term.tif"){
+  
+#custom_palette <- paletteer_c("grDevices::Zissou 1", 30) 
+custom_palette_pre <- paletteer_d("RColorBrewer::YlOrRd")
+custom_palette <- colorRampPalette(custom_palette_pre)(12)
+#custom_palette <- paletteer_c("viridis::plasma", 30)
+
+pressure_df <- as.data.frame(pressure_raster, xy = TRUE)
+
+# Custom labels for the legend
+custom_labels <- c(0, 1, 2, 3, "≥4")
+
+# Plot the main raster
+main_plot <- ggplot(pressure_df, aes(x = x, y = y, fill = sum)) +
+  geom_raster() +
+  scale_fill_gradientn(colors=custom_palette,
+                       limits = c(0, 4), 
+                       labels = custom_labels, 
+                       guide = guide_colorbar(title = NULL)) +
+  theme_minimal() +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank()
+  ) 
+
+#interactive_plot <- ggplotly(main_plot)
+#print(main_plot)
+#htmlwidgets::saveWidget(interactive_plot, "interactive_plot.html")
+
+# Add red boxes to highlight the zoom areas
+for (i in 1:3) { # 
+zoom_area <- zoom_areas[[i]]
+  xmin <- zoom_area[1]
+  xmax <- zoom_area[2]
+  ymin <- zoom_area[3]
+  ymax <- zoom_area[4]
+  main_plot <- main_plot +
+    geom_rect(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, color = "black", fill = NA, linewidth = 0.15)
+}
+
+ggsave(file.path(here("combining_pressures/paper_figs", saveName)),  main_plot, width = 5, height = 2.5, dpi = 300)
+
+# Create plots for each zoom area
+zoom_plots <- lapply(zoom_areas, function(zoom_area) { #zoom_area <- zoom_areas[[1]]
+  xmin <- zoom_area[1]
+  xmax <- zoom_area[2]
+  ymin <- zoom_area[3]
+  ymax <- zoom_area[4]
+  cropped_raster <- crop(pressure_raster, ext(xmin, xmax, ymin, ymax))
+  
+  cropped_df <- as.data.frame(cropped_raster, xy = TRUE)
+  
+  ggplot(cropped_df, aes(x = x, y = y, fill = sum)) +
+    geom_raster() + 
+    geom_rect(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, color = "darkgray", fill = NA, linewidth = 0.25) +
+  scale_fill_gradientn(colors=custom_palette,
+                       limits = c(0, 4), 
+                       labels = custom_labels, 
+                       guide = guide_colorbar(title = NULL)) +
+  theme_minimal() +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank(),
+    legend.position = "none"
+  ) 
+
+})
+
+# Combine the main plot and zoom plots
+combined_plot <- plot_grid(plotlist = zoom_plots, nrow = 1)
+
+ggsave(file.path(here("combining_pressures/paper_figs", paste0("zoom_", saveName))),  combined_plot, width = 5, height = 1.5, dpi = 300)
+
+}
+
+cum_pressure_plot(pressure_raster=pressure_cap, zoom_areas=zooms, saveName="cumulative_ssp245_medium-term.tif")
+
+```
+
+
+Maps of change
+```{r}
+
+
+list.files("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/", full=TRUE)
+
+pressure_future <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp245_medium-term.tif")
+pressure_current <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp245_current.tif")
+pressure_change <- pressure_future - pressure_current
+quantile(values(pressure_change), c(0.001, 0.999), na.rm=TRUE)
+
+pressure_cap <- ifel(pressure_change > 2, 2, pressure_change)
+pressure_cap <- ifel(pressure_cap < -0.5, -0.5, pressure_cap)
+
+cum_change_plot <- function(pressure_raster=pressure_cap, zoom_areas=zooms, saveName="cumulative_change_medium_vs_current_ssp245.tif"){
+
+#  pressure_raster=pressure_cap  
+custom_palette <- c(paletteer_c("grDevices::Zissou 1", 30)[c(1:15)],
+                    rev(paletteer_c("grDevices::ag_Sunset", 30)))
+
+#custom_palette <- paletteer_d("RColorBrewer::YlOrRd")
+#custom_palette <- paletteer_c("viridis::plasma", 30)
+
+pressure_df <- as.data.frame(pressure_raster, xy = TRUE)
+
+# Custom labels for the legend
+custom_labels <- c("≤-0.5", 0, 0.5, 1, 1.5, "≥2")
+
+# Plot the main raster
+main_plot <- ggplot(pressure_df, aes(x = x, y = y, fill = sum)) +
+  geom_raster() +
+  scale_fill_gradientn(colors=custom_palette,
+                       limits = c(-0.5, 2), 
+                       labels = custom_labels, 
+                       guide = guide_colorbar(title = NULL)) +
+  theme_minimal() +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank()
+  ) 
+
+#interactive_plot <- plotly::ggplotly(main_plot)
+#print(interactive_plot)
+
+for (i in 1:3) { # 
+zoom_area <- zoom_areas[[i]]
+  xmin <- zoom_area[1]
+  xmax <- zoom_area[2]
+  ymin <- zoom_area[3]
+  ymax <- zoom_area[4]
+  main_plot <- main_plot +
+    geom_rect(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, color = "black", fill = NA, linewidth = 0.15)
+}
+
+ggsave(file.path(here("combining_pressures/paper_figs", saveName)),  main_plot, width = 5, height = 2.5, dpi = 300)
+
+# Create plots for each zoom area
+zoom_plots <- lapply(zoom_areas, function(zoom_area) { #zoom_area <- zoom_areas[[1]]
+  xmin <- zoom_area[1]
+  xmax <- zoom_area[2]
+  ymin <- zoom_area[3]
+  ymax <- zoom_area[4]
+  cropped_raster <- crop(pressure_raster, ext(xmin, xmax, ymin, ymax))
+  
+  cropped_df <- as.data.frame(cropped_raster, xy = TRUE)
+  
+  ggplot(cropped_df, aes(x = x, y = y, fill = sum)) +
+    geom_raster() + 
+    geom_rect(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, color = "darkgray", fill = NA, linewidth = 0.25) +
+  scale_fill_gradientn(colors=custom_palette,
+                       limits = c(-0.5, 2), 
+                       labels = custom_labels, 
+                       guide = guide_colorbar(title = NULL)) +
+  theme_minimal() +
+  theme(
+    axis.title = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank(),
+    panel.grid = element_blank(),
+    legend.position = "none"
+  ) 
+
+})
+
+# Combine the zoom plots
+combined_plot <- plot_grid(plotlist = zoom_plots, nrow = 1)
+
+ggsave(file.path(here("combining_pressures/paper_figs", paste0("zoom_", saveName))),  combined_plot, width = 5, height = 1.5, dpi = 300)
+}
+
+cum_change_plot(pressure_raster=pressure_cap, zoom_areas=zooms, saveName="cumulative_change_medium_vs_current_ssp245.tif")
+
+
+```
+
+
