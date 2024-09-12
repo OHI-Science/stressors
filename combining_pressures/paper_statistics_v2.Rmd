@@ -1,0 +1,569 @@
+---
+title: "paper_statistics_v2"
+output: html_document
+date: "2024-08-09"
+---
+
+```{r}
+library(terra)
+library(tidyverse)
+library(here)
+library(cowplot)
+library(ggplot2)
+library(paletteer)
+library(countrycode)
+
+```
+
+
+
+## EEZ region and country summaries
+```{r}
+
+eez <- rast(here("_spatial/eez_mol_w_land.tif"))
+## cut land
+ocean_cells <- rast(here("_spatial/ocean_area_mol.tif"))
+ocean_cells <- ifel(ocean_cells>0, 1, 0)
+## add in the coastal area
+eez_coast <- rast(here("_spatial/coastal_country_mol.tif"))
+eez_coast <- ifel(eez_coast>0, 1, 0)
+## combine coast and ocean
+ocean_area <- app(c(ocean_cells, eez_coast), "sum", na.rm=TRUE)
+ocean_area <- ifel(ocean_area>0, 1, NA)
+plot(ocean_area)
+
+#get the area
+eez <- eez*ocean_area
+plot(eez)
+
+
+eez_id <- read_csv(here("_spatial/eez_rgn_names/rgn_names_ohi.csv")) %>%
+  filter(iso3c != "GUM") # cut out duplicated dual region
+
+pressure_files <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/rescaled_pressures", full=TRUE)
+
+pressure_stack <- rast(pressure_files)
+source_info <- gsub(".tif", "", basename(sources(pressure_stack)))
+names(pressure_stack) <- source_info
+
+result_list <- list()
+
+# Loop through each layer in the cumulative stack
+for (i in 1:nlyr(pressure_stack)) { # i = 1
+  # Extract the current layer
+  current_layer <- pressure_stack[[i]]
+  
+  # Compute the sum for each region using the ID raster
+  zonal_sum <- zonal(current_layer, eez, fun = "sum", na.rm=TRUE)
+  
+  # Add the result to the list
+  result_list[[i]] <- zonal_sum
+}
+
+# Merge all data frames by region ID
+eez_pressure_result <- Reduce(function(x, y) merge(x, y, by = "rgn_id"), result_list)
+
+eez_pressure_result <- eez_pressure_result %>%
+ pivot_longer(cols=-rgn_id, names_to = "pressure", values_to="value")
+
+
+eez_pressure_result <- eez_pressure_result %>%
+  left_join(eez_id, by="rgn_id") %>%
+  filter(!is.na(rgn_label)) %>%
+   filter(rgn_label != "disputed")
+
+# get number of cells in each eez:
+ eez_cell_num <- zonal(ifel(eez>0, 1, 0), eez, fun = "sum", na.rm=TRUE)
+ names(eez_cell_num) <- c("rgn_id", "cells")
+
+dim(eez_pressure_result)
+eez_pressure_result <- eez_pressure_result %>%
+  left_join(eez_cell_num, by="rgn_id") %>%
+  mutate(region = "eez") 
+
+
+write_csv(eez_pressure_result, here("combining_pressures/data/country_eez_pressure.csv"))
+
+```
+
+
+## coastal region and country summaries
+```{r}
+
+eez <- rast(here("_spatial/eez_mol_w_land.tif"))
+coast <- rast(here("_spatial/coastal_country_mol.tif"))
+coast <- ifel(eez_coast>0, 1, 0)
+#get the area
+country_coast <- eez*coast
+plot(country_coast)
+
+
+eez_id <- read_csv(here("_spatial/eez_rgn_names/rgn_names_ohi.csv")) %>%
+  filter(iso3c != "GUM") # cut out duplicated dual region
+
+pressure_files <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/rescaled_pressures", full=TRUE)
+
+pressure_stack <- rast(pressure_files)
+source_info <- gsub(".tif", "", basename(sources(pressure_stack)))
+names(pressure_stack) <- source_info
+
+result_list <- list()
+
+# Loop through each layer in the cumulative stack
+for (i in 1:nlyr(pressure_stack)) { # i = 1
+  # Extract the current layer
+  current_layer <- pressure_stack[[i]]
+  
+  # Compute the sum for each region using the ID raster
+  zonal_sum <- zonal(current_layer, country_coast, fun = "sum", na.rm=TRUE)
+  
+  # Add the result to the list
+  result_list[[i]] <- zonal_sum
+}
+
+# Merge all data frames by region ID
+coast_pressure_result <- Reduce(function(x, y) merge(x, y, by = "rgn_id"), result_list)
+
+coast_pressure_result <- coast_pressure_result %>%
+ pivot_longer(cols=-rgn_id, names_to = "pressure", values_to="value")
+
+
+coast_pressure_result <- coast_pressure_result %>%
+  left_join(eez_id, by="rgn_id") %>%
+  filter(!is.na(rgn_label)) %>%
+   filter(rgn_label != "disputed")
+
+# get number of cells in each eez:
+coast_cell_num <- zonal(ifel(country_coast>0, 1, 0), country_coast, fun = "sum", na.rm=TRUE)
+ names(coast_cell_num) <- c("rgn_id", "cells")
+
+dim(coast_pressure_result)
+coast_pressure_result <- coast_pressure_result %>%
+  left_join(coast_cell_num, by="rgn_id") %>%
+  mutate(region = "coast") 
+
+
+write_csv(coast_pressure_result, here("combining_pressures/data/country_coast_pressure.csv"))
+
+```
+
+
+Make a stacked bar plot of regions
+```{r}
+
+coast <- read_csv(here("combining_pressures/data/country_coast_pressure.csv"))
+eez <- read_csv(here("combining_pressures/data/country_eez_pressure.csv"))
+
+pressure_country <- rbind(coast, eez)
+
+pressure_rgn <- pressure_country %>%
+  group_by(pressure, geosubrgn, region) %>%
+  summarize(value = sum(value, na.rm=TRUE),
+            cells = sum(cells, na.rm=TRUE))
+
+pressure_rgn <- pressure_rgn %>%
+  mutate(avg_value = value/cells) %>%
+  separate(pressure, into = c("pressure", "scenario", "time_period"), sep = "_")
+
+plot_df <- pressure_rgn %>%
+  filter(scenario %in% c("ssp245", "ssp2")) %>%
+  select(pressure, time_period, geosubrgn, region, avg_value)
+
+# Spread the data by time_period
+plot_df_wide <- plot_df %>%
+  pivot_wider(names_from = time_period, values_from = avg_value)
+
+plot_df2 <- plot_df_wide %>%
+  mutate(medium_change = `medium-term` - current) %>%
+  select(pressure, geosubrgn, region, `medium-term`, medium_change) %>%
+  pivot_longer(cols = c(`medium-term`, medium_change), 
+               names_to = "variable", 
+               values_to = "value")
+
+colors <- read_csv(here("combining_pressures/data/pressure_colors.csv")) %>%
+  mutate(region = ifelse(region=="coastal", "coast", "eez")) %>%
+  filter(region =="eez") %>%
+  select(color, pressure)
+
+plot_df2 <- plot_df2 %>%
+  left_join(colors, by = c("pressure"))
+
+# Step 1: Summarize the data to get total values for each pressure within each geosubrgn
+pressure_order <- plot_df2 %>%
+  filter(variable == "medium_change") %>%
+  group_by(pressure) %>%
+  summarize(total_value = sum(`value`), .groups = 'drop') %>%
+  arrange(total_value) %>%
+  mutate(pressure = factor(pressure, levels = unique(pressure)))
+
+subregion_order <- plot_df2 %>%
+  filter(variable == "medium_change") %>%
+  filter(region == "coast") %>%
+  group_by(geosubrgn) %>%
+  summarize(total_value = sum(value), .groups='drop') %>%
+  arrange(desc(total_value)) %>%
+  mutate(geosubrgn = factor(geosubrgn, levels = unique(geosubrgn)))
+
+ # Step 2: Reorder the 'pressure' factor levels based on the total_value
+plot_df2 <- plot_df2 %>%
+  mutate(pressure = factor(pressure, levels = unique(pressure_order$pressure))) %>%
+  mutate(geosubrgn = factor(geosubrgn, levels = unique(subregion_order$geosubrgn))) %>%
+  arrange(region, geosubrgn, pressure)
+
+# Step 3: Plot the data
+
+plots_bars <- ggplot(filter(plot_df2, region == "coast"), aes(y = geosubrgn, x = value, fill = pressure)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~variable, nrow = 1) +
+  labs(x = "", y = "", title = "", fill = NULL) +  # fill = NULL removes the legend title
+  theme_minimal() +
+  scale_fill_manual(values = setNames(plot_df2$color, plot_df2$pressure)) +
+  theme(
+    strip.text = element_blank(),  # Removes the facet strip titles
+    legend.title = element_blank() # Removes the legend title
+  )
+
+ggsave(here("combining_pressures/paper_figs/georgn_pressure_change_barplot.png"), plot = plots_bars, width = 10, height = 4, dpi = 300)
+```
+
+
+
+
+## Pressures vs. dependence
+
+Format marine dependence data.
+
+https://conbio.onlinelibrary.wiley.com/doi/full/10.1111/conl.12617
+```{r}
+
+depend <- read_csv(here("prep/fisheries/data/marine_dependence_Selig.csv")) %>%
+  select(country = Country, 
+         integrated_depend = `Integrated dependence`,
+         econ_depend = `Economic dependence`, 
+         nutrition_depend = `Nutritional dependence`) %>%
+  slice(-1)
+depend$iso3c <- countrycode(depend$country, "country.name", "iso3c") 
+
+depend$iso3c[depend$country=="Saint Martin"] <- "NSM"
+
+write_csv(depend, here("combining_pressures/data/selig_marine_dependence.csv"))
+
+```
+
+
+
+coastline: Relationship between dependence on marine environments and cumulative pressures
+
+```{r}
+eez_coast <- rast(here("_spatial/coastal_country_mol.tif"))
+
+cumulative <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/", full=TRUE)
+
+cum_stack <- rast(cumulative)
+source_info <- gsub(".tif", "", basename(sources(cum_stack)))
+names(cum_stack) <- source_info
+
+result_list <- list()
+
+# Loop through each layer in the cumulative stack
+for (i in 1:nlyr(cum_stack)) {
+  # Extract the current layer
+  current_layer <- cum_stack[[i]]
+  
+  # Compute the sum for each region using the ID raster
+  zonal_sum <- zonal(current_layer, eez_coast, fun = "mean", na.rm=TRUE)
+  
+  # Add the result to the list
+  result_list[[i]] <- zonal_sum
+}
+
+# Merge all data frames by region ID
+coastal_combined_result <- Reduce(function(x, y) merge(x, y, by = "rgn_id"), result_list)
+
+
+eez_id <- read_csv(here("_spatial/eez_rgn_names/rgn_names_ohi.csv")) %>%
+  select(rgn_id, rgn_label) %>%
+  unique()
+
+coastal_combined_result <- coastal_combined_result %>%
+  left_join(eez_id, by="rgn_id") %>%
+  filter(!is.na(rgn_label))
+
+coastal_combined_result$iso3c <- countrycode(coastal_combined_result$rgn_label, "country.name", "iso3c") 
+coastal_combined_result <- filter(coastal_combined_result, rgn_label != "Bassas da India")
+
+
+double_rgns <- data.frame(rgn_label = c("Guadeloupe and Martinique", "Guadeloupe and Martinique",
+              "Northern Mariana Islands and Guam", "Northern Mariana Islands and Guam",
+              "Puerto Rico and Virgin Islands of the United States", "Puerto Rico and Virgin Islands of the United States"),
+                 iso3c = c("GLP", "MTQ", "GUM", "MNP", "PRI", "VIR"))
+
+coastal_double_eez <- filter(coastal_combined_result, rgn_label %in% c("Guadeloupe and Martinique",
+                                               "Northern Mariana Islands and Guam",
+                                               "Puerto Rico and Virgin Islands of the United States")) %>%
+  select(-iso3c)
+
+coastal_double_eez2 <- left_join(double_rgns, coastal_double_eez, by="rgn_label")
+
+coastal_combined_result <- filter(coastal_combined_result, !(rgn_label %in% c("Guadeloupe and Martinique",
+                                               "Northern Mariana Islands and Guam",
+                                               "Puerto Rico and Virgin Islands of the United States")))
+
+coastal_eez_cum <- rbind(coastal_combined_result, coastal_double_eez2)
+coastal_eez_cum$iso3c[coastal_eez_cum$rgn_label=="Northern Saint-Martin"] <- "NSM"
+coastal_eez_cum$iso3c[coastal_eez_cum$rgn_label=="Micronesia"] <- "FSM"
+coastal_eez_cum$iso3c[coastal_eez_cum$rgn_label %in% c("Crozet Islands",
+                                       "Kerguelen Islands",
+                                       "Amsterdam Island and Saint Paul Island",
+                                       "Ile Europa",
+                                       "Ile Tromelin",
+                                       "Juan de Nova Island",
+                                       "Glorioso Islands")] <- "ATF"
+coastal_eez_cum <- filter(coastal_eez_cum, iso3c != "ATF")
+
+coastal_eez_cum2 <- coastal_eez_cum %>%
+  filter(!is.na(iso3c)) %>%
+  select(-rgn_id, -rgn_label)
+
+write_csv(coastal_eez_cum2, here("combining_pressures/data/coast_cumulative.csv"))
+
+```
+
+Combine with coastal dependence data
+```{r}
+coastal_eez_cum2 <- read_csv(here("combining_pressures/data/coast_cumulative.csv"))
+depend <- read_csv(here("combining_pressures/data/selig_marine_dependence.csv"))
+
+missing_iso3c <- setdiff(depend$iso3c, coastal_eez_cum2$iso3c)
+filter(depend, iso3c %in% missing_iso3c) %>% print(n=25)
+setdiff(coastal_eez_cum2$iso3c, depend$iso3c)
+
+coastal_compare <- left_join(depend, coastal_eez_cum2, by="iso3c") %>%
+  filter(!is.na(ssp585_current))
+
+coastal_compare <- coastal_compare %>%
+  mutate(change_ssp245_medium = `ssp245_medium-term` - ssp245_current) %>%
+  mutate(pct_change_ssp245_medium = (`ssp245_medium-term` - ssp245_current)/ssp245_current) %>%
+    mutate(change_ssp585_medium = `ssp585_medium-term` - ssp585_current) %>%
+    mutate(pct_change_ssp585_medium = (`ssp585_medium-term` - ssp585_current)/ssp585_current)
+
+write_csv(coastal_compare, here("combining_pressures/data/country_coastal_cumulative_pressures.csv"))
+
+```
+
+
+Plot and analyze the data
+```{r}
+
+coastal_compare <- read_csv(here("combining_pressures/data/country_coastal_cumulative_pressures.csv")) %>%
+  mutate(integrated_depend = ifelse(integrated_depend > 0.8, 0.8, integrated_depend))
+
+p <- ggplot(data=coastal_compare , aes(x=`ssp245_medium-term`, y=change_ssp245_medium, color=integrated_depend, size=integrated_depend)) +
+  geom_point(aes(text=country), alpha=0.7) +
+  scale_color_gradientn(colors=paletteer_c("ggthemes::Temperature Diverging", 30)) +
+  geom_hline(yintercept = median(coastal_compare$change_ssp245_medium, na.rm=TRUE), linetype="dashed", color="orange") +
+   geom_vline(xintercept = median(coastal_compare$`ssp245_medium-term`, na.rm=TRUE), linetype="dashed", color="orange") +
+  theme_minimal()
+
+p
+
+plotly::ggplotly(ptooltip = "text")
+
+mod <- lm(change_ssp245_medium ~ integrated_depend, data=coastal_compare)
+summary(mod)
+mod <- lm(`ssp245_medium-term` ~ integrated_depend, data=coastal_compare)
+summary(mod)
+
+ggsave(here("combining_pressures/paper_figs/current_future_scatterplot.png"), plot = p, width = 7, height = 4, dpi = 300)
+
+```
+
+
+Doing the same thing, but for EEZ.
+EEZ: Relationship between dependence on marine environments and cumulative pressures
+```{r}
+
+eez <- rast(here("_spatial/eez_mol_w_land.tif"))
+eez_id <- read_csv(here("_spatial/eez_rgn_names/rgn_names_ohi.csv")) %>%
+  select(rgn_id, rgn_label) %>%
+  unique()
+
+cumulative <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/", full=TRUE)
+
+cum_stack <- rast(cumulative)
+source_info <- gsub(".tif", "", basename(sources(cum_stack)))
+names(cum_stack) <- source_info
+
+result_list <- list()
+
+# Loop through each layer in the cumulative stack
+for (i in 1:nlyr(cum_stack)) {
+  # Extract the current layer
+  current_layer <- cum_stack[[i]]
+  
+  # Compute the sum for each region using the ID raster
+  zonal_sum <- zonal(current_layer, eez, fun = "mean", na.rm=TRUE)
+  
+  # Add the result to the list
+  result_list[[i]] <- zonal_sum
+}
+
+# Merge all data frames by region ID
+combined_result <- Reduce(function(x, y) merge(x, y, by = "rgn_id"), result_list)
+
+combined_result <- combined_result %>%
+  left_join(eez_id, by="rgn_id") %>%
+  filter(!is.na(rgn_label))
+
+eez_cum <- combined_result 
+
+eez_cum$iso3c <- countrycode(eez_cum$rgn_label, "country.name", "iso3c") 
+eez_cum <- filter(eez_cum, rgn_label != "Bassas da India")
+
+double_rgns <- data.frame(rgn_label = c("Guadeloupe and Martinique", "Guadeloupe and Martinique",
+              "Northern Mariana Islands and Guam", "Northern Mariana Islands and Guam",
+              "Puerto Rico and Virgin Islands of the United States", "Puerto Rico and Virgin Islands of the United States"),
+                 iso3c = c("GLP", "MTQ", "GUM", "MNP", "PRI", "VIR"))
+
+double_eez <- filter(eez_cum, rgn_label %in% c("Guadeloupe and Martinique",
+                                               "Northern Mariana Islands and Guam",
+                                               "Puerto Rico and Virgin Islands of the United States")) %>%
+  select(-iso3c)
+double_eez2 <- left_join(double_rgns, double_eez, by="rgn_label")
+
+eez_cum <- filter(eez_cum, !(rgn_label %in% c("Guadeloupe and Martinique",
+                                               "Northern Mariana Islands and Guam",
+                                               "Puerto Rico and Virgin Islands of the United States")))
+
+eez_cum <- rbind(eez_cum, double_eez2)
+eez_cum$iso3c[eez_cum$rgn_label=="Northern Saint-Martin"] <- "NSM"
+eez_cum$iso3c[eez_cum$rgn_label=="Micronesia"] <- "FSM"
+eez_cum$iso3c[eez_cum$rgn_label %in% c("Crozet Islands",
+                                       "Kerguelen Islands",
+                                       "Amsterdam Island and Saint Paul Island",
+                                       "Ile Europa",
+                                       "Ile Tromelin",
+                                       "Juan de Nova Island",
+                                       "Glorioso Islands")] <- "ATF"
+eez_cum <- filter(eez_cum, iso3c != "ATF")
+
+eez_cum2 <- eez_cum %>%
+  filter(!is.na(iso3c)) %>%
+  select(-rgn_id, -rgn_label) 
+
+sum(duplicated(eez_cum2$iso3c))
+
+write_csv(eez_cum, here("combining_pressures/data/eez_cumulative.csv"))
+
+```
+
+Combine eez and marine dependence data.
+```{r}
+eez_cumulative <- read_csv(here("combining_pressures/data/eez_cumulative.csv"))
+depend <- read_csv(here("combining_pressures/data/selig_marine_dependence.csv"))
+
+missing_iso3c <- setdiff(depend$iso3c, eez_cum2$iso3c)
+filter(depend, iso3c %in% missing_iso3c) %>% print(n=25)
+setdiff(eez_cum$iso3c, depend$iso3c)
+
+compare <- left_join(depend, eez_cum2, by="iso3c") %>%
+  filter(!is.na(ssp585_current))
+
+compare <- compare %>%
+  mutate(change_ssp245_medium = `ssp245_medium-term` - ssp245_current) %>%
+  mutate(pct_change_ssp245_medium = (`ssp245_medium-term` - ssp245_current)/ssp245_current) %>%
+    mutate(change_ssp585_medium = `ssp585_medium-term` - ssp585_current) %>%
+    mutate(pct_change_ssp585_medium = (`ssp585_medium-term` - ssp585_current)/ssp585_current)
+
+ggplot(data=compare , aes(x=integrated_depend, y=change_ssp245_medium)) +
+  geom_point() 
+
+ggplot(data=compare , aes(x=integrated_depend, y=`ssp245_current`)) +
+  geom_point() 
+
+ggplot(data=compare , aes(x=integrated_depend, y=`ssp245_medium-term`)) +
+  geom_point() 
+
+ggplot(data=compare , aes(y=change_ssp245_medium, x=`ssp245_current`, col=integrated_depend)) +
+  geom_point() +
+  scale_color_gradientn(colors = rev(rainbow(7)[1:6]))
+
+mod <- lm(change_ssp245_medium ~ integrated_depend, data=compare)
+summary(mod)
+mod <- lm(`ssp245_medium-term` ~ integrated_depend, data=compare)
+summary(mod)
+mod <- lm(`ssp245_current` ~ integrated_depend, data=compare)
+summary(mod)
+
+
+```
+
+
+
+# making a raster that shows vulnerable areas
+```{r}
+
+list.files("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/", full=TRUE)
+
+ssp245_medium <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp245_medium-term.tif")
+
+ssp245_near_change <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp245_near-term.tif") - rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp245_current.tif")
+ssp245_medium_change <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp245_medium-term.tif") - rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp245_current.tif")
+ssp585_near_change <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp585_near-term.tif") - rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp585_current.tif")
+ssp585_medium_change <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp585_medium-term.tif") - rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp585_current.tif")
+
+plot(ssp245_medium)
+terra::quantile(values(ssp245_medium, na.rm=TRUE), probs = c(0.5, 0.75, 0.9, 0.95))
+terra::quantile(values(ssp245_medium_change, na.rm=TRUE), probs = c(0.5, 0.75, 0.9, 0.95))
+
+high_ssp245_medium <- ifel(ssp245_medium>1.38, 1, 0)
+high_ssp245_medium_change <- ifel(ssp245_medium_change > 0.76, 1, 0)
+
+high_stress <- high_ssp245_medium + high_ssp245_medium_change
+plot(high_stress)
+
+
+```
+
+Make and save change rasters.
+```{r}
+
+pressure_files <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/rescaled_pressures", full=TRUE)
+pressure_data <- gsub(".tif$", "", basename(pressure_files))
+
+# Split the filenames by "_"
+pressure_data <- strsplit(pressure_data, "_")
+
+# Convert the list to a dataframe
+pressure_dataframe <- do.call(rbind, lapply(pressure_data, function(x) data.frame(t(x), stringsAsFactors = FALSE)))
+
+# Rename the columns
+colnames(pressure_dataframe) <- c("pressure", "scenario", "time")
+
+combos <- expand.grid(pressure = unique(pressure_dataframe$pressure),
+            scenario = c("ssp2", "ssp5"))
+
+for(i in 1:dim(combos)[1]){ # i = 7
+  comparison <- combos[i, ]
+ scenario_tmp <- comparison$scenario
+ scenario_tmp_name <- ifelse(scenario_tmp == "ssp2", "ssp245", "ssp585")
+ pressure_tmp <- paste0(comparison$pressure, "_")
+ pressure_tmp_name <- gsub("_", "", pressure_tmp)
+ pressure_files_tmp <- grep(pressure_tmp, pressure_files, value=TRUE)
+ pressure_files_tmp <- grep(scenario_tmp, pressure_files_tmp, value=TRUE)
+
+ current_tmp <- grep("current", pressure_files_tmp, value=TRUE)    
+ near_tmp <- grep("near-term", pressure_files_tmp, value=TRUE)
+ medium_tmp <- grep("medium-term", pressure_files_tmp, value=TRUE)
+ 
+ near_change <- rast(near_tmp) - rast(current_tmp)
+ writeRaster(near_change, sprintf("/home/shares/ohi/stressors_2021/combining_pressures/pressure_change/%s_%s_near-change.tif", pressure_tmp_name, scenario_tmp_name), overwrite=TRUE)
+ 
+  medium_change <- rast(medium_tmp) - rast(current_tmp)
+ writeRaster(medium_change, sprintf("/home/shares/ohi/stressors_2021/combining_pressures/pressure_change/%s_%s_medium-change.tif", pressure_tmp_name, scenario_tmp_name), overwrite=TRUE)
+ 
+  
+}
+
+```
+

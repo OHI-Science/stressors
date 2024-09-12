@@ -9,6 +9,7 @@ date: "2024-07-17"
 library(tidyverse)
 library(terra)
 library(here)
+library(countrycode)
 
 ```
 
@@ -166,6 +167,8 @@ Make cumulative difference raster plots.
 tmp <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/cumulative", full=TRUE)
 
 ssp245_near_change <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp245_near-term.tif") - rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp245_current.tif")
+
+
 ssp245_medium_change <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp245_medium-term.tif") - rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp245_current.tif")
 ssp585_near_change <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp585_near-term.tif") - rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp585_current.tif")
 ssp585_medium_change <- rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp585_medium-term.tif") - rast("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/ssp585_current.tif")
@@ -193,3 +196,7 @@ diff_function(ssp245_near_change, filename="ssp245_near-change")
 diff_function(ssp245_medium_change, filename="ssp245_medium-change")
 diff_function(ssp585_near_change, filename="ssp585_near-change")
 diff_function(ssp585_medium_change, filename="ssp585_medium-change")
+
+```
+
+

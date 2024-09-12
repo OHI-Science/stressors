@@ -1,0 +1,48 @@
+---
+title: "Untitled"
+output: html_document
+date: "2024-08-09"
+---
+
+Prepare raster data for extracting coastal regions.
+get coastal and one cell offshore
+```{r}
+
+## prepare raster mask
+ocean <- terra::rast(here('_spatial/ocean_area_mol.tif'))
+
+## get coastline
+coastline <- terra::ifel(ocean<1 & ocean > 0,  1, 0)
+coastline <- terra::ifel(coastline ==1, 1, NA)
+global(coastline, "sum", na.rm=TRUE)
+
+## get one cell offshore
+full_ocean <- terra::ifel(ocean==1, 1, NA)
+one_offshore<- boundaries(full_ocean, falseval=NA, inner=TRUE)
+global(one_offshore, "sum", na.rm=TRUE)
+
+mask <- app(c(coastline, one_offshore), "sum", na.rm=TRUE)
+plot(mask)
+
+# get rid of outer boundary
+boundary_mask <- rast(nrow=1814, ncol=3617, xmin=-180, xmax=180, ymin=-90, ymax=90)
+values(boundary_mask) <- 1
+boundary_mask_mol <- terra::project(boundary_mask, "+proj=moll", res=10000)
+boundary_mask_mol <- extend(boundary_mask_mol, ext(ocean), fill=NA)
+boundary_mask_mol <- resample(boundary_mask_mol, ocean, method="near")
+inner_boundary <-  boundaries(boundary_mask_mol, inner=TRUE, falseval=0)
+inner_boundary <- ifel(inner_boundary==0, 1, NA) # cuts off out layer
+inner_inner_boundary <- boundaries(inner_boundary, inner=TRUE, falseval=0)
+inner_inner_boundary <- ifel(inner_inner_boundary==0, 1, NA) # cuts off next outer layer
+i_i_i_boundary <- boundaries(inner_inner_boundary, inner=TRUE, falseval=0)
+boundary_mask <- ifel(i_i_i_boundary==0, 1, NA) # one more layer removed!
+
+mask <- mask*boundary_mask
+plot(mask)
+
+eez <- rast(here("_spatial/eez_mol_w_land.tif"))
+eez_coast <- eez*mask
+
+writeRaster(eez_coast, here("_spatial/coastal_country_mol.tif"))
+```
+
