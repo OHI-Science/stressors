@@ -1,0 +1,42 @@
+---
+title: "Untitled"
+output: html_document
+date: "2024-09-12"
+---
+
+Using the habitats from Casey's species vulnerability work.
+
+```{r setup, include=FALSE}
+
+# copy from his repo
+from <- list.files(here::here("../spp_vuln_mapping/_data/habitat_maps"), full=TRUE)
+file.copy(from=from, to = here::here("habitats/data"))
+
+# alter names
+file_list <- list.files(here::here("habitats/data"), full=TRUE)
+new_file_names <- gsub("_updated", "", file_list)
+file.rename(file_list, new_file_names)
+
+```
+
+
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

@@ -1,0 +1,1417 @@
+rgn_id,impact,value,rgn_label,m49_code,iso3c,georgn,geosubrgn,cells,region
+1,ssp245_current,288.4365547336638,Cocos Islands,166,CCK,Oceania,Australia and New Zealand,4694,eez
+1,ssp245_medium-term,1322.7874553352594,Cocos Islands,166,CCK,Oceania,Australia and New Zealand,4694,eez
+1,ssp245_near-term,687.7912035360932,Cocos Islands,166,CCK,Oceania,Australia and New Zealand,4694,eez
+1,ssp585_current,509.9273247718811,Cocos Islands,166,CCK,Oceania,Australia and New Zealand,4694,eez
+1,ssp585_medium-term,2208.9367783665657,Cocos Islands,166,CCK,Oceania,Australia and New Zealand,4694,eez
+1,ssp585_near-term,951.6614380478859,Cocos Islands,166,CCK,Oceania,Australia and New Zealand,4694,eez
+2,ssp245_current,199.1635367218405,Christmas Island,162,CXR,Oceania,Australia and New Zealand,3298,eez
+2,ssp245_medium-term,963.9723527133465,Christmas Island,162,CXR,Oceania,Australia and New Zealand,3298,eez
+2,ssp245_near-term,543.5403151065111,Christmas Island,162,CXR,Oceania,Australia and New Zealand,3298,eez
+2,ssp585_current,238.2041374221444,Christmas Island,162,CXR,Oceania,Australia and New Zealand,3298,eez
+2,ssp585_medium-term,1549.2391442358494,Christmas Island,162,CXR,Oceania,Australia and New Zealand,3298,eez
+2,ssp585_near-term,654.4636872559786,Christmas Island,162,CXR,Oceania,Australia and New Zealand,3298,eez
+3,ssp245_current,629.3325528353453,Norfolk Island,574,NFK,Oceania,Australia and New Zealand,4317,eez
+3,ssp245_medium-term,2163.2692147493362,Norfolk Island,574,NFK,Oceania,Australia and New Zealand,4317,eez
+3,ssp245_near-term,1102.6707809269428,Norfolk Island,574,NFK,Oceania,Australia and New Zealand,4317,eez
+3,ssp585_current,607.7265370935202,Norfolk Island,574,NFK,Oceania,Australia and New Zealand,4317,eez
+3,ssp585_medium-term,3028.007942676544,Norfolk Island,574,NFK,Oceania,Australia and New Zealand,4317,eez
+3,ssp585_near-term,1292.6705795228481,Norfolk Island,574,NFK,Oceania,Australia and New Zealand,4317,eez
+4,ssp245_current,1029.475880086422,Macquarie Island,NA,NA,Oceania,Australia and New Zealand,4744,eez
+4,ssp245_medium-term,1854.47841745615,Macquarie Island,NA,NA,Oceania,Australia and New Zealand,4744,eez
+4,ssp245_near-term,1361.5340384244919,Macquarie Island,NA,NA,Oceania,Australia and New Zealand,4744,eez
+4,ssp585_current,1024.584060266614,Macquarie Island,NA,NA,Oceania,Australia and New Zealand,4744,eez
+4,ssp585_medium-term,2091.757447987795,Macquarie Island,NA,NA,Oceania,Australia and New Zealand,4744,eez
+4,ssp585_near-term,1422.7387912422419,Macquarie Island,NA,NA,Oceania,Australia and New Zealand,4744,eez
+5,ssp245_current,2514.087831251789,New Caledonia,540,NCL,Oceania,Melanesia,13775,eez
+5,ssp245_medium-term,8966.102773115039,New Caledonia,540,NCL,Oceania,Melanesia,13775,eez
+5,ssp245_near-term,5474.798854232766,New Caledonia,540,NCL,Oceania,Melanesia,13775,eez
+5,ssp585_current,2659.8336389949545,New Caledonia,540,NCL,Oceania,Melanesia,13775,eez
+5,ssp585_medium-term,10687.794299555011,New Caledonia,540,NCL,Oceania,Melanesia,13775,eez
+5,ssp585_near-term,6198.755513858981,New Caledonia,540,NCL,Oceania,Melanesia,13775,eez
+6,ssp245_current,968.4509320610669,Vanuatu,548,VUT,Oceania,Melanesia,6310,eez
+6,ssp245_medium-term,3627.594514783472,Vanuatu,548,VUT,Oceania,Melanesia,6310,eez
+6,ssp245_near-term,2111.520714268321,Vanuatu,548,VUT,Oceania,Melanesia,6310,eez
+6,ssp585_current,1007.3853063895367,Vanuatu,548,VUT,Oceania,Melanesia,6310,eez
+6,ssp585_medium-term,4516.04582150327,Vanuatu,548,VUT,Oceania,Melanesia,6310,eez
+6,ssp585_near-term,2229.4448020411655,Vanuatu,548,VUT,Oceania,Melanesia,6310,eez
+7,ssp245_current,1740.1417291988619,Solomon Islands,90,SLB,Oceania,Melanesia,16267,eez
+7,ssp245_medium-term,12667.081001206767,Solomon Islands,90,SLB,Oceania,Melanesia,16267,eez
+7,ssp245_near-term,7126.106410379289,Solomon Islands,90,SLB,Oceania,Melanesia,16267,eez
+7,ssp585_current,2126.45176754985,Solomon Islands,90,SLB,Oceania,Melanesia,16267,eez
+7,ssp585_medium-term,15069.891306973994,Solomon Islands,90,SLB,Oceania,Melanesia,16267,eez
+7,ssp585_near-term,7063.005178302992,Solomon Islands,90,SLB,Oceania,Melanesia,16267,eez
+8,ssp245_current,583.5344966426492,Palau,585,PLW,Oceania,Micronesia,6085,eez
+8,ssp245_medium-term,3171.082942992449,Palau,585,PLW,Oceania,Micronesia,6085,eez
+8,ssp245_near-term,1713.4520681500435,Palau,585,PLW,Oceania,Micronesia,6085,eez
+8,ssp585_current,614.6596202105284,Palau,585,PLW,Oceania,Micronesia,6085,eez
+8,ssp585_medium-term,4130.609431862831,Palau,585,PLW,Oceania,Micronesia,6085,eez
+8,ssp585_near-term,2033.0685159116983,Palau,585,PLW,Oceania,Micronesia,6085,eez
+9,ssp245_current,4012.21981764026,Micronesia,583,FSM,Oceania,Micronesia,30121,eez
+9,ssp245_medium-term,24661.427792500705,Micronesia,583,FSM,Oceania,Micronesia,30121,eez
+9,ssp245_near-term,13267.937458693981,Micronesia,583,FSM,Oceania,Micronesia,30121,eez
+9,ssp585_current,4195.44781547226,Micronesia,583,FSM,Oceania,Micronesia,30121,eez
+9,ssp585_medium-term,28765.548960853368,Micronesia,583,FSM,Oceania,Micronesia,30121,eez
+9,ssp585_near-term,14695.96286682412,Micronesia,583,FSM,Oceania,Micronesia,30121,eez
+10,ssp245_current,392.8779623731971,Nauru,520,NRU,Oceania,Micronesia,3097,eez
+10,ssp245_medium-term,1970.512954890728,Nauru,520,NRU,Oceania,Micronesia,3097,eez
+10,ssp245_near-term,1215.8195081055164,Nauru,520,NRU,Oceania,Micronesia,3097,eez
+10,ssp585_current,409.8521721661091,Nauru,520,NRU,Oceania,Micronesia,3097,eez
+10,ssp585_medium-term,2457.5081486701965,Nauru,520,NRU,Oceania,Micronesia,3097,eez
+10,ssp585_near-term,1296.6369197666645,Nauru,520,NRU,Oceania,Micronesia,3097,eez
+11,ssp245_current,1965.2011291608214,Marshall Islands,584,MHL,Oceania,Micronesia,20045,eez
+11,ssp245_medium-term,16002.781752765179,Marshall Islands,584,MHL,Oceania,Micronesia,20045,eez
+11,ssp245_near-term,8131.741051822901,Marshall Islands,584,MHL,Oceania,Micronesia,20045,eez
+11,ssp585_current,2318.419357791543,Marshall Islands,584,MHL,Oceania,Micronesia,20045,eez
+11,ssp585_medium-term,18742.36747688055,Marshall Islands,584,MHL,Oceania,Micronesia,20045,eez
+11,ssp585_near-term,9741.059070020914,Marshall Islands,584,MHL,Oceania,Micronesia,20045,eez
+12,ssp245_current,643.3633399233222,Wake Island,NA,NA,Oceania,Micronesia,4090,eez
+12,ssp245_medium-term,2098.5074901878834,Wake Island,NA,NA,Oceania,Micronesia,4090,eez
+12,ssp245_near-term,1115.2948373705149,Wake Island,NA,NA,Oceania,Micronesia,4090,eez
+12,ssp585_current,689.015299089253,Wake Island,NA,NA,Oceania,Micronesia,4090,eez
+12,ssp585_medium-term,2561.7825279831886,Wake Island,NA,NA,Oceania,Micronesia,4090,eez
+12,ssp585_near-term,1285.7643880546093,Wake Island,NA,NA,Oceania,Micronesia,4090,eez
+13,ssp245_current,1170.666978560388,Northern Mariana Islands and Guam,580,MNP,Oceania,Micronesia,9761,eez
+13,ssp245_medium-term,6824.38140052557,Northern Mariana Islands and Guam,580,MNP,Oceania,Micronesia,9761,eez
+13,ssp245_near-term,3570.4426239728928,Northern Mariana Islands and Guam,580,MNP,Oceania,Micronesia,9761,eez
+13,ssp585_current,1639.9750872924924,Northern Mariana Islands and Guam,580,MNP,Oceania,Micronesia,9761,eez
+13,ssp585_medium-term,7797.1789456009865,Northern Mariana Islands and Guam,580,MNP,Oceania,Micronesia,9761,eez
+13,ssp585_near-term,4185.881005257368,Northern Mariana Islands and Guam,580,MNP,Oceania,Micronesia,9761,eez
+14,ssp245_current,1231.080399055034,Taiwan,NA,TWN,Asia,Eastern Asia,3494,eez
+14,ssp245_medium-term,2381.8113429285586,Taiwan,NA,TWN,Asia,Eastern Asia,3494,eez
+14,ssp245_near-term,1783.2403349932283,Taiwan,NA,TWN,Asia,Eastern Asia,3494,eez
+14,ssp585_current,1195.366258578375,Taiwan,NA,TWN,Asia,Eastern Asia,3494,eez
+14,ssp585_medium-term,2848.6968136020005,Taiwan,NA,TWN,Asia,Eastern Asia,3494,eez
+14,ssp585_near-term,1912.238834951073,Taiwan,NA,TWN,Asia,Eastern Asia,3494,eez
+15,ssp245_current,6243.461045714095,Philippines,608,PHL,Asia,South-eastern Asia,19146,eez
+15,ssp245_medium-term,14876.908636605367,Philippines,608,PHL,Asia,South-eastern Asia,19146,eez
+15,ssp245_near-term,10729.667905659531,Philippines,608,PHL,Asia,South-eastern Asia,19146,eez
+15,ssp585_current,6079.861875441973,Philippines,608,PHL,Asia,South-eastern Asia,19146,eez
+15,ssp585_medium-term,17613.405716903973,Philippines,608,PHL,Asia,South-eastern Asia,19146,eez
+15,ssp585_near-term,11463.165055357269,Philippines,608,PHL,Asia,South-eastern Asia,19146,eez
+16,ssp245_current,11242.506844261283,Australia,36,AUS,Oceania,Australia and New Zealand,71139,eez
+16,ssp245_medium-term,27492.63764832914,Australia,36,AUS,Oceania,Australia and New Zealand,71139,eez
+16,ssp245_near-term,17216.198084144708,Australia,36,AUS,Oceania,Australia and New Zealand,71139,eez
+16,ssp585_current,10612.708525433758,Australia,36,AUS,Oceania,Australia and New Zealand,71139,eez
+16,ssp585_medium-term,36100.34104921995,Australia,36,AUS,Oceania,Australia and New Zealand,71139,eez
+16,ssp585_near-term,19788.381710889167,Australia,36,AUS,Oceania,Australia and New Zealand,71139,eez
+17,ssp245_current,4380.191499250388,Papua New Guinea,598,PNG,Oceania,Melanesia,24554,eez
+17,ssp245_medium-term,20089.92137643497,Papua New Guinea,598,PNG,Oceania,Melanesia,24554,eez
+17,ssp245_near-term,12205.809797638329,Papua New Guinea,598,PNG,Oceania,Melanesia,24554,eez
+17,ssp585_current,4348.817183370324,Papua New Guinea,598,PNG,Oceania,Melanesia,24554,eez
+17,ssp585_medium-term,23822.475636412157,Papua New Guinea,598,PNG,Oceania,Melanesia,24554,eez
+17,ssp585_near-term,13454.075314491056,Papua New Guinea,598,PNG,Oceania,Melanesia,24554,eez
+18,ssp245_current,1739.7284351624548,Fiji,242,FJI,Oceania,Melanesia,13007,eez
+18,ssp245_medium-term,7485.877687699627,Fiji,242,FJI,Oceania,Melanesia,13007,eez
+18,ssp245_near-term,4591.275575653184,Fiji,242,FJI,Oceania,Melanesia,13007,eez
+18,ssp585_current,1891.7250734637491,Fiji,242,FJI,Oceania,Melanesia,13007,eez
+18,ssp585_medium-term,9029.79063850129,Fiji,242,FJI,Oceania,Melanesia,13007,eez
+18,ssp585_near-term,4644.01273970725,Fiji,242,FJI,Oceania,Melanesia,13007,eez
+19,ssp245_current,744.1293909698725,Tuvalu,798,TUV,Oceania,Polynesia,7500,eez
+19,ssp245_medium-term,5330.080046445131,Tuvalu,798,TUV,Oceania,Polynesia,7500,eez
+19,ssp245_near-term,3125.027320280671,Tuvalu,798,TUV,Oceania,Polynesia,7500,eez
+19,ssp585_current,685.3501753844321,Tuvalu,798,TUV,Oceania,Polynesia,7500,eez
+19,ssp585_medium-term,6463.274821192026,Tuvalu,798,TUV,Oceania,Polynesia,7500,eez
+19,ssp585_near-term,2792.190109729767,Tuvalu,798,TUV,Oceania,Polynesia,7500,eez
+20,ssp245_current,1821.1482744356617,Republic of Korea,410,KOR,Asia,Eastern Asia,3431,eez
+20,ssp245_medium-term,2446.538961753249,Republic of Korea,410,KOR,Asia,Eastern Asia,3431,eez
+20,ssp245_near-term,2219.777681449894,Republic of Korea,410,KOR,Asia,Eastern Asia,3431,eez
+20,ssp585_current,1790.8023094064556,Republic of Korea,410,KOR,Asia,Eastern Asia,3431,eez
+20,ssp585_medium-term,3007.2977216546424,Republic of Korea,410,KOR,Asia,Eastern Asia,3431,eez
+20,ssp585_near-term,2243.846683362499,Republic of Korea,410,KOR,Asia,Eastern Asia,3431,eez
+21,ssp245_current,654.8923133462667,Democratic People's Republic of Korea,408,PRK,Asia,Eastern Asia,1257,eez
+21,ssp245_medium-term,941.1365491002798,Democratic People's Republic of Korea,408,PRK,Asia,Eastern Asia,1257,eez
+21,ssp245_near-term,865.5353722758591,Democratic People's Republic of Korea,408,PRK,Asia,Eastern Asia,1257,eez
+21,ssp585_current,634.5062149446458,Democratic People's Republic of Korea,408,PRK,Asia,Eastern Asia,1257,eez
+21,ssp585_medium-term,1107.0379396863282,Democratic People's Republic of Korea,408,PRK,Asia,Eastern Asia,1257,eez
+21,ssp585_near-term,860.7529174946249,Democratic People's Republic of Korea,408,PRK,Asia,Eastern Asia,1257,eez
+24,ssp245_current,207.25606590788811,Cambodia,116,KHM,Asia,South-eastern Asia,513,eez
+24,ssp245_medium-term,345.1703106984496,Cambodia,116,KHM,Asia,South-eastern Asia,513,eez
+24,ssp245_near-term,273.6264584250748,Cambodia,116,KHM,Asia,South-eastern Asia,513,eez
+24,ssp585_current,206.13161133322865,Cambodia,116,KHM,Asia,South-eastern Asia,513,eez
+24,ssp585_medium-term,402.0953842252493,Cambodia,116,KHM,Asia,South-eastern Asia,513,eez
+24,ssp585_near-term,275.3086753766984,Cambodia,116,KHM,Asia,South-eastern Asia,513,eez
+25,ssp245_current,1631.4006017465144,Thailand,764,THA,Asia,South-eastern Asia,3246,eez
+25,ssp245_medium-term,2746.630127105862,Thailand,764,THA,Asia,South-eastern Asia,3246,eez
+25,ssp245_near-term,2184.4202222302556,Thailand,764,THA,Asia,South-eastern Asia,3246,eez
+25,ssp585_current,1651.2666833521798,Thailand,764,THA,Asia,South-eastern Asia,3246,eez
+25,ssp585_medium-term,3142.598540265113,Thailand,764,THA,Asia,South-eastern Asia,3246,eez
+25,ssp585_near-term,2196.344015996903,Thailand,764,THA,Asia,South-eastern Asia,3246,eez
+26,ssp245_current,2615.8596634455025,Andaman and Nicobar,NA,NA,Asia,South-Eastern Asia,6702,eez
+26,ssp245_medium-term,5908.545276178978,Andaman and Nicobar,NA,NA,Asia,South-Eastern Asia,6702,eez
+26,ssp245_near-term,4194.94068050338,Andaman and Nicobar,NA,NA,Asia,South-Eastern Asia,6702,eez
+26,ssp585_current,2714.269805575721,Andaman and Nicobar,NA,NA,Asia,South-Eastern Asia,6702,eez
+26,ssp585_medium-term,6925.370837341994,Andaman and Nicobar,NA,NA,Asia,South-Eastern Asia,6702,eez
+26,ssp585_near-term,4365.1352581661195,Andaman and Nicobar,NA,NA,Asia,South-Eastern Asia,6702,eez
+28,ssp245_current,280.23278802633286,Comoro Islands,NA,NA,Africa,Eastern Africa,1669,eez
+28,ssp245_medium-term,1484.6293520629406,Comoro Islands,NA,NA,Africa,Eastern Africa,1669,eez
+28,ssp245_near-term,949.3589220941067,Comoro Islands,NA,NA,Africa,Eastern Africa,1669,eez
+28,ssp585_current,298.8650236427784,Comoro Islands,NA,NA,Africa,Eastern Africa,1669,eez
+28,ssp585_medium-term,1612.5580677390099,Comoro Islands,NA,NA,Africa,Eastern Africa,1669,eez
+28,ssp585_near-term,977.2781789302826,Comoro Islands,NA,NA,Africa,Eastern Africa,1669,eez
+29,ssp245_current,110.84511578083038,Mayotte,175,MYT,Africa,Eastern Africa,634,eez
+29,ssp245_medium-term,550.8991392552853,Mayotte,175,MYT,Africa,Eastern Africa,634,eez
+29,ssp245_near-term,355.0144330114126,Mayotte,175,MYT,Africa,Eastern Africa,634,eez
+29,ssp585_current,139.4561157822609,Mayotte,175,MYT,Africa,Eastern Africa,634,eez
+29,ssp585_medium-term,600.216235011816,Mayotte,175,MYT,Africa,Eastern Africa,634,eez
+29,ssp585_near-term,382.11770160496235,Mayotte,175,MYT,Africa,Eastern Africa,634,eez
+30,ssp245_current,68.1892526447773,Glorioso Islands,NA,NA,Africa,Eastern Africa,434,eez
+30,ssp245_medium-term,277.67336815595627,Glorioso Islands,NA,NA,Africa,Eastern Africa,434,eez
+30,ssp245_near-term,155.115884244442,Glorioso Islands,NA,NA,Africa,Eastern Africa,434,eez
+30,ssp585_current,70.7308720946312,Glorioso Islands,NA,NA,Africa,Eastern Africa,434,eez
+30,ssp585_medium-term,313.6992884874344,Glorioso Islands,NA,NA,Africa,Eastern Africa,434,eez
+30,ssp585_near-term,168.4555687904358,Glorioso Islands,NA,NA,Africa,Eastern Africa,434,eez
+31,ssp245_current,1137.4109114091843,Seychelles,690,SYC,Africa,Eastern Africa,13409,eez
+31,ssp245_medium-term,9484.923999130726,Seychelles,690,SYC,Africa,Eastern Africa,13409,eez
+31,ssp245_near-term,4421.0515328496695,Seychelles,690,SYC,Africa,Eastern Africa,13409,eez
+31,ssp585_current,1029.8679592981935,Seychelles,690,SYC,Africa,Eastern Africa,13409,eez
+31,ssp585_medium-term,11193.696302950382,Seychelles,690,SYC,Africa,Eastern Africa,13409,eez
+31,ssp585_near-term,4815.352818489075,Seychelles,690,SYC,Africa,Eastern Africa,13409,eez
+32,ssp245_current,223.24717598594725,Réunion,638,REU,Africa,Eastern Africa,3172,eez
+32,ssp245_medium-term,2649.6471119076014,Réunion,638,REU,Africa,Eastern Africa,3172,eez
+32,ssp245_near-term,1378.9878736361861,Réunion,638,REU,Africa,Eastern Africa,3172,eez
+32,ssp585_current,151.93803366273642,Réunion,638,REU,Africa,Eastern Africa,3172,eez
+32,ssp585_medium-term,3078.0543076545,Réunion,638,REU,Africa,Eastern Africa,3172,eez
+32,ssp585_near-term,1437.4634056985378,Réunion,638,REU,Africa,Eastern Africa,3172,eez
+33,ssp245_current,123.44325506687164,Juan de Nova Island,NA,NA,Africa,Eastern Africa,623,eez
+33,ssp245_medium-term,375.85113701224327,Juan de Nova Island,NA,NA,Africa,Eastern Africa,623,eez
+33,ssp245_near-term,227.20413649082184,Juan de Nova Island,NA,NA,Africa,Eastern Africa,623,eez
+33,ssp585_current,127.97068952023983,Juan de Nova Island,NA,NA,Africa,Eastern Africa,623,eez
+33,ssp585_medium-term,440.7491466999054,Juan de Nova Island,NA,NA,Africa,Eastern Africa,623,eez
+33,ssp585_near-term,232.34139329195023,Juan de Nova Island,NA,NA,Africa,Eastern Africa,623,eez
+34,ssp245_current,178.17905465513468,Bassas da India,NA,NA,Africa,Eastern Africa,1214,eez
+34,ssp245_medium-term,619.0448187887669,Bassas da India,NA,NA,Africa,Eastern Africa,1214,eez
+34,ssp245_near-term,396.02593553066254,Bassas da India,NA,NA,Africa,Eastern Africa,1214,eez
+34,ssp585_current,172.237619638443,Bassas da India,NA,NA,Africa,Eastern Africa,1214,eez
+34,ssp585_medium-term,784.1830614805222,Bassas da India,NA,NA,Africa,Eastern Africa,1214,eez
+34,ssp585_near-term,344.05582697689533,Bassas da India,NA,NA,Africa,Eastern Africa,1214,eez
+35,ssp245_current,142.6673755198717,Ile Europa,NA,NA,Africa,Eastern Africa,1253,eez
+35,ssp245_medium-term,528.1647178530693,Ile Europa,NA,NA,Africa,Eastern Africa,1253,eez
+35,ssp245_near-term,333.0644443333149,Ile Europa,NA,NA,Africa,Eastern Africa,1253,eez
+35,ssp585_current,146.45699717104435,Ile Europa,NA,NA,Africa,Eastern Africa,1253,eez
+35,ssp585_medium-term,730.3314036726952,Ile Europa,NA,NA,Africa,Eastern Africa,1253,eez
+35,ssp585_near-term,269.48056322336197,Ile Europa,NA,NA,Africa,Eastern Africa,1253,eez
+36,ssp245_current,259.44391179829836,Ile Tromelin,NA,NA,Africa,Eastern Africa,2719,eez
+36,ssp245_medium-term,1316.078363597393,Ile Tromelin,NA,NA,Africa,Eastern Africa,2719,eez
+36,ssp245_near-term,641.1899705529213,Ile Tromelin,NA,NA,Africa,Eastern Africa,2719,eez
+36,ssp585_current,241.37195222079754,Ile Tromelin,NA,NA,Africa,Eastern Africa,2719,eez
+36,ssp585_medium-term,1692.3662659525871,Ile Tromelin,NA,NA,Africa,Eastern Africa,2719,eez
+36,ssp585_near-term,726.8264041692019,Ile Tromelin,NA,NA,Africa,Eastern Africa,2719,eez
+37,ssp245_current,922.0106173157692,Mauritius,480,MUS,Africa,Eastern Africa,12821,eez
+37,ssp245_medium-term,6717.818329900503,Mauritius,480,MUS,Africa,Eastern Africa,12821,eez
+37,ssp245_near-term,3021.3202753141522,Mauritius,480,MUS,Africa,Eastern Africa,12821,eez
+37,ssp585_current,832.5730826379731,Mauritius,480,MUS,Africa,Eastern Africa,12821,eez
+37,ssp585_medium-term,8821.757120251656,Mauritius,480,MUS,Africa,Eastern Africa,12821,eez
+37,ssp585_near-term,3460.7507442459464,Mauritius,480,MUS,Africa,Eastern Africa,12821,eez
+38,ssp245_current,598.6119093960151,British Indian Ocean Territory,86,IOT,Africa,Eastern Africa,6424,eez
+38,ssp245_medium-term,2821.3523797914386,British Indian Ocean Territory,86,IOT,Africa,Eastern Africa,6424,eez
+38,ssp245_near-term,1185.9535082541406,British Indian Ocean Territory,86,IOT,Africa,Eastern Africa,6424,eez
+38,ssp585_current,595.723019329831,British Indian Ocean Territory,86,IOT,Africa,Eastern Africa,6424,eez
+38,ssp585_medium-term,3770.5489735901356,British Indian Ocean Territory,86,IOT,Africa,Eastern Africa,6424,eez
+38,ssp585_near-term,1738.4743332192302,British Indian Ocean Territory,86,IOT,Africa,Eastern Africa,6424,eez
+39,ssp245_current,1159.6353812161833,Maldives,462,MDV,Asia,Southern Asia,9223,eez
+39,ssp245_medium-term,7833.779435753822,Maldives,462,MDV,Asia,Southern Asia,9223,eez
+39,ssp245_near-term,4327.597094357014,Maldives,462,MDV,Asia,Southern Asia,9223,eez
+39,ssp585_current,1268.9925603102893,Maldives,462,MDV,Asia,Southern Asia,9223,eez
+39,ssp585_medium-term,8754.509531080723,Maldives,462,MDV,Asia,Southern Asia,9223,eez
+39,ssp585_near-term,4845.604554831982,Maldives,462,MDV,Asia,Southern Asia,9223,eez
+40,ssp245_current,1550.6291715453845,Sri Lanka,144,LKA,Asia,Southern Asia,5422,eez
+40,ssp245_medium-term,4729.182697774377,Sri Lanka,144,LKA,Asia,Southern Asia,5422,eez
+40,ssp245_near-term,3241.927454107441,Sri Lanka,144,LKA,Asia,Southern Asia,5422,eez
+40,ssp585_current,1596.2161148866871,Sri Lanka,144,LKA,Asia,Southern Asia,5422,eez
+40,ssp585_medium-term,5469.63149959757,Sri Lanka,144,LKA,Asia,Southern Asia,5422,eez
+40,ssp585_near-term,3473.96211480489,Sri Lanka,144,LKA,Asia,Southern Asia,5422,eez
+41,ssp245_current,1420.967840499652,Mozambique,508,MOZ,Africa,Eastern Africa,5941,eez
+41,ssp245_medium-term,4780.980535379727,Mozambique,508,MOZ,Africa,Eastern Africa,5941,eez
+41,ssp245_near-term,3333.259964756435,Mozambique,508,MOZ,Africa,Eastern Africa,5941,eez
+41,ssp585_current,1509.409832260164,Mozambique,508,MOZ,Africa,Eastern Africa,5941,eez
+41,ssp585_medium-term,5434.524898548028,Mozambique,508,MOZ,Africa,Eastern Africa,5941,eez
+41,ssp585_near-term,3233.753827287117,Mozambique,508,MOZ,Africa,Eastern Africa,5941,eez
+42,ssp245_current,1841.5282536098384,Madagascar,450,MDG,Africa,Eastern Africa,12348,eez
+42,ssp245_medium-term,9650.515927004395,Madagascar,450,MDG,Africa,Eastern Africa,12348,eez
+42,ssp245_near-term,6009.961916521192,Madagascar,450,MDG,Africa,Eastern Africa,12348,eez
+42,ssp585_current,1956.8127518243273,Madagascar,450,MDG,Africa,Eastern Africa,12348,eez
+42,ssp585_medium-term,11217.804830248817,Madagascar,450,MDG,Africa,Eastern Africa,12348,eez
+42,ssp585_near-term,6095.375565885915,Madagascar,450,MDG,Africa,Eastern Africa,12348,eez
+43,ssp245_current,238.2928374116309,Kenya,404,KEN,Africa,Eastern Africa,1171,eez
+43,ssp245_medium-term,1118.295713935513,Kenya,404,KEN,Africa,Eastern Africa,1171,eez
+43,ssp245_near-term,710.2156929261982,Kenya,404,KEN,Africa,Eastern Africa,1171,eez
+43,ssp585_current,241.83973857574165,Kenya,404,KEN,Africa,Eastern Africa,1171,eez
+43,ssp585_medium-term,1229.116258942522,Kenya,404,KEN,Africa,Eastern Africa,1171,eez
+43,ssp585_near-term,742.1776366932318,Kenya,404,KEN,Africa,Eastern Africa,1171,eez
+44,ssp245_current,1863.8637465815991,Somalia,706,SOM,Africa,Eastern Africa,8039,eez
+44,ssp245_medium-term,6949.836150120944,Somalia,706,SOM,Africa,Eastern Africa,8039,eez
+44,ssp245_near-term,5044.856479207054,Somalia,706,SOM,Africa,Eastern Africa,8039,eez
+44,ssp585_current,1478.018573003821,Somalia,706,SOM,Africa,Eastern Africa,8039,eez
+44,ssp585_medium-term,7982.863195342943,Somalia,706,SOM,Africa,Eastern Africa,8039,eez
+44,ssp585_near-term,5196.748094072565,Somalia,706,SOM,Africa,Eastern Africa,8039,eez
+45,ssp245_current,464.31790234777145,Eritrea,232,ERI,Africa,Eastern Africa,869,eez
+45,ssp245_medium-term,724.2845135978423,Eritrea,232,ERI,Africa,Eastern Africa,869,eez
+45,ssp245_near-term,607.6946653840132,Eritrea,232,ERI,Africa,Eastern Africa,869,eez
+45,ssp585_current,434.9975818407256,Eritrea,232,ERI,Africa,Eastern Africa,869,eez
+45,ssp585_medium-term,789.1015055845492,Eritrea,232,ERI,Africa,Eastern Africa,869,eez
+45,ssp585_near-term,607.1079637755174,Eritrea,232,ERI,Africa,Eastern Africa,869,eez
+46,ssp245_current,67.27986241132021,Djibouti,262,DJI,Africa,Eastern Africa,90,eez
+46,ssp245_medium-term,101.42252069711685,Djibouti,262,DJI,Africa,Eastern Africa,90,eez
+46,ssp245_near-term,84.87949478626251,Djibouti,262,DJI,Africa,Eastern Africa,90,eez
+46,ssp585_current,61.48822593688965,Djibouti,262,DJI,Africa,Eastern Africa,90,eez
+46,ssp585_medium-term,111.55887280404568,Djibouti,262,DJI,Africa,Eastern Africa,90,eez
+46,ssp585_near-term,86.14360172301531,Djibouti,262,DJI,Africa,Eastern Africa,90,eez
+47,ssp245_current,2426.565076178871,Yemen,887,YEM,Asia,Western Asia,5597,eez
+47,ssp245_medium-term,4803.470213614404,Yemen,887,YEM,Asia,Western Asia,5597,eez
+47,ssp245_near-term,3801.3056042799726,Yemen,887,YEM,Asia,Western Asia,5597,eez
+47,ssp585_current,2106.972327210009,Yemen,887,YEM,Asia,Western Asia,5597,eez
+47,ssp585_medium-term,5545.774495467544,Yemen,887,YEM,Asia,Western Asia,5597,eez
+47,ssp585_near-term,3932.8736667605117,Yemen,887,YEM,Asia,Western Asia,5597,eez
+48,ssp245_current,2091.213238354132,Oman,512,OMN,Asia,Western Asia,5497,eez
+48,ssp245_medium-term,4253.130892381538,Oman,512,OMN,Asia,Western Asia,5497,eez
+48,ssp245_near-term,3092.301593649434,Oman,512,OMN,Asia,Western Asia,5497,eez
+48,ssp585_current,2027.4009451782913,Oman,512,OMN,Asia,Western Asia,5497,eez
+48,ssp585_medium-term,4961.20573788567,Oman,512,OMN,Asia,Western Asia,5497,eez
+48,ssp585_near-term,3309.201996530057,Oman,512,OMN,Asia,Western Asia,5497,eez
+49,ssp245_current,439.27136135369074,Sudan,729,SDN,Africa,Northern Africa,707,eez
+49,ssp245_medium-term,677.1364324376918,Sudan,729,SDN,Africa,Northern Africa,707,eez
+49,ssp245_near-term,588.2497817378026,Sudan,729,SDN,Africa,Northern Africa,707,eez
+49,ssp585_current,440.47291525104083,Sudan,729,SDN,Africa,Northern Africa,707,eez
+49,ssp585_medium-term,745.9135840991512,Sudan,729,SDN,Africa,Northern Africa,707,eez
+49,ssp585_near-term,569.9045293503441,Sudan,729,SDN,Africa,Northern Africa,707,eez
+50,ssp245_current,1332.0821268514264,Saudi Arabia,682,SAU,Asia,Western Asia,2399,eez
+50,ssp245_medium-term,2147.8423899260815,Saudi Arabia,682,SAU,Asia,Western Asia,2399,eez
+50,ssp245_near-term,1873.3377866583178,Saudi Arabia,682,SAU,Asia,Western Asia,2399,eez
+50,ssp585_current,1352.3270068468992,Saudi Arabia,682,SAU,Asia,Western Asia,2399,eez
+50,ssp585_medium-term,2329.7060130438767,Saudi Arabia,682,SAU,Asia,Western Asia,2399,eez
+50,ssp585_near-term,1809.3194496266078,Saudi Arabia,682,SAU,Asia,Western Asia,2399,eez
+51,ssp245_current,14.877682346850634,Kuwait,414,KWT,Asia,Western Asia,144,eez
+51,ssp245_medium-term,52.69558470789343,Kuwait,414,KWT,Asia,Western Asia,144,eez
+51,ssp245_near-term,23.233319823164493,Kuwait,414,KWT,Asia,Western Asia,144,eez
+51,ssp585_current,17.952876169234514,Kuwait,414,KWT,Asia,Western Asia,144,eez
+51,ssp585_medium-term,56.76413172762841,Kuwait,414,KWT,Asia,Western Asia,144,eez
+51,ssp585_near-term,21.735984071157873,Kuwait,414,KWT,Asia,Western Asia,144,eez
+52,ssp245_current,12.78558013914153,Bahrain,48,BHR,Asia,Western Asia,87,eez
+52,ssp245_medium-term,37.26368473470211,Bahrain,48,BHR,Asia,Western Asia,87,eez
+52,ssp245_near-term,15.996198404580355,Bahrain,48,BHR,Asia,Western Asia,87,eez
+52,ssp585_current,13.005220049060881,Bahrain,48,BHR,Asia,Western Asia,87,eez
+52,ssp585_medium-term,41.18130385875702,Bahrain,48,BHR,Asia,Western Asia,87,eez
+52,ssp585_near-term,14.938814803026617,Bahrain,48,BHR,Asia,Western Asia,87,eez
+53,ssp245_current,934.4007604680955,Pakistan,586,PAK,Asia,Southern Asia,2290,eez
+53,ssp245_medium-term,1927.1547252386808,Pakistan,586,PAK,Asia,Southern Asia,2290,eez
+53,ssp245_near-term,1556.8145668134093,Pakistan,586,PAK,Asia,Southern Asia,2290,eez
+53,ssp585_current,966.4180614985526,Pakistan,586,PAK,Asia,Southern Asia,2290,eez
+53,ssp585_medium-term,2227.2042035087943,Pakistan,586,PAK,Asia,Southern Asia,2290,eez
+53,ssp585_near-term,1619.338779874146,Pakistan,586,PAK,Asia,Southern Asia,2290,eez
+54,ssp245_current,69.04769897647202,United Arab Emirates,784,ARE,Asia,Western Asia,590,eez
+54,ssp245_medium-term,340.6210914365947,United Arab Emirates,784,ARE,Asia,Western Asia,590,eez
+54,ssp245_near-term,224.11181386187673,United Arab Emirates,784,ARE,Asia,Western Asia,590,eez
+54,ssp585_current,74.57976936176419,United Arab Emirates,784,ARE,Asia,Western Asia,590,eez
+54,ssp585_medium-term,370.6225934699178,United Arab Emirates,784,ARE,Asia,Western Asia,590,eez
+54,ssp585_near-term,234.78788757696748,United Arab Emirates,784,ARE,Asia,Western Asia,590,eez
+55,ssp245_current,1005.6931504653767,Azores,NA,NA,Europe,Southern Europe,9604,eez
+55,ssp245_medium-term,5106.751832425594,Azores,NA,NA,Europe,Southern Europe,9604,eez
+55,ssp245_near-term,2865.60660789907,Azores,NA,NA,Europe,Southern Europe,9604,eez
+55,ssp585_current,1368.432909047231,Azores,NA,NA,Europe,Southern Europe,9604,eez
+55,ssp585_medium-term,7127.813326910138,Azores,NA,NA,Europe,Southern Europe,9604,eez
+55,ssp585_near-term,3121.964666068554,Azores,NA,NA,Europe,Southern Europe,9604,eez
+56,ssp245_current,1587.500038029626,Cape Verde,NA,NA,Africa,Western Africa,8036,eez
+56,ssp245_medium-term,4941.4732960909605,Cape Verde,NA,NA,Africa,Western Africa,8036,eez
+56,ssp245_near-term,3600.090375734493,Cape Verde,NA,NA,Africa,Western Africa,8036,eez
+56,ssp585_current,1978.6134848911315,Cape Verde,NA,NA,Africa,Western Africa,8036,eez
+56,ssp585_medium-term,5755.144444040954,Cape Verde,NA,NA,Africa,Western Africa,8036,eez
+56,ssp585_near-term,3892.801103115082,Cape Verde,NA,NA,Africa,Western Africa,8036,eez
+57,ssp245_current,669.4097889959812,Madeira,NA,NA,Europe,Southern Europe,4552,eez
+57,ssp245_medium-term,2924.4602053016424,Madeira,NA,NA,Europe,Southern Europe,4552,eez
+57,ssp245_near-term,1664.8457501232624,Madeira,NA,NA,Europe,Southern Europe,4552,eez
+57,ssp585_current,926.8257989212871,Madeira,NA,NA,Europe,Southern Europe,4552,eez
+57,ssp585_medium-term,3786.6447338610888,Madeira,NA,NA,Europe,Southern Europe,4552,eez
+57,ssp585_near-term,1978.4204711914062,Madeira,NA,NA,Europe,Southern Europe,4552,eez
+58,ssp245_current,1051.5750411995687,Canary Islands,NA,NA,Europe,Southern Europe,4549,eez
+58,ssp245_medium-term,3616.177893102169,Canary Islands,NA,NA,Europe,Southern Europe,4549,eez
+58,ssp245_near-term,2390.7807382298633,Canary Islands,NA,NA,Europe,Southern Europe,4549,eez
+58,ssp585_current,1370.9171824012883,Canary Islands,NA,NA,Europe,Southern Europe,4549,eez
+58,ssp585_medium-term,4124.696921970695,Canary Islands,NA,NA,Europe,Southern Europe,4549,eez
+58,ssp585_near-term,2567.327328160405,Canary Islands,NA,NA,Europe,Southern Europe,4549,eez
+59,ssp245_current,18.5330222081393,Belgium,56,BEL,Europe,Western Europe,41,eez
+59,ssp245_medium-term,25.247378142550588,Belgium,56,BEL,Europe,Western Europe,41,eez
+59,ssp245_near-term,24.027151965536177,Belgium,56,BEL,Europe,Western Europe,41,eez
+59,ssp585_current,17.819343144539744,Belgium,56,BEL,Europe,Western Europe,41,eez
+59,ssp585_medium-term,27.644885844551027,Belgium,56,BEL,Europe,Western Europe,41,eez
+59,ssp585_near-term,24.364464175887406,Belgium,56,BEL,Europe,Western Europe,41,eez
+60,ssp245_current,1.4644791185855865,Gibraltar,292,GIB,Europe,Southern Europe,5,eez
+60,ssp245_medium-term,2.631204903125763,Gibraltar,292,GIB,Europe,Southern Europe,5,eez
+60,ssp245_near-term,1.8292354047298431,Gibraltar,292,GIB,Europe,Southern Europe,5,eez
+60,ssp585_current,1.341864213347435,Gibraltar,292,GIB,Europe,Southern Europe,5,eez
+60,ssp585_medium-term,3.085539400577545,Gibraltar,292,GIB,Europe,Southern Europe,5,eez
+60,ssp585_near-term,1.924454003572464,Gibraltar,292,GIB,Europe,Southern Europe,5,eez
+61,ssp245_current,430.04244417184964,Tunisia,788,TUN,Africa,Northern Africa,1076,eez
+61,ssp245_medium-term,886.6829424789175,Tunisia,788,TUN,Africa,Northern Africa,1076,eez
+61,ssp245_near-term,724.1164779665414,Tunisia,788,TUN,Africa,Northern Africa,1076,eez
+61,ssp585_current,455.52238082606345,Tunisia,788,TUN,Africa,Northern Africa,1076,eez
+61,ssp585_medium-term,985.077286424581,Tunisia,788,TUN,Africa,Northern Africa,1076,eez
+61,ssp585_near-term,741.2700508539565,Tunisia,788,TUN,Africa,Northern Africa,1076,eez
+62,ssp245_current,888.3996306392364,Morocco,504,MAR,Africa,Northern Africa,2850,eez
+62,ssp245_medium-term,2196.8902653576806,Morocco,504,MAR,Africa,Northern Africa,2850,eez
+62,ssp245_near-term,1599.052645211108,Morocco,504,MAR,Africa,Northern Africa,2850,eez
+62,ssp585_current,1084.9143774500117,Morocco,504,MAR,Africa,Northern Africa,2850,eez
+62,ssp585_medium-term,2494.3112335894257,Morocco,504,MAR,Africa,Northern Africa,2850,eez
+62,ssp585_near-term,1655.7879005894065,Morocco,504,MAR,Africa,Northern Africa,2850,eez
+63,ssp245_current,984.8319980078377,Western Sahara,732,ESH,Africa,Northern Africa,2567,eez
+63,ssp245_medium-term,1712.464875577949,Western Sahara,732,ESH,Africa,Northern Africa,2567,eez
+63,ssp245_near-term,1491.6985340137035,Western Sahara,732,ESH,Africa,Northern Africa,2567,eez
+63,ssp585_current,1130.3274018722586,Western Sahara,732,ESH,Africa,Northern Africa,2567,eez
+63,ssp585_medium-term,1951.8151951683685,Western Sahara,732,ESH,Africa,Northern Africa,2567,eez
+63,ssp585_near-term,1454.0862998943776,Western Sahara,732,ESH,Africa,Northern Africa,2567,eez
+64,ssp245_current,587.9536550436169,Mauritania,478,MRT,Africa,Western Africa,1581,eez
+64,ssp245_medium-term,1074.6526239216328,Mauritania,478,MRT,Africa,Western Africa,1581,eez
+64,ssp245_near-term,894.8168802950531,Mauritania,478,MRT,Africa,Western Africa,1581,eez
+64,ssp585_current,618.5785724893212,Mauritania,478,MRT,Africa,Western Africa,1581,eez
+64,ssp585_medium-term,1270.2989705130458,Mauritania,478,MRT,Africa,Western Africa,1581,eez
+64,ssp585_near-term,907.9511783812195,Mauritania,478,MRT,Africa,Western Africa,1581,eez
+65,ssp245_current,78.81303736940026,Gambia,270,GMB,Africa,Western Africa,232,eez
+65,ssp245_medium-term,153.33526442199945,Gambia,270,GMB,Africa,Western Africa,232,eez
+65,ssp245_near-term,124.4928369410336,Gambia,270,GMB,Africa,Western Africa,232,eez
+65,ssp585_current,79.41962271556258,Gambia,270,GMB,Africa,Western Africa,232,eez
+65,ssp585_medium-term,178.10584944486618,Gambia,270,GMB,Africa,Western Africa,232,eez
+65,ssp585_near-term,132.52430403605103,Gambia,270,GMB,Africa,Western Africa,232,eez
+66,ssp245_current,608.083901412785,Senegal,686,SEN,Africa,Western Africa,1684,eez
+66,ssp245_medium-term,1191.591779474169,Senegal,686,SEN,Africa,Western Africa,1684,eez
+66,ssp245_near-term,943.9155330564827,Senegal,686,SEN,Africa,Western Africa,1684,eez
+66,ssp585_current,625.7392420824617,Senegal,686,SEN,Africa,Western Africa,1684,eez
+66,ssp585_medium-term,1407.5224267169833,Senegal,686,SEN,Africa,Western Africa,1684,eez
+66,ssp585_near-term,1015.5074199941009,Senegal,686,SEN,Africa,Western Africa,1684,eez
+67,ssp245_current,1326.830955274403,Libya,434,LBY,Africa,Northern Africa,3678,eez
+67,ssp245_medium-term,3243.288966923952,Libya,434,LBY,Africa,Northern Africa,3678,eez
+67,ssp245_near-term,2517.579975128174,Libya,434,LBY,Africa,Northern Africa,3678,eez
+67,ssp585_current,1387.9990394357592,Libya,434,LBY,Africa,Northern Africa,3678,eez
+67,ssp585_medium-term,3502.7777698263526,Libya,434,LBY,Africa,Northern Africa,3678,eez
+67,ssp585_near-term,2550.186503343284,Libya,434,LBY,Africa,Northern Africa,3678,eez
+68,ssp245_current,177.25894729793072,Malta,470,MLT,Europe,Southern Europe,549,eez
+68,ssp245_medium-term,387.7348489165306,Malta,470,MLT,Europe,Southern Europe,549,eez
+68,ssp245_near-term,319.8738679289818,Malta,470,MLT,Europe,Southern Europe,549,eez
+68,ssp585_current,177.42374928295612,Malta,470,MLT,Europe,Southern Europe,549,eez
+68,ssp585_medium-term,449.44692319631577,Malta,470,MLT,Europe,Southern Europe,549,eez
+68,ssp585_near-term,316.58092817664146,Malta,470,MLT,Europe,Southern Europe,549,eez
+69,ssp245_current,115.43234678171575,Latvia,428,LVA,Europe,Northern Europe,312,eez
+69,ssp245_medium-term,197.84352860227227,Latvia,428,LVA,Europe,Northern Europe,312,eez
+69,ssp245_near-term,172.71341026946902,Latvia,428,LVA,Europe,Northern Europe,312,eez
+69,ssp585_current,121.1265145111829,Latvia,428,LVA,Europe,Northern Europe,312,eez
+69,ssp585_medium-term,227.8946042880416,Latvia,428,LVA,Europe,Northern Europe,312,eez
+69,ssp585_near-term,172.92109470441937,Latvia,428,LVA,Europe,Northern Europe,312,eez
+70,ssp245_current,164.88297344371676,Estonia,233,EST,Europe,Northern Europe,422,eez
+70,ssp245_medium-term,245.77070175111294,Estonia,233,EST,Europe,Northern Europe,422,eez
+70,ssp245_near-term,224.73565173894167,Estonia,233,EST,Europe,Northern Europe,422,eez
+70,ssp585_current,168.62796515226364,Estonia,233,EST,Europe,Northern Europe,422,eez
+70,ssp585_medium-term,278.18047197163105,Estonia,233,EST,Europe,Northern Europe,422,eez
+70,ssp585_near-term,231.1500241085887,Estonia,233,EST,Europe,Northern Europe,422,eez
+71,ssp245_current,269.27393060177565,Bulgaria,100,BGR,Europe,Eastern Europe,369,eez
+71,ssp245_medium-term,396.87154629826546,Bulgaria,100,BGR,Europe,Eastern Europe,369,eez
+71,ssp245_near-term,359.8088271468878,Bulgaria,100,BGR,Europe,Eastern Europe,369,eez
+71,ssp585_current,277.13909535482526,Bulgaria,100,BGR,Europe,Eastern Europe,369,eez
+71,ssp585_medium-term,426.2592506110668,Bulgaria,100,BGR,Europe,Eastern Europe,369,eez
+71,ssp585_near-term,361.93689608573914,Bulgaria,100,BGR,Europe,Eastern Europe,369,eez
+72,ssp245_current,154.86316923517734,Romania,642,ROU,Europe,Eastern Europe,313,eez
+72,ssp245_medium-term,236.70155961066484,Romania,642,ROU,Europe,Eastern Europe,313,eez
+72,ssp245_near-term,214.56490921694785,Romania,642,ROU,Europe,Eastern Europe,313,eez
+72,ssp585_current,164.51720785163343,Romania,642,ROU,Europe,Eastern Europe,313,eez
+72,ssp585_medium-term,256.8505992759019,Romania,642,ROU,Europe,Eastern Europe,313,eez
+72,ssp585_near-term,217.18387155141681,Romania,642,ROU,Europe,Eastern Europe,313,eez
+73,ssp245_current,41718.01459962316,Russian Federation,643,RUS,Europe,Eastern Europe,80808,eez
+73,ssp245_medium-term,78254.08609572146,Russian Federation,643,RUS,Europe,Eastern Europe,80808,eez
+73,ssp245_near-term,65357.32156740478,Russian Federation,643,RUS,Europe,Eastern Europe,80808,eez
+73,ssp585_current,45054.732910102815,Russian Federation,643,RUS,Europe,Eastern Europe,80808,eez
+73,ssp585_medium-term,84966.21078321198,Russian Federation,643,RUS,Europe,Eastern Europe,80808,eez
+73,ssp585_near-term,63647.194279947784,Russian Federation,643,RUS,Europe,Eastern Europe,80808,eez
+74,ssp245_current,161.61502159852535,Georgia,268,GEO,Asia,Western Asia,247,eez
+74,ssp245_medium-term,237.6341929025948,Georgia,268,GEO,Asia,Western Asia,247,eez
+74,ssp245_near-term,216.9603377878666,Georgia,268,GEO,Asia,Western Asia,247,eez
+74,ssp585_current,171.3633203636855,Georgia,268,GEO,Asia,Western Asia,247,eez
+74,ssp585_medium-term,257.3147555217147,Georgia,268,GEO,Asia,Western Asia,247,eez
+74,ssp585_near-term,216.50716455839574,Georgia,268,GEO,Asia,Western Asia,247,eez
+75,ssp245_current,748.2772612376139,Ukraine,804,UKR,Europe,Eastern Europe,1465,eez
+75,ssp245_medium-term,1143.025042442605,Ukraine,804,UKR,Europe,Eastern Europe,1465,eez
+75,ssp245_near-term,1051.2137828720734,Ukraine,804,UKR,Europe,Eastern Europe,1465,eez
+75,ssp585_current,796.4848859608173,Ukraine,804,UKR,Europe,Eastern Europe,1465,eez
+75,ssp585_medium-term,1257.2923464663327,Ukraine,804,UKR,Europe,Eastern Europe,1465,eez
+75,ssp585_near-term,1075.8218722399324,Ukraine,804,UKR,Europe,Eastern Europe,1465,eez
+76,ssp245_current,1773.9471724936739,Turkey,792,TUR,Asia,Western Asia,2830,eez
+76,ssp245_medium-term,2793.5350456424057,Turkey,792,TUR,Asia,Western Asia,2830,eez
+76,ssp245_near-term,2460.943973906338,Turkey,792,TUR,Asia,Western Asia,2830,eez
+76,ssp585_current,1886.602715069428,Turkey,792,TUR,Asia,Western Asia,2830,eez
+76,ssp585_medium-term,2973.355691520497,Turkey,792,TUR,Asia,Western Asia,2830,eez
+76,ssp585_near-term,2479.9669522652403,Turkey,792,TUR,Asia,Western Asia,2830,eez
+77,ssp245_current,42.88059192895889,Syria,NA,NA,Asia,Western Asia,108,eez
+77,ssp245_medium-term,93.71686808019876,Syria,NA,NA,Asia,Western Asia,108,eez
+77,ssp245_near-term,75.43181579560041,Syria,NA,NA,Asia,Western Asia,108,eez
+77,ssp585_current,47.46973463147879,Syria,NA,NA,Asia,Western Asia,108,eez
+77,ssp585_medium-term,95.95018701255322,Syria,NA,NA,Asia,Western Asia,108,eez
+77,ssp585_near-term,71.86584157124162,Syria,NA,NA,Asia,Western Asia,108,eez
+78,ssp245_current,66.06293040513992,Lebanon,422,LBN,Asia,Western Asia,205,eez
+78,ssp245_medium-term,169.40347772836685,Lebanon,422,LBN,Asia,Western Asia,205,eez
+78,ssp245_near-term,132.22655476629734,Lebanon,422,LBN,Asia,Western Asia,205,eez
+78,ssp585_current,73.85867570340633,Lebanon,422,LBN,Asia,Western Asia,205,eez
+78,ssp585_medium-term,174.0366712063551,Lebanon,422,LBN,Asia,Western Asia,205,eez
+78,ssp585_near-term,124.27152839303017,Lebanon,422,LBN,Asia,Western Asia,205,eez
+79,ssp245_current,120.4844768345356,Israel,376,ISR,Asia,Western Asia,291,eez
+79,ssp245_medium-term,252.107557348907,Israel,376,ISR,Asia,Western Asia,291,eez
+79,ssp245_near-term,187.99620957672596,Israel,376,ISR,Asia,Western Asia,291,eez
+79,ssp585_current,122.42983663827181,Israel,376,ISR,Asia,Western Asia,291,eez
+79,ssp585_medium-term,259.3366971760988,Israel,376,ISR,Asia,Western Asia,291,eez
+79,ssp585_near-term,179.74656204134226,Israel,376,ISR,Asia,Western Asia,291,eez
+80,ssp245_current,2338.502867627889,Greece,300,GRC,Europe,Southern Europe,5298,eez
+80,ssp245_medium-term,4753.293416345492,Greece,300,GRC,Europe,Southern Europe,5298,eez
+80,ssp245_near-term,3616.3806247487664,Greece,300,GRC,Europe,Southern Europe,5298,eez
+80,ssp585_current,2547.603547187522,Greece,300,GRC,Europe,Southern Europe,5298,eez
+80,ssp585_medium-term,5007.140290757641,Greece,300,GRC,Europe,Southern Europe,5298,eez
+80,ssp585_near-term,3660.0679565612227,Greece,300,GRC,Europe,Southern Europe,5298,eez
+81,ssp245_current,314.71885502524674,Cyprus,196,CYP,Asia,Western Asia,1013,eez
+81,ssp245_medium-term,712.1217593997717,Cyprus,196,CYP,Asia,Western Asia,1013,eez
+81,ssp245_near-term,534.5748078897595,Cyprus,196,CYP,Asia,Western Asia,1013,eez
+81,ssp585_current,343.1546978764236,Cyprus,196,CYP,Asia,Western Asia,1013,eez
+81,ssp585_medium-term,742.4613741971552,Cyprus,196,CYP,Asia,Western Asia,1013,eez
+81,ssp585_near-term,485.0642027333379,Cyprus,196,CYP,Asia,Western Asia,1013,eez
+82,ssp245_current,26.92730368860066,Albania,8,ALB,Europe,Southern Europe,134,eez
+82,ssp245_medium-term,72.96947732381523,Albania,8,ALB,Europe,Southern Europe,134,eez
+82,ssp245_near-term,52.952153072692454,Albania,8,ALB,Europe,Southern Europe,134,eez
+82,ssp585_current,36.658875139430165,Albania,8,ALB,Europe,Southern Europe,134,eez
+82,ssp585_medium-term,85.97598209511489,Albania,8,ALB,Europe,Southern Europe,134,eez
+82,ssp585_near-term,47.77748178038746,Albania,8,ALB,Europe,Southern Europe,134,eez
+84,ssp245_current,409.704626750201,Algeria,12,DZA,Africa,Northern Africa,1353,eez
+84,ssp245_medium-term,1038.4635580759495,Algeria,12,DZA,Africa,Northern Africa,1353,eez
+84,ssp245_near-term,791.9544386863708,Algeria,12,DZA,Africa,Northern Africa,1353,eez
+84,ssp585_current,466.9111852310598,Algeria,12,DZA,Africa,Northern Africa,1353,eez
+84,ssp585_medium-term,1183.2271997854114,Algeria,12,DZA,Africa,Northern Africa,1353,eez
+84,ssp585_near-term,826.4962168838829,Algeria,12,DZA,Africa,Northern Africa,1353,eez
+85,ssp245_current,602.2553617805243,Ascension,NA,NA,Europe,Northern Europe,4440,eez
+85,ssp245_medium-term,2934.954827427864,Ascension,NA,NA,Europe,Northern Europe,4440,eez
+85,ssp245_near-term,1587.0141185820103,Ascension,NA,NA,Europe,Northern Europe,4440,eez
+85,ssp585_current,653.1220623925328,Ascension,NA,NA,Europe,Northern Europe,4440,eez
+85,ssp585_medium-term,3196.6855829954147,Ascension,NA,NA,Europe,Northern Europe,4440,eez
+85,ssp585_near-term,1522.759090334177,Ascension,NA,NA,Europe,Northern Europe,4440,eez
+86,ssp245_current,362.3234154880047,Saint Helena,654,SHN,Africa,Western Africa,4472,eez
+86,ssp245_medium-term,2253.8843353390694,Saint Helena,654,SHN,Africa,Western Africa,4472,eez
+86,ssp245_near-term,1359.5806807726622,Saint Helena,654,SHN,Africa,Western Africa,4472,eez
+86,ssp585_current,379.8468251824379,Saint Helena,654,SHN,Africa,Western Africa,4472,eez
+86,ssp585_medium-term,3208.0292875766754,Saint Helena,654,SHN,Africa,Western Africa,4472,eez
+86,ssp585_near-term,1240.9778667986393,Saint Helena,654,SHN,Africa,Western Africa,4472,eez
+88,ssp245_current,1365.6324985995889,Tristan da Cunha,NA,NA,Europe,Northern Europe,7562,eez
+88,ssp245_medium-term,2981.121999874711,Tristan da Cunha,NA,NA,Europe,Northern Europe,7562,eez
+88,ssp245_near-term,1751.4064369872212,Tristan da Cunha,NA,NA,Europe,Northern Europe,7562,eez
+88,ssp585_current,1382.7235253676772,Tristan da Cunha,NA,NA,Europe,Northern Europe,7562,eez
+88,ssp585_medium-term,4135.102071508765,Tristan da Cunha,NA,NA,Europe,Northern Europe,7562,eez
+88,ssp585_near-term,2053.4940895065665,Tristan da Cunha,NA,NA,Europe,Northern Europe,7562,eez
+89,ssp245_current,4581.003187009599,South Georgia and the South Sandwich Islands,239,SGS,Latin America and the Caribbean,South America,14490,eez
+89,ssp245_medium-term,7545.05747079663,South Georgia and the South Sandwich Islands,239,SGS,Latin America and the Caribbean,South America,14490,eez
+89,ssp245_near-term,4579.349143030588,South Georgia and the South Sandwich Islands,239,SGS,Latin America and the Caribbean,South America,14490,eez
+89,ssp585_current,3839.5983837395906,South Georgia and the South Sandwich Islands,239,SGS,Latin America and the Caribbean,South America,14490,eez
+89,ssp585_medium-term,9239.08181380108,South Georgia and the South Sandwich Islands,239,SGS,Latin America and the Caribbean,South America,14490,eez
+89,ssp585_near-term,5695.215593948029,South Georgia and the South Sandwich Islands,239,SGS,Latin America and the Caribbean,South America,14490,eez
+90,ssp245_current,1270.4497620984912,Prince Edward Islands,NA,NA,Southern Islands,Southern Islands,4736,eez
+90,ssp245_medium-term,2635.775204464793,Prince Edward Islands,NA,NA,Southern Islands,Southern Islands,4736,eez
+90,ssp245_near-term,1398.4623613357544,Prince Edward Islands,NA,NA,Southern Islands,Southern Islands,4736,eez
+90,ssp585_current,952.3132690042257,Prince Edward Islands,NA,NA,Southern Islands,Southern Islands,4736,eez
+90,ssp585_medium-term,3035.5795166790485,Prince Edward Islands,NA,NA,Southern Islands,Southern Islands,4736,eez
+90,ssp585_near-term,1718.4736024141312,Prince Edward Islands,NA,NA,Southern Islands,Southern Islands,4736,eez
+91,ssp245_current,1671.7931246608496,Crozet Islands,NA,NA,Southern Islands,Southern Islands,5746,eez
+91,ssp245_medium-term,3458.203126102686,Crozet Islands,NA,NA,Southern Islands,Southern Islands,5746,eez
+91,ssp245_near-term,1820.5208521187305,Crozet Islands,NA,NA,Southern Islands,Southern Islands,5746,eez
+91,ssp585_current,1225.9998450875282,Crozet Islands,NA,NA,Southern Islands,Southern Islands,5746,eez
+91,ssp585_medium-term,3886.242158949375,Crozet Islands,NA,NA,Southern Islands,Southern Islands,5746,eez
+91,ssp585_near-term,2286.0441802442074,Crozet Islands,NA,NA,Southern Islands,Southern Islands,5746,eez
+92,ssp245_current,662.9900302365422,Amsterdam Island and Saint Paul Island,NA,NA,Southern Islands,Southern Islands,5093,eez
+92,ssp245_medium-term,1589.9392043948174,Amsterdam Island and Saint Paul Island,NA,NA,Southern Islands,Southern Islands,5093,eez
+92,ssp245_near-term,954.642445281148,Amsterdam Island and Saint Paul Island,NA,NA,Southern Islands,Southern Islands,5093,eez
+92,ssp585_current,727.038868971169,Amsterdam Island and Saint Paul Island,NA,NA,Southern Islands,Southern Islands,5093,eez
+92,ssp585_medium-term,2463.7818168103695,Amsterdam Island and Saint Paul Island,NA,NA,Southern Islands,Southern Islands,5093,eez
+92,ssp585_near-term,1215.1356650292873,Amsterdam Island and Saint Paul Island,NA,NA,Southern Islands,Southern Islands,5093,eez
+93,ssp245_current,2076.0544465910643,Kerguelen Islands,NA,NA,Southern Islands,Southern Islands,5727,eez
+93,ssp245_medium-term,4332.919010452926,Kerguelen Islands,NA,NA,Southern Islands,Southern Islands,5727,eez
+93,ssp245_near-term,2270.473528318107,Kerguelen Islands,NA,NA,Southern Islands,Southern Islands,5727,eez
+93,ssp585_current,1629.0266367197037,Kerguelen Islands,NA,NA,Southern Islands,Southern Islands,5727,eez
+93,ssp585_medium-term,4693.244957596064,Kerguelen Islands,NA,NA,Southern Islands,Southern Islands,5727,eez
+93,ssp585_near-term,2987.399249434471,Kerguelen Islands,NA,NA,Southern Islands,Southern Islands,5727,eez
+94,ssp245_current,1418.795909486711,Heard and McDonald Islands,NA,NA,Southern Islands,Southern Islands,4160,eez
+94,ssp245_medium-term,3483.8017891049385,Heard and McDonald Islands,NA,NA,Southern Islands,Southern Islands,4160,eez
+94,ssp245_near-term,1724.445421025157,Heard and McDonald Islands,NA,NA,Southern Islands,Southern Islands,4160,eez
+94,ssp585_current,1123.4208006337285,Heard and McDonald Islands,NA,NA,Southern Islands,Southern Islands,4160,eez
+94,ssp585_medium-term,3689.609929174185,Heard and McDonald Islands,NA,NA,Southern Islands,Southern Islands,4160,eez
+94,ssp585_near-term,2211.454625144601,Heard and McDonald Islands,NA,NA,Southern Islands,Southern Islands,4160,eez
+95,ssp245_current,1858.90930976253,Falkland Islands,238,FLK,Latin America and the Caribbean,South America,5573,eez
+95,ssp245_medium-term,3225.5514201684855,Falkland Islands,238,FLK,Latin America and the Caribbean,South America,5573,eez
+95,ssp245_near-term,2002.3775788904168,Falkland Islands,238,FLK,Latin America and the Caribbean,South America,5573,eez
+95,ssp585_current,1752.7252521857154,Falkland Islands,238,FLK,Latin America and the Caribbean,South America,5573,eez
+95,ssp585_medium-term,3608.9619682477787,Falkland Islands,238,FLK,Latin America and the Caribbean,South America,5573,eez
+95,ssp585_near-term,2286.709061249392,Falkland Islands,238,FLK,Latin America and the Caribbean,South America,5573,eez
+96,ssp245_current,640.0745222403202,Sierra Leone,694,SLE,Africa,Western Africa,1651,eez
+96,ssp245_medium-term,1297.3657394116744,Sierra Leone,694,SLE,Africa,Western Africa,1651,eez
+96,ssp245_near-term,968.322373531526,Sierra Leone,694,SLE,Africa,Western Africa,1651,eez
+96,ssp585_current,610.3946372405626,Sierra Leone,694,SLE,Africa,Western Africa,1651,eez
+96,ssp585_medium-term,1362.2816156637855,Sierra Leone,694,SLE,Africa,Western Africa,1651,eez
+96,ssp585_near-term,992.3330780293327,Sierra Leone,694,SLE,Africa,Western Africa,1651,eez
+97,ssp245_current,851.9388390518725,Liberia,430,LBR,Africa,Western Africa,2506,eez
+97,ssp245_medium-term,2111.391999837011,Liberia,430,LBR,Africa,Western Africa,2506,eez
+97,ssp245_near-term,1512.4493175391108,Liberia,430,LBR,Africa,Western Africa,2506,eez
+97,ssp585_current,839.9543201737106,Liberia,430,LBR,Africa,Western Africa,2506,eez
+97,ssp585_medium-term,2214.918851736933,Liberia,430,LBR,Africa,Western Africa,2506,eez
+97,ssp585_near-term,1527.193601762876,Liberia,430,LBR,Africa,Western Africa,2506,eez
+98,ssp245_current,51.065086007118225,Togo,768,TGO,Africa,Western Africa,156,eez
+98,ssp245_medium-term,118.97711324691772,Togo,768,TGO,Africa,Western Africa,156,eez
+98,ssp245_near-term,86.98496347665787,Togo,768,TGO,Africa,Western Africa,156,eez
+98,ssp585_current,51.1341966688633,Togo,768,TGO,Africa,Western Africa,156,eez
+98,ssp585_medium-term,123.3398208618164,Togo,768,TGO,Africa,Western Africa,156,eez
+98,ssp585_near-term,86.88513296842575,Togo,768,TGO,Africa,Western Africa,156,eez
+99,ssp245_current,103.91559326648712,Benin,204,BEN,Africa,Western Africa,310,eez
+99,ssp245_medium-term,244.7760482430458,Benin,204,BEN,Africa,Western Africa,310,eez
+99,ssp245_near-term,178.1170471906662,Benin,204,BEN,Africa,Western Africa,310,eez
+99,ssp585_current,104.65383094549179,Benin,204,BEN,Africa,Western Africa,310,eez
+99,ssp585_medium-term,254.609688103199,Benin,204,BEN,Africa,Western Africa,310,eez
+99,ssp585_near-term,178.28836277127266,Benin,204,BEN,Africa,Western Africa,310,eez
+100,ssp245_current,180.95045006275177,Republique du Congo,NA,NA,Africa,Middle Africa,407,eez
+100,ssp245_medium-term,338.2009013593197,Republique du Congo,NA,NA,Africa,Middle Africa,407,eez
+100,ssp245_near-term,252.74868957698345,Republique du Congo,NA,NA,Africa,Middle Africa,407,eez
+100,ssp585_current,168.67975056171417,Republique du Congo,NA,NA,Africa,Middle Africa,407,eez
+100,ssp585_medium-term,419.74887719750404,Republique du Congo,NA,NA,Africa,Middle Africa,407,eez
+100,ssp585_near-term,278.94766379892826,Republique du Congo,NA,NA,Africa,Middle Africa,407,eez
+101,ssp245_current,1977.5174630712718,Namibia,516,NAM,Africa,Southern Africa,5726,eez
+101,ssp245_medium-term,4828.983122617006,Namibia,516,NAM,Africa,Southern Africa,5726,eez
+101,ssp245_near-term,3229.152480592951,Namibia,516,NAM,Africa,Southern Africa,5726,eez
+101,ssp585_current,1999.3316599382088,Namibia,516,NAM,Africa,Southern Africa,5726,eez
+101,ssp585_medium-term,5837.016613069922,Namibia,516,NAM,Africa,Southern Africa,5726,eez
+101,ssp585_near-term,3243.903283102438,Namibia,516,NAM,Africa,Southern Africa,5726,eez
+102,ssp245_current,2305.6604011997115,South Africa,710,ZAF,Africa,Southern Africa,10864,eez
+102,ssp245_medium-term,6598.358050541952,South Africa,710,ZAF,Africa,Southern Africa,10864,eez
+102,ssp245_near-term,4389.652095366735,South Africa,710,ZAF,Africa,Southern Africa,10864,eez
+102,ssp585_current,2468.833826670889,South Africa,710,ZAF,Africa,Southern Africa,10864,eez
+102,ssp585_medium-term,8044.2427816619165,South Africa,710,ZAF,Africa,Southern Africa,10864,eez
+102,ssp585_near-term,4159.117664425634,South Africa,710,ZAF,Africa,Southern Africa,10864,eez
+103,ssp245_current,363.14809180330485,Sao Tome and Principe,678,STP,Africa,Middle Africa,1319,eez
+103,ssp245_medium-term,1068.3309041503817,Sao Tome and Principe,678,STP,Africa,Middle Africa,1319,eez
+103,ssp245_near-term,705.9319393122569,Sao Tome and Principe,678,STP,Africa,Middle Africa,1319,eez
+103,ssp585_current,357.0445843981579,Sao Tome and Principe,678,STP,Africa,Middle Africa,1319,eez
+103,ssp585_medium-term,1223.7298370022327,Sao Tome and Principe,678,STP,Africa,Middle Africa,1319,eez
+103,ssp585_near-term,810.632210560143,Sao Tome and Principe,678,STP,Africa,Middle Africa,1319,eez
+104,ssp245_current,753.2799215707928,Equatorial Guinea,226,GNQ,Africa,Middle Africa,3121,eez
+104,ssp245_medium-term,2488.8438708484173,Equatorial Guinea,226,GNQ,Africa,Middle Africa,3121,eez
+104,ssp245_near-term,1741.6798097155988,Equatorial Guinea,226,GNQ,Africa,Middle Africa,3121,eez
+104,ssp585_current,763.7264134986326,Equatorial Guinea,226,GNQ,Africa,Middle Africa,3121,eez
+104,ssp585_medium-term,2938.1732188872993,Equatorial Guinea,226,GNQ,Africa,Middle Africa,3121,eez
+104,ssp585_near-term,1858.3860965706408,Equatorial Guinea,226,GNQ,Africa,Middle Africa,3121,eez
+105,ssp245_current,1443.173073142767,Bouvet Island,74,BVT,Latin America and the Caribbean,South America,4393,eez
+105,ssp245_medium-term,2743.647083759308,Bouvet Island,74,BVT,Latin America and the Caribbean,South America,4393,eez
+105,ssp245_near-term,1591.085286974907,Bouvet Island,74,BVT,Latin America and the Caribbean,South America,4393,eez
+105,ssp585_current,1174.618559062481,Bouvet Island,74,BVT,Latin America and the Caribbean,South America,4393,eez
+105,ssp585_medium-term,3506.9630126953125,Bouvet Island,74,BVT,Latin America and the Caribbean,South America,4393,eez
+105,ssp585_near-term,2181.249581992626,Bouvet Island,74,BVT,Latin America and the Caribbean,South America,4393,eez
+106,ssp245_current,795.2767255939543,Ghana,288,GHA,Africa,Western Africa,2295,eez
+106,ssp245_medium-term,1907.7564484253526,Ghana,288,GHA,Africa,Western Africa,2295,eez
+106,ssp245_near-term,1325.0553408265114,Ghana,288,GHA,Africa,Western Africa,2295,eez
+106,ssp585_current,777.1846226528287,Ghana,288,GHA,Africa,Western Africa,2295,eez
+106,ssp585_medium-term,1972.6884132139385,Ghana,288,GHA,Africa,Western Africa,2295,eez
+106,ssp585_near-term,1347.935956954956,Ghana,288,GHA,Africa,Western Africa,2295,eez
+107,ssp245_current,1205.5424825400114,Clipperton Island,NA,NA,Latin America and the Caribbean,Central America,4343,eez
+107,ssp245_medium-term,2840.6955139636993,Clipperton Island,NA,NA,Latin America and the Caribbean,Central America,4343,eez
+107,ssp245_near-term,1893.4263998270035,Clipperton Island,NA,NA,Latin America and the Caribbean,Central America,4343,eez
+107,ssp585_current,1141.7338256537914,Clipperton Island,NA,NA,Latin America and the Caribbean,Central America,4343,eez
+107,ssp585_medium-term,3313.034382402897,Clipperton Island,NA,NA,Latin America and the Caribbean,Central America,4343,eez
+107,ssp585_near-term,2288.880843669176,Clipperton Island,NA,NA,Latin America and the Caribbean,Central America,4343,eez
+108,ssp245_current,641.2651360705495,Bermuda,60,BMU,Northern America,Northern America,4519,eez
+108,ssp245_medium-term,1729.2639344334602,Bermuda,60,BMU,Northern America,Northern America,4519,eez
+108,ssp245_near-term,1286.9476357400417,Bermuda,60,BMU,Northern America,Northern America,4519,eez
+108,ssp585_current,516.4807639047503,Bermuda,60,BMU,Northern America,Northern America,4519,eez
+108,ssp585_medium-term,2301.575416177511,Bermuda,60,BMU,Northern America,Northern America,4519,eez
+108,ssp585_near-term,1347.8508860170841,Bermuda,60,BMU,Northern America,Northern America,4519,eez
+110,ssp245_current,953.3773611295037,Bahamas,44,BHS,Latin America and the Caribbean,Caribbean,6077,eez
+110,ssp245_medium-term,3586.191229645163,Bahamas,44,BHS,Latin America and the Caribbean,Caribbean,6077,eez
+110,ssp245_near-term,2409.6044447566383,Bahamas,44,BHS,Latin America and the Caribbean,Caribbean,6077,eez
+110,ssp585_current,1054.448697662796,Bahamas,44,BHS,Latin America and the Caribbean,Caribbean,6077,eez
+110,ssp585_medium-term,4139.674895084463,Bahamas,44,BHS,Latin America and the Caribbean,Caribbean,6077,eez
+110,ssp585_near-term,2341.826459516771,Bahamas,44,BHS,Latin America and the Caribbean,Caribbean,6077,eez
+111,ssp245_current,196.02243754267693,Turks and Caicos Islands,796,TCA,Latin America and the Caribbean,Caribbean,1552,eez
+111,ssp245_medium-term,1018.0892496407032,Turks and Caicos Islands,796,TCA,Latin America and the Caribbean,Caribbean,1552,eez
+111,ssp245_near-term,698.7122757136822,Turks and Caicos Islands,796,TCA,Latin America and the Caribbean,Caribbean,1552,eez
+111,ssp585_current,218.05932833254337,Turks and Caicos Islands,796,TCA,Latin America and the Caribbean,Caribbean,1552,eez
+111,ssp585_medium-term,1186.2513251006603,Turks and Caicos Islands,796,TCA,Latin America and the Caribbean,Caribbean,1552,eez
+111,ssp585_near-term,672.5327957123518,Turks and Caicos Islands,796,TCA,Latin America and the Caribbean,Caribbean,1552,eez
+112,ssp245_current,854.0853734174743,Cuba,192,CUB,Latin America and the Caribbean,Caribbean,3898,eez
+112,ssp245_medium-term,3328.1039553945884,Cuba,192,CUB,Latin America and the Caribbean,Caribbean,3898,eez
+112,ssp245_near-term,2348.52968105115,Cuba,192,CUB,Latin America and the Caribbean,Caribbean,3898,eez
+112,ssp585_current,909.95513828611,Cuba,192,CUB,Latin America and the Caribbean,Caribbean,3898,eez
+112,ssp585_medium-term,3527.758147909306,Cuba,192,CUB,Latin America and the Caribbean,Caribbean,3898,eez
+112,ssp585_near-term,2375.105212301947,Cuba,192,CUB,Latin America and the Caribbean,Caribbean,3898,eez
+113,ssp245_current,195.6340316683054,Cayman Islands,136,CYM,Latin America and the Caribbean,Caribbean,1196,eez
+113,ssp245_medium-term,733.8677832484245,Cayman Islands,136,CYM,Latin America and the Caribbean,Caribbean,1196,eez
+113,ssp245_near-term,531.6963916122913,Cayman Islands,136,CYM,Latin America and the Caribbean,Caribbean,1196,eez
+113,ssp585_current,203.99335427582264,Cayman Islands,136,CYM,Latin America and the Caribbean,Caribbean,1196,eez
+113,ssp585_medium-term,797.6956011652946,Cayman Islands,136,CYM,Latin America and the Caribbean,Caribbean,1196,eez
+113,ssp585_near-term,558.2826612591743,Cayman Islands,136,CYM,Latin America and the Caribbean,Caribbean,1196,eez
+114,ssp245_current,288.53536949836416,Haiti,332,HTI,Latin America and the Caribbean,Caribbean,1307,eez
+114,ssp245_medium-term,1195.6185900175478,Haiti,332,HTI,Latin America and the Caribbean,Caribbean,1307,eez
+114,ssp245_near-term,915.5065202242695,Haiti,332,HTI,Latin America and the Caribbean,Caribbean,1307,eez
+114,ssp585_current,296.2607954501873,Haiti,332,HTI,Latin America and the Caribbean,Caribbean,1307,eez
+114,ssp585_medium-term,1290.0811881588306,Haiti,332,HTI,Latin America and the Caribbean,Caribbean,1307,eez
+114,ssp585_near-term,933.9760854310589,Haiti,332,HTI,Latin America and the Caribbean,Caribbean,1307,eez
+115,ssp245_current,594.1152750698384,Dominican Republic,214,DOM,Latin America and the Caribbean,Caribbean,2768,eez
+115,ssp245_medium-term,2307.207703558728,Dominican Republic,214,DOM,Latin America and the Caribbean,Caribbean,2768,eez
+115,ssp245_near-term,1795.8421955694212,Dominican Republic,214,DOM,Latin America and the Caribbean,Caribbean,2768,eez
+115,ssp585_current,655.604098720185,Dominican Republic,214,DOM,Latin America and the Caribbean,Caribbean,2768,eez
+115,ssp585_medium-term,2593.7347491759574,Dominican Republic,214,DOM,Latin America and the Caribbean,Caribbean,2768,eez
+115,ssp585_near-term,1791.444612238207,Dominican Republic,214,DOM,Latin America and the Caribbean,Caribbean,2768,eez
+116,ssp245_current,402.20359434117563,Puerto Rico and Virgin Islands of the United States,NA,NA,Latin America and the Caribbean,Caribbean,2150,eez
+116,ssp245_medium-term,1702.1504215090536,Puerto Rico and Virgin Islands of the United States,NA,NA,Latin America and the Caribbean,Caribbean,2150,eez
+116,ssp245_near-term,1251.2300096387044,Puerto Rico and Virgin Islands of the United States,NA,NA,Latin America and the Caribbean,Caribbean,2150,eez
+116,ssp585_current,490.1802421811735,Puerto Rico and Virgin Islands of the United States,NA,NA,Latin America and the Caribbean,Caribbean,2150,eez
+116,ssp585_medium-term,1956.6639404720627,Puerto Rico and Virgin Islands of the United States,NA,NA,Latin America and the Caribbean,Caribbean,2150,eez
+116,ssp585_near-term,1265.737543449155,Puerto Rico and Virgin Islands of the United States,NA,NA,Latin America and the Caribbean,Caribbean,2150,eez
+117,ssp245_current,79.35362396389246,British Virgin Islands,92,VGB,Latin America and the Caribbean,Caribbean,805,eez
+117,ssp245_medium-term,568.5174352526665,British Virgin Islands,92,VGB,Latin America and the Caribbean,Caribbean,805,eez
+117,ssp245_near-term,374.934332549572,British Virgin Islands,92,VGB,Latin America and the Caribbean,Caribbean,805,eez
+117,ssp585_current,128.22256381064653,British Virgin Islands,92,VGB,Latin America and the Caribbean,Caribbean,805,eez
+117,ssp585_medium-term,663.849381685257,British Virgin Islands,92,VGB,Latin America and the Caribbean,Caribbean,805,eez
+117,ssp585_near-term,392.7703623175621,British Virgin Islands,92,VGB,Latin America and the Caribbean,Caribbean,805,eez
+118,ssp245_current,105.32449064403772,Anguilla,660,AIA,Latin America and the Caribbean,Caribbean,924,eez
+118,ssp245_medium-term,625.782731950283,Anguilla,660,AIA,Latin America and the Caribbean,Caribbean,924,eez
+118,ssp245_near-term,422.64337280392647,Anguilla,660,AIA,Latin America and the Caribbean,Caribbean,924,eez
+118,ssp585_current,152.1346068456769,Anguilla,660,AIA,Latin America and the Caribbean,Caribbean,924,eez
+118,ssp585_medium-term,722.4084088206291,Anguilla,660,AIA,Latin America and the Caribbean,Caribbean,924,eez
+118,ssp585_near-term,419.6286472976208,Anguilla,660,AIA,Latin America and the Caribbean,Caribbean,924,eez
+119,ssp245_current,7.831128403544426,Saint Kitts and Nevis,659,KNA,Latin America and the Caribbean,Caribbean,105,eez
+119,ssp245_medium-term,66.60904967784882,Saint Kitts and Nevis,659,KNA,Latin America and the Caribbean,Caribbean,105,eez
+119,ssp245_near-term,42.3374128639698,Saint Kitts and Nevis,659,KNA,Latin America and the Caribbean,Caribbean,105,eez
+119,ssp585_current,13.187192618846893,Saint Kitts and Nevis,659,KNA,Latin America and the Caribbean,Caribbean,105,eez
+119,ssp585_medium-term,83.80555933713913,Saint Kitts and Nevis,659,KNA,Latin America and the Caribbean,Caribbean,105,eez
+119,ssp585_near-term,43.296559512615204,Saint Kitts and Nevis,659,KNA,Latin America and the Caribbean,Caribbean,105,eez
+120,ssp245_current,97.99046687129885,Antigua and Barbuda,28,ATG,Latin America and the Caribbean,Caribbean,1091,eez
+120,ssp245_medium-term,616.5089103877544,Antigua and Barbuda,28,ATG,Latin America and the Caribbean,Caribbean,1091,eez
+120,ssp245_near-term,407.0958479270339,Antigua and Barbuda,28,ATG,Latin America and the Caribbean,Caribbean,1091,eez
+120,ssp585_current,161.38912522792816,Antigua and Barbuda,28,ATG,Latin America and the Caribbean,Caribbean,1091,eez
+120,ssp585_medium-term,780.6338745951653,Antigua and Barbuda,28,ATG,Latin America and the Caribbean,Caribbean,1091,eez
+120,ssp585_near-term,396.17841252684593,Antigua and Barbuda,28,ATG,Latin America and the Caribbean,Caribbean,1091,eez
+121,ssp245_current,12.317209884524345,Montserrat,500,MSR,Latin America and the Caribbean,Caribbean,80,eez
+121,ssp245_medium-term,61.190109848976135,Montserrat,500,MSR,Latin America and the Caribbean,Caribbean,80,eez
+121,ssp245_near-term,42.00469928979874,Montserrat,500,MSR,Latin America and the Caribbean,Caribbean,80,eez
+121,ssp585_current,15.502141788601875,Montserrat,500,MSR,Latin America and the Caribbean,Caribbean,80,eez
+121,ssp585_medium-term,70.9644837975502,Montserrat,500,MSR,Latin America and the Caribbean,Caribbean,80,eez
+121,ssp585_near-term,41.106297969818115,Montserrat,500,MSR,Latin America and the Caribbean,Caribbean,80,eez
+122,ssp245_current,27.561618824722245,Saint Lucia,662,LCA,Latin America and the Caribbean,Caribbean,162,eez
+122,ssp245_medium-term,119.878292420879,Saint Lucia,662,LCA,Latin America and the Caribbean,Caribbean,162,eez
+122,ssp245_near-term,81.87638276815414,Saint Lucia,662,LCA,Latin America and the Caribbean,Caribbean,162,eez
+122,ssp585_current,29.775340252788737,Saint Lucia,662,LCA,Latin America and the Caribbean,Caribbean,162,eez
+122,ssp585_medium-term,139.74255386786535,Saint Lucia,662,LCA,Latin America and the Caribbean,Caribbean,162,eez
+122,ssp585_near-term,81.6953465230763,Saint Lucia,662,LCA,Latin America and the Caribbean,Caribbean,162,eez
+123,ssp245_current,15.612884138245136,Dominica,212,DMA,Latin America and the Caribbean,Caribbean,293,eez
+123,ssp245_medium-term,193.0575034469366,Dominica,212,DMA,Latin America and the Caribbean,Caribbean,293,eez
+123,ssp245_near-term,117.21170799061656,Dominica,212,DMA,Latin America and the Caribbean,Caribbean,293,eez
+123,ssp585_current,29.287458864971995,Dominica,212,DMA,Latin America and the Caribbean,Caribbean,293,eez
+123,ssp585_medium-term,231.73036857694387,Dominica,212,DMA,Latin America and the Caribbean,Caribbean,293,eez
+123,ssp585_near-term,115.29387969523668,Dominica,212,DMA,Latin America and the Caribbean,Caribbean,293,eez
+124,ssp245_current,137.45148266479373,Barbados,52,BRB,Latin America and the Caribbean,Caribbean,1857,eez
+124,ssp245_medium-term,919.91534124314785,Barbados,52,BRB,Latin America and the Caribbean,Caribbean,1857,eez
+124,ssp245_near-term,590.9675249345601,Barbados,52,BRB,Latin America and the Caribbean,Caribbean,1857,eez
+124,ssp585_current,164.55592918023467,Barbados,52,BRB,Latin America and the Caribbean,Caribbean,1857,eez
+124,ssp585_medium-term,1210.6169139742851,Barbados,52,BRB,Latin America and the Caribbean,Caribbean,1857,eez
+124,ssp585_near-term,603.3399195820093,Barbados,52,BRB,Latin America and the Caribbean,Caribbean,1857,eez
+125,ssp245_current,52.38005502521992,Grenada,308,GRD,Latin America and the Caribbean,Caribbean,269,eez
+125,ssp245_medium-term,195.34059289097786,Grenada,308,GRD,Latin America and the Caribbean,Caribbean,269,eez
+125,ssp245_near-term,134.38507318496704,Grenada,308,GRD,Latin America and the Caribbean,Caribbean,269,eez
+125,ssp585_current,53.70188745856285,Grenada,308,GRD,Latin America and the Caribbean,Caribbean,269,eez
+125,ssp585_medium-term,232.73337334394455,Grenada,308,GRD,Latin America and the Caribbean,Caribbean,269,eez
+125,ssp585_near-term,139.55083765089512,Grenada,308,GRD,Latin America and the Caribbean,Caribbean,269,eez
+126,ssp245_current,184.1238757520914,Trinidad and Tobago,780,TTO,Latin America and the Caribbean,Caribbean,785,eez
+126,ssp245_medium-term,601.1817417144775,Trinidad and Tobago,780,TTO,Latin America and the Caribbean,Caribbean,785,eez
+126,ssp245_near-term,433.0997804701328,Trinidad and Tobago,780,TTO,Latin America and the Caribbean,Caribbean,785,eez
+126,ssp585_current,189.64508765935898,Trinidad and Tobago,780,TTO,Latin America and the Caribbean,Caribbean,785,eez
+126,ssp585_medium-term,683.5330402851105,Trinidad and Tobago,780,TTO,Latin America and the Caribbean,Caribbean,785,eez
+126,ssp585_near-term,449.9606434106827,Trinidad and Tobago,780,TTO,Latin America and the Caribbean,Caribbean,785,eez
+127,ssp245_current,53.30703342705965,Saint Vincent and the Grenadines,670,VCT,Latin America and the Caribbean,Caribbean,369,eez
+127,ssp245_medium-term,251.21348083019257,Saint Vincent and the Grenadines,670,VCT,Latin America and the Caribbean,Caribbean,369,eez
+127,ssp245_near-term,168.31420980393887,Saint Vincent and the Grenadines,670,VCT,Latin America and the Caribbean,Caribbean,369,eez
+127,ssp585_current,53.01874493807554,Saint Vincent and the Grenadines,670,VCT,Latin America and the Caribbean,Caribbean,369,eez
+127,ssp585_medium-term,299.6247287392616,Saint Vincent and the Grenadines,670,VCT,Latin America and the Caribbean,Caribbean,369,eez
+127,ssp585_near-term,173.07039330899715,Saint Vincent and the Grenadines,670,VCT,Latin America and the Caribbean,Caribbean,369,eez
+129,ssp245_current,1207.5466894201818,Panama,591,PAN,Latin America and the Caribbean,Central America,3464,eez
+129,ssp245_medium-term,3095.7624847397674,Panama,591,PAN,Latin America and the Caribbean,Central America,3464,eez
+129,ssp245_near-term,2326.8673170899274,Panama,591,PAN,Latin America and the Caribbean,Central America,3464,eez
+129,ssp585_current,1126.6683700509602,Panama,591,PAN,Latin America and the Caribbean,Central America,3464,eez
+129,ssp585_medium-term,3439.5499614276923,Panama,591,PAN,Latin America and the Caribbean,Central America,3464,eez
+129,ssp585_near-term,2412.6669122303138,Panama,591,PAN,Latin America and the Caribbean,Central America,3464,eez
+130,ssp245_current,1683.9300816496834,Costa Rica,188,CRI,Latin America and the Caribbean,Central America,5823,eez
+130,ssp245_medium-term,4617.040632041171,Costa Rica,188,CRI,Latin America and the Caribbean,Central America,5823,eez
+130,ssp245_near-term,3045.8918409124017,Costa Rica,188,CRI,Latin America and the Caribbean,Central America,5823,eez
+130,ssp585_current,1506.843234570697,Costa Rica,188,CRI,Latin America and the Caribbean,Central America,5823,eez
+130,ssp585_medium-term,5213.687944618985,Costa Rica,188,CRI,Latin America and the Caribbean,Central America,5823,eez
+130,ssp585_near-term,3332.2630623541772,Costa Rica,188,CRI,Latin America and the Caribbean,Central America,5823,eez
+131,ssp245_current,754.584009764716,Nicaragua,558,NIC,Latin America and the Caribbean,Central America,2296,eez
+131,ssp245_medium-term,1883.4271496012807,Nicaragua,558,NIC,Latin America and the Caribbean,Central America,2296,eez
+131,ssp245_near-term,1494.5621012859046,Nicaragua,558,NIC,Latin America and the Caribbean,Central America,2296,eez
+131,ssp585_current,667.5543344579637,Nicaragua,558,NIC,Latin America and the Caribbean,Central America,2296,eez
+131,ssp585_medium-term,2121.491527430713,Nicaragua,558,NIC,Latin America and the Caribbean,Central America,2296,eez
+131,ssp585_near-term,1516.4093666002154,Nicaragua,558,NIC,Latin America and the Caribbean,Central America,2296,eez
+132,ssp245_current,2151.746743304422,Colombia,170,COL,Latin America and the Caribbean,South America,7469,eez
+132,ssp245_medium-term,6102.455575856846,Colombia,170,COL,Latin America and the Caribbean,South America,7469,eez
+132,ssp245_near-term,4689.915939230006,Colombia,170,COL,Latin America and the Caribbean,South America,7469,eez
+132,ssp585_current,1952.9460374510381,Colombia,170,COL,Latin America and the Caribbean,South America,7469,eez
+132,ssp585_medium-term,6856.77423603693,Colombia,170,COL,Latin America and the Caribbean,South America,7469,eez
+132,ssp585_near-term,4728.796499453951,Colombia,170,COL,Latin America and the Caribbean,South America,7469,eez
+133,ssp245_current,553.9364738743752,Honduras,340,HND,Latin America and the Caribbean,Central America,2255,eez
+133,ssp245_medium-term,1887.8769014701247,Honduras,340,HND,Latin America and the Caribbean,Central America,2255,eez
+133,ssp245_near-term,1437.648470139131,Honduras,340,HND,Latin America and the Caribbean,Central America,2255,eez
+133,ssp585_current,477.2393678696826,Honduras,340,HND,Latin America and the Caribbean,Central America,2255,eez
+133,ssp585_medium-term,2084.772123951465,Honduras,340,HND,Latin America and the Caribbean,Central America,2255,eez
+133,ssp585_near-term,1481.0281054917723,Honduras,340,HND,Latin America and the Caribbean,Central America,2255,eez
+134,ssp245_current,360.7154505997896,El Salvador,222,SLV,Latin America and the Caribbean,Central America,958,eez
+134,ssp245_medium-term,852.5284239947796,El Salvador,222,SLV,Latin America and the Caribbean,Central America,958,eez
+134,ssp245_near-term,626.8214578330517,El Salvador,222,SLV,Latin America and the Caribbean,Central America,958,eez
+134,ssp585_current,350.41140991449356,El Salvador,222,SLV,Latin America and the Caribbean,Central America,958,eez
+134,ssp585_medium-term,942.7757829725742,El Salvador,222,SLV,Latin America and the Caribbean,Central America,958,eez
+134,ssp585_near-term,686.1415831297636,El Salvador,222,SLV,Latin America and the Caribbean,Central America,958,eez
+135,ssp245_current,11376.19651997881,Mexico,484,MEX,Latin America and the Caribbean,Central America,33495,eez
+135,ssp245_medium-term,23848.726763116196,Mexico,484,MEX,Latin America and the Caribbean,Central America,33495,eez
+135,ssp245_near-term,18214.344780217856,Mexico,484,MEX,Latin America and the Caribbean,Central America,33495,eez
+135,ssp585_current,11040.570960047888,Mexico,484,MEX,Latin America and the Caribbean,Central America,33495,eez
+135,ssp585_medium-term,28172.984226943925,Mexico,484,MEX,Latin America and the Caribbean,Central America,33495,eez
+135,ssp585_near-term,19278.4972993806,Mexico,484,MEX,Latin America and the Caribbean,Central America,33495,eez
+136,ssp245_current,432.01979647390544,Guatemala,320,GTM,Latin America and the Caribbean,Central America,1204,eez
+136,ssp245_medium-term,1038.3855266459286,Guatemala,320,GTM,Latin America and the Caribbean,Central America,1204,eez
+136,ssp245_near-term,776.6603049486876,Guatemala,320,GTM,Latin America and the Caribbean,Central America,1204,eez
+136,ssp585_current,417.3040377907455,Guatemala,320,GTM,Latin America and the Caribbean,Central America,1204,eez
+136,ssp585_medium-term,1166.4258469343185,Guatemala,320,GTM,Latin America and the Caribbean,Central America,1204,eez
+136,ssp585_near-term,854.6735549494624,Guatemala,320,GTM,Latin America and the Caribbean,Central America,1204,eez
+137,ssp245_current,2397.267795994878,Ecuador,218,ECU,Latin America and the Caribbean,South America,10926,eez
+137,ssp245_medium-term,7091.630502548069,Ecuador,218,ECU,Latin America and the Caribbean,South America,10926,eez
+137,ssp245_near-term,5496.796352811158,Ecuador,218,ECU,Latin America and the Caribbean,South America,10926,eez
+137,ssp585_current,2167.1309086717665,Ecuador,218,ECU,Latin America and the Caribbean,South America,10926,eez
+137,ssp585_medium-term,8160.119073577225,Ecuador,218,ECU,Latin America and the Caribbean,South America,10926,eez
+137,ssp585_near-term,5800.499864157289,Ecuador,218,ECU,Latin America and the Caribbean,South America,10926,eez
+138,ssp245_current,3152.8123881914653,Peru,604,PER,Latin America and the Caribbean,South America,8521,eez
+138,ssp245_medium-term,6668.241170949303,Peru,604,PER,Latin America and the Caribbean,South America,8521,eez
+138,ssp245_near-term,4980.927902973257,Peru,604,PER,Latin America and the Caribbean,South America,8521,eez
+138,ssp585_current,2939.760067171883,Peru,604,PER,Latin America and the Caribbean,South America,8521,eez
+138,ssp585_medium-term,7708.501484242268,Peru,604,PER,Latin America and the Caribbean,South America,8521,eez
+138,ssp585_near-term,5675.05126714753,Peru,604,PER,Latin America and the Caribbean,South America,8521,eez
+139,ssp245_current,1311.2362961205654,Venezuela,862,VEN,Latin America and the Caribbean,South America,4976,eez
+139,ssp245_medium-term,3568.821982998401,Venezuela,862,VEN,Latin America and the Caribbean,South America,4976,eez
+139,ssp245_near-term,2969.839579795487,Venezuela,862,VEN,Latin America and the Caribbean,South America,4976,eez
+139,ssp585_current,1323.065318393521,Venezuela,862,VEN,Latin America and the Caribbean,South America,4976,eez
+139,ssp585_medium-term,4134.069410341792,Venezuela,862,VEN,Latin America and the Caribbean,South America,4976,eez
+139,ssp585_near-term,2903.4713499406353,Venezuela,862,VEN,Latin America and the Caribbean,South America,4976,eez
+140,ssp245_current,134.4172445423901,Guadeloupe and Martinique,NA,NA,Latin America and the Caribbean,Caribbean,1403,eez
+140,ssp245_medium-term,947.0257501974702,Guadeloupe and Martinique,NA,NA,Latin America and the Caribbean,Caribbean,1403,eez
+140,ssp245_near-term,620.8571195453405,Guadeloupe and Martinique,NA,NA,Latin America and the Caribbean,Caribbean,1403,eez
+140,ssp585_current,206.68400815874338,Guadeloupe and Martinique,NA,NA,Latin America and the Caribbean,Caribbean,1403,eez
+140,ssp585_medium-term,1141.5750221908092,Guadeloupe and Martinique,NA,NA,Latin America and the Caribbean,Caribbean,1403,eez
+140,ssp585_near-term,609.585509210825,Guadeloupe and Martinique,NA,NA,Latin America and the Caribbean,Caribbean,1403,eez
+141,ssp245_current,1325.5502287000418,Faeroe Islands,NA,NA,Europe,Northern Europe,2685,eez
+141,ssp245_medium-term,1999.0103526860476,Faeroe Islands,NA,NA,Europe,Northern Europe,2685,eez
+141,ssp245_near-term,1723.0443823635578,Faeroe Islands,NA,NA,Europe,Northern Europe,2685,eez
+141,ssp585_current,1452.914070904255,Faeroe Islands,NA,NA,Europe,Northern Europe,2685,eez
+141,ssp585_medium-term,2405.048658117652,Faeroe Islands,NA,NA,Europe,Northern Europe,2685,eez
+141,ssp585_near-term,1750.8484480828047,Faeroe Islands,NA,NA,Europe,Northern Europe,2685,eez
+143,ssp245_current,3128.085505089839,Iceland,352,ISL,Europe,Northern Europe,7747,eez
+143,ssp245_medium-term,4777.84544891119,Iceland,352,ISL,Europe,Northern Europe,7747,eez
+143,ssp245_near-term,4424.033227225998,Iceland,352,ISL,Europe,Northern Europe,7747,eez
+143,ssp585_current,3852.040338374325,Iceland,352,ISL,Europe,Northern Europe,7747,eez
+143,ssp585_medium-term,5765.539050674299,Iceland,352,ISL,Europe,Northern Europe,7747,eez
+143,ssp585_near-term,4477.82946190238,Iceland,352,ISL,Europe,Northern Europe,7747,eez
+144,ssp245_current,841.3762885406613,Jan Mayen,NA,NA,Europe,Northern Europe,2917,eez
+144,ssp245_medium-term,1571.7380601763725,Jan Mayen,NA,NA,Europe,Northern Europe,2917,eez
+144,ssp245_near-term,938.2605534046888,Jan Mayen,NA,NA,Europe,Northern Europe,2917,eez
+144,ssp585_current,882.7437834516168,Jan Mayen,NA,NA,Europe,Northern Europe,2917,eez
+144,ssp585_medium-term,1948.6497848927975,Jan Mayen,NA,NA,Europe,Northern Europe,2917,eez
+144,ssp585_near-term,1251.4260918796062,Jan Mayen,NA,NA,Europe,Northern Europe,2917,eez
+145,ssp245_current,12266.86817856424,Greenland,304,GRL,Northern America,Northern America,24707,eez
+145,ssp245_medium-term,17015.96113757626,Greenland,304,GRL,Northern America,Northern America,24707,eez
+145,ssp245_near-term,15342.112143409788,Greenland,304,GRL,Northern America,Northern America,24707,eez
+145,ssp585_current,12155.15248564165,Greenland,304,GRL,Northern America,Northern America,24707,eez
+145,ssp585_medium-term,17642.90288346773,Greenland,304,GRL,Northern America,Northern America,24707,eez
+145,ssp585_near-term,13447.2893194739,Greenland,304,GRL,Northern America,Northern America,24707,eez
+146,ssp245_current,404.1207390874624,Pitcairn,612,PCN,Oceania,Polynesia,8391,eez
+146,ssp245_medium-term,2953.4424878954887,Pitcairn,612,PCN,Oceania,Polynesia,8391,eez
+146,ssp245_near-term,1308.7836851924658,Pitcairn,612,PCN,Oceania,Polynesia,8391,eez
+146,ssp585_current,266.09604863787536,Pitcairn,612,PCN,Oceania,Polynesia,8391,eez
+146,ssp585_medium-term,3543.586070805788,Pitcairn,612,PCN,Oceania,Polynesia,8391,eez
+146,ssp585_near-term,1247.5762677043676,Pitcairn,612,PCN,Oceania,Polynesia,8391,eez
+147,ssp245_current,4561.080002987757,French Polynesia,258,PYF,Oceania,Polynesia,47989,eez
+147,ssp245_medium-term,24367.753258630633,French Polynesia,258,PYF,Oceania,Polynesia,47989,eez
+147,ssp245_near-term,11760.128583278507,French Polynesia,258,PYF,Oceania,Polynesia,47989,eez
+147,ssp585_current,4859.986938687041,French Polynesia,258,PYF,Oceania,Polynesia,47989,eez
+147,ssp585_medium-term,27645.168153882027,French Polynesia,258,PYF,Oceania,Polynesia,47989,eez
+147,ssp585_near-term,13667.723868761212,French Polynesia,258,PYF,Oceania,Polynesia,47989,eez
+148,ssp245_current,2132.101246446371,Line Group,NA,NA,Oceania,Micronesia,16547,eez
+148,ssp245_medium-term,10067.77592509985,Line Group,NA,NA,Oceania,Micronesia,16547,eez
+148,ssp245_near-term,5437.405722796917,Line Group,NA,NA,Oceania,Micronesia,16547,eez
+148,ssp585_current,2514.7066880837083,Line Group,NA,NA,Oceania,Micronesia,16547,eez
+148,ssp585_medium-term,11672.67674818635,Line Group,NA,NA,Oceania,Micronesia,16547,eez
+148,ssp585_near-term,6313.2054408192635,Line Group,NA,NA,Oceania,Micronesia,16547,eez
+149,ssp245_current,321.14638543874025,Jarvis Island,NA,NA,Oceania,Micronesia,3182,eez
+149,ssp245_medium-term,1018.6833980977535,Jarvis Island,NA,NA,Oceania,Micronesia,3182,eez
+149,ssp245_near-term,560.3449517786503,Jarvis Island,NA,NA,Oceania,Micronesia,3182,eez
+149,ssp585_current,354.8178370669484,Jarvis Island,NA,NA,Oceania,Micronesia,3182,eez
+149,ssp585_medium-term,1355.8387878239155,Jarvis Island,NA,NA,Oceania,Micronesia,3182,eez
+149,ssp585_near-term,714.2888473272324,Jarvis Island,NA,NA,Oceania,Micronesia,3182,eez
+150,ssp245_current,464.4720885679126,Palmyra Atoll,NA,NA,Oceania,Micronesia,3536,eez
+150,ssp245_medium-term,1629.8417333066463,Palmyra Atoll,NA,NA,Oceania,Micronesia,3536,eez
+150,ssp245_near-term,871.6953930407763,Palmyra Atoll,NA,NA,Oceania,Micronesia,3536,eez
+150,ssp585_current,430.02756993472576,Palmyra Atoll,NA,NA,Oceania,Micronesia,3536,eez
+150,ssp585_medium-term,2058.876516222954,Palmyra Atoll,NA,NA,Oceania,Micronesia,3536,eez
+150,ssp585_near-term,1159.2065354138613,Palmyra Atoll,NA,NA,Oceania,Micronesia,3536,eez
+151,ssp245_current,700.0303056165576,American Samoa,16,ASM,Oceania,Polynesia,4074,eez
+151,ssp245_medium-term,2479.4433447122574,American Samoa,16,ASM,Oceania,Polynesia,4074,eez
+151,ssp245_near-term,1550.357626736164,American Samoa,16,ASM,Oceania,Polynesia,4074,eez
+151,ssp585_current,629.9535721093416,American Samoa,16,ASM,Oceania,Polynesia,4074,eez
+151,ssp585_medium-term,2983.024322926998,American Samoa,16,ASM,Oceania,Polynesia,4074,eez
+151,ssp585_near-term,1548.4534025788307,American Samoa,16,ASM,Oceania,Polynesia,4074,eez
+152,ssp245_current,257.0863908524625,Samoa,882,WSM,Oceania,Polynesia,1342,eez
+152,ssp245_medium-term,930.8622737824917,Samoa,882,WSM,Oceania,Polynesia,1342,eez
+152,ssp245_near-term,595.9568825513124,Samoa,882,WSM,Oceania,Polynesia,1342,eez
+152,ssp585_current,226.51512437453493,Samoa,882,WSM,Oceania,Polynesia,1342,eez
+152,ssp585_medium-term,1077.3995775338262,Samoa,882,WSM,Oceania,Polynesia,1342,eez
+152,ssp585_near-term,560.9957467531785,Samoa,882,WSM,Oceania,Polynesia,1342,eez
+153,ssp245_current,2534.907263368368,Cook Islands,184,COK,Oceania,Polynesia,19713,eez
+153,ssp245_medium-term,8812.188636437058,Cook Islands,184,COK,Oceania,Polynesia,19713,eez
+153,ssp245_near-term,5126.0288451612,Cook Islands,184,COK,Oceania,Polynesia,19713,eez
+153,ssp585_current,2523.686093259603,Cook Islands,184,COK,Oceania,Polynesia,19713,eez
+153,ssp585_medium-term,10895.224860340357,Cook Islands,184,COK,Oceania,Polynesia,19713,eez
+153,ssp585_near-term,5775.312440037727,Cook Islands,184,COK,Oceania,Polynesia,19713,eez
+154,ssp245_current,307.2817493379116,Niue,570,NIU,Oceania,Polynesia,3188,eez
+154,ssp245_medium-term,1410.1563953757286,Niue,570,NIU,Oceania,Polynesia,3188,eez
+154,ssp245_near-term,806.1910641640425,Niue,570,NIU,Oceania,Polynesia,3188,eez
+154,ssp585_current,330.63858657330275,Niue,570,NIU,Oceania,Polynesia,3188,eez
+154,ssp585_medium-term,1757.0363183617592,Niue,570,NIU,Oceania,Polynesia,3188,eez
+154,ssp585_near-term,853.3111451864243,Niue,570,NIU,Oceania,Polynesia,3188,eez
+155,ssp245_current,736.5889520123601,Tonga,776,TON,Oceania,Polynesia,6682,eez
+155,ssp245_medium-term,3498.03537479043,Tonga,776,TON,Oceania,Polynesia,6682,eez
+155,ssp245_near-term,2091.95322149992,Tonga,776,TON,Oceania,Polynesia,6682,eez
+155,ssp585_current,913.7079023122787,Tonga,776,TON,Oceania,Polynesia,6682,eez
+155,ssp585_medium-term,4280.139134705067,Tonga,776,TON,Oceania,Polynesia,6682,eez
+155,ssp585_near-term,2167.966481000185,Tonga,776,TON,Oceania,Polynesia,6682,eez
+156,ssp245_current,411.71327036619186,Tokelau,772,TKL,Oceania,Polynesia,3221,eez
+156,ssp245_medium-term,2241.0928099155426,Tokelau,772,TKL,Oceania,Polynesia,3221,eez
+156,ssp245_near-term,1365.2249824404716,Tokelau,772,TKL,Oceania,Polynesia,3221,eez
+156,ssp585_current,485.7286378890276,Tokelau,772,TKL,Oceania,Polynesia,3221,eez
+156,ssp585_medium-term,2618.560445666313,Tokelau,772,TKL,Oceania,Polynesia,3221,eez
+156,ssp585_near-term,1306.8065757155418,Tokelau,772,TKL,Oceania,Polynesia,3221,eez
+157,ssp245_current,1071.6722353547812,Phoenix Group,NA,NA,Oceania,Micronesia,7477,eez
+157,ssp245_medium-term,4574.391148626804,Phoenix Group,NA,NA,Oceania,Micronesia,7477,eez
+157,ssp245_near-term,2638.524607002735,Phoenix Group,NA,NA,Oceania,Micronesia,7477,eez
+157,ssp585_current,1022.4622031152248,Phoenix Group,NA,NA,Oceania,Micronesia,7477,eez
+157,ssp585_medium-term,5604.394795238972,Phoenix Group,NA,NA,Oceania,Micronesia,7477,eez
+157,ssp585_near-term,2735.5947099924088,Phoenix Group,NA,NA,Oceania,Micronesia,7477,eez
+158,ssp245_current,483.513057641685,Howland Island and Baker Island,NA,NA,Oceania,Micronesia,4369,eez
+158,ssp245_medium-term,1583.6227511763573,Howland Island and Baker Island,NA,NA,Oceania,Micronesia,4369,eez
+158,ssp245_near-term,893.2287396788597,Howland Island and Baker Island,NA,NA,Oceania,Micronesia,4369,eez
+158,ssp585_current,362.59282433241606,Howland Island and Baker Island,NA,NA,Oceania,Micronesia,4369,eez
+158,ssp585_medium-term,2168.2543900310993,Howland Island and Baker Island,NA,NA,Oceania,Micronesia,4369,eez
+158,ssp585_near-term,1040.6643526256084,Howland Island and Baker Island,NA,NA,Oceania,Micronesia,4369,eez
+159,ssp245_current,442.5839534625411,Johnston Atoll,NA,NA,Oceania,Micronesia,4438,eez
+159,ssp245_medium-term,2673.7011763751507,Johnston Atoll,NA,NA,Oceania,Micronesia,4438,eez
+159,ssp245_near-term,1232.0769443362951,Johnston Atoll,NA,NA,Oceania,Micronesia,4438,eez
+159,ssp585_current,404.2105594985187,Johnston Atoll,NA,NA,Oceania,Micronesia,4438,eez
+159,ssp585_medium-term,3227.212480992079,Johnston Atoll,NA,NA,Oceania,Micronesia,4438,eez
+159,ssp585_near-term,1665.390125080943,Johnston Atoll,NA,NA,Oceania,Micronesia,4438,eez
+161,ssp245_current,391.2516377940774,Wallis and Futuna,NA,NA,Oceania,Polynesia,2629,eez
+161,ssp245_medium-term,1687.0230693817139,Wallis and Futuna,NA,NA,Oceania,Polynesia,2629,eez
+161,ssp245_near-term,1025.606071472168,Wallis and Futuna,NA,NA,Oceania,Polynesia,2629,eez
+161,ssp585_current,364.6795111000538,Wallis and Futuna,NA,NA,Oceania,Polynesia,2629,eez
+161,ssp585_medium-term,1997.6374187469482,Wallis and Futuna,NA,NA,Oceania,Polynesia,2629,eez
+161,ssp585_near-term,988.3877568244934,Wallis and Futuna,NA,NA,Oceania,Polynesia,2629,eez
+162,ssp245_current,8094.785771516734,New Zealand,554,NZL,Oceania,Australia and New Zealand,41546,eez
+162,ssp245_medium-term,18225.837862791726,New Zealand,554,NZL,Oceania,Australia and New Zealand,41546,eez
+162,ssp245_near-term,10175.821244516643,New Zealand,554,NZL,Oceania,Australia and New Zealand,41546,eez
+162,ssp585_current,7956.081656501046,New Zealand,554,NZL,Oceania,Australia and New Zealand,41546,eez
+162,ssp585_medium-term,25027.85104950238,New Zealand,554,NZL,Oceania,Australia and New Zealand,41546,eez
+162,ssp585_near-term,10724.771122042672,New Zealand,554,NZL,Oceania,Australia and New Zealand,41546,eez
+163,ssp245_current,38678.767725430254,United States of America,840,USA,Northern America,Northern America,88879,eez
+163,ssp245_medium-term,65093.854300250765,United States of America,840,USA,Northern America,Northern America,88879,eez
+163,ssp245_near-term,48024.832432002295,United States of America,840,USA,Northern America,Northern America,88879,eez
+163,ssp585_current,39808.199307670584,United States of America,840,USA,Northern America,Northern America,88879,eez
+163,ssp585_medium-term,76550.71260719607,United States of America,840,USA,Northern America,Northern America,88879,eez
+163,ssp585_near-term,50216.15136433218,United States of America,840,USA,Northern America,Northern America,88879,eez
+164,ssp245_current,92.9329322911799,Belize,84,BLZ,Latin America and the Caribbean,Central America,390,eez
+164,ssp245_medium-term,313.9558054804802,Belize,84,BLZ,Latin America and the Caribbean,Central America,390,eez
+164,ssp245_near-term,210.95531029254198,Belize,84,BLZ,Latin America and the Caribbean,Central America,390,eez
+164,ssp585_current,78.69712008163333,Belize,84,BLZ,Latin America and the Caribbean,Central America,390,eez
+164,ssp585_medium-term,346.96140433847904,Belize,84,BLZ,Latin America and the Caribbean,Central America,390,eez
+164,ssp585_near-term,221.33586066961288,Belize,84,BLZ,Latin America and the Caribbean,Central America,390,eez
+166,ssp245_current,508.639100379718,Jamaica,388,JAM,Latin America and the Caribbean,Caribbean,2486,eez
+166,ssp245_medium-term,2156.5547569375485,Jamaica,388,JAM,Latin America and the Caribbean,Caribbean,2486,eez
+166,ssp245_near-term,1511.3146806061268,Jamaica,388,JAM,Latin America and the Caribbean,Caribbean,2486,eez
+166,ssp585_current,467.38018499157624,Jamaica,388,JAM,Latin America and the Caribbean,Caribbean,2486,eez
+166,ssp585_medium-term,2375.7148938511964,Jamaica,388,JAM,Latin America and the Caribbean,Caribbean,2486,eez
+166,ssp585_near-term,1525.5082544492325,Jamaica,388,JAM,Latin America and the Caribbean,Caribbean,2486,eez
+167,ssp245_current,327.4980442635715,Guyana,328,GUY,Latin America and the Caribbean,South America,1412,eez
+167,ssp245_medium-term,1027.8087619431317,Guyana,328,GUY,Latin America and the Caribbean,South America,1412,eez
+167,ssp245_near-term,764.4962168484926,Guyana,328,GUY,Latin America and the Caribbean,South America,1412,eez
+167,ssp585_current,342.82135728374124,Guyana,328,GUY,Latin America and the Caribbean,South America,1412,eez
+167,ssp585_medium-term,1153.5881627388299,Guyana,328,GUY,Latin America and the Caribbean,South America,1412,eez
+167,ssp585_near-term,794.8078788332641,Guyana,328,GUY,Latin America and the Caribbean,South America,1412,eez
+168,ssp245_current,372.63628038205206,Suriname,740,SUR,Latin America and the Caribbean,South America,1325,eez
+168,ssp245_medium-term,1020.76355801709,Suriname,740,SUR,Latin America and the Caribbean,South America,1325,eez
+168,ssp245_near-term,765.9025789573789,Suriname,740,SUR,Latin America and the Caribbean,South America,1325,eez
+168,ssp585_current,368.90274522826076,Suriname,740,SUR,Latin America and the Caribbean,South America,1325,eez
+168,ssp585_medium-term,1148.9285377375782,Suriname,740,SUR,Latin America and the Caribbean,South America,1325,eez
+168,ssp585_near-term,809.3125273566693,Suriname,740,SUR,Latin America and the Caribbean,South America,1325,eez
+169,ssp245_current,385.61904248036444,French Guiana,254,GUF,Latin America and the Caribbean,South America,1388,eez
+169,ssp245_medium-term,1049.7032711356878,French Guiana,254,GUF,Latin America and the Caribbean,South America,1388,eez
+169,ssp245_near-term,799.32939530164,French Guiana,254,GUF,Latin America and the Caribbean,South America,1388,eez
+169,ssp585_current,387.35823217220604,French Guiana,254,GUF,Latin America and the Caribbean,South America,1388,eez
+169,ssp585_medium-term,1212.046289652586,French Guiana,254,GUF,Latin America and the Caribbean,South America,1388,eez
+169,ssp585_near-term,860.2022628113627,French Guiana,254,GUF,Latin America and the Caribbean,South America,1388,eez
+171,ssp245_current,10876.096295382828,Brazil,76,BRA,Latin America and the Caribbean,South America,37586,eez
+171,ssp245_medium-term,28503.405919849873,Brazil,76,BRA,Latin America and the Caribbean,South America,37586,eez
+171,ssp245_near-term,21694.049118394032,Brazil,76,BRA,Latin America and the Caribbean,South America,37586,eez
+171,ssp585_current,10906.329895438626,Brazil,76,BRA,Latin America and the Caribbean,South America,37586,eez
+171,ssp585_medium-term,32304.784886229783,Brazil,76,BRA,Latin America and the Caribbean,South America,37586,eez
+171,ssp585_near-term,23006.576283192262,Brazil,76,BRA,Latin America and the Caribbean,South America,37586,eez
+172,ssp245_current,4141.308885278413,Argentina,32,ARG,Latin America and the Caribbean,South America,11155,eez
+172,ssp245_medium-term,8157.40633385675,Argentina,32,ARG,Latin America and the Caribbean,South America,11155,eez
+172,ssp245_near-term,5708.181908920407,Argentina,32,ARG,Latin America and the Caribbean,South America,11155,eez
+172,ssp585_current,3800.7070468983147,Argentina,32,ARG,Latin America and the Caribbean,South America,11155,eez
+172,ssp585_medium-term,8962.498386087827,Argentina,32,ARG,Latin America and the Caribbean,South America,11155,eez
+172,ssp585_near-term,6040.15569743095,Argentina,32,ARG,Latin America and the Caribbean,South America,11155,eez
+173,ssp245_current,361.0595929879928,Uruguay,858,URY,Latin America and the Caribbean,South America,1347,eez
+173,ssp245_medium-term,658.665553374216,Uruguay,858,URY,Latin America and the Caribbean,South America,1347,eez
+173,ssp245_near-term,482.99150818469934,Uruguay,858,URY,Latin America and the Caribbean,South America,1347,eez
+173,ssp585_current,364.4075758079998,Uruguay,858,URY,Latin America and the Caribbean,South America,1347,eez
+173,ssp585_medium-term,752.5695473749656,Uruguay,858,URY,Latin America and the Caribbean,South America,1347,eez
+173,ssp585_near-term,511.1340586305596,Uruguay,858,URY,Latin America and the Caribbean,South America,1347,eez
+174,ssp245_current,325.8615611887071,Finland,246,FIN,Europe,Northern Europe,958,eez
+174,ssp245_medium-term,395.9009491195902,Finland,246,FIN,Europe,Northern Europe,958,eez
+174,ssp245_near-term,375.12969209835865,Finland,246,FIN,Europe,Northern Europe,958,eez
+174,ssp585_current,351.73796517867595,Finland,246,FIN,Europe,Northern Europe,958,eez
+174,ssp585_medium-term,457.83133040973917,Finland,246,FIN,Europe,Northern Europe,958,eez
+174,ssp585_near-term,394.18394018081017,Finland,246,FIN,Europe,Northern Europe,958,eez
+175,ssp245_current,493.22787409834564,Denmark,208,DNK,Europe,Northern Europe,1201,eez
+175,ssp245_medium-term,616.7014570292085,Denmark,208,DNK,Europe,Northern Europe,1201,eez
+175,ssp245_near-term,599.6075804959983,Denmark,208,DNK,Europe,Northern Europe,1201,eez
+175,ssp585_current,504.20196557440795,Denmark,208,DNK,Europe,Northern Europe,1201,eez
+175,ssp585_medium-term,701.6877943747677,Denmark,208,DNK,Europe,Northern Europe,1201,eez
+175,ssp585_near-term,607.3552464169916,Denmark,208,DNK,Europe,Northern Europe,1201,eez
+176,ssp245_current,263.024947413709,Germany,276,DEU,Europe,Western Europe,654,eez
+176,ssp245_medium-term,347.9361335770227,Germany,276,DEU,Europe,Western Europe,654,eez
+176,ssp245_near-term,341.66196634992957,Germany,276,DEU,Europe,Western Europe,654,eez
+176,ssp585_current,263.0726239674259,Germany,276,DEU,Europe,Western Europe,654,eez
+176,ssp585_medium-term,392.59373351652175,Germany,276,DEU,Europe,Western Europe,654,eez
+176,ssp585_near-term,343.926911087241,Germany,276,DEU,Europe,Western Europe,654,eez
+177,ssp245_current,275.50832775235176,Netherlands,528,NLD,Europe,Western Europe,662,eez
+177,ssp245_medium-term,383.84840451180935,Netherlands,528,NLD,Europe,Western Europe,662,eez
+177,ssp245_near-term,359.3658676892519,Netherlands,528,NLD,Europe,Western Europe,662,eez
+177,ssp585_current,275.3176828324795,Netherlands,528,NLD,Europe,Western Europe,662,eez
+177,ssp585_medium-term,437.83296397328377,Netherlands,528,NLD,Europe,Western Europe,662,eez
+177,ssp585_near-term,366.262146666646,Netherlands,528,NLD,Europe,Western Europe,662,eez
+178,ssp245_current,141.29029018664733,Poland,616,POL,Europe,Eastern Europe,345,eez
+178,ssp245_medium-term,216.80574407149106,Poland,616,POL,Europe,Eastern Europe,345,eez
+178,ssp245_near-term,197.9213169515133,Poland,616,POL,Europe,Eastern Europe,345,eez
+178,ssp585_current,150.69818610069342,Poland,616,POL,Europe,Eastern Europe,345,eez
+178,ssp585_medium-term,245.6996443993412,Poland,616,POL,Europe,Eastern Europe,345,eez
+178,ssp585_near-term,190.90679588913918,Poland,616,POL,Europe,Eastern Europe,345,eez
+179,ssp245_current,1448.3832913478836,France,250,FRA,Europe,Western Europe,3661,eez
+179,ssp245_medium-term,2557.095329809934,France,250,FRA,Europe,Western Europe,3661,eez
+179,ssp245_near-term,2076.36043661274,France,250,FRA,Europe,Western Europe,3661,eez
+179,ssp585_current,1467.8236054400913,France,250,FRA,Europe,Western Europe,3661,eez
+179,ssp585_medium-term,2999.439386942424,France,250,FRA,Europe,Western Europe,3661,eez
+179,ssp585_near-term,2186.5306792235933,France,250,FRA,Europe,Western Europe,3661,eez
+180,ssp245_current,3772.1333716346417,United Kingdom,NA,NA,Europe,Northern Europe,7724,eez
+180,ssp245_medium-term,5938.725948009174,United Kingdom,NA,NA,Europe,Northern Europe,7724,eez
+180,ssp245_near-term,5275.845002052374,United Kingdom,NA,NA,Europe,Northern Europe,7724,eez
+180,ssp585_current,3999.2366053946316,United Kingdom,NA,NA,Europe,Northern Europe,7724,eez
+180,ssp585_medium-term,6987.412408773322,United Kingdom,NA,NA,Europe,Northern Europe,7724,eez
+180,ssp585_near-term,5235.391112229321,United Kingdom,NA,NA,Europe,Northern Europe,7724,eez
+181,ssp245_current,1963.133447661996,Ireland,372,IRL,Europe,Northern Europe,4408,eez
+181,ssp245_medium-term,3364.7301451922394,Ireland,372,IRL,Europe,Northern Europe,4408,eez
+181,ssp245_near-term,2886.2702690479346,Ireland,372,IRL,Europe,Northern Europe,4408,eez
+181,ssp585_current,2123.825859963894,Ireland,372,IRL,Europe,Northern Europe,4408,eez
+181,ssp585_medium-term,3852.9116247333586,Ireland,372,IRL,Europe,Northern Europe,4408,eez
+181,ssp585_near-term,2943.2968366702553,Ireland,372,IRL,Europe,Northern Europe,4408,eez
+182,ssp245_current,1927.6270702194888,Spain,724,ESP,Europe,Southern Europe,5749,eez
+182,ssp245_medium-term,4245.957722145366,Spain,724,ESP,Europe,Southern Europe,5749,eez
+182,ssp245_near-term,3090.0078892122256,Spain,724,ESP,Europe,Southern Europe,5749,eez
+182,ssp585_current,2015.2951516417088,Spain,724,ESP,Europe,Southern Europe,5749,eez
+182,ssp585_medium-term,5036.363950577332,Spain,724,ESP,Europe,Southern Europe,5749,eez
+182,ssp585_near-term,3299.448694761726,Spain,724,ESP,Europe,Southern Europe,5749,eez
+183,ssp245_current,877.6011453382671,Portugal,620,PRT,Europe,Southern Europe,3179,eez
+183,ssp245_medium-term,1893.1872998224571,Portugal,620,PRT,Europe,Southern Europe,3179,eez
+183,ssp245_near-term,1236.5092390011996,Portugal,620,PRT,Europe,Southern Europe,3179,eez
+183,ssp585_current,915.7406405867077,Portugal,620,PRT,Europe,Southern Europe,3179,eez
+183,ssp585_medium-term,2332.0921025825664,Portugal,620,PRT,Europe,Southern Europe,3179,eez
+183,ssp585_near-term,1421.7783885719255,Portugal,620,PRT,Europe,Southern Europe,3179,eez
+184,ssp245_current,2109.0151564709377,Italy,380,ITA,Europe,Southern Europe,5678,eez
+184,ssp245_medium-term,4633.611025814898,Italy,380,ITA,Europe,Southern Europe,5678,eez
+184,ssp245_near-term,3673.8427506631706,Italy,380,ITA,Europe,Southern Europe,5678,eez
+184,ssp585_current,2285.9012052963953,Italy,380,ITA,Europe,Southern Europe,5678,eez
+184,ssp585_medium-term,5117.917650121497,Italy,380,ITA,Europe,Southern Europe,5678,eez
+184,ssp585_near-term,3717.8216437367955,Italy,380,ITA,Europe,Southern Europe,5678,eez
+185,ssp245_current,0.19780271500349045,Monaco,492,MCO,Europe,Western Europe,2,eez
+185,ssp245_medium-term,0.7458387613296509,Monaco,492,MCO,Europe,Western Europe,2,eez
+185,ssp245_near-term,0.5308372527360916,Monaco,492,MCO,Europe,Western Europe,2,eez
+185,ssp585_current,0.22534242272377014,Monaco,492,MCO,Europe,Western Europe,2,eez
+185,ssp585_medium-term,0.9860303103923798,Monaco,492,MCO,Europe,Western Europe,2,eez
+185,ssp585_near-term,0.5619691014289856,Monaco,492,MCO,Europe,Western Europe,2,eez
+186,ssp245_current,34.89028733409941,Montenegro,499,MNE,Europe,Southern Europe,83,eez
+186,ssp245_medium-term,77.71068082004786,Montenegro,499,MNE,Europe,Southern Europe,83,eez
+186,ssp245_near-term,60.296249840408564,Montenegro,499,MNE,Europe,Southern Europe,83,eez
+186,ssp585_current,41.787102207541466,Montenegro,499,MNE,Europe,Southern Europe,83,eez
+186,ssp585_medium-term,86.58874457329512,Montenegro,499,MNE,Europe,Southern Europe,83,eez
+186,ssp585_near-term,56.35754707083106,Montenegro,499,MNE,Europe,Southern Europe,83,eez
+187,ssp245_current,276.54049604199827,Croatia,191,HRV,Europe,Southern Europe,636,eez
+187,ssp245_medium-term,522.5121835283935,Croatia,191,HRV,Europe,Southern Europe,636,eez
+187,ssp245_near-term,430.817238394171,Croatia,191,HRV,Europe,Southern Europe,636,eez
+187,ssp585_current,291.18769431859255,Croatia,191,HRV,Europe,Southern Europe,636,eez
+187,ssp585_medium-term,569.7257329560816,Croatia,191,HRV,Europe,Southern Europe,636,eez
+187,ssp585_near-term,411.9557369276881,Croatia,191,HRV,Europe,Southern Europe,636,eez
+188,ssp245_current,1.0006295666098595,Slovenia,705,SVN,Europe,Southern Europe,4,eez
+188,ssp245_medium-term,1.759414479136467,Slovenia,705,SVN,Europe,Southern Europe,4,eez
+188,ssp245_near-term,1.4932795763015747,Slovenia,705,SVN,Europe,Southern Europe,4,eez
+188,ssp585_current,1.0422444604337215,Slovenia,705,SVN,Europe,Southern Europe,4,eez
+188,ssp585_medium-term,1.8824914023280144,Slovenia,705,SVN,Europe,Southern Europe,4,eez
+188,ssp585_near-term,1.4503593184053898,Slovenia,705,SVN,Europe,Southern Europe,4,eez
+189,ssp245_current,27.43109342455864,Lithuania,440,LTU,Europe,Northern Europe,68,eez
+189,ssp245_medium-term,44.53127643465996,Lithuania,440,LTU,Europe,Northern Europe,68,eez
+189,ssp245_near-term,39.39339563250542,Lithuania,440,LTU,Europe,Northern Europe,68,eez
+189,ssp585_current,30.156272530555725,Lithuania,440,LTU,Europe,Northern Europe,68,eez
+189,ssp585_medium-term,50.9805251955986,Lithuania,440,LTU,Europe,Northern Europe,68,eez
+189,ssp585_near-term,40.1857887506485,Lithuania,440,LTU,Europe,Northern Europe,68,eez
+190,ssp245_current,45.913198253081646,Qatar,634,QAT,Asia,Western Asia,345,eez
+190,ssp245_medium-term,181.19896220136434,Qatar,634,QAT,Asia,Western Asia,345,eez
+190,ssp245_near-term,118.96339389961213,Qatar,634,QAT,Asia,Western Asia,345,eez
+190,ssp585_current,43.86614629998803,Qatar,634,QAT,Asia,Western Asia,345,eez
+190,ssp585_medium-term,201.58586167520843,Qatar,634,QAT,Asia,Western Asia,345,eez
+190,ssp585_near-term,118.93536675581709,Qatar,634,QAT,Asia,Western Asia,345,eez
+191,ssp245_current,666.0700908284634,Iran,364,IRN,Asia,Southern Asia,1763,eez
+191,ssp245_medium-term,1323.077689557802,Iran,364,IRN,Asia,Southern Asia,1763,eez
+191,ssp245_near-term,1075.4164461325854,Iran,364,IRN,Asia,Southern Asia,1763,eez
+191,ssp585_current,700.4553709179163,Iran,364,IRN,Asia,Southern Asia,1763,eez
+191,ssp585_medium-term,1495.9204804287292,Iran,364,IRN,Asia,Southern Asia,1763,eez
+191,ssp585_near-term,1089.3376217577606,Iran,364,IRN,Asia,Southern Asia,1763,eez
+192,ssp245_current,2.1168748512864113,Iraq,368,IRQ,Asia,Western Asia,10,eez
+192,ssp245_medium-term,3.794558271765709,Iraq,368,IRQ,Asia,Western Asia,10,eez
+192,ssp245_near-term,2.692174419760704,Iraq,368,IRQ,Asia,Western Asia,10,eez
+192,ssp585_current,2.2930463775992393,Iraq,368,IRQ,Asia,Western Asia,10,eez
+192,ssp585_medium-term,4.1118375808000565,Iraq,368,IRQ,Asia,Western Asia,10,eez
+192,ssp585_near-term,2.5506647378206253,Iraq,368,IRQ,Asia,Western Asia,10,eez
+193,ssp245_current,470.87684071669355,Guinea Bissau,624,GNB,Africa,Western Africa,1138,eez
+193,ssp245_medium-term,804.7776410775259,Guinea Bissau,624,GNB,Africa,Western Africa,1138,eez
+193,ssp245_near-term,624.5891549843363,Guinea Bissau,624,GNB,Africa,Western Africa,1138,eez
+193,ssp585_current,466.0393487061374,Guinea Bissau,624,GNB,Africa,Western Africa,1138,eez
+193,ssp585_medium-term,915.320266077295,Guinea Bissau,624,GNB,Africa,Western Africa,1138,eez
+193,ssp585_near-term,677.4936867868528,Guinea Bissau,624,GNB,Africa,Western Africa,1138,eez
+194,ssp245_current,515.2443503430113,Guinea,324,GIN,Africa,Western Africa,1145,eez
+194,ssp245_medium-term,813.3797852303833,Guinea,324,GIN,Africa,Western Africa,1145,eez
+194,ssp245_near-term,630.3140661651269,Guinea,324,GIN,Africa,Western Africa,1145,eez
+194,ssp585_current,508.40816219942644,Guinea,324,GIN,Africa,Western Africa,1145,eez
+194,ssp585_medium-term,857.7277178522199,Guinea,324,GIN,Africa,Western Africa,1145,eez
+194,ssp585_near-term,665.0646930686198,Guinea,324,GIN,Africa,Western Africa,1145,eez
+195,ssp245_current,635.6394883058965,Ivory Coast,NA,NA,Africa,Western Africa,1807,eez
+195,ssp245_medium-term,1496.5567828267813,Ivory Coast,NA,NA,Africa,Western Africa,1807,eez
+195,ssp245_near-term,1047.1725793741643,Ivory Coast,NA,NA,Africa,Western Africa,1807,eez
+195,ssp585_current,623.2986761722714,Ivory Coast,NA,NA,Africa,Western Africa,1807,eez
+195,ssp585_medium-term,1540.931415911764,Ivory Coast,NA,NA,Africa,Western Africa,1807,eez
+195,ssp585_near-term,1048.908790173009,Ivory Coast,NA,NA,Africa,Western Africa,1807,eez
+196,ssp245_current,763.7311816411093,Nigeria,566,NGA,Africa,Western Africa,1935,eez
+196,ssp245_medium-term,1694.9687049649656,Nigeria,566,NGA,Africa,Western Africa,1935,eez
+196,ssp245_near-term,1231.938013099134,Nigeria,566,NGA,Africa,Western Africa,1935,eez
+196,ssp585_current,760.4193568332121,Nigeria,566,NGA,Africa,Western Africa,1935,eez
+196,ssp585_medium-term,1764.6529536657035,Nigeria,566,NGA,Africa,Western Africa,1935,eez
+196,ssp585_near-term,1277.7071105353534,Nigeria,566,NGA,Africa,Western Africa,1935,eez
+197,ssp245_current,42.984748570248485,Cameroon,120,CMR,Africa,Middle Africa,186,eez
+197,ssp245_medium-term,101.3621843084693,Cameroon,120,CMR,Africa,Middle Africa,186,eez
+197,ssp245_near-term,63.295620212331414,Cameroon,120,CMR,Africa,Middle Africa,186,eez
+197,ssp585_current,42.71338746044785,Cameroon,120,CMR,Africa,Middle Africa,186,eez
+197,ssp585_medium-term,108.90297755599022,Cameroon,120,CMR,Africa,Middle Africa,186,eez
+197,ssp585_near-term,71.23839044570923,Cameroon,120,CMR,Africa,Middle Africa,186,eez
+198,ssp245_current,725.5123541047797,Gabon,266,GAB,Africa,Middle Africa,2040,eez
+198,ssp245_medium-term,1528.469991678372,Gabon,266,GAB,Africa,Middle Africa,2040,eez
+198,ssp245_near-term,1117.3858973942697,Gabon,266,GAB,Africa,Middle Africa,2040,eez
+198,ssp585_current,697.723462167196,Gabon,266,GAB,Africa,Middle Africa,2040,eez
+198,ssp585_medium-term,1854.3874412216246,Gabon,266,GAB,Africa,Middle Africa,2040,eez
+198,ssp585_near-term,1233.7293578647077,Gabon,266,GAB,Africa,Middle Africa,2040,eez
+199,ssp245_current,58.713030233979225,Democratic Republic of the Congo,180,COD,Africa,Middle Africa,143,eez
+199,ssp245_medium-term,116.24216497689486,Democratic Republic of the Congo,180,COD,Africa,Middle Africa,143,eez
+199,ssp245_near-term,89.48406153172255,Democratic Republic of the Congo,180,COD,Africa,Middle Africa,143,eez
+199,ssp585_current,55.972796358168125,Democratic Republic of the Congo,180,COD,Africa,Middle Africa,143,eez
+199,ssp585_medium-term,140.85288807749748,Democratic Republic of the Congo,180,COD,Africa,Middle Africa,143,eez
+199,ssp585_near-term,97.03341370820999,Democratic Republic of the Congo,180,COD,Africa,Middle Africa,143,eez
+200,ssp245_current,1430.8159532137215,Angola,24,AGO,Africa,Middle Africa,5019,eez
+200,ssp245_medium-term,3908.9025142863393,Angola,24,AGO,Africa,Middle Africa,5019,eez
+200,ssp245_near-term,2914.3223264124244,Angola,24,AGO,Africa,Middle Africa,5019,eez
+200,ssp585_current,1497.1940194545314,Angola,24,AGO,Africa,Middle Africa,5019,eez
+200,ssp585_medium-term,4806.623809278011,Angola,24,AGO,Africa,Middle Africa,5019,eez
+200,ssp585_near-term,3051.018043311313,Angola,24,AGO,Africa,Middle Africa,5019,eez
+202,ssp245_current,439.39975399989635,United Republic of Tanzania,834,TZA,Africa,Eastern Africa,2514,eez
+202,ssp245_medium-term,2384.6461628228426,United Republic of Tanzania,834,TZA,Africa,Eastern Africa,2514,eez
+202,ssp245_near-term,1453.6926354253665,United Republic of Tanzania,834,TZA,Africa,Eastern Africa,2514,eez
+202,ssp585_current,487.20086129708216,United Republic of Tanzania,834,TZA,Africa,Eastern Africa,2514,eez
+202,ssp585_medium-term,2556.3047622982413,United Republic of Tanzania,834,TZA,Africa,Eastern Africa,2514,eez
+202,ssp585_near-term,1541.521216513589,United Republic of Tanzania,834,TZA,Africa,Eastern Africa,2514,eez
+203,ssp245_current,7056.966046196874,India,356,IND,Asia,Southern Asia,16838,eez
+203,ssp245_medium-term,14541.32986412663,India,356,IND,Asia,Southern Asia,16838,eez
+203,ssp245_near-term,10773.82476557605,India,356,IND,Asia,Southern Asia,16838,eez
+203,ssp585_current,7028.899092428386,India,356,IND,Asia,Southern Asia,16838,eez
+203,ssp585_medium-term,16676.169749404304,India,356,IND,Asia,Southern Asia,16838,eez
+203,ssp585_near-term,11351.251863022335,India,356,IND,Asia,Southern Asia,16838,eez
+204,ssp245_current,486.0118984095752,Bangladesh,50,BGD,Asia,Southern Asia,1000,eez
+204,ssp245_medium-term,816.3281286451966,Bangladesh,50,BGD,Asia,Southern Asia,1000,eez
+204,ssp245_near-term,653.7641983637586,Bangladesh,50,BGD,Asia,Southern Asia,1000,eez
+204,ssp585_current,525.2266674702987,Bangladesh,50,BGD,Asia,Southern Asia,1000,eez
+204,ssp585_medium-term,904.4383620498702,Bangladesh,50,BGD,Asia,Southern Asia,1000,eez
+204,ssp585_near-term,648.0698002073914,Bangladesh,50,BGD,Asia,Southern Asia,1000,eez
+205,ssp245_current,2485.35437673633,Myanmar,104,MMR,Asia,South-eastern Asia,5443,eez
+205,ssp245_medium-term,4487.055847405572,Myanmar,104,MMR,Asia,South-eastern Asia,5443,eez
+205,ssp245_near-term,3348.6767721624346,Myanmar,104,MMR,Asia,South-eastern Asia,5443,eez
+205,ssp585_current,2602.5213789689587,Myanmar,104,MMR,Asia,South-eastern Asia,5443,eez
+205,ssp585_medium-term,5212.066551874159,Myanmar,104,MMR,Asia,South-eastern Asia,5443,eez
+205,ssp585_near-term,3348.7120866426267,Myanmar,104,MMR,Asia,South-eastern Asia,5443,eez
+206,ssp245_current,2054.7632707138546,Malaysia,458,MYS,Asia,South-eastern Asia,4787,eez
+206,ssp245_medium-term,3837.740006393753,Malaysia,458,MYS,Asia,South-eastern Asia,4787,eez
+206,ssp245_near-term,3102.687580930069,Malaysia,458,MYS,Asia,South-eastern Asia,4787,eez
+206,ssp585_current,2056.3788959342055,Malaysia,458,MYS,Asia,South-eastern Asia,4787,eez
+206,ssp585_medium-term,4369.143240466714,Malaysia,458,MYS,Asia,South-eastern Asia,4787,eez
+206,ssp585_near-term,3168.1485250191763,Malaysia,458,MYS,Asia,South-eastern Asia,4787,eez
+207,ssp245_current,2757.326962274732,Vietnam,704,VNM,Asia,South-eastern Asia,6716,eez
+207,ssp245_medium-term,4675.882078316063,Vietnam,704,VNM,Asia,South-eastern Asia,6716,eez
+207,ssp245_near-term,3803.9686215273105,Vietnam,704,VNM,Asia,South-eastern Asia,6716,eez
+207,ssp585_current,2660.5610203996766,Vietnam,704,VNM,Asia,South-eastern Asia,6716,eez
+207,ssp585_medium-term,5508.669288918143,Vietnam,704,VNM,Asia,South-eastern Asia,6716,eez
+207,ssp585_near-term,3951.3839513054118,Vietnam,704,VNM,Asia,South-eastern Asia,6716,eez
+208,ssp245_current,8.199082180857658,Singapore,702,SGP,Asia,South-eastern Asia,15,eez
+208,ssp245_medium-term,11.654789164662361,Singapore,702,SGP,Asia,South-eastern Asia,15,eez
+208,ssp245_near-term,9.526613295078278,Singapore,702,SGP,Asia,South-eastern Asia,15,eez
+208,ssp585_current,8.158262073993683,Singapore,702,SGP,Asia,South-eastern Asia,15,eez
+208,ssp585_medium-term,13.426764324307442,Singapore,702,SGP,Asia,South-eastern Asia,15,eez
+208,ssp585_near-term,9.536871239542961,Singapore,702,SGP,Asia,South-eastern Asia,15,eez
+209,ssp245_current,5465.982860822231,China,156,CHN,Asia,Eastern Asia,9507,eez
+209,ssp245_medium-term,7277.161878618412,China,156,CHN,Asia,Eastern Asia,9507,eez
+209,ssp245_near-term,6231.087031031027,China,156,CHN,Asia,Eastern Asia,9507,eez
+209,ssp585_current,5249.011875586584,China,156,CHN,Asia,Eastern Asia,9507,eez
+209,ssp585_medium-term,8397.369309559464,China,156,CHN,Asia,Eastern Asia,9507,eez
+209,ssp585_near-term,6547.276549078524,China,156,CHN,Asia,Eastern Asia,9507,eez
+210,ssp245_current,12984.292091906827,Japan,392,JPN,Asia,Eastern Asia,41095,eez
+210,ssp245_medium-term,22501.156757118297,Japan,392,JPN,Asia,Eastern Asia,41095,eez
+210,ssp245_near-term,18544.43202048156,Japan,392,JPN,Asia,Eastern Asia,41095,eez
+210,ssp585_current,12820.398764731304,Japan,392,JPN,Asia,Eastern Asia,41095,eez
+210,ssp585_medium-term,27281.999342245515,Japan,392,JPN,Asia,Eastern Asia,41095,eez
+210,ssp585_near-term,20401.820402419544,Japan,392,JPN,Asia,Eastern Asia,41095,eez
+212,ssp245_current,1044.613961815834,Kiribati,296,KIR,Oceania,Micronesia,10564,eez
+212,ssp245_medium-term,6973.58019310236,Kiribati,296,KIR,Oceania,Micronesia,10564,eez
+212,ssp245_near-term,4020.8852146565914,Kiribati,296,KIR,Oceania,Micronesia,10564,eez
+212,ssp585_current,968.4251181967556,Kiribati,296,KIR,Oceania,Micronesia,10564,eez
+212,ssp585_medium-term,8155.745124936104,Kiribati,296,KIR,Oceania,Micronesia,10564,eez
+212,ssp585_near-term,4325.60818618536,Kiribati,296,KIR,Oceania,Micronesia,10564,eez
+213,ssp245_current,98467.11552219861,Antarctica,10,ATA,Antarctica,Antarctica,322943,eez
+213,ssp245_medium-term,189733.36866830953,Antarctica,10,ATA,Antarctica,Antarctica,322943,eez
+213,ssp245_near-term,122491.79673730757,Antarctica,10,ATA,Antarctica,Antarctica,322943,eez
+213,ssp585_current,92348.47645431472,Antarctica,10,ATA,Antarctica,Antarctica,322943,eez
+213,ssp585_medium-term,221073.8169022121,Antarctica,10,ATA,Antarctica,Antarctica,322943,eez
+213,ssp585_near-term,142274.91278704494,Antarctica,10,ATA,Antarctica,Antarctica,322943,eez
+214,ssp245_current,1081.1838241652586,Egypt,818,EGY,Africa,Northern Africa,2537,eez
+214,ssp245_medium-term,2134.1271727588028,Egypt,818,EGY,Africa,Northern Africa,2537,eez
+214,ssp245_near-term,1745.6468873035628,Egypt,818,EGY,Africa,Northern Africa,2537,eez
+214,ssp585_current,1128.5055671331938,Egypt,818,EGY,Africa,Northern Africa,2537,eez
+214,ssp585_medium-term,2253.4845081674866,Egypt,818,EGY,Africa,Northern Africa,2537,eez
+214,ssp585_near-term,1635.9729653585237,Egypt,818,EGY,Africa,Northern Africa,2537,eez
+215,ssp245_current,0.07028121734037995,Jordan,400,JOR,Asia,Western Asia,3,eez
+215,ssp245_medium-term,0.11827433854341507,Jordan,400,JOR,Asia,Western Asia,3,eez
+215,ssp245_near-term,0.08404852636158466,Jordan,400,JOR,Asia,Western Asia,3,eez
+215,ssp585_current,0.077805002219975,Jordan,400,JOR,Asia,Western Asia,3,eez
+215,ssp585_medium-term,0.12229872774332762,Jordan,400,JOR,Asia,Western Asia,3,eez
+215,ssp585_near-term,0.07917607063427567,Jordan,400,JOR,Asia,Western Asia,3,eez
+216,ssp245_current,16691.07343968493,Indonesia,360,IDN,Asia,South-eastern Asia,62033,eez
+216,ssp245_medium-term,45580.28150692629,Indonesia,360,IDN,Asia,South-eastern Asia,62033,eez
+216,ssp245_near-term,32300.79505389917,Indonesia,360,IDN,Asia,South-eastern Asia,62033,eez
+216,ssp585_current,16703.64638485259,Indonesia,360,IDN,Asia,South-eastern Asia,62033,eez
+216,ssp585_medium-term,53378.26347142481,Indonesia,360,IDN,Asia,South-eastern Asia,62033,eez
+216,ssp585_near-term,34751.99455840606,Indonesia,360,IDN,Asia,South-eastern Asia,62033,eez
+218,ssp245_current,33189.105119314336,Canada,124,CAN,Northern America,Northern America,64226,eez
+218,ssp245_medium-term,48084.63159258093,Canada,124,CAN,Northern America,Northern America,64226,eez
+218,ssp245_near-term,40754.39438776061,Canada,124,CAN,Northern America,Northern America,64226,eez
+218,ssp585_current,29704.159255174163,Canada,124,CAN,Northern America,Northern America,64226,eez
+218,ssp585_medium-term,49432.77788564435,Canada,124,CAN,Northern America,Northern America,64226,eez
+218,ssp585_near-term,34368.5925135538,Canada,124,CAN,Northern America,Northern America,64226,eez
+219,ssp245_current,56.50276383757591,Saint Pierre and Miquelon,666,SPM,Northern America,Northern America,124,eez
+219,ssp245_medium-term,91.1724456846714,Saint Pierre and Miquelon,666,SPM,Northern America,Northern America,124,eez
+219,ssp245_near-term,76.18942794203758,Saint Pierre and Miquelon,666,SPM,Northern America,Northern America,124,eez
+219,ssp585_current,56.28558026254177,Saint Pierre and Miquelon,666,SPM,Northern America,Northern America,124,eez
+219,ssp585_medium-term,115.51939141750336,Saint Pierre and Miquelon,666,SPM,Northern America,Northern America,124,eez
+219,ssp585_near-term,74.06597098708153,Saint Pierre and Miquelon,666,SPM,Northern America,Northern America,124,eez
+220,ssp245_current,1.0420058369636536,Sint Maarten,534,SXM,Latin America and the Caribbean,Caribbean,6,eez
+220,ssp245_medium-term,2.795434057712555,Sint Maarten,534,SXM,Latin America and the Caribbean,Caribbean,6,eez
+220,ssp245_near-term,2.1560358852148056,Sint Maarten,534,SXM,Latin America and the Caribbean,Caribbean,6,eez
+220,ssp585_current,1.2889929711818695,Sint Maarten,534,SXM,Latin America and the Caribbean,Caribbean,6,eez
+220,ssp585_medium-term,3.50607967376709,Sint Maarten,534,SXM,Latin America and the Caribbean,Caribbean,6,eez
+220,ssp585_near-term,2.1237599849700928,Sint Maarten,534,SXM,Latin America and the Caribbean,Caribbean,6,eez
+221,ssp245_current,6.6370366513729095,Northern Saint-Martin,NA,NA,Latin America and the Caribbean,Caribbean,53,eez
+221,ssp245_medium-term,23.71073678135872,Northern Saint-Martin,NA,NA,Latin America and the Caribbean,Caribbean,53,eez
+221,ssp245_near-term,17.850843906402588,Northern Saint-Martin,NA,NA,Latin America and the Caribbean,Caribbean,53,eez
+221,ssp585_current,9.121269576251507,Northern Saint-Martin,NA,NA,Latin America and the Caribbean,Caribbean,53,eez
+221,ssp585_medium-term,30.329034715890884,Northern Saint-Martin,NA,NA,Latin America and the Caribbean,Caribbean,53,eez
+221,ssp585_near-term,17.097371384501457,Northern Saint-Martin,NA,NA,Latin America and the Caribbean,Caribbean,53,eez
+222,ssp245_current,639.5084002404474,Sweden,752,SWE,Europe,Northern Europe,1808,eez
+222,ssp245_medium-term,802.2437494602054,Sweden,752,SWE,Europe,Northern Europe,1808,eez
+222,ssp245_near-term,763.3009155417094,Sweden,752,SWE,Europe,Northern Europe,1808,eez
+222,ssp585_current,689.3700057390379,Sweden,752,SWE,Europe,Northern Europe,1808,eez
+222,ssp585_medium-term,940.7486840696074,Sweden,752,SWE,Europe,Northern Europe,1808,eez
+222,ssp585_near-term,770.2323795882985,Sweden,752,SWE,Europe,Northern Europe,1808,eez
+223,ssp245_current,8129.565544148092,Norway,578,NOR,Europe,Northern Europe,18325,eez
+223,ssp245_medium-term,13363.204211931326,Norway,578,NOR,Europe,Northern Europe,18325,eez
+223,ssp245_near-term,12042.044369370211,Norway,578,NOR,Europe,Northern Europe,18325,eez
+223,ssp585_current,9885.54995856178,Norway,578,NOR,Europe,Northern Europe,18325,eez
+223,ssp585_medium-term,16139.252157897456,Norway,578,NOR,Europe,Northern Europe,18325,eez
+223,ssp585_near-term,12159.054849801585,Norway,578,NOR,Europe,Northern Europe,18325,eez
+224,ssp245_current,9645.831923812046,Chile,152,CHL,Latin America and the Caribbean,South America,37960,eez
+224,ssp245_medium-term,18674.526427083183,Chile,152,CHL,Latin America and the Caribbean,South America,37960,eez
+224,ssp245_near-term,13313.23917523399,Chile,152,CHL,Latin America and the Caribbean,South America,37960,eez
+224,ssp585_current,9796.722447692417,Chile,152,CHL,Latin America and the Caribbean,South America,37960,eez
+224,ssp585_medium-term,22892.563077810686,Chile,152,CHL,Latin America and the Caribbean,South America,37960,eez
+224,ssp585_near-term,15190.790338719613,Chile,152,CHL,Latin America and the Caribbean,South America,37960,eez
+227,ssp245_current,5.151780420914292,Jersey,832,JEY,Europe,Northern Europe,31,eez
+227,ssp245_medium-term,12.340105026960373,Jersey,832,JEY,Europe,Northern Europe,31,eez
+227,ssp245_near-term,9.701188869774342,Jersey,832,JEY,Europe,Northern Europe,31,eez
+227,ssp585_current,4.604994821362197,Jersey,832,JEY,Europe,Northern Europe,31,eez
+227,ssp585_medium-term,14.317135199904442,Jersey,832,JEY,Europe,Northern Europe,31,eez
+227,ssp585_near-term,9.948066242039204,Jersey,832,JEY,Europe,Northern Europe,31,eez
+228,ssp245_current,47.82616177201271,Guernsey,831,GGY,Europe,Northern Europe,87,eez
+228,ssp245_medium-term,73.5237977206707,Guernsey,831,GGY,Europe,Northern Europe,87,eez
+228,ssp245_near-term,65.7917652130127,Guernsey,831,GGY,Europe,Northern Europe,87,eez
+228,ssp585_current,44.10869598388672,Guernsey,831,GGY,Europe,Northern Europe,87,eez
+228,ssp585_medium-term,84.79112082719803,Guernsey,831,GGY,Europe,Northern Europe,87,eez
+228,ssp585_near-term,67.26996472477913,Guernsey,831,GGY,Europe,Northern Europe,87,eez
+231,ssp245_current,45.81125402543694,East Timor,NA,NA,Asia,South-Eastern Asia,431,eez
+231,ssp245_medium-term,292.02948466246016,East Timor,NA,NA,Asia,South-Eastern Asia,431,eez
+231,ssp245_near-term,180.66629927093163,East Timor,NA,NA,Asia,South-Eastern Asia,431,eez
+231,ssp585_current,44.16849991035997,East Timor,NA,NA,Asia,South-Eastern Asia,431,eez
+231,ssp585_medium-term,349.62883516028523,East Timor,NA,NA,Asia,South-Eastern Asia,431,eez
+231,ssp585_near-term,211.04692356160376,East Timor,NA,NA,Asia,South-Eastern Asia,431,eez
+232,ssp245_current,0.03519584983587265,Bosnia and Herzegovina,70,BIH,Europe,Southern Europe,3,eez
+232,ssp245_medium-term,0.0697038471698761,Bosnia and Herzegovina,70,BIH,Europe,Southern Europe,3,eez
+232,ssp245_near-term,0.05310555920004845,Bosnia and Herzegovina,70,BIH,Europe,Southern Europe,3,eez
+232,ssp585_current,0.03667318820953369,Bosnia and Herzegovina,70,BIH,Europe,Southern Europe,3,eez
+232,ssp585_medium-term,0.0773824006319046,Bosnia and Herzegovina,70,BIH,Europe,Southern Europe,3,eez
+232,ssp585_near-term,0.04929671436548233,Bosnia and Herzegovina,70,BIH,Europe,Southern Europe,3,eez
+237,ssp245_current,3.1939520612359047,Oecussi Ambeno,NA,NA,Asia,South-Eastern Asia,24,eez
+237,ssp245_medium-term,9.149928659200668,Oecussi Ambeno,NA,NA,Asia,South-Eastern Asia,24,eez
+237,ssp245_near-term,4.531246319413185,Oecussi Ambeno,NA,NA,Asia,South-Eastern Asia,24,eez
+237,ssp585_current,2.8894713670015335,Oecussi Ambeno,NA,NA,Asia,South-Eastern Asia,24,eez
+237,ssp585_medium-term,12.992345094680786,Oecussi Ambeno,NA,NA,Asia,South-Eastern Asia,24,eez
+237,ssp585_near-term,6.415160357952118,Oecussi Ambeno,NA,NA,Asia,South-Eastern Asia,24,eez
+244,ssp245_current,77.51817025244236,Curaçao,531,CUW,Latin America and the Caribbean,Caribbean,310,eez
+244,ssp245_medium-term,232.92043018341064,Curaçao,531,CUW,Latin America and the Caribbean,Caribbean,310,eez
+244,ssp245_near-term,176.01566419005394,Curaçao,531,CUW,Latin America and the Caribbean,Caribbean,310,eez
+244,ssp585_current,71.79256771504879,Curaçao,531,CUW,Latin America and the Caribbean,Caribbean,310,eez
+244,ssp585_medium-term,272.3758868575096,Curaçao,531,CUW,Latin America and the Caribbean,Caribbean,310,eez
+244,ssp585_near-term,169.95542681217194,Curaçao,531,CUW,Latin America and the Caribbean,Caribbean,310,eez
+245,ssp245_current,29.781970605254173,Bonaire,NA,NA,Latin America and the Caribbean,Caribbean,138,eez
+245,ssp245_medium-term,107.45562446117401,Bonaire,NA,NA,Latin America and the Caribbean,Caribbean,138,eez
+245,ssp245_near-term,76.24295634031296,Bonaire,NA,NA,Latin America and the Caribbean,Caribbean,138,eez
+245,ssp585_current,26.263647601008415,Bonaire,NA,NA,Latin America and the Caribbean,Caribbean,138,eez
+245,ssp585_medium-term,125.09393209218979,Bonaire,NA,NA,Latin America and the Caribbean,Caribbean,138,eez
+245,ssp585_near-term,73.52896735072136,Bonaire,NA,NA,Latin America and the Caribbean,Caribbean,138,eez
+247,ssp245_current,124.9140360057354,Brunei,NA,NA,Asia,South-Eastern Asia,269,eez
+247,ssp245_medium-term,239.96492284536362,Brunei,NA,NA,Asia,South-Eastern Asia,269,eez
+247,ssp245_near-term,194.58101615309715,Brunei,NA,NA,Asia,South-Eastern Asia,269,eez
+247,ssp585_current,128.33766302466393,Brunei,NA,NA,Asia,South-Eastern Asia,269,eez
+247,ssp585_medium-term,274.59007424116135,Brunei,NA,NA,Asia,South-Eastern Asia,269,eez
+247,ssp585_near-term,197.055606007576,Brunei,NA,NA,Asia,South-Eastern Asia,269,eez
+248,ssp245_current,16.321142800152302,Saba,NA,NA,Latin America and the Caribbean,Caribbean,96,eez
+248,ssp245_medium-term,74.63133442401886,Saba,NA,NA,Latin America and the Caribbean,Caribbean,96,eez
+248,ssp245_near-term,53.298677414655685,Saba,NA,NA,Latin America and the Caribbean,Caribbean,96,eez
+248,ssp585_current,20.622730627655983,Saba,NA,NA,Latin America and the Caribbean,Caribbean,96,eez
+248,ssp585_medium-term,87.4075163602829,Saba,NA,NA,Latin America and the Caribbean,Caribbean,96,eez
+248,ssp585_near-term,54.100957453250885,Saba,NA,NA,Latin America and the Caribbean,Caribbean,96,eez
+249,ssp245_current,1.9760716184973717,Sint Eustatius,NA,NA,Latin America and the Caribbean,Caribbean,25,eez
+249,ssp245_medium-term,9.918746709823608,Sint Eustatius,NA,NA,Latin America and the Caribbean,Caribbean,25,eez
+249,ssp245_near-term,7.022428423166275,Sint Eustatius,NA,NA,Latin America and the Caribbean,Caribbean,25,eez
+249,ssp585_current,3.251334011554718,Sint Eustatius,NA,NA,Latin America and the Caribbean,Caribbean,25,eez
+249,ssp585_medium-term,13.452668249607086,Sint Eustatius,NA,NA,Latin America and the Caribbean,Caribbean,25,eez
+249,ssp585_near-term,6.925290629267693,Sint Eustatius,NA,NA,Latin America and the Caribbean,Caribbean,25,eez
+250,ssp245_current,54.19950741529465,Aruba,533,ABW,Latin America and the Caribbean,Caribbean,256,eez
+250,ssp245_medium-term,182.66573560237885,Aruba,533,ABW,Latin America and the Caribbean,Caribbean,256,eez
+250,ssp245_near-term,137.3301526606083,Aruba,533,ABW,Latin America and the Caribbean,Caribbean,256,eez
+250,ssp585_current,49.276071548461914,Aruba,533,ABW,Latin America and the Caribbean,Caribbean,256,eez
+250,ssp585_medium-term,215.79465687274933,Aruba,533,ABW,Latin America and the Caribbean,Caribbean,256,eez
+250,ssp585_near-term,131.85859796404839,Aruba,533,ABW,Latin America and the Caribbean,Caribbean,256,eez
+260,ssp245_current,18789.802249759436,Arctic Sea,NA,NA,Arctic Sea,Arctic Sea,25663,eez
+260,ssp245_medium-term,25869.44231159985,Arctic Sea,NA,NA,Arctic Sea,Arctic Sea,25663,eez
+260,ssp245_near-term,22429.395339407027,Arctic Sea,NA,NA,Arctic Sea,Arctic Sea,25663,eez
+260,ssp585_current,13859.736713558435,Arctic Sea,NA,NA,Arctic Sea,Arctic Sea,25663,eez
+260,ssp585_medium-term,21497.095413107425,Arctic Sea,NA,NA,Arctic Sea,Arctic Sea,25663,eez
+260,ssp585_near-term,15918.315793007612,Arctic Sea,NA,NA,Arctic Sea,Arctic Sea,25663,eez
+261,ssp245_current,4414.6201080828905,Atlantic Northwest,NA,NA,Atlantic Ocean,Atlantic Northwest,26461,eez
+261,ssp245_medium-term,9802.817773804069,Atlantic Northwest,NA,NA,Atlantic Ocean,Atlantic Northwest,26461,eez
+261,ssp245_near-term,7668.21820859611,Atlantic Northwest,NA,NA,Atlantic Ocean,Atlantic Northwest,26461,eez
+261,ssp585_current,4625.8852909989655,Atlantic Northwest,NA,NA,Atlantic Ocean,Atlantic Northwest,26461,eez
+261,ssp585_medium-term,12971.215954214334,Atlantic Northwest,NA,NA,Atlantic Ocean,Atlantic Northwest,26461,eez
+261,ssp585_near-term,7695.732909023762,Atlantic Northwest,NA,NA,Atlantic Ocean,Atlantic Northwest,26461,eez
+262,ssp245_current,11322.513007238507,Atlantic Northeast,NA,NA,Atlantic Ocean,Atlantic Northeast,53351,eez
+262,ssp245_medium-term,26662.773126333952,Atlantic Northeast,NA,NA,Atlantic Ocean,Atlantic Northeast,53351,eez
+262,ssp245_near-term,18324.023343719542,Atlantic Northeast,NA,NA,Atlantic Ocean,Atlantic Northeast,53351,eez
+262,ssp585_current,11818.208740457892,Atlantic Northeast,NA,NA,Atlantic Ocean,Atlantic Northeast,53351,eez
+262,ssp585_medium-term,31931.879858970642,Atlantic Northeast,NA,NA,Atlantic Ocean,Atlantic Northeast,53351,eez
+262,ssp585_near-term,19010.142147541046,Atlantic Northeast,NA,NA,Atlantic Ocean,Atlantic Northeast,53351,eez
+263,ssp245_current,9886.028599619865,Atlantic Western Central,NA,NA,Atlantic Ocean,Atlantic Western Central,73617,eez
+263,ssp245_medium-term,36943.89982879162,Atlantic Western Central,NA,NA,Atlantic Ocean,Atlantic Western Central,73617,eez
+263,ssp245_near-term,25449.306936383247,Atlantic Western Central,NA,NA,Atlantic Ocean,Atlantic Western Central,73617,eez
+263,ssp585_current,10240.409071318805,Atlantic Western Central,NA,NA,Atlantic Ocean,Atlantic Western Central,73617,eez
+263,ssp585_medium-term,45459.17217105627,Atlantic Western Central,NA,NA,Atlantic Ocean,Atlantic Western Central,73617,eez
+263,ssp585_near-term,25238.928254902363,Atlantic Western Central,NA,NA,Atlantic Ocean,Atlantic Western Central,73617,eez
+264,ssp245_current,16918.24612660706,Atlantic Eastern Central,NA,NA,Atlantic Ocean,Atlantic Eastern Central,91176,eez
+264,ssp245_medium-term,48458.585018485785,Atlantic Eastern Central,NA,NA,Atlantic Ocean,Atlantic Eastern Central,91176,eez
+264,ssp245_near-term,31770.23126460612,Atlantic Eastern Central,NA,NA,Atlantic Ocean,Atlantic Eastern Central,91176,eez
+264,ssp585_current,17279.771310567856,Atlantic Eastern Central,NA,NA,Atlantic Ocean,Atlantic Eastern Central,91176,eez
+264,ssp585_medium-term,61700.49108505249,Atlantic Eastern Central,NA,NA,Atlantic Ocean,Atlantic Eastern Central,91176,eez
+264,ssp585_near-term,36184.083860486746,Atlantic Eastern Central,NA,NA,Atlantic Ocean,Atlantic Eastern Central,91176,eez
+266,ssp245_current,18320.44161436893,Atlantic Southwest,NA,NA,Atlantic Ocean,Atlantic Southwest,123693,eez
+266,ssp245_medium-term,54873.912014871836,Atlantic Southwest,NA,NA,Atlantic Ocean,Atlantic Southwest,123693,eez
+266,ssp245_near-term,32840.743093550205,Atlantic Southwest,NA,NA,Atlantic Ocean,Atlantic Southwest,123693,eez
+266,ssp585_current,17591.68888528645,Atlantic Southwest,NA,NA,Atlantic Ocean,Atlantic Southwest,123693,eez
+266,ssp585_medium-term,68057.84931245446,Atlantic Southwest,NA,NA,Atlantic Ocean,Atlantic Southwest,123693,eez
+266,ssp585_near-term,36556.61873270571,Atlantic Southwest,NA,NA,Atlantic Ocean,Atlantic Southwest,123693,eez
+267,ssp245_current,21871.94373997301,Atlantic Southeast,NA,NA,Atlantic Ocean,Atlantic Southeast,149921,eez
+267,ssp245_medium-term,67770.04090343416,Atlantic Southeast,NA,NA,Atlantic Ocean,Atlantic Southeast,149921,eez
+267,ssp245_near-term,38248.33240891248,Atlantic Southeast,NA,NA,Atlantic Ocean,Atlantic Southeast,149921,eez
+267,ssp585_current,21172.782741105184,Atlantic Southeast,NA,NA,Atlantic Ocean,Atlantic Southeast,149921,eez
+267,ssp585_medium-term,89616.28650939465,Atlantic Southeast,NA,NA,Atlantic Ocean,Atlantic Southeast,149921,eez
+267,ssp585_near-term,40672.51200776547,Atlantic Southeast,NA,NA,Atlantic Ocean,Atlantic Southeast,149921,eez
+269,ssp245_current,21948.91214137897,Indian Ocean Western,NA,NA,Indian Ocean,Indian Ocean Western,170954,eez
+269,ssp245_medium-term,76150.74243079126,Indian Ocean Western,NA,NA,Indian Ocean,Indian Ocean Western,170954,eez
+269,ssp245_near-term,42161.11684835702,Indian Ocean Western,NA,NA,Indian Ocean,Indian Ocean Western,170954,eez
+269,ssp585_current,19272.54376028478,Indian Ocean Western,NA,NA,Indian Ocean,Indian Ocean Western,170954,eez
+269,ssp585_medium-term,99358.25685684383,Indian Ocean Western,NA,NA,Indian Ocean,Indian Ocean Western,170954,eez
+269,ssp585_near-term,46338.8018264547,Indian Ocean Western,NA,NA,Indian Ocean,Indian Ocean Western,170954,eez
+270,ssp245_current,33017.7229469493,Indian Ocean Eastern,NA,NA,Indian Ocean,Indian Ocean Eastern,222600,eez
+270,ssp245_medium-term,93341.13493533432,Indian Ocean Eastern,NA,NA,Indian Ocean,Indian Ocean Eastern,222600,eez
+270,ssp245_near-term,54782.33485092968,Indian Ocean Eastern,NA,NA,Indian Ocean,Indian Ocean Eastern,222600,eez
+270,ssp585_current,33214.72338463366,Indian Ocean Eastern,NA,NA,Indian Ocean,Indian Ocean Eastern,222600,eez
+270,ssp585_medium-term,131616.86618983746,Indian Ocean Eastern,NA,NA,Indian Ocean,Indian Ocean Eastern,222600,eez
+270,ssp585_near-term,63374.08470334113,Indian Ocean Eastern,NA,NA,Indian Ocean,Indian Ocean Eastern,222600,eez
+272,ssp245_current,16014.48967712652,Pacific Northwest,NA,NA,Pacific Ocean,Pacific Northwest,103397,eez
+272,ssp245_medium-term,46878.188201952726,Pacific Northwest,NA,NA,Pacific Ocean,Pacific Northwest,103397,eez
+272,ssp245_near-term,30449.095084309578,Pacific Northwest,NA,NA,Pacific Ocean,Pacific Northwest,103397,eez
+272,ssp585_current,14551.972774857655,Pacific Northwest,NA,NA,Pacific Ocean,Pacific Northwest,103397,eez
+272,ssp585_medium-term,61949.69652463868,Pacific Northwest,NA,NA,Pacific Ocean,Pacific Northwest,103397,eez
+272,ssp585_near-term,33550.58012109436,Pacific Northwest,NA,NA,Pacific Ocean,Pacific Northwest,103397,eez
+273,ssp245_current,11579.443834915757,Pacific Northeast,NA,NA,Pacific Ocean,Pacific Northeast,45829,eez
+273,ssp245_medium-term,23378.694598644972,Pacific Northeast,NA,NA,Pacific Ocean,Pacific Northeast,45829,eez
+273,ssp245_near-term,16576.066925108433,Pacific Northeast,NA,NA,Pacific Ocean,Pacific Northeast,45829,eez
+273,ssp585_current,12173.488163128495,Pacific Northeast,NA,NA,Pacific Ocean,Pacific Northeast,45829,eez
+273,ssp585_medium-term,31057.6009401381,Pacific Northeast,NA,NA,Pacific Ocean,Pacific Northeast,45829,eez
+273,ssp585_near-term,14054.44641213119,Pacific Northeast,NA,NA,Pacific Ocean,Pacific Northeast,45829,eez
+274,ssp245_current,7753.193256855011,Pacific Western Central,NA,NA,Pacific Ocean,Pacific Western Central,63694,eez
+274,ssp245_medium-term,36364.320977285504,Pacific Western Central,NA,NA,Pacific Ocean,Pacific Western Central,63694,eez
+274,ssp245_near-term,19144.53606917709,Pacific Western Central,NA,NA,Pacific Ocean,Pacific Western Central,63694,eez
+274,ssp585_current,7795.904564384371,Pacific Western Central,NA,NA,Pacific Ocean,Pacific Western Central,63694,eez
+274,ssp585_medium-term,45059.02951271832,Pacific Western Central,NA,NA,Pacific Ocean,Pacific Western Central,63694,eez
+274,ssp585_near-term,22422.403171114624,Pacific Western Central,NA,NA,Pacific Ocean,Pacific Western Central,63694,eez
+275,ssp245_current,41789.59993256256,Pacific Eastern Central,NA,NA,Pacific Ocean,Pacific Eastern Central,305962,eez
+275,ssp245_medium-term,138587.8200854808,Pacific Eastern Central,NA,NA,Pacific Ocean,Pacific Eastern Central,305962,eez
+275,ssp245_near-term,80331.16528206319,Pacific Eastern Central,NA,NA,Pacific Ocean,Pacific Eastern Central,305962,eez
+275,ssp585_current,40133.65675729886,Pacific Eastern Central,NA,NA,Pacific Ocean,Pacific Eastern Central,305962,eez
+275,ssp585_medium-term,182201.41149130464,Pacific Eastern Central,NA,NA,Pacific Ocean,Pacific Eastern Central,305962,eez
+275,ssp585_near-term,96073.18618689477,Pacific Eastern Central,NA,NA,Pacific Ocean,Pacific Eastern Central,305962,eez
+276,ssp245_current,34900.46679058671,Pacific Southwest,NA,NA,Pacific Ocean,Pacific Southwest,203531,eez
+276,ssp245_medium-term,87104.6825800091,Pacific Southwest,NA,NA,Pacific Ocean,Pacific Southwest,203531,eez
+276,ssp245_near-term,58906.585737377405,Pacific Southwest,NA,NA,Pacific Ocean,Pacific Southwest,203531,eez
+276,ssp585_current,38753.8840463981,Pacific Southwest,NA,NA,Pacific Ocean,Pacific Southwest,203531,eez
+276,ssp585_medium-term,113067.33091154695,Pacific Southwest,NA,NA,Pacific Ocean,Pacific Southwest,203531,eez
+276,ssp585_near-term,60555.17280007899,Pacific Southwest,NA,NA,Pacific Ocean,Pacific Southwest,203531,eez
+277,ssp245_current,31107.755621965975,Pacific Southeast,NA,NA,Pacific Ocean,Pacific Southeast,248207,eez
+277,ssp245_medium-term,103808.60730236769,Pacific Southeast,NA,NA,Pacific Ocean,Pacific Southeast,248207,eez
+277,ssp245_near-term,57593.600204370916,Pacific Southeast,NA,NA,Pacific Ocean,Pacific Southeast,248207,eez
+277,ssp585_current,32306.10773766786,Pacific Southeast,NA,NA,Pacific Ocean,Pacific Southeast,248207,eez
+277,ssp585_medium-term,132644.9930087179,Pacific Southeast,NA,NA,Pacific Ocean,Pacific Southeast,248207,eez
+277,ssp585_near-term,73872.45527812839,Pacific Southeast,NA,NA,Pacific Ocean,Pacific Southeast,248207,eez
