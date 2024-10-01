@@ -1,0 +1,222 @@
+---
+title: "Benthic temperature"
+format: html
+editor: visual
+---
+
+## Benthic temperature
+
+The Ocean temperature data are bio-oracle data from here:
+
+https://bio-oracle.org/downloads-to-email.php
+
+units: degrees C
+
+average of a given decade, and long-term average of the yearly monthly maxima and minima of a given decade (e.g., the average temperature of the warmest month in the period 2000-2010).
+
+Resolution: 0.05 degree resolution
+
+For benthic: because focal cells at 0.05 degree resolution comprise a wide range of depth values, the benthic layers were developed for the minimum, average and maximum depth within focal cells.
+
+Downloaded September 30 2024.
+
+```{r}
+library(tidyverse)
+library(terra)
+library(ncdf4)
+library(biooracler)
+library(here)
+# devtools::install_github("bio-oracle/biooracler")
+```
+
+Downloading the data (https://github.com/bio-oracle/biooracler):
+
+```{r}
+
+list_layers("Temperature")$dataset_id
+dataset_id <- "thetao_ssp245_2020_2100_depthmean"
+info_layer(dataset_id)
+
+
+# make a function to download the data from site
+# (called by getdata function after this)
+layer_download <- function(time, latitude, longitude, dataset_id, statistic){
+constraints = list(time, latitude, longitude)
+names(constraints) = c("time", "latitude", "longitude")
+variables = paste0(variable, "_", statistic)
+layers <- download_layers(dataset_id, variables, constraints)
+return(layers)
+}
+
+# make a function to get oxygen and depth data for each time period.
+getdata <- function(variable = "thetao", depth = "depthmean", statistic = "mean"){
+
+latitude = c(-89.975, 89.975)
+longitude = c(-179.975, 179.975)
+
+ scenarios = c("ssp119", "ssp126", "ssp245", "ssp370", "ssp460", "ssp585")
+
+#historical
+dataset_id <- paste0(variable, "_baseline_2000_2019_", depth)
+time = c('2000-01-01T00:00:00Z', '2000-01-01T00:00:00Z')
+
+layers <- layer_download(time=time, latitude=latitude, longitude = longitude, dataset_id = dataset_id, statistic = statistic)
+
+writeRaster(layers, filename = file.path("//home/shares/ohi/stressors_2021/_raw_data/biooracle_temperature", paste0(variable, "-", depth, "_", statistic, "_hist_hist.tif")), overwrite=TRUE)
+
+#current
+dataset_id <- paste0(variable, "_baseline_2000_2019_", depth)
+time = c('2010-01-01T00:00:00Z', '2010-01-01T00:00:00Z')
+
+layers <- layer_download(time=time, latitude=latitude, longitude = longitude, dataset_id = dataset_id, statistic=statistic)
+
+writeRaster(layers, filename = file.path("/home/shares/ohi/stressors_2021/_raw_data/biooracle_temperature", paste0(variable, "-", depth, "_", statistic, "_current_current.tif")), overwrite=TRUE)
+
+# scenarios
+for(scenario in scenarios){ # scenario=scenarios[3]
+  
+dataset_id <- paste0(variable, "_", scenario, "_2020_2100_", depth)
+
+##near
+time = c('2020-01-01T00:00:00Z', '2030-01-01T00:00:00Z')
+layers <- layer_download(time=time, latitude=latitude, longitude = longitude, dataset_id = dataset_id, statistic=statistic)
+rmean <- app(layers, mean)
+writeRaster(rmean, filename = file.path("/home/shares/ohi/stressors_2021/_raw_data/biooracle_temperature", paste0(variable, "-", depth, "_", statistic, "_", scenario, "_near-term.tif")), overwrite=TRUE)
+  
+##medium
+time = c('2040-01-01T00:00:00Z', '2050-01-01T00:00:00Z')
+layers <- layer_download(time=time, latitude=latitude, longitude = longitude, dataset_id = dataset_id, statistic=statistic)
+rmean <- app(layers, mean)
+writeRaster(rmean, filename = file.path("/home/shares/ohi/stressors_2021/_raw_data/biooracle_temperature", paste0(variable, "-", depth, "_", statistic, "_", scenario, "_medium-term.tif")), overwrite=TRUE)
+
+##long
+time = c('2080-01-01T00:00:00Z', '2090-01-01T00:00:00Z')
+layers <- layer_download(time=time, latitude=latitude, longitude = longitude, dataset_id = dataset_id, statistic=statistic)
+rmean <- app(layers, mean)
+writeRaster(rmean, filename = file.path("/home/shares/ohi/stressors_2021/_raw_data/biooracle_temperature", paste0(variable, "-", depth, "_", statistic, "_", scenario, "_long-term.tif")), overwrite=TRUE)
+  
+}
+}
+
+
+#### This will update the data in the folder!
+# benthic (average depth) data
+# mean temperature
+#getdata(variable = "thetao", depth="depthmean", statistic="mean")
+# average yearly range (based on average monthly high and low)
+#getdata(variable = "thetao", depth="depthmean", statistic="range")
+
+
+```
+
+# Rescaling
+
+```{r}
+
+rescale_files <- expand.grid(
+  scenario = c("ssp119", "ssp126", "ssp245", "ssp370", "ssp460", "ssp585"),
+  time_frame =c("near-term", "medium-term", "long-term"))
+
+current <- data.frame(scenario = "current", time_frame = "current")
+rescale_files <- rbind(rescale_files, current)
+
+rescale_temp <- function(scenario = "ssp585",
+                    time_frame = "medium-term",
+                    historic_range = "/home/shares/ohi/stressors_2021/_raw_data/biooracle_temperature/thetao-depthmean_range_hist_hist.tif",
+                    historic_mean = "/home/shares/ohi/stressors_2021/_raw_data/biooracle_temperature/thetao-depthmean_mean_hist_hist.tif"){
+
+    hist_mean <- rast(historic_mean)
+    hist_range <- rast(historic_range)
+  
+future <- rast(sprintf("/home/shares/ohi/stressors_2021/_raw_data/biooracle_temperature/thetao-depthmean_mean_%s_%s.tif", scenario, time_frame))
+
+change <- future - hist_mean  
+rescale <- change/hist_range
+rescale <- ifel(rescale > 1, 1, rescale)
+rescale <- ifel(rescale<=0, 0, rescale)
+    
+writeRaster(rescale, sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_benthic/rescaled/benthic-temp_%s_%s.tif", scenario, time_frame), overwrite=TRUE)
+}
+
+for(i in 1:dim(rescale_files)[1]){ # i=1
+tmp_scenario = rescale_files[i,"scenario"]
+tmp_time = rescale_files[i,"time_frame"]
+
+  rescale_temp(scenario = tmp_scenario,
+              time_frame = tmp_time)  
+}
+
+# delete the aux files
+delete_files <- list.files("/home/shares/ohi/stressors_2021/_dataprep/T_benthic/rescaled", full=TRUE, pattern=".aux")
+
+file.remove(delete_files)
+
+# expand the current ones
+scenarios <- c("ssp119", "ssp126", "ssp245", "ssp370", "ssp460", "ssp585")
+current_files <- list.files("/home/shares/ohi/stressors_2021/_dataprep/T_benthic/rescaled", full=TRUE, pattern="current")
+
+for(current_file in current_files){ #current_file <- current_files[1]
+  tmp <- rast(current_file)
+  for(scenario in scenarios){ # scenario = scenarios[1]
+    saveName <- basename(current_file)
+    saveName <- gsub("_current_", sprintf("_%s_", scenario), saveName)
+  writeRaster(tmp, sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_benthic/rescaled/%s", saveName))
+  }}
+
+# delete the current ones
+delete_files <- list.files("/home/shares/ohi/stressors_2021/_dataprep/T_benthic/rescaled", full=TRUE, pattern="current_current")
+file.remove(delete_files)
+
+
+```
+
+Final formatting
+
+```{r}
+rast_base_10km_file <- terra::rast(here('_spatial/rast_base_mol_10km.tif'))
+ocean_template <- terra::rast(here('_spatial/ocean_area_mol.tif'))
+ocean_template[ocean_template>0] <- 1
+plot(ocean_template)
+
+T_paths <- list.files("/home/shares/ohi/stressors_2021/_dataprep/T_benthic/rescaled", full=TRUE)
+
+for(T_path in T_paths){ # T_path = T_paths[1]
+T_rast <- terra::rast(T_path)
+
+mol_rast <- terra::project(T_rast, rast_base_10km_file, method="bilinear", over=TRUE)
+#plot(mol_rast)
+
+## gapfill
+gf_raster <- function(x){raster::focal(x, w = matrix(1,3,3), fun = mean, na.rm=TRUE, na.policy="only")}
+
+r = mol_rast
+  
+## Repeat 50 times (most is immediately gapfilled but the antarctic area was persistent)
+i <- 0
+while (i <= 50){
+r <- gf_raster(r)
+i <- i + 1
+print(i)
+}
+
+# plot(r)
+r <- r*ocean_template
+# diff_rast <- r - mol_rast
+#plot(diff_rast) # should be 0 
+
+saveName <- basename(T_path)
+writeRaster(r, filename = file.path("/home/shares/ohi/stressors_2021/_dataprep/T_benthic/rescaled_mol", saveName), overwrite = TRUE)
+}
+
+```
+
+Quick look at some!
+
+```{r}
+raws <- list.files("/home/shares/ohi/stressors_2021/_dataprep/T_benthic/rescaled_mol", full=TRUE)
+
+tmp <- rast(raws[10]) - rast(raws[1])
+plot(tmp)
+
+
+```

@@ -9,3 +9,4 @@ x,npp,/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled_mol,npp_rescale
 ,fisheries targeted biomass removal,/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure,fisheries,"ssp1, ssp2, ssp3, ssp4, ssp5","current, near-term, medium-term, long-term"
 ,extreme air heat index,/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/pressure_crop,heat-index,"ssp119, ssp126, ssp245, ssp370, ssp585","current, near-term, medium-term, long-term"
 ,surface oxygen,home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled_mol,o2-depthsurf,"ssp119, ssp126, ssp245, ssp370, ssp460, ssp585","current, near-term, medium-term, long-term"
+,benthic temperature,home/shares/ohi/stressors_2021/_dataprep/T_benthic/rescaled_mol,benthic-temp,"ssp119, ssp126, ssp245, ssp370, ssp460, ssp585","current, near-term, medium-term, long-term"
