@@ -17,6 +17,9 @@ cols_palette <- paletteer_c("ggthemes::Sunset-Sunrise Diverging", 30)
 ```
 
 ```{r, include = FALSE, echo=FALSE}
+
+clean <- list.files("combining_pressures/figs_floating_scale", full=TRUE)
+file.remove(clean)
 # make the pngs of the data
 files <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/rescaled_pressures", full=TRUE)
 

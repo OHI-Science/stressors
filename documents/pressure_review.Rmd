@@ -98,7 +98,7 @@ Non-indigenous species | marine vessel transport, mariculture, aquarium trade
 
 ** includes categories of extreme events (number of days > 35 or 40 C, dry and wet bulb temperatures)
 
-We were able to get current and future estimates for 11 of the pressure categories (I am still going to assume I can get the fisheries stuff). These data included various scenarios and methodologies. Without future projections, we were able to map 14 pressures. Major data limitations include:
+We were able to get current and future estimates for 10 of the pressure categories. These data included various scenarios and methodologies. Without future projections, we were able to map 14 pressures. Major data limitations include:
 
 - locations of most coastal and marine structures (hardening, windmills, wave energy, coastal hardening) 
 - a great deal of uncertainty in the location of mariculture

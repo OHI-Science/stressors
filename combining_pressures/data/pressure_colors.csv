@@ -13,11 +13,13 @@ slr,coastal,#499894FF
 slr,global,#86BCB6FF
 coastal-disturbance,coastal,#E15759FF
 coastal-disturbance,global,#FF9D9AFF
-oxygen-deep,coastal,#79706EFF
-oxygen-deep,global,#BAB0ACFF
+oxygen-benthic,coastal,#79706EFF
+oxygen-benthic,global,#BAB0ACFF
 oa,coastal,#D37295FF
 oa,global,#FABFD2FF
 fisheries-biomass-loss,coastal,#B07AA1FF
 fisheries-biomass-loss,global,#D4A6C8FF
 sst-extremes,coastal,#9D7660FF
 sst-extremes,global,#D7B5A6FF
+temperature-benthic,coastal,#8C564BFF
+temperature-benthic,global,#C49C94FF

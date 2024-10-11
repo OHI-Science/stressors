@@ -18,6 +18,7 @@ Save final pressure files to consistent file location and adjust filenaming.
 
 pressure_save <- "/home/shares/ohi/stressors_2021/combining_pressures/rescaled_pressures"
 pressure_list <- read_csv(here("combining_pressures/pressure_list.csv"))
+file.remove(list.files(pressure_save, full=TRUE))
 
 files_to_save <- paste0(pressure_list$f_path, "/", pressure_list$fn_pressure, "_",  pressure_list$fn_scenario, "_", pressure_list$fn_time, ".tif")
 files_new_loc <- paste0(pressure_save, "/", pressure_list$new_fn_pressure, "_", pressure_list$fn_scenario, "_", pressure_list$fn_time, ".tif")
@@ -25,13 +26,16 @@ for (i in seq_along(files_to_save)) { # i = 178
   file.copy(from = files_to_save[i], to = files_new_loc[i], overwrite = TRUE)
 }
 
-length(list.files(pressure_save)) # currently should be 203
+length(list.files(pressure_save)) # currently should be 227
 
 ```
 
 
 Calculate raster differences
 ```{r}
+
+clean <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/change", full=TRUE)
+file.remove(clean)
 
 files_df <- data.frame(fp = list.files("/home/shares/ohi/stressors_2021/combining_pressures/rescaled_pressures", full=TRUE))
 files_df$fn <- basename(files_df$fp) 
@@ -73,6 +77,9 @@ for(pressure in pressure_list){ # pressure = pressure_list[1]
 Obtain cumulative pressures
 ```{r}
 
+clean <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/", full=TRUE)
+file.remove(clean)
+
 files_df <- data.frame(fp = list.files("/home/shares/ohi/stressors_2021/combining_pressures/rescaled_pressures", full=TRUE))
 files_df$fn <- basename(files_df$fp) 
 files_df <- files_df %>%
@@ -94,11 +101,14 @@ for (i in 1:dim(cumulative_list)[1]){ # i = 1
    cat(as.character(scenario), " ", as.character(timeframe), " ", length(file_list$df_pressure), "\n")
   stack <- rast(file_list$fp)
   cumulative <- app(stack, "sum", na.rm=TRUE)
-  writeRaster(cumulative, sprintf("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/%s_%s.tif", scenario, timeframe))
+  writeRaster(cumulative, sprintf("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/%s_%s.tif", scenario, timeframe), overwrite=TRUE)
   
 }
 
-#check that all outputs have N=11 (or, whatever!)
+#check that all outputs have N=12
+
+clean <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/cumulative_change/", full=TRUE)
+file.remove(clean)
 
 list.files("/home/shares/ohi/stressors_2021/combining_pressures/cumulative/", full=TRUE)
 
@@ -128,6 +138,8 @@ writeRaster(ssp585_t2, "/home/shares/ohi/stressors_2021/combining_pressures/cumu
 
 Make cumulative figures
 ```{r}
+clean <- list.files(here("combining_pressures/figs_cumulative"), full=TRUE)
+file.remove(clean)
 
 library(paletteer)
 library(png)
@@ -163,6 +175,9 @@ dev.off()
 Make cumulative difference raster plots.
 
 ```{r}
+
+clean <- list.files(here("combining_pressures/figs_cumulative_diff"), full=TRUE)
+file.remove(clean)
 
 tmp <- list.files("/home/shares/ohi/stressors_2021/combining_pressures/cumulative", full=TRUE)
 
