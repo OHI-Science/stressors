@@ -724,7 +724,7 @@ summary(mod)
 
 
 ### Zonal country pressure impacts
-First step is to summarize the pressures for each habitat (being sure to divide by the pressure).
+First step is to correct for the number of habitats (being sure to divide by the pressure).
 
 ```{r}
 

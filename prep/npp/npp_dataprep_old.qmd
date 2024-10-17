@@ -12,9 +12,7 @@ https://psl.noaa.gov/ipcc/cmip6/
 
 The rasters are organized like this:
 
-**Caption:** Primary Organic Carbon Production by All Types of Phytoplankton for ENSMN interpolated on a 1x1 grid for the entire year; **First panel:**  mean climate from the historical experiment for the period 1955-1984; **Second panel:** difference in the mean climate in the future time period (e.g., ssp126: 2020-2049) compared to the historical reference period (1955-1984); **Third panel:** inter-annual (de-trended) standard deviation for the historical reference period (1955-1984); **Fourth panel:** ratio of the de-trended variance in the future (e.g., 2020-2049) divided by the past (1955-1984).
-
-The current period is from 1985-2014.
+**Caption:** Primary Organic Carbon Production by All Types of Phytoplankton for ENSMN interpolated on a 1x1 grid for the entire year; **First panel:**  mean climate from the historical experiment for the period 1985-2014; **Second panel:** difference in the mean climate in the future time period (ssp126: 2020-2049) compared to the historical reference period (1985-2014); **Third panel:** inter-annual (de-trended) standard deviation for the historical reference period (1985-2014); **Fourth panel:** ratio of the de-trended variance in the future (2020-2049) divided by the past (1985-2014).
 
 units: 1.E-9 mol m-2 s-1
 
@@ -22,23 +20,22 @@ units: 1.E-9 mol m-2 s-1
 library(tidyverse)
 library(terra)
 library(ncdf4)
-library(here)
 ```
 
 Exploring the data (can skip):
 
 ```{r}
-tmp1 <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models_hist_1955-1984/npp_ssp126_2020_2049_v1.nc")
+tmp1 <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models_hist_1985-2014/npp_ssp126_2020_2049_v1.nc")
 test1 <- tmp1[[1]]
 test3 <- tmp1[[3]]
 
-tmp2 <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models_hist_1955-1984/npp_ssp126_2040_2069_v1.nc")
+tmp2 <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models_hist_1985-2014/npp_ssp126_2040_2069_v1.nc")
 test2 <- tmp2[[1]]
 
 plot(test2-test1) # good! these are the same data, which makes sense (but I wanted to check)
 
 
-tmp <- nc_open("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models_hist_1955-1984/npp_ssp126_2020_2049_v1.nc")
+tmp <- nc_open("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models_hist_1985-2014/npp_ssp126_2020_2049_v1.nc")
 names(tmp[['var']])
 ncatt_get(tmp, attributes(tmp$var)$names[1])$info
 
@@ -49,7 +46,7 @@ tmp <- ReadNetCDF("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models_his
 
 ```{r}
 
-nc_files <- list.files("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models_hist_1955-1984/", full=TRUE)
+nc_files <- list.files("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models_hist_1985-2014/", full=TRUE)
 
 for(nc in nc_files){ # nc = nc_files[1]
   
@@ -73,7 +70,7 @@ file_names <- nc_open(nc)
  fileName_future <- ncatt_get(file_names, attributes(file_names$var)$names[layer+n_layers])$info
  fileName_future <- gsub("anomaly ", "", fileName_future)
  fileName_future <- gsub(" ", "_", fileName_future)
- fileName_future <- gsub("-\\(1955-1984\\)", "", fileName_future)
+ fileName_future <- gsub("-\\(1985-2014\\)", "", fileName_future)
 
   
  writeRaster(historical, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/extracted_files/%s.tif", fileName_his), overwrite=TRUE)
@@ -87,52 +84,15 @@ file_names <- nc_open(nc)
   
 }
 
-tmp <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models_hist_1955-1984/npp_ssp126_2020_2049_v1.nc")
+tmp <- terra::rast("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models_hist_1985-2014/npp_ssp126_2020_2049_v1.nc")
 terra::plot(tmp[[2]])
 
-tmp <- nc_open("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models_hist_1955-1984/npp_ssp126_2020_2049_v1.nc")
+tmp <- nc_open("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models_hist_1985-2014//npp_ssp126_2020_2049_v1.nc")
 names(tmp[['var']])
 ncatt_get(tmp, attributes(tmp$var)$names[1])$info
 
 
 ```
-
-
-Get the "historical" from 1984-2014
-```{r}
-
-nc_files <- list.files("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models_hist_1985-2014/", full=TRUE)
-
-for(nc in nc_files){ # nc = nc_files[1]
-  
-  nc_rast <- terra::rast(nc)
-  n_layers <- dim(nc_rast)[3]/4
-
-file_names <- nc_open(nc)
-
-    
-  for(layer in 1:n_layers){#layer=1
-    
-    historical <- nc_rast[[layer]]
-
-
- fileName_his <- ncatt_get(file_names, attributes(file_names$var)$names[layer+n_layers])$info
- fileName_his <- sub("anomaly \\(.*\\)", "current", fileName_his)
- fileName_his <- gsub(" ", "_", fileName_his)
- 
- 
- writeRaster(historical, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/extracted_files/%s.tif", fileName_his), overwrite=TRUE)
- 
- #plot(terra::rast(list.files("/home/shares/ohi/stressors_2021/_dataprep/npp/extracted_files", full=TRUE)[1]))
- 
- 
-  }
-  
-}
-
-
-```
-
 
 ```{r}
 
@@ -150,7 +110,7 @@ ensemble_models <- intersect(ensemble_models, ssp585_mods)
 ensemble_models <- paste(ensemble_models, collapse="|")
 
 ensemble_combos <- expand.grid(scenario=c("ssp126", "ssp245", "ssp370", "ssp585"),
-            time = c("current", "historical", "(2020-2049)", "(2040-2069)", "(2070-2099)"))
+            time = c("historical", "(2020-2049)", "(2040-2069)", "(2070-2099)"))
 
 ```
 
@@ -180,7 +140,6 @@ for(i in 1:dim(ensemble_combos)[1]){ # i=4
 
 ```
 
-
 rescaling the data:
 
 ```{r}
@@ -193,22 +152,17 @@ for(scenario in scenarios){ #scenario = scenarios[1]
   
   scenario_rasters <- grep(scenario, ensemble_list, value=TRUE)
   
-  current <- rast(grep("current", scenario_rasters, value=TRUE))
   historical <- rast(grep("historical", scenario_rasters, value=TRUE))
   near <- rast(grep("2020-2049", scenario_rasters, value=TRUE))
   medium <- rast(grep("2040-2069", scenario_rasters, value=TRUE))
   long <- rast(grep("2070-2099", scenario_rasters, value=TRUE))
   
-    writeRaster(current, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_raw_%s_current.tif", scenario), overwrite=TRUE)
-  writeRaster(historical, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_raw_%s_historical.tif", scenario), overwrite=TRUE)
+  writeRaster(historical, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_raw_%s_current.tif", scenario), overwrite=TRUE)
     writeRaster(near, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_raw_%s_near-term.tif", scenario), overwrite=TRUE)
     writeRaster(medium, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_raw_%s_medium-term.tif", scenario), overwrite=TRUE)
     writeRaster(long, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_raw_%s_long-term.tif", scenario), overwrite=TRUE)
     
-  
-  current_rescaled <- 1 - current/historical
-  current_rescaled <- ifel(current_rescaled>1, 1, current_rescaled)
-  current_rescaled <- ifel(current_rescaled<0, 0, current_rescaled)      
+      
   near_rescaled <- 1 - near/historical
   near_rescaled <- ifel(near_rescaled>1, 1, near_rescaled)
   near_rescaled <- ifel(near_rescaled<0, 0, near_rescaled)
@@ -219,11 +173,14 @@ for(scenario in scenarios){ #scenario = scenarios[1]
   long_rescaled <- ifel(long_rescaled>1, 1, long_rescaled)  
   long_rescaled <- ifel(long_rescaled<0, 0, long_rescaled)  
    
-      writeRaster(current_rescaled, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_rescaled_%s_current.tif", scenario), overwrite=TRUE)
     writeRaster(near_rescaled, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_rescaled_%s_near-term.tif", scenario), overwrite=TRUE)
     writeRaster(medium_rescaled, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_rescaled_%s_medium-term.tif", scenario), overwrite=TRUE)
     writeRaster(long_rescaled, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_rescaled_%s_long-term.tif", scenario), overwrite=TRUE)   
  
+    ## current have pressure of 0, with current method
+    current <- terra::ifel(!is.na(historical), 0, NA)
+      writeRaster(current, sprintf("/home/shares/ohi/stressors_2021/_dataprep/npp/raw_rescaled/npp_rescaled_%s_current.tif", scenario), overwrite=TRUE)
+  
 }
 ```
 

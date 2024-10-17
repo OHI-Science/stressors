@@ -1,0 +1,161 @@
+---
+title: "SLR"
+output: html_document
+date: "2023-07-26"
+---
+
+```{r setup, include=FALSE}
+library(terra)
+library(tidyverse)
+library(here)
+
+rast_base_10km_file <- terra::rast(here('_spatial/rast_base_mol_10km.tif'))
+
+```
+
+Get clipping area
+```{r}
+
+ocean_raw <- terra::rast(here('_spatial/ocean_area_mol.tif'))
+
+coast_tmp <- terra::ifel(ocean_raw >0 & ocean_raw<1, 1, NA)
+plot(coast_tmp)
+terra::global(coast_tmp, "sum", na.rm=TRUE)
+
+## masking out that outer ring!
+boundary_mask <- rast(nrow=1814, ncol=3617, xmin=-180, xmax=180, ymin=-90, ymax=90)
+values(boundary_mask) <- 1
+boundary_mask_mol <- terra::project(boundary_mask, "+proj=moll", res=10000)
+boundary_mask_mol <- extend(boundary_mask_mol, ext(coast), fill=NA)
+boundary_mask_mol <- resample(boundary_mask_mol, coast, method="near")
+inner_boundary <-  boundaries(boundary_mask_mol, inner=TRUE, falseval=0)
+global_mask <- ifel(inner_boundary==0, 1, NA)
+plot(global_mask)
+
+coast <- coast_tmp*global_mask
+plot(coast)
+terra::global(coast, "sum", na.rm=TRUE)
+
+
+```
+
+
+Gapfill, clip, and save rasters with new name
+```{r}
+
+file_rename <-data.frame(filename = c(
+  "CMIP6 - Sea level rise (SLR) Change meters - Long Term (2081-2100) SSP1-2.6 (rel. to 1995-2014) - Annual.tiff", 
+  "CMIP6 - Sea level rise (SLR) Change meters - Long Term (2081-2100) SSP2-4.5 (rel. to 1995-2014) - Annual .tiff", 
+  "CMIP6 - Sea level rise (SLR) Change meters - Long Term (2081-2100) SSP3-7.0 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Long Term (2081-2100) SSP5-8.5 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Medium Term (2041-2060) SSP1-2.6 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Medium Term (2041-2060) SSP2-4.5 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Medium Term (2041-2060) SSP3-7.0 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Medium Term (2041-2060) SSP5-8.5 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Near Term (2021-2040) SSP1-2.6 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Near Term (2021-2040) SSP2-4.5 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Near Term (2021-2040) SSP3-7.0 (rel. to 1995-2014) - Annual .tiff",
+  "CMIP6 - Sea level rise (SLR) Change meters - Near Term (2021-2040) SSP5-8.5 (rel. to 1995-2014) - Annual .tiff"),
+  scenario = c("ssp126", "ssp245", "ssp370", "ssp585", "ssp126", "ssp245", "ssp370", "ssp585", "ssp126", "ssp245", "ssp370", "ssp585"),
+  timeframe = rep(c("long-term", "medium-term", "near-term"), each=4))
+
+raw_data <- "/home/shares/ohi/stressors_2021/_raw_data/slr_ipcc"
+save_data_location <- "/home/shares/ohi/stressors_2021/_dataprep/slr"
+file_list <- list.files(raw_data, pattern="tif", full=TRUE)
+
+for(file in file_rename$filename){ # file = file_rename$filename[1]
+  
+  save_name <- paste0("slr-m_", file_rename$scenario[file_rename$filename==file], "_",
+                    file_rename$timeframe[file_rename$filename==file], ".tif")
+  
+  tmp <- rast(file.path(raw_data, file))
+  tmp_proj <- project(tmp, rast_base_10km_file, method="bilinear")
+
+  tmp_proj_gf <- tmp_proj
+
+for(i in 1:20){
+  i=1+i
+tmp_proj_gf <- terra::focal(tmp_proj_gf, w=3, fun=mean, na.rm=TRUE, na.policy="only")
+cat(i, "\n")
+}
+
+masked_gf <- tmp_proj_gf*coast
+    ## plot(masked_gf - tmp_proj)
+
+writeRaster(masked_gf, file.path(save_data_location, "raw", save_name), overwrite=TRUE)
+
+}
+
+```
+
+
+Rescale the rasters. This is based on the data from this paper:
+https://www.nature.com/articles/s41586-023-06448-z
+
+Using the general data that describes rates of slr and survival of mangrove, coral, and saltmarsh, the scaling factors are:
+0-4 mm/year or less is pressure 0
+4-10 mm/year scales linearly
+greater than 10 is a pressure of 1
+
+This necessitates finding the average rate of yearly change across time periods.
+
+```{r}
+
+raw_files <- list.files(file.path(save_data_location, "raw"), full=TRUE, pattern = "slr-m_")
+scenarios <- c("ssp126", "ssp245", "ssp370", "ssp585")
+
+for(scenario in scenarios) { #scenario = "ssp126"
+  scen_files <- grep(scenario, raw_files, value=TRUE)
+  
+  #calculate current and near term rates
+  time <- "near-term"
+  near <- grep(time, scen_files, value=TRUE)
+  near_rast <- rast(near)
+  near_annual <- near_rast/25 * 1000 # divide by average number of years the change is measured over, and multiply by 1000 to convert m to mm
+  writeRaster(near_annual, file.path(save_data_location, "raw", sprintf("slr-annual_%s_%s.tif", scenario, time)), overwrite=TRUE)
+    writeRaster(near_annual, file.path(save_data_location, "raw", sprintf("slr-annual_%s_current.tif", scenario)), overwrite=TRUE)
+    
+    #calculate medium term rates
+  time <- "medium-term"
+  med <- grep(time, scen_files, value=TRUE)
+  med_rast <- rast(med)
+  med_annual <- (med_rast - near_rast)/20 * 1000
+  writeRaster(med_annual, file.path(save_data_location, "raw", sprintf("slr-annual_%s_%s.tif", scenario, time)), overwrite=TRUE)
+
+      #calculate long term rates
+  time <- "long-term"
+  long <- grep(time, scen_files, value=TRUE)
+  long_rast <- rast(long)
+  long_annual <- (long_rast - med_rast)/40 * 1000
+  writeRaster(long_annual, file.path(save_data_location, "raw", sprintf("slr-annual_%s_%s.tif", scenario, time)), overwrite=TRUE)
+  
+}
+```
+
+
+# rescaling rasters
+
+```{r}
+
+annual_files <- list.files(file.path(save_data_location, "raw"), pattern = "slr-annual", full=TRUE)
+
+for(annual_file in annual_files){ #annual_file = annual_files[1]
+  
+
+  fileName <- basename(annual_file)
+  fileName <- gsub("-annual", "", fileName)
+  annual_rast <- rast(annual_file) 
+#  annual_rast <- c(-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+ rescaled <- (annual_rast - 4) / 6
+ rescaled <- clamp(rescaled, lower=0, upper=1)
+  
+writeRaster(rescaled, file.path(save_data_location, "rescaled", fileName), overwrite=TRUE)
+}
+
+
+```
+
+
+
+
+
