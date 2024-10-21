@@ -299,8 +299,8 @@ new_names <- gsub(".tif", "", basename(tmp))
 names(stack) <- new_names
 
 global(stack, "sum", na.rm=TRUE)
-2000034.7/852431.8
-2353158.6/847087.1
+2026580.3/890040.7
+2381822.0/885184.5
 
 ## Change in coastal pressure
 ## global coast
@@ -314,8 +314,8 @@ names(stack) <- new_names
 
 stack <- stack * coast
 global(stack, "sum", na.rm=TRUE)
-100920.63/ 55436.48
-109594.93/55201.98
+101842.35/57628.67
+113274.60/80367.97
 
 
 # relative pressures coastal vs global
