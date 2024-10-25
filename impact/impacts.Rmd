@@ -72,7 +72,7 @@ check <- list.files("/home/shares/ohi/stressors_2021/hab_vuln_pressure/", full=T
 plot(rast(check[652]))
 
 length(check)
- #should be 4,767
+ #should be 4,540
 habitats <- sub("_.*", "", basename(check))
 table(habitats)
 pressure <- sub("^[^_]*_([^_]*)_.*", "\\1", basename(check))
@@ -117,7 +117,7 @@ writeRaster(pressure_vulnerability_habitat, filename = output_filenames, overwri
 
 heatindex_modify(habitat="salt-marsh", lower_threshold=0.2, upper_threshold=0.25) 
 heatindex_modify(habitat="seagrass", lower_threshold=0.2, upper_threshold=0.25) 
-heatindex_modify(habitat="ice", lower_threshold=0, upper_threshold=0) 
+#heatindex_modify(habitat="ice", lower_threshold=0, upper_threshold=0) 
 ```
 
 
@@ -239,7 +239,7 @@ Do a little check.
 ```{r}
 check <- list.files("/home/shares/ohi/stressors_2021/hab_vuln_pressure/")
 length(check)
- #should be 4,998
+ #should be 4,760
 habitats <- sub("_.*", "", check)
 table(habitats)
 pressure <- sub("^[^_]*_([^_]*)_.*", "\\1", check)
@@ -253,6 +253,9 @@ Create raster with total number of habitats in each cell.
 habitat_files <- list.files(here("habitats/data"), full=TRUE)
 habitat_rast <- rast(habitat_files)
 habitat_n <- sum(habitat_rast, na.rm=TRUE)
+check <- ifel(habitat_n == 0, 1, NA)
+plot(check, col="red")
+global(check, "sum", na.rm=TRUE)
 check <- ifel(habitat_n < 1, 1, NA)
 plot(check, col="red")
 habitat_n = ifel(habitat_n <1, 1, habitat_n)
@@ -288,8 +291,50 @@ cum_impact(scen_time = "ssp245_current")
 
 ```
 
-## zonal extracts of data
-Cumulative pressures
+# For individual pressures, need to create rasters that correct for number of habitats
+For regional summaries of pressure impacdts, the impact of the pressure will depend on the number of habitats. 
+
+
+First step is to correct for the number of habitats (being sure to divide by the pressure). This is used for geographic summaries of pressures (but not habitat based summaries.).
+
+```{r}
+
+check <- list.files("/home/shares/ohi/stressors_2021/hab_vuln_pressure_habitat_corrected/", full=TRUE)
+file.remove(check)
+
+pressures <- list.files("/home/shares/ohi/stressors_2021/hab_vuln_pressure/", full=TRUE)
+pressures <- grep("ssp245|ssp585", pressures, value=TRUE)
+pressures <- grep("_current|_near-term|_medium-term", pressures, value=TRUE)
+
+hab_impacts_stack <- rast(pressures)
+source_info <- gsub(".tif", "", basename(sources(hab_impacts_stack)))
+names(hab_impacts_stack) <- source_info
+
+## have to correct the pressures by the number of habitats
+habitat_n <- rast(here("habitats/habitat_n.tif"))
+
+for(i in 1: nlyr(hab_impacts_stack)){ #i=1
+current_layer <- hab_impacts_stack[[i]]
+
+  # Perform the division
+  corrected_layer <- current_layer / habitat_n
+
+  # Define the output filename
+  layer_name <- names(hab_impacts_stack)[i]
+
+  # Write the output to disk
+  writeRaster(corrected_layer, 
+              filename = sprintf("/home/shares/ohi/stressors_2021/hab_vuln_pressure_habitat_corrected/%s.tif", layer_name), 
+              overwrite = TRUE)
+
+  # Optional: Print progress
+  cat("Processed and saved:", layer_name, "\n")
+}
+
+```
+
+
+# Statistic: Describe projected increase in impact over time.
 ```{r}
 ## Change in global pressure
 ## global
@@ -299,81 +344,37 @@ new_names <- gsub(".tif", "", basename(tmp))
 names(stack) <- new_names
 
 global(stack, "sum", na.rm=TRUE)
-2026580.3/890040.7
-2381822.0/885184.5
-
-## Change in coastal pressure
-## global coast
-coast <- rast(here("_spatial/coastal_country_mol.tif"))
-coast <- ifel(coast>0, 1, 0)
-
-tmp <- list.files("/home/shares/ohi/stressors_2021/impacts/cumulative", full=TRUE)
-stack <- rast(tmp)
-new_names <- gsub(".tif", "", basename(tmp))
-names(stack) <- new_names
-
-stack <- stack * coast
-global(stack, "sum", na.rm=TRUE)
-101842.35/57628.67
-113274.60/80367.97
-
-
-# relative pressures coastal vs global
-cumulative <- list.files("/home/shares/ohi/stressors_2021/impacts/cumulative", full=TRUE)
-
-cum_stack <- rast(cumulative)
-source_info <- gsub(".tif", "", basename(sources(cum_stack)))
-names(cum_stack) <- source_info
-tmp <- global(cum_stack, "sum", na.rm=TRUE)
-
-ocean_cells <- rast(here("_spatial/ocean_area_mol.tif"))
-ocean_cells <- ifel(ocean_cells>0, 1, 0)
-ocean_cells_num <- global(ocean_cells, "sum", na.rm=TRUE)
-
-
-cum_stack <- as.data.frame(tmp) %>%
-mutate(cells = ocean_cells_num) %>%
-  mutate(average = sum/cells)
-
-# figure out for coastal
-eez_coast <- rast(here("_spatial/coastal_country_mol.tif"))
-eez_coast <- ifel(eez_coast>0, 1, NA)
-
-p_stack <- rast(cumulative)
-source_info <- gsub(".tif", "", basename(sources(p_stack)))
-names(p_stack) <- source_info
-
-p_stack_mask <- p_stack*eez_coast
-
-coastal_stats <- global(p_stack_mask, "sum", na.rm=TRUE)
-coastal_df <- data.frame(coastal_stats) 
-coastal_df$filename <- rownames(coastal_df)
-row.names(coastal_df) <- NULL
-
-names(coastal_df) <- c("value", "filename")
-coastal_df <- coastal_df %>%
-  separate(filename, into=c("pressure", "scenario", "timeframe"), sep="_")
-
-coast_cells <- ifel(eez_coast>0, 1, 0)
-coast_cells_num <- global(coast_cells, "sum", na.rm=TRUE)
-
-coastal_df <- coastal_df %>%
-  mutate(cells = coast_cells_num$sum) %>%
-  mutate(average = value/cells) %>%
-  select(-value, -cells)
-
-
-
+2029599.1/890958.3
+2385282.7/886167.4
 
 ```
 
-cumulative impact
-global map future total impact.
+
+### Figure 1
+Maps of cumulative impact and change in cumulative impact
 ```{r}
 
 library(paletteer)
 library(png)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
 
+```
+
+Get land boundaries
+
+```{r}
+world <- ne_countries(scale = "medium", returnclass = "sf")
+# Define the Mollweide projection string
+moll_crs <- "+proj=moll"
+
+# Reproject the world data to Mollweide
+world_moll <- st_transform(world, crs = moll_crs)
+```
+
+Get current and future cumulative impacts
+```{r}
 upperscale <- 1.5
 cols_palette <- paletteer_c("grDevices::Lajolla", 200)
 #cols_palette <- rev(paletteer_c("ggthemes::Classic Orange-Blue", 250)[1:150])
@@ -383,6 +384,10 @@ tmp <- list.files("/home/shares/ohi/stressors_2021/impacts/cumulative", full=TRU
 stack <- rast(tmp)
 new_names <- gsub(".tif", "", basename(tmp))
 names(stack) <- new_names
+
+ssp2_med <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp245_medium-term.tif")
+quantile(data.frame(ssp2_med)$sum, c(0.9999))
+
 
 stack_capped <- ifel(stack>upperscale, upperscale, stack)
 
@@ -400,8 +405,21 @@ plot_cum <- ggplot(df, aes(x = x, y = y, fill = value)) +
     limits = zlim_values,
     name = ""
   ) +
+  geom_sf(
+    data = world_moll,
+    fill = "gray80",       # Land fill color
+    color = "gray85",      # Slightly lighter color for boundaries
+    size = 0.2,            # Adjust line thickness
+    inherit.aes = FALSE
+  ) +
 #  ggtitle(gsub(".tif", "", basename(tmp[i]))) +
-  theme_minimal() +
+geom_raster() +
+  scale_fill_gradientn(
+    colours = cols_palette,
+    limits = zlim_values,
+    name = ""
+  ) +
+    theme_minimal() +
 theme(
   panel.grid = element_blank(),
   panel.border = element_blank(),
@@ -412,7 +430,8 @@ theme(
   plot.title = element_text(hjust = 0.5)
 )
 
-ggsave(plot_cum, filename=here(sprintf("impact/figs/cumulative/%s", gsub(".tif", ".png", basename(tmp[i])))), width=5, height = 2.5, units = c("in"))
+
+ggsave(plot_cum, filename=here(sprintf("impact/figs/cumulative/%s", gsub(".tif", ".png", basename(tmp[i])))), width=5.5, height = 2.5, units = c("in"))
 }
 
 ```
@@ -423,15 +442,6 @@ Make global plot of change in impact figures
 cols_palette <- c(paletteer_c("grDevices::BluGrn", 30)[21:30],
                   rev(paletteer_c("grDevices::Inferno", 110)))
 
-
-list.files("/home/shares/ohi/stressors_2021/impacts/cumulative", full=TRUE)
-
-ssp2_med <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp245_medium-term.tif")- 
-            rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp245_current.tif") 
-
-
-plot(ssp2_med)
-quantile(data.frame(ssp2_med)$sum, c(0.99999))
 
 diff_impact <- function(raster, lowerscale = -0.2, upperscale = 1.2, saveName){
 #raster=ssp2_med
@@ -450,6 +460,19 @@ plot_cum <- ggplot(df, aes(x = x, y = y, fill = value)) +
     limits = zlim_values,
     name = ""
   ) +
+  geom_sf(
+    data = world_moll,
+    fill = "gray80",       # Land fill color
+    color = "gray85",      # Slightly lighter color for boundaries
+    size = 0.2,            # Adjust line thickness
+    inherit.aes = FALSE
+  ) + 
+   geom_raster() +
+  scale_fill_gradientn(
+    colours = cols_palette,
+    limits = zlim_values,
+    name = ""
+  ) +
 #  ggtitle(gsub(".tif", "", basename(tmp[i]))) +
   theme_minimal() +
 theme(
@@ -462,28 +485,355 @@ theme(
   plot.title = element_text(hjust = 0.5)
 )
 
-ggsave(plot_cum, filename=here(sprintf("impact/figs/cumulative/%s", saveName)), width=5, height = 2.5, units = c("in"))
+ggsave(plot_cum, filename=here(sprintf("impact/figs/cumulative/%s", saveName)), width=4.5, height = 2.5, units = c("in"))
 }
 
+
+list.files("/home/shares/ohi/stressors_2021/impacts/cumulative", full=TRUE)
+
+ssp2_med <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp245_medium-term.tif")- 
+            rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp245_current.tif") 
+
+global(ssp2_med, "min", na.rm=TRUE)
+global(ssp2_med, "min", na.rm=TRUE)
+plot(ssp2_med)
+quantile(data.frame(ssp2_med)$sum, c(0.9999))
+quantile(data.frame(ssp2_med)$sum, c(1-0.9999))
+ssp5_med <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp585_medium-term.tif")- 
+            rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp585_current.tif") 
+
 diff_impact(raster=ssp2_med, lowerscale = -0.1, upperscale = 1.25, saveName="sspp245_change.png")
+diff_impact(raster=ssp5_med, lowerscale = -0.1, upperscale = 1.25, saveName="sspp585_change.png")
 ```
 
-## Figure showing highest risk areas
+Global plot of hotspots
 ```{r}
 
-ssp2_future <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp245_medium-term.tif")
-ssp2_future_quant <-global(ssp2_future, fun = quantile, probs = 0.80, na.rm = TRUE) %>% pull()
-ssp2_future_high <- ifel(ssp2_future >= ssp2_future_quant, 1, 0)
+ssp2_change <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp245_medium-term.tif") -
+               rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp245_current.tif")
+ssp2_change_high_quant <-global(ssp2_change, fun = quantile, probs = 0.80, na.rm = TRUE) %>% pull()
+ssp2_change_high <- ifel(ssp2_change >= ssp2_change_high_quant, 1, 0)
+ssp2_change_low_quant <-global(ssp2_change, fun = quantile, probs = 0.20, na.rm = TRUE) %>% pull()
+ssp2_change_low <- ifel(ssp2_change <= ssp2_change_low_quant, 1, 0)
 
-ssp2_change <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp245_medium-term.tif")- 
-            rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp245_current.tif")
-ssp2_change_quant <-global(ssp2_change, fun = quantile, probs = 0.80, na.rm = TRUE) %>% pull()
-ssp2_change_high <- ifel(ssp2_change >= ssp2_change_quant, 1, 0)
+ssp2_current <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp245_current.tif")
+ssp2_current_high_quant <-global(ssp2_current, fun = quantile, probs = 0.80, na.rm = TRUE) %>% pull()
+ssp2_current_high <- ifel(ssp2_current >= ssp2_current_high_quant, 1, 0)
+ssp2_current_low_quant <-global(ssp2_current, fun = quantile, probs = 0.20, na.rm = TRUE) %>% pull()
+ssp2_current_low <- ifel(ssp2_current <= ssp2_current_low_quant, 1, 0)
 
-high_risk <- ssp2_change_high + ssp2_future_high
-high_risk <- ifel(high_risk == 0, NA, high_risk)
-plot(high_risk, col=c("orange", "red"))
+# category 1: current low and stable
+cat1 <- ssp2_current_low + ssp2_change_low
+cat1 <- ifel(cat1 == 2, 3, NA)
+plot(cat1, col="#44ACC8")
+
+# category 2: current high and stable
+cat2 <- ssp2_current_high + ssp2_change_low
+cat2 <- ifel(cat2 == 2, 4, NA)
+plot(cat2, col="#E2D100", add=TRUE)
+
+# category 3: current high and fast increase
+cat3 <- ssp2_current_high + ssp2_change_high
+cat3 <- ifel(cat3 == 2, 3, NA)
+plot(cat3, col="#E58501", add=TRUE)
+
+# category 4: current low and fast increase
+cat4 <- ssp2_current_low + ssp2_change_high
+cat4 <- ifel(cat4 == 2, 4, NA)
+plot(cat4, col="#B41821", add=TRUE)
+
+png(here("impact/figs/hotspots.png"), width = 2000, height = 1500, res = 300)
+
+plot(st_geometry(world_moll), col="gray80", border="gray85")
+plot(cat1, col="#44ACC8", add=TRUE, legend=FALSE)
+plot(cat2, col="#E2D100", add=TRUE, legend=FALSE)
+plot(cat3, col="#E58501", add=TRUE, legend=FALSE)
+plot(cat4, col="#B41821", add=TRUE, legend=FALSE)
+
+dev.off()
+
 ```
+
+## Figure 2: coastal vs ocean
+
+Some stats for the paper
+```{r}
+
+
+# relative pressures coastal vs global
+
+## global coast
+coast <- rast(here("_spatial/coastal_country_mol.tif"))
+coast <- ifel(coast>0, 1, 0)
+
+## offshore area only
+ocean <- rast(here("_spatial/ocean_area_mol.tif"))
+ocean <- ifel(ocean>0, 2, 0)
+offshore <- ocean - ifel(is.na(coast), 0, coast)
+offshore <- ifel(offshore ==2, 1, NA)
+
+
+cumulative <- list.files("/home/shares/ohi/stressors_2021/impacts/cumulative", full=TRUE)
+
+cum_stack <- rast(cumulative)
+source_info <- gsub(".tif", "", basename(sources(cum_stack)))
+names(cum_stack) <- source_info
+
+offshore_pressures <- cum_stack*offshore
+total_offshore_pressures <- global(offshore_pressures, "sum", na.rm=TRUE)
+
+offshore_cells_num <- global(offshore, "sum", na.rm=TRUE) %>% pull()
+
+offshore_impact <- as.data.frame(total_offshore_pressures) %>%
+  mutate(cells = offshore_cells_num) %>%
+  mutate(average = sum/cells)
+
+# figure out for coastal
+coastal_pressures <- cum_stack*coast
+total_coastal_pressures <- global(coastal_pressures, "sum", na.rm=TRUE)
+
+coastal_cells_num <- global(coast, "sum", na.rm=TRUE) %>% pull()
+
+coastal_impact <- as.data.frame(total_coastal_pressures) %>%
+  mutate(cells = coastal_cells_num) %>%
+  mutate(average = sum/cells)
+
+```
+
+
+Cumulative impact plot
+
+```{r}
+
+cumulative <- list.files("/home/shares/ohi/stressors_2021/impacts/cumulative", full=TRUE)
+cum_stack <- rast(cumulative)
+source_info <- gsub(".tif", "", basename(sources(cum_stack)))
+names(cum_stack) <- source_info
+
+offshore_pressures <- cum_stack*offshore
+
+offshore_points <- data.frame(offshore_pressures)
+offshore_points$region <- "offshore"
+
+coastal_pressures <- cum_stack*coast
+
+coast_points <- data.frame(coastal_pressures)
+coast_points$region <- "coastal"
+
+point_data <- rbind(coast_points, offshore_points[sample(nrow(offshore_points), dim(coast_points)[1]), ])
+
+colnames(point_data) <- gsub("\\.", "-", colnames(point_data))
+
+
+point_data_long <- point_data %>%
+  pivot_longer(
+    cols = starts_with("ssp"),       # Columns to reshape
+    names_to = c("scenario", "time_period"),  # New column names
+    names_sep = "_",                 # Separator used in column names
+    values_to = "value"              # Name of the values column
+  )
+
+point_data_plot <- filter(point_data_long, scenario == "ssp245", time_period %in% c("current", "medium-term"))
+
+# Calculate the overall range of 'value' to set consistent axes
+range(point_data_long$value, na.rm = TRUE)
+
+
+
+cum <- ggplot(point_data_plot, aes(y = region, x = value, fill = region)) +
+  geom_violin(trim = FALSE) +
+  xlim(0, 2) + 
+  facet_wrap(~ time_period, ncol = 1) +
+  scale_fill_manual(values = c("offshore" = "#73A088", "coastal" = "#F98400")) +
+  theme_minimal() +
+  labs(
+    title = "",
+    x = "Cumulative impact",
+    y = "",
+    fill = ""
+  ) +
+  theme(
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.grid.major = element_line(color = "grey90"),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(color = "white"),
+    axis.text = element_text(color = "black"),
+    axis.title = element_text(color = "black"),
+    legend.position = "none"
+  )
+
+ggsave(cum, filename=here("impact/figs/coastal_vs_offshore_cumulative_impact.png"), width=5.5, height =2, units = c("in"))
+
+```
+
+Now get pressure impacts data together by summarizing pressure impacts across habitats.
+
+```{r}
+# 1. summarize pressure rasters across habitats
+summarize_pressures <- function(scenario ="ssp245", time = "medium-term"){
+  # scenario = "ssp245"
+  # time = "medium-term"
+  
+files <- list.files("/home/shares/ohi/stressors_2021/hab_vuln_pressure_habitat_corrected/", full=TRUE)
+
+pressure_list <- data.frame(pressures=c("sst-extremes|temperature", "slr", "_oxygen-", "_oa_", "nutrient", "npp", "light-pollution", "fisheries", "coastal-disturbance", "air-heat-index"),
+                            pressure_name = c("temperature", "slr", "oxygen", "oa", "nutrient", "npp", "light-pollution",
+                                              "fisheries", "coastal-disturbance", "air-heat-index"))
+
+  for(pressure in pressure_list$pressures){
+    #pressure = pressure_list$pressures[2]
+    pressure_files <- grep(scenario, files, value=TRUE)
+    pressure_files <- grep(time, pressure_files, value=TRUE)
+    pressure_files <- grep(pressure, pressure_files, value=TRUE)
+    cat(pressure, "n = ", length(pressure_files), "\n")
+    
+    pressure_impact_rasts <- rast(pressure_files)
+    pressure_impact_sum <- sum(pressure_impact_rasts, na.rm=TRUE)
+   
+    name_raster <- paste0(pressure_list$pressure_name[pressure_list$pressures==pressure],"_",
+                          scenario, "_", time, ".tif")
+    writeRaster(pressure_impact_sum, 
+                paste0("/home/shares/ohi/stressors_2021/impacts/pressure_impacts/", name_raster),
+                overwrite=TRUE) 
+  }
+}
+
+summarize_pressures(scenario ="ssp245", time = "medium-term")
+summarize_pressures(scenario ="ssp245", time = "current")
+
+```
+
+Now get the data for each pressure and plot by region
+```{r}
+
+list.files("/home/shares/ohi/stressors_2021/impacts/pressure_impacts/")
+
+pressures <- list.files("/home/shares/ohi/stressors_2021/impacts/pressure_impacts/", full=TRUE)
+pressure_stack <- rast(pressures)
+source_info <- gsub(".tif", "", basename(sources(pressure_stack)))
+names(pressure_stack) <- source_info
+
+offshore2 <- ifel(offshore>=1, 2, 0)
+offshore2 <- ifel(is.na(offshore2), 0, offshore2)
+coast2 <- ifel(is.na(coast), 0, coast)
+habitats <- offshore2 + coast2
+habitats <- ifel(habitats == 0, NA, habitats)
+
+coast_area <- global(coast, "sum", na.rm=TRUE) %>% pull()
+offshore_area <- global(offshore, "sum", na.rm=TRUE) %>% pull()
+
+area_df <- data.frame(region = c("coastal", "offshore"),
+                      area = c(coast_area, offshore_area))
+
+  # Compute the average pressure impact for each region
+  zonal_sum <- zonal(pressure_stack, habitats, fun = "sum", na.rm=TRUE)
+
+
+avg_pressure_impacts <- zonal_sum %>%
+ pivot_longer(cols=-ocean_area_mol, names_to = "pressure_impact", values_to="value") %>%
+separate(
+    col = pressure_impact,
+    into = c("pressure", "scenario", "time_period"),
+    sep = "_",
+    remove = FALSE
+  ) %>%
+  mutate(region = ifelse(ocean_area_mol == 1, "coastal", "offshore")) %>%
+  left_join(area_df, by="region") %>%
+  mutate(pressure_impact = value/area) %>%
+  select(pressure, scenario, time_period, region, pressure_impact)
+
+# Calculate average impact for each pressure
+average_impacts <- avg_pressure_impacts %>%
+  group_by(pressure) %>%
+  summarize(avg_impact = mean(pressure_impact, na.rm = TRUE)) %>%
+  arrange(avg_impact)
+
+
+# Prepare data
+df <- avg_pressure_impacts %>%
+  mutate(
+    pressure = factor(pressure, levels = average_impacts$pressure),
+    region = factor(region), 
+    time_period = factor(time_period, levels = c("current", "medium-term"))
+  )
+
+# Reshape data to wide format
+df_wide <- df %>%
+  pivot_wider(
+    id_cols = c(pressure, region),
+    names_from = time_period,
+    values_from = pressure_impact
+  ) %>%
+  arrange(pressure)
+
+# Create combined factor and adjust positions
+df_wide <- df_wide %>%
+  mutate(
+    pressure_position = as.numeric(factor(pressure, levels = levels(df$pressure))),
+    y_position = pressure_position + ifelse(region == "coastal", -0.1, 0.1),
+    delta = `medium-term` - current,
+    offset = delta * 0.05,  # Adjust this fraction as needed
+    x_start = current + sign(delta) * offset,
+    x_end = `medium-term` - sign(delta) * offset
+  )
+
+
+# Create the plot
+coast_compare <- ggplot() +
+  geom_segment(
+  data = df_wide,
+  aes(
+    x = x_start,
+    xend = x_end,
+    y = y_position,
+    yend = y_position,
+    color = region
+  ),
+  arrow = arrow(length = unit(0.2, "cm")),
+  size = 0.5,
+  alpha=0.5
+)  +
+  geom_point(
+    data = df_wide,
+    aes(x = current, y = y_position, shape = "Current", color = region),
+    size = 2.5
+  ) +
+  geom_point(
+    data = df_wide,
+    aes(x = `medium-term`, y = y_position, shape = "Medium-Term", color = region),
+    size = 2.5
+  ) +
+  scale_y_continuous(
+    breaks = unique(df_wide$pressure_position),
+    labels = levels(df$pressure)
+  ) +
+  scale_shape_manual(
+    name = "Time period",
+    values = c("Current" = 16, "Medium-Term" = 17)
+  ) +
+  scale_color_manual(
+    name = "Region",
+    values = c("offshore" = "#73A088", "coastal" = "#F98400")
+  ) +
+  theme_minimal() +
+  labs(
+    title = "",
+    x = "Pressure impact",
+    y = ""
+  ) +
+theme(
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.grid.major = element_line(color = "grey90"),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(color = "white"),
+    axis.text = element_text(color = "black"),
+    axis.title = element_text(color = "black")
+  )
+ggsave(coast_compare, filename ="impact/figs/coastal_vs_offshore_pressure_impact.png", width=6, height =3, units = c("in"))
+```
+
 
 ## cumulative impact: country EEZ summaries
 ```{r}
@@ -697,18 +1047,28 @@ coastal_compare <- coastal_compare %>%
 
 
 p <- ggplot(data=coastal_compare , aes(y=`ssp245_medium-term`, x=change_ssp245_medium, color=as.factor(depend_cat))) +
-  geom_point(aes(text=country), alpha=0.7, size=2) +
+  geom_point(aes(text=country), alpha=0.7, size=1.1) +
   scale_color_manual(values = c("1" = "red", "0" = "gray")) + 
-#  scale_color_gradientn(colors=paletteer_c("ggthemes::Temperature Diverging", 30)) +
   geom_vline(xintercept = median(coastal_compare$change_ssp245_medium, na.rm=TRUE), linetype="dashed", color="orange") +
    geom_hline(yintercept = median(coastal_compare$`ssp245_medium-term`, na.rm=TRUE), linetype="dashed", color="orange") +
-  theme_minimal()
+  theme_classic()  +
+  theme(
+    # Add major gridlines
+    panel.grid.major = element_line(color = "lightgray", size = 0.1),
+    # Remove minor gridlines
+    panel.grid.minor = element_blank(),
+    legend.position = "none"
+  ) +
+  labs(y="Future impact, 2040-2060", x = "\u0394 impact")
 
 p
-ggsave(here("combining_pressures/paper_figs/current_future_scatterplot.png"), plot = p, width = 7, height = 4, dpi = 300)
+ggsave(here("impact/figs/current_future_depend_scatterplot.png"), plot = p, width = 5, height = 3, dpi = 300)
 
 
-plotly::ggplotly(ptooltip = "text")
+pp <- plotly::ggplotly(p, tooltip = "text")
+pp
+library(htmlwidgets)
+saveWidget(pp, "interactive_plot.html", selfcontained = TRUE)
 
 ggplot(data=filter(coastal_compare, !is.na(depend_cat)) , aes(x=change_ssp245_medium, fill=as.factor(depend_cat), color=as.factor(depend_cat))) +
   geom_density(alpha=0.7, size=2, position = "identity") +
@@ -724,43 +1084,7 @@ summary(mod)
 
 
 ### Zonal country pressure impacts
-First step is to correct for the number of habitats (being sure to divide by the pressure).
-
 ```{r}
-
-check <- list.files("/home/shares/ohi/stressors_2021/hab_vuln_pressure_habitat_corrected/", full=TRUE)
-file.remove(check)
-
-pressures <- list.files("/home/shares/ohi/stressors_2021/hab_vuln_pressure/", full=TRUE)
-pressures <- grep("ssp245|ssp585", pressures, value=TRUE)
-pressures <- grep("_current|_near-term|_medium-term", pressures, value=TRUE)
-
-hab_impacts_stack <- rast(pressures)
-source_info <- gsub(".tif", "", basename(sources(hab_impacts_stack)))
-names(hab_impacts_stack) <- source_info
-
-## have to correct the pressures by the number of habitats
-habitat_n <- rast(here("habitats/habitat_n.tif"))
-
-for(i in 1: nlyr(hab_impacts_stack)){ #i=1
-current_layer <- hab_impacts_stack[[i]]
-
-  # Perform the division
-  corrected_layer <- current_layer / habitat_n
-
-  # Define the output filename
-  layer_name <- names(hab_impacts_stack)[i]
-
-  # Write the output to disk
-  writeRaster(corrected_layer, 
-              filename = sprintf("/home/shares/ohi/stressors_2021/hab_vuln_pressure_habitat_corrected/%s.tif", layer_name), 
-              overwrite = TRUE)
-
-  # Optional: Print progress
-  cat("Processed and saved:", layer_name, "\n")
-}
-
-
 pressures_correct <- list.files("/home/shares/ohi/stressors_2021/hab_vuln_pressure_habitat_corrected/", full=TRUE)
 
 hab_impacts_stack_correct <- rast(pressures_correct)
