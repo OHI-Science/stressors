@@ -1,0 +1,13 @@
+pressure,color,plot_name_pressure
+light-pollution,#9C9EDEFF,light pollution
+oxygen-surface,#A0CBE8FF,reduced oxygen
+nutrient-input,#FFBE7DFF,nutrient pollution
+npp,#8CD17DFF,primary productivity
+air-heat-index,#F1CE63FF,air heat index
+slr,#86BCB6FF,sea level rise
+coastal-disturbance,#FF9D9AFF,coastal disturbance
+oxygen-benthic,#A0CBE8FF,reduced oxygen
+oa,#FABFD2FF,acidification
+fisheries-biomass-loss,#D4A6C8FF,fisheries biomass loss
+sst-extremes,#D7B5A6FF,ocean warming
+temperature-benthic,#D7B5A6FF,ocean warming
