@@ -60,6 +60,9 @@ The mean and sd of the annual rate of change in biomass across fao regions is us
 hs_rgn_avg <- pressure_avg %>%
   filter(ant_typ %in% c("fao", "eez-ccamlr"))
 
+mean(hs_rgn_avg$avg_percent_change)
+sd(hs_rgn_avg$avg_percent_change)
+
 ```
 
 
