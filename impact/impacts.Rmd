@@ -401,7 +401,7 @@ pivot_longer(
   names_to = "file_name",
   values_to = "value"
 ) %>%
-  mutate(value = round(value/2, 2)) %>%
+  mutate(value = round(value/4, 2)) %>%
   left_join(habitats) %>%
   left_join(pressures) %>%
   select(pressure = plot_name_pressure, habitat=plot_name_habitat, value) %>%
