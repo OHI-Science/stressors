@@ -190,3 +190,39 @@ write_csv(country_avg_change, here("prep/fisheries/data/region_biomass_trends.cs
 ```
 
 
+Get values of biomass for eezs throughout time
+(exploration)
+
+```{r}
+
+effort_data_files <- "/home/shares/ohi/stressors_2021/_raw_data/Bianchi_fish_biomass/BOATS_effort"
+
+biomass <- rast(file.path(effort_data_files, "boats-v2_gfdl-mom6-cobalt2_none_obsclim_histsoc_onedeg_tcb_global_annually_1841-2010.nc"))
+
+biomass_times<- which(as.Date(time(biomass)) >= as.Date("1900-01-01") & as.Date(time(biomass)) < as.Date("2011-01-01")) 
+biomass_c <- subset(biomass, biomass_times)
+biomass_c <- cellSize(biomass_c) * biomass_c * 1e-6
+
+# Initialize an empty SpatRaster to store percent change values
+percent_change <- biomass_c[[1]]
+
+zones_raster <- rasterize(eez, rast(percent_change), field="rgn_id")
+plot(zones_raster)
+
+setdiff(eez_data$rgn_id, unique(zones_raster)$rgn_id)
+setdiff(unique(zones_raster)$rgn_id, eez_data$rgn_id)
+
+# extract current yearly biomass for each eez
+country_biomass <- terra::zonal(biomass_c, zones_raster, fun = sum, na.rm=TRUE)
+
+names(country_biomass) <- c("rgn_id", paste0("yr", 1900:2010))
+
+# clean data 
+country_biomass_change <- country_biomass %>% 
+  pivot_longer(cols = starts_with("yr"),
+                names_to = "year",
+                values_to = "biomass") %>%
+   mutate(year = as.numeric(gsub("yr", "", year))) %>%
+  left_join(eez_data, by="rgn_id")
+
+write_csv(country_biomass_change, here("prep/fisheries/data/country_1900_2010_biomass.csv"))

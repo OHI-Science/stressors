@@ -24,33 +24,21 @@ library(rnaturalearth)
 ## Get the data
 ```{r}
 
-## historic data
-historic <- read_csv(here("prep/fisheries/data/region_biomass_trends.csv")) %>%
-  select(rgn_id, historic_1900)
 
 # eez
-eez_sim <- read_csv("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/random_eez_2024-06-21.csv")
-eez_sim <- eez_sim %>%
-  pivot_longer(cols = starts_with("biomass_"), names_to = "biomass_type", values_to = "biomass") %>%
-  filter(biomass_type != "biomass_2005") %>%
-  group_by(iso3c, rgn_id, scenario, year) %>%
-  summarize(biomass = median(biomass))
+eez_mod <- read_csv(here("prep/fisheries/data/habited_eez_biomass.csv"))
 
 ## uninhabited
-unin_sim <- read_csv("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/random_uninhabited_2024-06-21.csv") %>%
-  group_by(iso3c, rgn_id, scenario, year) %>%
-  summarize(biomass = median(biomass))
+uninhabited_mod <- read_csv(here("prep/fisheries/data/uninhabited_eez_biomass.csv"))
 
 ## high seas
-hs_sim <- read_csv("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/random_hs_2024-06-18.csv") %>%
-  group_by(iso3c, rgn_id, scenario, year) %>%
-  summarize(biomass = median(biomass))
+hs_mod <- read_csv(here("prep/fisheries/data/hs_biomass.csv"))
 
-
-fish_data <- rbind(eez_sim, unin_sim, hs_sim) %>%
-  left_join(historic, by= "rgn_id") %>%
-  mutate(pressure = 1- biomass/historic_1900) %>%
-  mutate(pressure = ifelse(pressure < 0, 0, pressure))
+fish_data <- bind_rows(eez_mod, uninhabited_mod, hs_mod) %>%
+  mutate(pressure = 1- avg_biomass_accel/historic_1900) %>%
+  mutate(pressure = ifelse(pressure < 0, 0, pressure)) %>%
+  mutate(pressure_no_accel = 1- avg_biomass_no_accel/historic_1900) %>%
+  mutate(pressure_no_accel = ifelse(pressure_no_accel < 0, 0, pressure_no_accel))
 
 ```
 
@@ -83,6 +71,7 @@ mapping_fish_pressure <- function(scenarios, time_frame, years){
 #time_frame = pressure_maps$time_frame[2]
 #years = eval(parse(text = pressure_maps$years[2]))
 
+# create and save the model with acceleration and deceleration of biomass loss
   tmp_data <- fish_data %>%
   filter(scenario %in% scenarios) %>%
   filter(year %in% years) %>%
@@ -98,6 +87,27 @@ pressure_rast <- terra::rasterize(eez_tmp, ocean_template, field = "pressure", f
 pressure_rast_mask <- pressure_rast*ocean_template
 #plot(pressure_rast_mask)
 terra::writeRaster(pressure_rast_mask, sprintf("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure/fisheries_%s_%s.tif", tolower(scenarios), time_frame), overwrite=TRUE)
+
+## end of model 1
+
+# create and save the model with only deceleration of biomass loss
+  tmp_data_mod2 <- fish_data %>%
+  filter(scenario %in% scenarios) %>%
+  filter(year %in% years) %>%
+  group_by(rgn_id) %>%
+  summarize(pressure = mean(pressure_no_accel))
+  
+eez_tmp_mod2 <- left_join(eez_shp, tmp_data_mod2, by="rgn_id")
+
+# Rasterize the biomass data using the raster template
+pressure_rast_mod2 <- terra::rasterize(eez_tmp_mod2, ocean_template, field = "pressure", fun = mean, background = NA)
+#terra::plot(pressure_rast)
+
+pressure_rast_mask_mod2 <- pressure_rast_mod2*ocean_template
+#plot(pressure_rast_mask)
+terra::writeRaster(pressure_rast_mask_mod2, sprintf("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure_mod2/fisheries_%s_%s.tif", tolower(scenarios), time_frame), overwrite=TRUE)
+
+
 cat(i, "\n")
 }
 
@@ -123,5 +133,13 @@ plot(rast("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure/
 plot(rast("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure//fisheries_ssp2_medium-term.tif"), main="SSP2, 2040-2060")
 plot(rast("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure//fisheries_ssp3_medium-term.tif"), main="SSP3, 2040-2060")
 plot(rast("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure//fisheries_ssp4_medium-term.tif"), main="SSP4, 2040-2060")
-plot(rast("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure//fisheries_ssp5_medium-term.tif"), main="SSP5, 2040-2060")
+v1 <- rast("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure//fisheries_ssp5_medium-term.tif")
 
+list.files("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure_mod2/", full=TRUE)
+plot(rast("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure_mod2//fisheries_ssp1_medium-term.tif"), main="SSP1, 2040-2060")
+plot(rast("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure_mod2//fisheries_ssp2_medium-term.tif"), main="SSP2, 2040-2060")
+plot(rast("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure_mod2//fisheries_ssp3_medium-term.tif"), main="SSP3, 2040-2060")
+plot(rast("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure_mod2//fisheries_ssp4_medium-term.tif"), main="SSP4, 2040-2060")
+v2 <- rast("/home/shares/ohi/stressors_2021/_dataprep/fisheries_biomass/pressure_mod2//fisheries_ssp5_medium-term.tif")
+
+plot(v1-v2)
