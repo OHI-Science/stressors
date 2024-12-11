@@ -52,10 +52,12 @@ ggplot(mod, aes(y = slope, x=governance)) +
 intercept <- coef(mod)["(Intercept)"]
 governance_coeff <- coef(mod)["governance"]
 
-quantile(pressure_data$avg_percent_change, c(0.05)) # change will not fall below this
-quantile(pressure_data$avg_percent_change, c(0.95)) # change will go above this
-quantile(pressure_data$slope, c(0.25)) # nudge for SSP5
-quantile(pressure_data$slope, c(0.5)) # nudge for SSP2
+quantile(pressure_data$avg_percent_change, c(0.05)) # change will not fall below this rate
+quantile(pressure_data$avg_percent_change, c(0.95)) # change will go above this rate
+
+tmp <- filter(pressure_data, avg_percent_change<0)
+quantile(tmp$avg_percent_change, c(0.95)) # nudge for SSP2
+quantile(tmp$avg_percent_change, c(0.90)) # nudge for SSP5
 
 
 gov_projections <- read_csv(here("prep/fisheries/data/governance_2000_2100.csv")) %>%
@@ -79,6 +81,7 @@ gov_projections <- gov_projections %>%
 estimated_biomass <- fish_pressure %>%
   filter(iso3c %in% gov_projections$iso3c) %>%
   mutate(starting_prop = biomass_2005/historic_1900) %>%
+  mutate(avg_percent_change = ifelse(avg_percent_change > 0 & starting_prop > 0.45, 0, avg_percent_change)) %>%  #assume no place will be increasing if meeting sustainability thresholds
   select(rgn_id, rgn_nam, iso3c, avg_biomass, avg_percent_change, historic_1900, biomass_2005, prop = prop_biomass, starting_prop)
 
 model_data <- left_join(gov_projections, estimated_biomass, by=c("rgn_id", "rgn_nam", "iso3c"))
@@ -89,9 +92,9 @@ This is used in the next code chunk
 ```{r}
 
 update_biomass <- function(df) {
-  # df <- new_data_sim
+  # df <- new_data_projected
   #print(df)
-  # df <- filter(model_data, iso3c=="ECU", scenario == "SSP2")
+  # df <- filter(new_data_projected_v2, iso3c=="CCK", scenario == "SSP2")
   
   df$prop[1] <- df$biomass_2005[1] / df$historic_1900[1]
   df$avg_percent_change[1] <- df$avg_percent_change[1]
@@ -108,15 +111,15 @@ update_biomass <- function(df) {
       upper_threshold <- 0.65
       lower_threshold <- 0.2
     } else if (scenario == "SSP2") {
-      nudge <- -0.0009  
+      nudge <- -0.002  
       upper_threshold <- 0.45
       lower_threshold <- 0.15
     } else if (scenario == "SSP3" || scenario == "SSP4") {
-      nudge <- -0.003  
+      nudge <- -0.005  
       upper_threshold <- 0.45
       lower_threshold <- 0.15
     } else if (scenario == "SSP5") {
-      nudge <- -0.003 
+      nudge <- -0.005 
       upper_threshold <- 0.45
       lower_threshold <- 0.15
     } else {
@@ -125,7 +128,8 @@ update_biomass <- function(df) {
    
   for (i in 2:nrow(df)) { # i=2
     
-    new_percent_change <- df$avg_percent_change[i - 1] + df[["acceleration_projected"]][i] 
+    new_percent_change <- df$avg_percent_change[i - 1] + df$acceleration_projected[i] 
+    
     if(new_percent_change < -0.03){ ## keep rate of change going beyond what is typically observed, 5th quantile
       new_percent_change <- -0.03
     }
@@ -139,8 +143,8 @@ update_biomass <- function(df) {
 
 
     ## Move high biomass lower towards a sustainable yield, if percent_change is positive
-     if (potential_prop > upper_threshold & new_percent_change > 0) {
-      new_percent_change <- df$avg_percent_change[i - 1] + nudge
+     if (potential_prop > upper_threshold & new_percent_change >= nudge) {
+      new_percent_change <- nudge
       potential_biomass <- df$avg_biomass[i - 1] * (1 + new_percent_change)
       potential_prop <- potential_biomass / df$historic_1900[i]
     }
@@ -153,7 +157,7 @@ update_biomass <- function(df) {
      }
     
     ## keep high biomass countries from getting higher, with no nudge (SSP1)
-      if (potential_prop > starting_prop & potential_prop > upper_threshold & scenario=="SSP1") {
+      if (potential_prop >= starting_prop & potential_prop > upper_threshold & scenario=="SSP1") {
       new_percent_change <- 0
       potential_biomass <- df$avg_biomass[i - 1] * (1 + new_percent_change)
       potential_prop <- potential_biomass / df$historic_1900[i]
@@ -200,9 +204,137 @@ proj_data <- left_join(new_data_projected, new_data_projected_v2) %>%
 
 write_csv(proj_data, here("prep/fisheries/data/habited_eez_biomass.csv"))
 
+```
 
+## Some explorations of the data
+## this series explores the populated EEZs
+```{r}
+
+plot_data <- left_join(new_data_projected, new_data_projected_v2) %>% 
+  filter(iso3c %in% c("USA", "CCK", "CHN", "BEL", "CIV", "COD", "DEU", "ECU") & scenario =="SSP2")
+
+## plot 1: explore some countries with different tendencies
+# observed data: this file created in step1
+country_biomass_change <- read_csv("prep/fisheries/data/country_biomass_2000_2010.csv") %>%
+  filter(iso3c %in% c("USA", "CCK", "CHN", "BEL", "CIV", "COD", "DEU", "ECU") & year %in% 2000:2010) %>%
+  select(iso3c, year, biomass_obs = biomass) 
+
+country_biomass_change <- left_join(country_biomass_change, fish_pressure, by="iso3c") %>%
+  mutate(prop_obs = biomass_obs/historic_1900)
+  
+
+ggplot(plot_data, aes(x=year, y=prop, group=iso3c, color=iso3c)) +
+  geom_line(linetype="dotted") +
+  geom_line(aes(x=year, y=prop_no_accel, group=iso3c, color=iso3c)) +
+  geom_hline(yintercept=0.45, color="orange") +
+  geom_hline(yintercept=0.15, color="red") +
+  geom_point(data = country_biomass_change, aes(x=year, y=prop_obs, color=iso3c)) +
+  geom_text(
+    data = plot_data %>% group_by(iso3c) %>% filter(year == max(year)), 
+    aes(x = 2000, y = starting_prop, label = iso3c),
+    hjust = 0,
+    nudge_x = 0.5,
+    size = 3
+  )
+
+
+
+## plot 1: explore some countries with different tendencies
+# observed data: this file created in step1
+
+plot_data <- left_join(new_data_projected, new_data_projected_v2) %>% 
+  filter(iso3c %in% c("CCK", "NCL", "VUT", "SLB", "PNG", "FJI") & scenario =="SSP2")
+
+country_biomass_change <- read_csv("prep/fisheries/data/country_biomass_2000_2010.csv") %>%
+  filter(iso3c %in% c("CCK", "NCL", "VUT", "SLB", "PNG", "FJI") & year %in% 2000:2010) %>%
+  select(iso3c, year, biomass_obs = biomass) 
+
+country_biomass_change <- left_join(country_biomass_change, fish_pressure, by="iso3c") %>%
+  mutate(prop_obs = biomass_obs/historic_1900)
+  
+
+ggplot(plot_data, aes(x=year, y=prop, group=iso3c, color=iso3c)) +
+  geom_line(linetype="dotted") +
+  geom_line(aes(x=year, y=prop_no_accel, group=iso3c, color=iso3c)) +
+  geom_hline(yintercept=0.45, color="orange") +
+  geom_hline(yintercept=0.15, color="red") +
+  geom_point(data = country_biomass_change, aes(x=year, y=prop_obs, color=iso3c)) +
+  geom_text(
+    data = plot_data %>% group_by(iso3c) %>% filter(year == max(year)), 
+    aes(x = 2000, y = starting_prop, label = iso3c),
+    hjust = 0,
+    nudge_x = 0.5,
+    size = 3
+  )
+## plot 2: Compare 2 models (acceleration and deceleration vs. deceleration only)
+
+## first a plot to see how the scenarios compare:
+ssp_plot <- left_join(new_data_projected, new_data_projected_v2) %>%
+  select(scenario, iso3c, rgn_nam, year, avg_biomass, avg_biomass_no_accel, historic_1900) %>%
+  group_by(scenario, year) %>%
+  summarize(biomass_accel = sum(avg_biomass, na.rm=TRUE),
+            biomass_noaccel = sum(avg_biomass_no_accel, na.rm=TRUE),
+            biomass_hist = sum(historic_1900)) %>%
+  ungroup() %>%
+  rowwise() %>% 
+  mutate(prop_accel = biomass_accel/biomass_hist,
+         prop_noaccel = biomass_noaccel/biomass_hist)
+
+
+## add in observed
+obs_biomass <- read_csv("prep/fisheries/data/country_1900_2010_biomass.csv") %>%
+  filter(iso3c %in% proj_data$iso3c) %>%
+  group_by(year) %>%
+  summarize(biomass_obs = sum(biomass, na.rm=TRUE)) %>%
+  ungroup() %>%
+  mutate(obs_prop = biomass_obs/1148446559) %>%
+  filter(year >=1950)
+
+ggplot(ssp_plot, aes(x = year, color = scenario, group = scenario)) +
+  geom_point(aes(y = prop_accel)) +
+  geom_line(aes(y = prop_accel)) +
+  geom_point(aes(y = prop_noaccel), alpha = 0.15) +
+  geom_line(aes(y = prop_noaccel), alpha = 0.15) +
+  geom_point(data=obs_biomass, aes(x=year, y=obs_prop), inherit.aes=FALSE)  
+  
+
+## plot 3: years 2005-2010, 
+
+country_biomass_change <- read_csv("prep/fisheries/data/country_biomass_2000_2010.csv")  %>%
+  select(iso3c, year, biomass_obs = biomass) %>%
+  filter(!is.na(iso3c))
+
+country_biomass_change <- left_join(country_biomass_change, select(fish_pressure, c(iso3c, historic_1900)), by="iso3c") %>%
+  mutate(prop_obs = biomass_obs/historic_1900)
+
+mod_data <- left_join(country_biomass_change, proj_data, by=c("iso3c", "year")) %>%
+  filter(year >= 2005)
+
+plot_data <- mod_data %>%
+  group_by(scenario, year) %>%
+  summarize(historic_biomass = sum(historic_1900.x, na.rm=TRUE),
+            biomass_obs = sum(biomass_obs),
+            biomass_accel = sum(avg_biomass_accel),
+            biomass_no_accel = sum(avg_biomass_no_accel)) %>%
+  ungroup() %>%
+  rowwise() %>%
+  mutate(obs_prop = biomass_obs/historic_biomass,
+         accel_prop = biomass_accel/historic_biomass,
+         no_accel_prop = biomass_no_accel/historic_biomass) %>%
+   pivot_longer(
+    cols = contains("prop"),  # Specify the columns to pivot
+    names_to = "prop",      # Name for the new variable column
+    values_to = "value"     # Name for the new value column
+  )
+
+ggplot(filter(plot_data, scenario=="SSP2"), aes(x=year, y=value, group = prop, color = prop)) +
+  geom_point()
 
 ```
+
+
+
+
 
 
 # unpopulated EEZs
@@ -267,7 +399,7 @@ Function to update yearly biomass based on model:
 ```{r}
 
 update_biomass <- function(df) {
-  # df <- new_data_sim %>% filter(iso3c == "MCQ" & scenario == "SSP2")
+  # df <- new_data_sim %>% filter(iso3c == "SLB" & scenario == "SSP2")
   #print(df)
   
   df$prop[1] <- df$biomass_2005[1] / df$historic_1900[1]
@@ -528,99 +660,6 @@ ggplot(hs_plot, aes(x = year, color = scenario, group = scenario)) +
 
 ```
 
-
-
-
-# Some explorations of the data
-## this series explores the populated EEZs
-```{r}
-
-plot_data <- left_join(new_data_projected, new_data_projected_v2) %>% 
-  filter(iso3c %in% c("USA", "CCK", "CHN", "BEL", "CIV", "COD", "DEU", "ECU") & scenario =="SSP2")
-
-## plot 1: explore some countries with different tendencies
-# observed data: this file created in step1
-country_biomass_change <- read_csv("prep/fisheries/data/country_biomass_2000_2010.csv") %>%
-  filter(iso3c %in% c("USA", "CCK", "CHN", "BEL", "CIV", "COD", "DEU", "ECU") & year %in% 2000:2010) %>%
-  select(iso3c, year, biomass_obs = biomass) 
-
-country_biomass_change <- left_join(country_biomass_change, fish_pressure, by="iso3c") %>%
-  mutate(prop_obs = biomass_obs/historic_1900)
-  
-
-ggplot(plot_data, aes(x=year, y=prop, group=iso3c, color=iso3c)) +
-  geom_line() +
-  geom_line(aes(x=year, y=prop_no_accel, group=iso3c, color=iso3c), linetype="dotted") +
-  geom_hline(yintercept=0.45, color="orange") +
-  geom_hline(yintercept=0.15, color="red") +
-  geom_point(data = country_biomass_change, aes(x=year, y= prop_obs, color=iso3c))
-  
-
-## plot 2: Compare 2 models (acceleration and deceleration vs. deceleration only)
-
-## first a plot to see how the scenarios compare:
-ssp_plot <- left_join(new_data_projected, new_data_projected_v2) %>%
-  select(scenario, iso3c, rgn_nam, year, avg_biomass, avg_biomass_no_accel, historic_1900) %>%
-  group_by(scenario, year) %>%
-  summarize(biomass_accel = sum(avg_biomass, na.rm=TRUE),
-            biomass_noaccel = sum(avg_biomass_no_accel, na.rm=TRUE),
-            biomass_hist = sum(historic_1900)) %>%
-  ungroup() %>%
-  rowwise() %>% 
-  mutate(prop_accel = biomass_accel/biomass_hist,
-         prop_noaccel = biomass_noaccel/biomass_hist)
-
-
-## add in observed
-obs_biomass <- read_csv("prep/fisheries/data/country_1900_2010_biomass.csv") %>%
-  filter(iso3c %in% proj_data$iso3c) %>%
-  group_by(year) %>%
-  summarize(biomass_obs = sum(biomass, na.rm=TRUE)) %>%
-  ungroup() %>%
-  mutate(obs_prop = biomass_obs/1148446559) %>%
-  filter(year >=1950)
-
-ggplot(ssp_plot, aes(x = year, color = scenario, group = scenario)) +
-  geom_point(aes(y = prop_accel)) +
-  geom_line(aes(y = prop_accel)) +
-  geom_point(aes(y = prop_noaccel), alpha = 0.15) +
-  geom_line(aes(y = prop_noaccel), alpha = 0.15) +
-  geom_point(data=obs_biomass, aes(x=year, y=obs_prop), inherit.aes=FALSE)  
-  
-
-## plot 3: years 2005-2010, 
-
-country_biomass_change <- read_csv("prep/fisheries/data/country_biomass_2000_2010.csv")  %>%
-  select(iso3c, year, biomass_obs = biomass) %>%
-  filter(!is.na(iso3c))
-
-country_biomass_change <- left_join(country_biomass_change, select(fish_pressure, c(iso3c, historic_1900)), by="iso3c") %>%
-  mutate(prop_obs = biomass_obs/historic_1900)
-
-mod_data <- left_join(country_biomass_change, proj_data, by=c("iso3c", "year")) %>%
-  filter(year >= 2005)
-
-plot_data <- mod_data %>%
-  group_by(scenario, year) %>%
-  summarize(historic_biomass = sum(historic_1900, na.rm=TRUE),
-            biomass_obs = sum(biomass_obs),
-            biomass_accel = sum(avg_biomass_accel),
-            biomass_no_accel = sum(avg_biomass_no_accel)) %>%
-  ungroup() %>%
-  rowwise() %>%
-  mutate(obs_prop = biomass_obs/historic_biomass,
-         accel_prop = biomass_accel/historic_biomass,
-         no_accel_prop = biomass_no_accel/historic_biomass) %>%
-   pivot_longer(
-    cols = contains("prop"),  # Specify the columns to pivot
-    names_to = "prop",      # Name for the new variable column
-    values_to = "value"     # Name for the new value column
-  )
-
-ggplot(filter(plot_data, scenario=="SSP2"), aes(x=year, y=value, group = prop, color = prop)) +
-  geom_point()
-
-```
 
 
 
