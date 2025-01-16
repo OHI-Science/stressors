@@ -1,0 +1,33 @@
+---
+title: "Untitled"
+output: html_document
+date: "2024-07-17"
+---
+
+```{r setup, include=FALSE}
+
+library(tidyverse)
+library(terra)
+library(here)
+library(countrycode)
+
+```
+
+Save final pressure files to consistent file location and adjust filenaming.
+```{r}
+
+pressure_save <- "/home/shares/ohi/stressors_2021/_final_data/rescaled_pressures"
+pressure_list <- read_csv(here("impact/pressure_locations.csv"))
+file.remove(list.files(pressure_save, full=TRUE))
+
+files_to_save <- paste0(pressure_list$f_path, "/", pressure_list$fn_pressure, "_",  pressure_list$fn_scenario, "_", pressure_list$fn_time, ".tif")
+files_new_loc <- paste0(pressure_save, "/", pressure_list$new_fn_pressure, "_", pressure_list$fn_scenario, "_", pressure_list$fn_time, ".tif")
+for (i in seq_along(files_to_save)) { # i = 178
+  file.copy(from = files_to_save[i], to = files_new_loc[i], overwrite = TRUE)
+}
+
+length(list.files(pressure_save)) # currently should be 227
+
+```
+
+

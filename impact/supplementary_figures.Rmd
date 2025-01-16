@@ -82,7 +82,7 @@ tmp <- zonal(pressure_stack, decrease, fun="mean", na.rm=TRUE) %>%
 
 Some figures made in impacts.Rmd for SSP5-8.5 scenarios. They are in impact/figs/cumulative
 
-histogram and statistics for latitudinal pattenrns
+histogram and statistics for latitudinal patterns
 ```{r}
 
 tmp <- list.files("/home/shares/ohi/stressors_2021/impacts/cumulative", full=TRUE, pattern = "current|medium-term")
@@ -178,8 +178,8 @@ png(here("impact/figs/hotspots_ssp585.png"), width = 2000, height = 1500, res = 
 plot(st_geometry(world_moll), col="gray80", border="gray85")
 plot(cat1, col="#44ACC8", add=TRUE, legend=FALSE)
 plot(cat2, col="#E2D100", add=TRUE, legend=FALSE)
-plot(cat3, col="#E58501", add=TRUE, legend=FALSE)
-plot(cat4, col="#B41821", add=TRUE, legend=FALSE)
+plot(cat3, col="#B41821", add=TRUE, legend=FALSE)
+plot(cat4, col="#E58501", add=TRUE, legend=FALSE)
 
 dev.off()
 
@@ -187,7 +187,7 @@ dev.off()
 
 ## Figure 2: coastal vs ocean
 
-Some stats for the paper
+Cumulative impact plots
 ```{r}
 # relative pressures coastal vs global
 
@@ -201,38 +201,6 @@ ocean <- ifel(ocean>0, 2, 0)
 offshore <- ocean - ifel(is.na(coast), 0, coast)
 offshore <- ifel(offshore ==2, 1, NA)
 
-
-cumulative <- list.files("/home/shares/ohi/stressors_2021/impacts/cumulative", full=TRUE)
-
-cum_stack <- rast(cumulative)
-source_info <- gsub(".tif", "", basename(sources(cum_stack)))
-names(cum_stack) <- source_info
-
-offshore_pressures <- cum_stack*offshore
-total_offshore_pressures <- global(offshore_pressures, "sum", na.rm=TRUE)
-
-offshore_cells_num <- global(offshore, "sum", na.rm=TRUE) %>% pull()
-
-offshore_impact <- as.data.frame(total_offshore_pressures) %>%
-  mutate(cells = offshore_cells_num) %>%
-  mutate(average = sum/cells)
-
-# figure out for coastal
-coastal_pressures <- cum_stack*coast
-total_coastal_pressures <- global(coastal_pressures, "sum", na.rm=TRUE)
-
-coastal_cells_num <- global(coast, "sum", na.rm=TRUE) %>% pull()
-
-coastal_impact <- as.data.frame(total_coastal_pressures) %>%
-  mutate(cells = coastal_cells_num) %>%
-  mutate(average = sum/cells)
-
-```
-
-
-Cumulative impact plot
-
-```{r}
 
 cumulative <- list.files("/home/shares/ohi/stressors_2021/impacts/cumulative", full=TRUE)
 cum_stack <- rast(cumulative)
@@ -307,7 +275,7 @@ summarize_pressures <- function(scenario ="ssp585", time = "medium-term"){
   # scenario = "ssp245"
   # time = "medium-term"
   
-files <- list.files("/home/shares/ohi/stressors_2021/hab_vuln_pressure_habitat_corrected/", full=TRUE)
+files <- list.files("/home/shares/ohi/stressors_2021/impacts/hab_vuln_pressure_habitat_corrected/", full=TRUE)
 
 pressure_list <- data.frame(pressures=c("sst-extremes|temperature", "slr", "_oxygen-", "_oa_", "nutrient", "npp", "light-pollution", "fisheries", "coastal-disturbance", "air-heat-index"),
                             pressure_name = c("ocean-warming", "sea-level-rise", "reduced-oxygen", "acidification", "nutrient-pollution", "primary-productivity", "light-pollution",
@@ -480,7 +448,7 @@ ggsave(combined_plot, filename ="impact/figs/coastal_vs_offshoret_ssp585.png", w
 Get habitat impact data
 ```{r}
 
-pressures <- list.files("/home/shares/ohi/stressors_2021/hab_vuln_pressure/", full=TRUE)
+pressures <- list.files("/home/shares/ohi/stressors_2021/impacts/hab_vuln_pressure/", full=TRUE)
 pressures <- grep("ssp245|ssp585", pressures, value=TRUE)
 pressures <- grep("_current|_near-term|_medium-term", pressures, value=TRUE)
 
@@ -743,6 +711,13 @@ pressure_rgn <- pressure_rgn %>%
   ungroup() 
 
 
+## country coastal raster
+eez <- rast(here("_spatial/eez_mol_w_land.tif"))
+coast <- rast(here("_spatial/coastal_country_mol.tif"))
+coast <- ifel(coast>0, 1, 0)
+#get the area
+country_coast <- eez*coast
+plot(country_coast)
 
 # get number of coastal cells in each country:
  coast_cell_num <- zonal(ifel(country_coast>0, 1, 0), country_coast, fun = "sum", na.rm=TRUE)
