@@ -44,5 +44,11 @@ eez <- rast(here("_spatial/eez_mol_w_land.tif"))
 eez_coast <- eez*mask
 
 writeRaster(eez_coast, here("_spatial/coastal_country_mol.tif"))
+
+
+ tmp <- raster(here("_spatial/coastal_country_mol.tif"))
+ tmp_latlong <- projectRaster(tmp, crs = target_crs)
+ mapview::mapview(tmp_latlong, maxpixels =  7094640)
+ 
 ```
 

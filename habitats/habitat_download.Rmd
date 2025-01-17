@@ -1,0 +1,20 @@
+---
+title: "Untitled"
+output: html_document
+date: "2024-09-12"
+---
+
+Using the habitats from Casey's species vulnerability work.
+
+```{r setup, include=FALSE}
+
+# copy from his repo
+from <- list.files(here::here("../spp_vuln_mapping/_data/habitat_maps"), full=TRUE)
+file.copy(from=from, to = here::here("habitats/data"))
+
+# alter names
+file_list <- list.files(here::here("habitats/data"), full=TRUE)
+new_file_names <- gsub("_updated", "", file_list)
+file.rename(file_list, new_file_names)
+
+```
