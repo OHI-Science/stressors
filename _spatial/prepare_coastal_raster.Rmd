@@ -46,9 +46,10 @@ eez_coast <- eez*mask
 writeRaster(eez_coast, here("_spatial/coastal_country_mol.tif"))
 
 
- tmp <- raster(here("_spatial/coastal_country_mol.tif"))
- tmp_latlong <- projectRaster(tmp, crs = target_crs)
+ tmp <- rast(here("_spatial/coastal_country_mol.tif"))
+ tmp_latlong <- project(tmp, "EPSG:4326")
+ tmp_latlong <- ifel(tmp_latlong>0, 1, NA)
  mapview::mapview(tmp_latlong, maxpixels =  7094640)
- 
+ global(tmp_latlong, "sum", na.rm=TRUE)
 ```
 

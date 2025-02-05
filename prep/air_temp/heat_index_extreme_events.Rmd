@@ -6,7 +6,7 @@ date: '2022-08-09'
 
 https://wbg-cckp.s3.amazonaws.com/data/cmip6-x0.25/hi41/ensemble-all-ssp119/timeseries-hi41-annual-mean_cmip6-x0.25_ensemble-all-ssp119_timeseries_median_2015-2100.nc
 
-I will be using Heat Index data from the World Bank Climate Change Knowledge Portal!!
+I will be using Heat Index data from the World Bank Climate Change Knowledge Portal.
 
 Heat Index data is calculated using:
 Steadman R.G., 1979: The assessment of sultriness, Part I: A temperature-humidity index based on human
@@ -135,7 +135,7 @@ fileSave), overwrite=TRUE)
 
 Calculate rescaled pressure score.
 
-Use historical data to determine a reasonable rescaling point:
+Use historical data to determine relative change:
 ```{r}
   hist_hi_35 <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/time_frame_average/climatology-hi35-annual-mean_cmip6-x0.25_ensemble-all-historical_climatology_median_1995-2014.tif")
     hist_hi_37 <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/time_frame_average/climatology-hi37-annual-mean_cmip6-x0.25_ensemble-all-historical_climatology_median_1995-2014.tif")
@@ -244,6 +244,14 @@ boundary_mask <- ifel(i_i_i_boundary==0, 1, NA) # one more layer removed!
 
 mask <- mask*boundary_mask
 plot(mask)
+mask_latlon <- project(mask, "EPSG:4236")
+NA_extent <- ext(-170, -50, 5, 85) 
+mask_latlon <- crop(mask_latlon, NA_extent)
+pal <- leaflet::colorNumeric(palette = "viridis", domain = values(mask_latlon), alpha = TRUE)
+mapview::mapview(mask_latlon, maxpixels=970830, col.regions=pal)
+leaflet() %>%
+  addTiles() %>%
+  addRasterImage(mask_latlon, colors = pal, opacity = 0.5) 
 
 raster_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/T_air/wb_heat_index/pressure/", full=TRUE)
 

@@ -1,0 +1,340 @@
+---
+title: "Prepping population data"
+output: html_document
+date: '2022-09-07'
+---
+
+#Data Source
+ https://www.nature.com/articles/s41597-022-01675-x
+version 3, downloaded Jan 17 2025
+
+
+**Reference**: Wang et al. 2022, https://www.nature.com/articles/s41597-022-01675-x
+**Downloaded**: Jan 17, 2025
+**Description**:  Population count per cell 
+**Native data resolution**: 0.008333333 degrees  
+**Time range**: projection 2020-2100 (SSP1, SSP2, SSP3, SSP4, SSP5), 5 year periods
+**Format**:  tif
+
+
+##Setup  
+
+```{r setup,message=FALSE,warning=FALSE,verbose=FALSE}
+#set options for all chunks in code
+knitr::opts_chunk$set(warning=FALSE, message=FALSE,fig.width=6, fig.height=6)
+#libraries
+library(maps)
+library(tidyverse)
+library(RColorBrewer)
+library(terra)
+library(here)
+
+# color
+cols = rev(colorRampPalette(brewer.pal(9, 'Spectral'))(255)) # rainbow color scheme
+
+# spatial map data
+ocean_raw <- terra::rast(here("_spatial/ocean_area_mol.tif"))
+ocean <- ocean_raw
+ocean[ocean >0] <- 1
+
+
+## boundary mask
+boundary_mask <- rast(nrow=2160, ncol=4320, xmin=-180, xmax=180, ymin=-90, ymax=90)
+values(boundary_mask) <- 1
+boundary_mask_mol <- terra::project(boundary_mask, "+proj=moll", res=10000)
+
+plot(boundary_mask_mol)
+
+```
+
+## Defining years to use
+```{r}
+years_select <- data.frame(
+  time_frame = c("current", "near-term", "medium-term", "long-term"),
+  year_range = c("2020",
+                 "2025|2030|2035|2040",
+                 "2045|2050|2055|2060",
+                 "2085|2090|2095|2100"))
+
+scenarios <- c("SSP1", 
+               "SSP2",
+               "SSP3",
+               "SSP4",
+               "SSP5")
+
+```
+
+
+Explore: can be skipped
+```{r}
+
+# see what is in directory
+files <- dir("/home/shares/ohi/stressors_2021/_raw_data/wang_population/SSP1", full=TRUE)
+
+pop <- raster::raster("/home/shares/ohi/stressors_2021/_raw_data/wang_population/SSP1/SSP1_2020.tif") 
+raster::cellStats(pop, "sum", na.rm=TRUE)
+## world population in 2015 was 7.44 and 7.86 in 2020 billion (worldbank)
+## estimate here: 7.56, looks good!
+plot(log(pop+1))
+
+```
+
+
+## Function to prep raster
+```{r}
+#terraOptions(progress=0)
+
+#dir.create("/home/shares/ohi/stressors_2021/_dataprep/population")
+prep_rast <- function(scen = "SSP5_RCP8_5"){ # scen = scenarios[3]
+    for(yrs in years_select$year_range){ # yrs = years_select$year_range[2]
+  file_years <- yrs
+  
+  all_files <- list.files(
+    sprintf("/home/shares/ohi/stressors_2021/_raw_data/wang_population/%s/", scen), full=TRUE)
+  subset_files <- grep(scen, all_files, value=TRUE)
+  subset_files <- grep(file_years, subset_files, value=TRUE)
+  subset_files <- grep("\\.tif$", subset_files, value=TRUE)  
+  
+  # the extents and resolution on these rasters is not saved correctly, fixing:                     
+  template <- rast("/home/shares/ohi/stressors_2021/_raw_data/wang_population/SSP3//SSP3_2040.tif")
+  
+  rasters <- lapply(subset_files, rast)
+  standardized_rasters <- lapply(rasters, function(r) {
+  ext(r) <- ext(template)    # Assign the common extent
+  res(r) <- res(template)       # Assign the common resolution
+  return(r)
+})
+  
+  stack_rasters <- terra::rast(rasters)
+  cat(scen, ", ", yrs, ",  N=", length(subset_files), "\n")
+  
+  # get mean number of people per cell across relevant window of years
+  avg_pop <- terra::app(stack_rasters, "mean", na.rm=FALSE)
+  
+  # aggregate the data to be similar to our target resolution
+  avg_pop_agg <- terra::aggregate(avg_pop, fact=10, fun="sum", na.rm=TRUE)
+  
+  # convert to density (people/km2) in order to safely project
+  avg_pop_density <- avg_pop_agg/terra::cellSize(avg_pop_agg, unit="km")
+
+   shoreline_density_km2 <- terra::project(avg_pop_density, ocean)
+  # terra::global(shoreline_density_km2, "sum", na.rm=TRUE)*100
+#cellSize(shoreline_density_km2, unit="km")
+      
+       time_frame <- years_select$time_frame[years_select$year_range==yrs]
+  terra::writeRaster(shoreline_density_km2, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/population_v2/pop_density_km2/human-pop-density-km2_%s_%s.tif",
+              time_frame, scen), overwrite=TRUE)
+      
+  ## get the nearshore disturbance estimate, average population density of nearby land and ocean cells (these are zero population) 
+  offshore_density_km2_noNA <- ifel(is.na(shoreline_density_km2), 0, shoreline_density_km2) 
+
+offshore_density_km2_noNA_smoothed <-   terra::focal(offshore_density_km2_noNA, w=3, fun="mean", na.rm=TRUE)
+#plot(log(offshore_density_km2_noNA - offshore_density_km2_noNA_smoothed+1))
+
+
+# check that things look ok!    
+#  extent <- terra::ext(1e7, 1.25e7, 3e6, 5e6)  
+# extent <- terra::ext(1e7, 1.15e7, 4e6, 5e6) 
+  # extent <- terra::ext(1.09e7, 1.12e7, 4.4e6, 4.7e6) 
+#plot(terra::crop(log(shoreline_density_km2+1), extent))
+#plot(terra::crop(log(offshore_density_km2_noNA_smoothed+1), extent))
+
+# tmp1 <- terra::crop(terra::ifel(offshore_density_km2_noNA_smoothed>0, 1, 0), extent)
+# tmp2 <- terra::crop(terra::ifel(shoreline_density_km2>0, 1, 0), extent)
+# tmp2 <- terra::ifel(is.na(tmp2), 0, tmp2)
+# plot(tmp2+tmp1)
+
+    ## combine shoreline and offshore regions
+  total <- terra::ifel(is.na(shoreline_density_km2), offshore_density_km2_noNA_smoothed, shoreline_density_km2)  
+    
+  # global(total, "sum", na.rm=TRUE)*100
+  #plot(terra::crop(log(total+1), extent))
+  
+  terra::writeRaster(total, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/population_v2/pop_density_km2_ocean_expand/human-pop-density-km2_%s_%s.tif",
+              time_frame, scen), overwrite=TRUE)
+
+  }
+  }
+
+
+```
+
+Run function on all scenarios.
+```{r}
+for(scenario in scenarios){ #scenario= scenarios[1]
+  prep_rast(scen=scenario)
+  }
+
+```
+
+## We interupt this program....
+Here I am going to save an additional iteration on the population data that will be useful for predicting other pressures (such as, light pollution).
+
+In this case we extend the population data a bit further into the ocean.
+
+```{r}
+
+pop_density_files <- list.files("/home/shares/ohi/stressors_2021/_dataprep/population_v2/pop_density_km2/", full=TRUE)
+ 
+for(pop_density_file in pop_density_files){ # pop_density_file = pop_density_files[1]
+  
+  saveName <- basename(pop_density_file)
+  saveName <- paste0("extend_", saveName)
+  
+  pop_raster <- terra::rast(pop_density_file)
+  pop_no_NA <- ifel(is.na(pop_raster), 0, pop_raster) 
+
+  
+for(i in 1:3){# i=1
+  if(i==1){
+offshore_pop <-   terra::focal(pop_no_NA, w=3, fun=mean, na.rm=TRUE)
+} else
+  offshore_pop <-   terra::focal(offshore_pop, w=3, fun=mean, na.rm=TRUE)
+  i=1+i  
+}      
+      ## combine shoreline and offshore regions
+  total <- terra::ifel(is.na(pop_raster), offshore_pop, pop_raster)  
+
+terra::writeRaster(total, sprintf("/home/shares/ohi/stressors_2021/_dataprep/population_v2/other_pop_files/v3_%s", saveName), overwrite=TRUE)
+}
+
+
+for(pop_density_file in pop_density_files){ # pop_density_file = pop_density_files[1]
+  
+  saveName <- basename(pop_density_file)
+  saveName <- paste0("extend_", saveName)
+  
+  pop_raster <- terra::rast(pop_density_file)
+  pop_no_NA <- ifel(is.na(pop_raster), 0, pop_raster) 
+
+  
+for(i in 1:2){# i=1
+  if(i==1){
+offshore_pop <-   terra::focal(pop_no_NA, w=3, fun=mean, na.rm=TRUE)
+} else
+  offshore_pop <-   terra::focal(offshore_pop, w=3, fun=mean, na.rm=TRUE)
+  i=1+i  
+}      
+      ## combine shoreline and offshore regions
+  total <- terra::ifel(is.na(pop_raster), offshore_pop, pop_raster)  
+
+terra::writeRaster(total, sprintf("/home/shares/ohi/stressors_2021/_dataprep/population_v2/other_pop_files/v2_%s", saveName), overwrite=TRUE)
+}
+
+```
+
+## Back to our regularly scheduled program....
+
+## Log transform data
+This paper shows how log tranforming population data is linearly correlated with several stressors.
+https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1000606
+```{r}
+files <- list.files("/home/shares/ohi/stressors_2021/_dataprep/population_v2/pop_density_km2_ocean_expand/", full=TRUE)
+
+for(file in files){
+  # file <- files[1]
+  file_name <- basename(file)
+  file_name <- gsub("-km2", "-km2-log", file_name)
+  
+  raster <- terra::rast(file)
+  ln_raster <- log(raster + 1)
+  
+    terra::writeRaster(ln_raster, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/population_v2/pop_density_km2_ocean_expand_log/%s",
+              file_name), overwrite=TRUE)
+  
+}
+ 
+```
+
+## Rescaling data
+
+Ideally, we would want to rescale this based on something biologically meaningful,
+for example, the relationship between human density and biological stress.
+
+But I haven't been able to find anything. Given this, I will rescale these data based on a confidence interval.
+
+Step 1: 
+Create a mask so rescaling is based only on coastal rasters. 
+
+```{r}
+
+moll_crs <- '+proj=moll +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m'
+
+ocean_sf <- sf::read_sf(here('_spatial', 'ne_10m_ocean', 'ne_10m_ocean.shp'))
+
+  ocean_moll_sf <- ocean_sf %>%
+    sf::st_transform(crs = moll_crs)
+
+coastal_mask <- rast(here("_spatial/coastal_country_mol.tif"))
+coastal_mask <- ifel(coastal_mask>0, 1, NA)
+# using this value as information to determine best quantile to use.
+# how many coastal cells are there?
+global(coastal_mask, sum, na.rm=TRUE)
+#159233
+  
+  
+```
+
+Get scaling value from current year. 
+(use only coastal cells to determine scaling value, 
+but rescale all population data)
+
+```{r}
+
+
+rescale_raster <- terra::rast("/home/shares/ohi/stressors_2021/_dataprep/population_v2/pop_density_km2_ocean_expand_log/human-pop-density-km2-log_current_SSP1.tif")
+
+rescale_raster_coast <- rescale_raster*coastal_mask
+
+extent <- terra::ext(1e7, 1.15e7, 4e6, 5e6) 
+plot(terra::crop(rescale_raster_coast, extent))
+
+## determine quantile value used for rescaling
+global(rescale_raster_coast, fun= function(x) {quantile(x, probs=c(0.99, 0.999, 0.9999), na.rm=TRUE)})
+
+test1 <- terra::ifel(rescale_raster_coast >= 9.433692, 1, NA)
+plot(as.points(test1), col="red")
+plot(ocean_moll_sf, add=TRUE, color=NA)
+
+test2 <- terra::ifel(rescale_raster_coast >= 8.411285, 1, NA)
+plot(as.points(test2), col="red")
+plot(ocean_moll_sf, add=TRUE, color=NA)
+
+
+# will go with the 99.9th quantile value
+#rescale_value <- global(rescale_raster_coast, fun= function(x) {quantile(x, probs=c(0.999), na.rm=TRUE)})
+rescale_value <- 8.411285
+```
+
+## rescaling the data!
+```{r}
+
+files <- list.files("/home/shares/ohi/stressors_2021/_dataprep/population_v2/pop_density_km2_ocean_expand_log", full=TRUE)
+
+
+for(file in files){
+  #file <- files[1]
+  save_name <- basename(file)
+  save_name <- gsub("human-pop-density-km2-log", "disturbance", basename(file))
+
+  # Function to switch the 2nd and 3rd sections
+swap_sections <- function(filename) {
+  sub("^([^_]+)_([^_]+)_([^_]+)(\\..*)$", "\\1_\\3_\\2\\4", filename)
+}
+save_name <- swap_sections(save_name)
+
+  tmp <- terra::rast(file)
+#  rescaled <- tmp/pull(rescale_value)
+    rescaled <- tmp/rescale_value
+  rescaled <- ifel(rescaled > 1, 1, rescaled)
+# plot(rescaled, col=cols)
+  rescaled <- rescaled * coastal_mask
+ terra::writeRaster(rescaled, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/population_v2/pop_density_km2_ocean_expand_log_rescaled_crop/%s",
+              save_name), overwrite=TRUE)  
+    
+}
+
+
+```
+
+

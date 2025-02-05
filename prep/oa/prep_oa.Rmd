@@ -169,11 +169,26 @@ hist_stack_historical <- hist_stack_align[[grep(years_select_hist, names(hist_st
 historical_avg <- terra::app(hist_stack_historical, mean)
 plot(historical_avg)
 
+## format raster
+historical_avg_crs <- terra::project(historical_avg, ocean, method="bilinear")
+historical_avg_crs[is.nan(historical_avg_crs)] <- NA
+
+# gapfill coastline
+historical_avg_crs_gf <- historical_avg_crs
+for(i in 1:200){
+  i=1+i
+historical_avg_crs_gf <- terra::focal(historical_avg_crs_gf, w=3, fun=mean, na.rm=TRUE, na.policy="only")
+}
+
+historical <- terra::mask(historical_avg_crs_gf, ocean)
+
+writeRaster(historical, "/home/shares/ohi/stressors_2021/_dataprep/oa/raw/historical.tif", overwrite=TRUE)
+
 # check to see how much is <1
-tmp <- terra::ifel(historical_avg <= 1, 1, NA)
+tmp <- terra::ifel(historical <= 1, 1, NA)
 plot(tmp, col="red")
 
-tmp <- terra::ifel(historical_avg >3, 1, NA)
+tmp <- terra::ifel(historical >3, 1, NA)
 plot(tmp, col="red")
 ```
 
@@ -199,7 +214,8 @@ predict
 
 #for each layer, all values <=1 are assigned a 1, otherwise old-new/(old-1)
 oa_rescale <- function(raster_path, stack_list=stack_list_spp, historical_avg){ #raster_path <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/nc/median/Aragonite_median_ssp245.nc"
-
+#stack_list=stack_list_spp, historical_avg=historical
+  
   saveName <- basename(raster_path)
   saveName <- gsub(".nc", "", saveName)
   saveName <- gsub("Aragonite_median_", "", saveName)
@@ -212,7 +228,7 @@ oa_rescale <- function(raster_path, stack_list=stack_list_spp, historical_avg){ 
   scenario <- c("current", "near-term", "medium-term", "long-term")
 
 for(select_time_frame in scenario){
-          #select_time_frame = "current"
+          #select_time_frame = "medium-term"
 
     ## Select relevant years for time period
     select_year_range_tmp <- years_select %>%
@@ -224,7 +240,24 @@ for(select_time_frame in scenario){
     cat(sprintf("third dimension should be 2: observed is %s", dim(year_range_stack)[3]))
     oa_predict <- terra::app(year_range_stack, mean)
 
-    ## rescale
+## format raster
+oa_crs <- terra::project(oa_predict, ocean, method="bilinear")
+oa_crs[is.nan(oa_crs)] <- NA
+
+# gapfill coastline
+oa_crs_gf <- oa_crs
+for(i in 1:200){
+  i=1+i
+oa_crs_gf <- terra::focal(oa_crs_gf, w=3, fun=mean, na.rm=TRUE, na.policy="only")
+}
+
+
+oa_predict <- terra::mask(oa_crs_gf, ocean)
+
+terra::writeRaster(oa_predict, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/oa/raw/raw_oa_%s_%s.tif",
+              saveName, select_time_frame), overwrite=TRUE)
+
+      ## rescale
   diff = (historical_avg - oa_predict)/(historical_avg - 1)
   
   oa_pressure <- terra::ifel(oa_predict<=1, 1, oa_predict)                                 #all values at or less than 1 are given a value of 1
@@ -240,21 +273,8 @@ for(select_time_frame in scenario){
     #all cells with values greater than 1 are capped at 1
     oa_pressure <- terra::ifel(oa_pressure>1 , 1, oa_pressure)
 
-  
-## format raster
-oa_pressure_crs <- terra::project(oa_pressure, ocean, method="bilinear")
-oa_pressure_crs[is.nan(oa_pressure_crs)] <- NA
 
-# gapfill coastline
-oa_pressure_gf <- oa_pressure_crs
-for(i in 1:200){
-  i=1+i
-oa_pressure_gf <- terra::focal(oa_pressure_gf, w=3, fun=mean, na.rm=TRUE, na.policy="only")
-}
-
-oa_mask <- terra::mask(oa_pressure_gf, ocean)
-
-terra::writeRaster(oa_mask, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/oa/oa_%s_%s.tif",
+terra::writeRaster(oa_pressure, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/oa/rescaled/oa_%s_%s.tif",
               saveName, select_time_frame), overwrite=TRUE)
 }
 }
@@ -282,19 +302,19 @@ stack_list_spp <- data.frame(rasters_name = paste0("X",1:9),
                                  "years_2091-2100"))
 
 ssp245_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/nc/median/Aragonite_median_ssp245.nc"
-oa_rescale(raster_path = ssp245_stack, stack_list=stack_list_spp, historical_avg=historical_avg)
+oa_rescale(raster_path = ssp245_stack, stack_list=stack_list_spp, historical_avg = historical)
 
 ssp119_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/nc/median/Aragonite_median_ssp119.nc"
-oa_rescale(raster_path = ssp119_stack, stack_list=stack_list_spp, historical_avg=historical_avg)
+oa_rescale(raster_path = ssp119_stack, stack_list=stack_list_spp, historical_avg=historical)
 
 ssp126_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/nc/median/Aragonite_median_ssp126.nc"
-oa_rescale(raster_path = ssp126_stack, stack_list=stack_list_spp, historical_avg=historical_avg)
+oa_rescale(raster_path = ssp126_stack, stack_list=stack_list_spp, historical_avg=historical)
 
 ssp370_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/nc/median/Aragonite_median_ssp370.nc"
-oa_rescale(raster_path = ssp370_stack, stack_list=stack_list_spp, historical_avg=historical_avg)
+oa_rescale(raster_path = ssp370_stack, stack_list=stack_list_spp, historical_avg=historical)
 
 ssp585_stack <- "/home/shares/ohi/stressors_2021/_raw_data/oa_arag_noaa_jiang/nc/median/Aragonite_median_ssp585.nc"
-oa_rescale(raster_path = ssp585_stack, stack_list=stack_list_spp, historical_avg=historical_avg)
+oa_rescale(raster_path = ssp585_stack, stack_list=stack_list_spp, historical_avg=historical)
 
 ```
 
@@ -303,6 +323,15 @@ oa_rescale(raster_path = ssp585_stack, stack_list=stack_list_spp, historical_avg
 ## Some checks
 ```{r plot rescale}
 rast_list <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oa", full=TRUE)
+
+old <- rast("/home/shares/ohi/stressors_2021/_dataprep/oa/oa_ssp245_medium-term.tif")
+new <- rast("/home/shares/ohi/stressors_2021/_dataprep/oa/rescaled/oa_ssp245_medium-term.tif")
+plot(old - new)
+tmp <- old-new
+click(tmp)
+tmp <- ifel(tmp!=0, 1, 0)
+plot(tmp)
+
 library(ggplot2)
 library(tidyterra)
 library(ggmap)

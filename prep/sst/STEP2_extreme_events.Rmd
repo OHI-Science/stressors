@@ -132,7 +132,7 @@ terra::plot(tmp)
 terra::click(tmp)
 ```
 
-Next use historical data to estimate sd (or, 90th quantile) for each week using years 1979-2010.
+Next use historical data to estimate sd for each week using years 1979-2010.
 ```{r}
 hist_yrs <- paste(1979:2010, collapse="|")
 
@@ -244,7 +244,7 @@ cat("save_name = ", save_name, "   exceeds=", cellStats(weekly_exceed, "sum", na
 
 tmp <- list.files("/home/shares/ohi/stressors_2021/_dataprep/SST/weekly_exceed_two_sd/", full=TRUE)
 
-plot(raster(tmp[500]))
+plot(raster(tmp[502]))
 
 ```
 

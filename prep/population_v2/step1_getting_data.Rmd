@@ -1,0 +1,28 @@
+---
+title: "Downloading population data"
+output: html_document
+date: '2022-09-07'
+---
+ https://www.nature.com/articles/s41597-022-01675-x
+version 3, downloaded Jan 17 2025
+
+Spatially explicit population grids can play an important role in climate change, resource management, sustainable development, and other fields. Several gridded datasets already exist, but global data, especially high-resolution data on future populations, are largely lacking. Based on the WorldPop dataset, we present a global gridded population dataset covering 248 countries or areas at 30 arc-seconds (approximately 1 km) spatial resolution with five-year intervals for the period 2020–2100 by implementing random forest (RF) algorithm. Our dataset is quantitatively consistent with the shared socioeconomic pathways (SSPs) national population. The spatially explicit population grid we predicted in this study is validated by comparison with the WorldPop dataset at both the sub-national and grid level. A total of 3,569 provinces (almost all provinces on the globe) and more than 480 thousand grids are verified, and the results show that our dataset can serve as an input for predictive research in various fields.
+
+
+```{r}
+
+options(timeout = 800)
+url <- "https://figshare.com/ndownloader/articles/19608594/versions/3"
+url <- "https://figshare.com/ndownloader/files/34829160"
+download_dir <- "/home/shares/ohi/stressors_2021/_raw_data/wang_population/SSP1.zip"
+
+download.file(url, download_dir, mode = "wb") 
+
+unzip("/home/shares/ohi/stressors_2021/_raw_data/wang_population/population_data.zip", exdir = "/home/shares/ohi/stressors_2021/_raw_data/wang_population")  # Extract to the specified directory
+
+unzip("/home/shares/ohi/stressors_2021/_raw_data/wang_population/SSP1.zip", exdir = "/home/shares/ohi/stressors_2021/_raw_data/wang_population")  # Extract to the specified directory
+unzip("/home/shares/ohi/stressors_2021/_raw_data/wang_population/SSP2.zip", exdir = "/home/shares/ohi/stressors_2021/_raw_data/wang_population")  # Extract to the specified directory
+unzip("/home/shares/ohi/stressors_2021/_raw_data/wang_population/SSP3.zip", exdir = "/home/shares/ohi/stressors_2021/_raw_data/wang_population")  # Extract to the specified directory
+unzip("/home/shares/ohi/stressors_2021/_raw_data/wang_population/SSP4.zip", exdir = "/home/shares/ohi/stressors_2021/_raw_data/wang_population")  # Extract to the specified directory
+unzip("/home/shares/ohi/stressors_2021/_raw_data/wang_population/SSP5.zip", exdir = "/home/shares/ohi/stressors_2021/_raw_data/wang_population")  # Extract to the specified directory
+```

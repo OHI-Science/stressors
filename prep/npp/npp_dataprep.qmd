@@ -97,8 +97,8 @@ ncatt_get(tmp, attributes(tmp$var)$names[1])$info
 
 ```
 
-
 Get the "historical" from 1984-2014
+
 ```{r}
 
 nc_files <- list.files("/home/shares/ohi/stressors_2021/_raw_data/npp_noaa/models_hist_1985-2014/", full=TRUE)
@@ -132,7 +132,6 @@ file_names <- nc_open(nc)
 
 
 ```
-
 
 ```{r}
 
@@ -179,7 +178,6 @@ for(i in 1:dim(ensemble_combos)[1]){ # i=4
 # all scenarios had 12 models!
 
 ```
-
 
 rescaling the data:
 
