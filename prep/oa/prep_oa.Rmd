@@ -170,7 +170,7 @@ historical_avg <- terra::app(hist_stack_historical, mean)
 plot(historical_avg)
 
 ## format raster
-historical_avg_crs <- terra::project(historical_avg, ocean, method="bilinear")
+historical_avg_crs <- terra::project(historical_avg, ocean, method="near")
 historical_avg_crs[is.nan(historical_avg_crs)] <- NA
 
 # gapfill coastline
@@ -241,7 +241,7 @@ for(select_time_frame in scenario){
     oa_predict <- terra::app(year_range_stack, mean)
 
 ## format raster
-oa_crs <- terra::project(oa_predict, ocean, method="bilinear")
+oa_crs <- terra::project(oa_predict, ocean, method="near")
 oa_crs[is.nan(oa_crs)] <- NA
 
 # gapfill coastline

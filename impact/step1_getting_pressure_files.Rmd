@@ -26,7 +26,7 @@ for (i in seq_along(files_to_save)) { # i = 178
   file.copy(from = files_to_save[i], to = files_new_loc[i], overwrite = TRUE)
 }
 
-length(list.files(pressure_save)) # currently should be 227
+length(list.files(pressure_save)) # currently should be 231
 
 ```
 

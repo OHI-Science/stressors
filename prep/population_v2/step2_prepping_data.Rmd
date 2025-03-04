@@ -96,7 +96,7 @@ prep_rast <- function(scen = "SSP5_RCP8_5"){ # scen = scenarios[3]
   subset_files <- grep("\\.tif$", subset_files, value=TRUE)  
   
   # the extents and resolution on these rasters is not saved correctly, fixing:                     
-  template <- rast("/home/shares/ohi/stressors_2021/_raw_data/wang_population/SSP3//SSP3_2040.tif")
+  template <- rast("/home/shares/ohi/stressors_2021/_raw_data/wang_population/SSP3/SSP3_2040.tif")
   
   rasters <- lapply(subset_files, rast)
   standardized_rasters <- lapply(rasters, function(r) {
@@ -306,8 +306,42 @@ plot(ocean_moll_sf, add=TRUE, color=NA)
 rescale_value <- 8.411285
 ```
 
-## rescaling the data!
+## rescaling and masking the data!
 ```{r}
+
+## get mask that includes coastline and one cell offshore
+## prepare raster mask
+ocean <- terra::rast(here('_spatial/ocean_area_mol.tif'))
+
+## get coastline
+coastline <- terra::ifel(ocean<1 & ocean > 0,  1, 0)
+coastline <- terra::ifel(coastline ==1, 1, NA)
+global(coastline, "sum", na.rm=TRUE)
+
+
+## get one cell offshore
+full_ocean <- terra::ifel(ocean==1, 1, NA)
+one_offshore<- boundaries(full_ocean, falseval=NA, inner=TRUE)
+global(one_offshore, "sum", na.rm=TRUE)
+
+mask <- app(c(coastline, one_offshore), "sum", na.rm=TRUE)
+plot(mask)
+
+# get rid of outer boundary
+boundary_mask <- rast(nrow=1814, ncol=3617, xmin=-180, xmax=180, ymin=-90, ymax=90)
+values(boundary_mask) <- 1
+boundary_mask_mol <- terra::project(boundary_mask, "+proj=moll", res=10000)
+boundary_mask_mol <- extend(boundary_mask_mol, ext(ocean), fill=NA)
+boundary_mask_mol <- resample(boundary_mask_mol, ocean, method="near")
+inner_boundary <-  boundaries(boundary_mask_mol, inner=TRUE, falseval=0)
+inner_boundary <- ifel(inner_boundary==0, 1, NA) # cuts off out layer
+inner_inner_boundary <- boundaries(inner_boundary, inner=TRUE, falseval=0)
+inner_inner_boundary <- ifel(inner_inner_boundary==0, 1, NA) # cuts off next outer layer
+i_i_i_boundary <- boundaries(inner_inner_boundary, inner=TRUE, falseval=0)
+boundary_mask <- ifel(i_i_i_boundary==0, 1, NA) # one more layer removed!
+mask <- mask*boundary_mask
+plot(mask)
+
 
 files <- list.files("/home/shares/ohi/stressors_2021/_dataprep/population_v2/pop_density_km2_ocean_expand_log", full=TRUE)
 
@@ -325,15 +359,47 @@ save_name <- swap_sections(save_name)
 
   tmp <- terra::rast(file)
 #  rescaled <- tmp/pull(rescale_value)
-    rescaled <- tmp/rescale_value
+  rescaled <- tmp/rescale_value
   rescaled <- ifel(rescaled > 1, 1, rescaled)
+  rescaled <- rescaled*mask
 # plot(rescaled, col=cols)
-  rescaled <- rescaled * coastal_mask
+
  terra::writeRaster(rescaled, filename=sprintf("/home/shares/ohi/stressors_2021/_dataprep/population_v2/pop_density_km2_ocean_expand_log_rescaled_crop/%s",
               save_name), overwrite=TRUE)  
     
 }
 
+path <- "/home/shares/ohi/stressors_2021/_dataprep/population_v2/pop_density_km2_ocean_expand_log_rescaled_crop/"
+orgs <- grep("SSP1", list.files(path, full=TRUE), value=TRUE)
+
+# Create vector of new names
+new_files <- c(
+ gsub("SSP1", "ssp126", orgs),
+ gsub("SSP1", "ssp119", orgs)
+)
+
+
+# Copy files with new names
+file.copy(orgs, new_files)
+
+orgs <- grep("SSP", list.files(path, full=TRUE), value=TRUE)
+
+rename_patterns <- c(
+ "SSP2" = "ssp245",
+ "SSP3" = "ssp370", 
+ "SSP4" = "ssp460",
+ "SSP5" = "ssp585"
+)
+
+# Rename files using a loop
+for(old_pattern in names(rename_patterns)) { # old_pattern <- names(rename_patterns)[1]
+ files_to_rename <- grep(old_pattern, orgs, value=TRUE)
+ new_names <- gsub(old_pattern, rename_patterns[old_pattern], files_to_rename)
+ file.rename(from = files_to_rename, to = new_names)
+}
+
+orgs <- grep("SSP", list.files(path, full=TRUE), value=TRUE)
+file.remove(orgs)
 
 ```
 

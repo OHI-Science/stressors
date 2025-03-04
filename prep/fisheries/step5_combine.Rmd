@@ -23,8 +23,6 @@ library(rnaturalearth)
 
 ## Get the data
 ```{r}
-
-
 # eez
 eez_mod <- read_csv(here("prep/fisheries/data/habited_eez_biomass.csv"))
 

@@ -107,6 +107,49 @@ writeRaster(rmean, filename = file.path("/home/shares/ohi/stressors_2021/_raw_da
 
 ```
 
+# Project and gapfill raw data
+
+```{r}
+
+rast_base_10km_file <- terra::rast(here('_spatial/rast_base_mol_10km.tif'))
+ocean_template <- terra::rast(here('_spatial/ocean_area_mol.tif'))
+ocean_template[ocean_template>0] <- 1
+plot(ocean_template)
+
+oxy_paths <- list.files("/home/shares/ohi/stressors_2021/_raw_data/biooracle_oxygen", full=TRUE)
+
+for(oxy_path in oxy_paths){ # oxy_path = oxy_paths[1]
+oxy_rast <- terra::rast(oxy_path)
+
+mol_rast <- terra::project(oxy_rast, rast_base_10km_file, method="bilinear", over=TRUE)
+#plot(mol_rast)
+
+## gapfill
+gf_raster <- function(x){raster::focal(x, w = matrix(1,3,3), fun = mean, na.rm=TRUE, na.policy="only")}
+
+r = mol_rast
+  
+## Repeat 50 times (most is immediately gapfilled but the antarctic area was persistent)
+i <- 0
+while (i <= 50){
+r <- gf_raster(r)
+i <- i + 1
+print(i)
+}
+
+# plot(r)
+r <- r*ocean_template
+# diff_rast <- r - mol_rast
+#plot(diff_rast) # should be 0 
+
+saveName <- basename(oxy_path)
+
+writeRaster(r, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/oxygen/projected/%s", basename(oxy_path)), overwrite = TRUE)
+}
+
+```
+
+
 # Rescaling
 
 ```{r}
@@ -143,20 +186,20 @@ o2rescale <- function(fp_current = files2scale[20],
 
 # deep water
 
-files2scale <- list.files("/home/shares/ohi/stressors_2021/_raw_data/biooracle_oxygen", pattern = "depthmean", full=TRUE)
+files2scale <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/projected", pattern = "depthmean", full=TRUE)
 
 for(file2scale in files2scale){ # file2scale <- files2scale[1]
-historic_rast <- rast("/home/shares/ohi/stressors_2021/_raw_data/biooracle_oxygen/o2-depthmean_hist_hist.tif")
+historic_rast <- rast("/home/shares/ohi/stressors_2021/_dataprep/oxygen/projected/o2-depthmean_hist_hist.tif")
 stress_rescale <- o2rescale(fp_current = file2scale, 
           historic = historic_rast)
 writeRaster(stress_rescale, file.path("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled", basename(file2scale)), overwrite=TRUE)
 }
 
 # surface water
-files2scale <- list.files("/home/shares/ohi/stressors_2021/_raw_data/biooracle_oxygen", pattern = "depthsurf", full=TRUE)
+files2scale <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/projected", pattern = "depthsurf", full=TRUE)
 
 for(file2scale in files2scale){ # file2scale <- files2scale[1]
-historic_rast <- rast("/home/shares/ohi/stressors_2021/_raw_data/biooracle_oxygen/o2-depthsurf_hist_hist.tif")
+historic_rast <- rast("/home/shares/ohi/stressors_2021/_dataprep/oxygen/projected/o2-depthsurf_hist_hist.tif")
 stress_rescale <- o2rescale(fp_current = file2scale, 
           historic = historic_rast)
 writeRaster(stress_rescale, file.path("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled", basename(file2scale)), overwrite=TRUE)
@@ -189,55 +232,19 @@ file.remove(delete_files)
 
 ```
 
-Final formatting
-
-```{r}
-rast_base_10km_file <- terra::rast(here('_spatial/rast_base_mol_10km.tif'))
-ocean_template <- terra::rast(here('_spatial/ocean_area_mol.tif'))
-ocean_template[ocean_template>0] <- 1
-plot(ocean_template)
-
-oxy_paths <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled", full=TRUE)
-
-for(oxy_path in oxy_paths){ # oxy_path = oxy_paths[1]
-oxy_rast <- terra::rast(oxy_path)
-
-mol_rast <- terra::project(oxy_rast, rast_base_10km_file, method="bilinear", over=TRUE)
-#plot(mol_rast)
-
-## gapfill
-gf_raster <- function(x){raster::focal(x, w = matrix(1,3,3), fun = mean, na.rm=TRUE, na.policy="only")}
-
-r = mol_rast
-  
-## Repeat 50 times (most is immediately gapfilled but the antarctic area was persistent)
-i <- 0
-while (i <= 50){
-r <- gf_raster(r)
-i <- i + 1
-print(i)
-}
-
-# plot(r)
-r <- r*ocean_template
-# diff_rast <- r - mol_rast
-#plot(diff_rast) # should be 0 
-
-saveName <- basename(oxy_path)
-
-writeRaster(r, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled_mol/%s", basename(oxy_path)), overwrite = TRUE)
-}
-
-```
-
 Quick look at some!
-
 ```{r}
-raws <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled_mol", full=TRUE)
+old <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled_old", full=TRUE)
+new <- list.files("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled", full=TRUE)
 
-tmp <- rast(oxy_paths[10]) - rast(oxy_paths[1])
-tmp <- ifel(tmp>0.5, 0.5, tmp)
-plot(tmp[tmp<1])
+
+tmp <- rast("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled_mol/o2-depthmean_ssp245_medium-term.tif") - rast("/home/shares/ohi/stressors_2021/_dataprep/oxygen/rescaled/o2-depthmean_ssp245_medium-term.tif")
+plot(tmp)
+tmp <- ifel(tmp>0.2, 1, NA)
+plot(tmp, col="red")
+
+plot(new[10])
+tmp <- rast(new[10]) - rast(new[1])
 
 
 

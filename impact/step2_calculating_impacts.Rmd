@@ -18,7 +18,7 @@ vulnerability <- read_csv(here("impact/vulnerability_weighting_matrix.csv")) %>%
 
 habitat_files <- list.files(here("habitats/data"), full=TRUE)
 
-setdiff(names(vulnerability), gsub(".tif", "", basename(habitat_files)))
+setdiff(names(vulnerability), gsub(".tif", "", basename(habitat_files))) # "pressure" ok!
 setdiff(gsub(".tif", "", basename(habitat_files)), names(vulnerability))
 
 pressure_files <- list.files("/home/shares/ohi/stressors_2021/_final_data/rescaled_pressures", full=TRUE)
@@ -72,9 +72,9 @@ check <- list.files("/home/shares/ohi/stressors_2021/impacts/hab_vuln_pressure/"
 plot(rast(check[652]))
 
 length(check)
- #should be 4,540
+ #should be 4,620
 habitats <- sub("_.*", "", basename(check))
-table(habitats)
+table(habitats) # should be the same
 pressure <- sub("^[^_]*_([^_]*)_.*", "\\1", basename(check))
 table(pressure)
 
@@ -230,7 +230,8 @@ files_fix <- list.files("/home/shares/ohi/stressors_2021/impacts/hab_vuln_pressu
 length(files_fix)
 files_ssp5 <- grep("ssp5_", files_fix, value=TRUE)
 file.rename(from = files_ssp5, to = gsub("ssp5_", "ssp585_", files_ssp5))
-  
+
+
 ```
 
 
@@ -239,7 +240,7 @@ Do a little check.
 ```{r}
 check <- list.files("/home/shares/ohi/stressors_2021/impacts/hab_vuln_pressure/")
 length(check)
- #should be 4,760
+ #should be 4,840
 habitats <- sub("_.*", "", check)
 table(habitats)
 pressure <- sub("^[^_]*_([^_]*)_.*", "\\1", check)
@@ -292,7 +293,7 @@ cum_impact(scen_time = "ssp245_current")
 ```
 
 # For individual pressures, need to create rasters that correct for number of habitats
-For regional summaries of pressure impacdts, the impact of the pressure will depend on the number of habitats. 
+For regional summaries of pressure impacts, the impact of the pressure will depend on the number of habitats. 
 First step is to correct for the number of habitats (being sure to divide by the pressure). This is used for geographic summaries of pressures (but not habitat based summaries.).
 
 ```{r}
@@ -343,8 +344,11 @@ names(stack) <- new_names
 
 # paper statistics
 global(stack, "sum", na.rm=TRUE)
-1958809.2/892389.5 ##ssp245
-2331685.3/889717.7 ##ssp585
+1957006.7/890768.3
+2330441.5/888146.8
+
+#1958809.2/892389.5 ##ssp245
+#2331685.3/889717.7 ##ssp585
 
 
 ```
@@ -630,9 +634,13 @@ mean(ssp2_highlat$value)
 ssp2_eq <- filter(lats, scenario == "ssp245_medium-term" & y >= eq_lower & y <= eq_upper)
 mean(ssp2_eq$value)
 
-0.5305011/0.2547932 # antarctic
-0.6625507/0.3853962 #arctic
-0.53126/ 0.1969383 # equator
+0.5298306/0.2543985
+0.6631517/0.3858724
+0.5305982/0.1964062
+
+#0.5305011/0.2547932 # antarctic
+#0.6625507/0.3853962 #arctic
+#0.53126/ 0.1969383 # equator
 
 
 ssp5_lowlat <- filter(lats, scenario == "ssp585_current" & y <= low_lat)
@@ -650,9 +658,14 @@ mean(ssp5_highlat$value)
 ssp5_eq <- filter(lats, scenario == "ssp585_medium-term" & y >= eq_lower & y <= eq_upper)
 mean(ssp5_eq$value)
 
-0.6254916/0.2498347  #antarctic
-0.7532798/0.3847086 #arctic
-0.6355367/0.1973814 #equator
+0.6248193/0.2492332
+ 0.7541939/0.3852165
+0.6350968/ 0.1968663
+
+
+#0.6254916/0.2498347  #antarctic
+#0.7532798/0.3847086 #arctic
+#0.6355367/0.1973814 #equator
 
 ```
 Hotspot statistics
@@ -666,7 +679,7 @@ current <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp245_curre
 max(current$sum)
 quantile(as.data.frame(current)$sum, c(0.99999))
 quantile(as.data.frame(current)$sum, c(0.00001))
-current_high <- ifel(current>1.7 , 1, NA)
+current_high <- ifel(current>1.8 , 1, NA)
 current_high_df <- as.data.frame(current_high, xy=TRUE)
 plot(current)
 points(current_high_df$x, current_high_df$y, col="red")
@@ -792,8 +805,8 @@ coastal_cells_num <- global(coast, "sum", na.rm=TRUE) %>% pull()
 coastal_impact <- as.data.frame(total_coastal_pressures) %>%
   mutate(cells = coastal_cells_num) %>%
   mutate(average = sum/cells)
-
-0.3689473/ 0.2364934
+0.3804300/0.2355148
+#0.3689473/ 0.2364934
 
 ```
 
@@ -886,7 +899,7 @@ pressure_list <- data.frame(pressures=c("sst-extremes|temperature", "slr", "_oxy
                                               "fisheries-biomass-loss", "coastal-disturbance", "air-heat-index"))
 
   for(pressure in pressure_list$pressures){
-    #pressure = pressure_list$pressures[2]
+    #pressure = pressure_list$pressures[9]
     pressure_files <- grep(scenario, files, value=TRUE)
     pressure_files <- grep(time, pressure_files, value=TRUE)
     pressure_files <- grep(pressure, pressure_files, value=TRUE)
@@ -905,6 +918,8 @@ pressure_list <- data.frame(pressures=c("sst-extremes|temperature", "slr", "_oxy
 
 summarize_pressures(scenario ="ssp245", time = "medium-term")
 summarize_pressures(scenario ="ssp245", time = "current")
+summarize_pressures(scenario ="ssp585", time = "medium-term")
+summarize_pressures(scenario ="ssp585", time = "current")
 
 ```
 
@@ -1304,7 +1319,8 @@ cum_wide <- cum_impact_habitat %>%
 
 min(cum_wide$"ssp245_medium-term")
 max(cum_wide$"ssp245_medium-term")
-1.29/0.34
+1.32/0.33
+#1.29/0.34
 
 
 # Create combined factor and adjust positions
@@ -1792,7 +1808,7 @@ coast_impact_result <- coast_impact_result %>%
 plot dependence vs. impacts
 ```{r}
 #from paper_statistics_v2
-depend <- read_csv(here("combining_pressures/data/selig_marine_dependence.csv"))
+depend <- read_csv(here("impact/data/selig_marine_dependence.csv"))
 
 impact_country <- coast_impact_result %>%
   mutate(avg_value = value/cells) 
