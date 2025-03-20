@@ -1,0 +1,1201 @@
+habitat,pressure,scen_time,color,avg_impact
+beach,acidification,ssp245_current,#D48F90FF,0
+beach,acidification,ssp245_medium-term,#D48F90FF,0
+beach,acidification,ssp245_near-term,#D48F90FF,0
+beach,acidification,ssp585_current,#D48F90FF,0
+beach,acidification,ssp585_medium-term,#D48F90FF,0
+beach,acidification,ssp585_near-term,#D48F90FF,0
+beach,air heat index,ssp245_current,#D2A54BFF,0.002250882156909685
+beach,air heat index,ssp245_medium-term,#D2A54BFF,0.01632597551503342
+beach,air heat index,ssp245_near-term,#D2A54BFF,0.006204794062443844
+beach,air heat index,ssp585_current,#D2A54BFF,0.002165782729265125
+beach,air heat index,ssp585_medium-term,#D2A54BFF,0.02935990596250614
+beach,air heat index,ssp585_near-term,#D2A54BFF,0.0074906599849853565
+beach,coastal disturbance,ssp245_current,#90D8C8FF,0.1176336504860424
+beach,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.11945128909546585
+beach,coastal disturbance,ssp245_near-term,#90D8C8FF,0.11892699245423584
+beach,coastal disturbance,ssp585_current,#90D8C8FF,0.11754916137156271
+beach,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.11916960575935798
+beach,coastal disturbance,ssp585_near-term,#90D8C8FF,0.11872712148090618
+beach,fisheries biomass loss,ssp245_current,#87A5A5FF,0.08788136199065445
+beach,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.1135648355517128
+beach,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.10315763213220858
+beach,fisheries biomass loss,ssp585_current,#87A5A5FF,0.08847173948191484
+beach,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.12098353055078487
+beach,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.10748063523784315
+beach,light pollution,ssp245_current,#B4B45AFF,0.011190735884230455
+beach,light pollution,ssp245_medium-term,#B4B45AFF,0.01409886181798715
+beach,light pollution,ssp245_near-term,#B4B45AFF,0.012505099236145237
+beach,light pollution,ssp585_current,#B4B45AFF,0.011194725805097372
+beach,light pollution,ssp585_medium-term,#B4B45AFF,0.01584694069446265
+beach,light pollution,ssp585_near-term,#B4B45AFF,0.013022658666571783
+beach,nutrient pollution,ssp245_current,#1E4B3CFF,0.004706818055886707
+beach,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.005378009790184244
+beach,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.005154183517957432
+beach,nutrient pollution,ssp585_current,#1E4B3CFF,0.004715696526210227
+beach,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.005222743911015165
+beach,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.0051584193974843
+beach,ocean warming,ssp245_current,#B4783CFF,0.029096786772177634
+beach,ocean warming,ssp245_medium-term,#B4783CFF,0.07968103379016943
+beach,ocean warming,ssp245_near-term,#B4783CFF,0.05177179170367562
+beach,ocean warming,ssp585_current,#B4783CFF,0.029052602485080747
+beach,ocean warming,ssp585_medium-term,#B4783CFF,0.0949545097655873
+beach,ocean warming,ssp585_near-term,#B4783CFF,0.04751111772197214
+beach,primary productivity,ssp245_current,#AB84A5FF,7.472036623353336e-4
+beach,primary productivity,ssp245_medium-term,#AB84A5FF,0.0060294338741445856
+beach,primary productivity,ssp245_near-term,#AB84A5FF,0.004023872337282427
+beach,primary productivity,ssp585_current,#AB84A5FF,7.4441535604267e-4
+beach,primary productivity,ssp585_medium-term,#AB84A5FF,0.006410923833410468
+beach,primary productivity,ssp585_near-term,#AB84A5FF,0.004185329487913789
+beach,reduced oxygen,ssp245_current,#78963CFF,8.917008068530166e-4
+beach,reduced oxygen,ssp245_medium-term,#78963CFF,0.003051456267326175
+beach,reduced oxygen,ssp245_near-term,#78963CFF,0.001706237571948274
+beach,reduced oxygen,ssp585_current,#78963CFF,8.917008068530166e-4
+beach,reduced oxygen,ssp585_medium-term,#78963CFF,0.004232016841513442
+beach,reduced oxygen,ssp585_near-term,#78963CFF,0.0018214068250756552
+beach,sea level rise,ssp245_current,#D2D2C3FF,0.03469112043883763
+beach,sea level rise,ssp245_medium-term,#D2D2C3FF,0.1006880638216472
+beach,sea level rise,ssp245_near-term,#D2D2C3FF,0.03469112043883763
+beach,sea level rise,ssp585_current,#D2D2C3FF,0.04348139214209476
+beach,sea level rise,ssp585_medium-term,#D2D2C3FF,0.15772443846174067
+beach,sea level rise,ssp585_near-term,#D2D2C3FF,0.04348139214209476
+coral reef,acidification,ssp245_current,#D48F90FF,9.553646452809679e-5
+coral reef,acidification,ssp245_medium-term,#D48F90FF,0.0012783707215941074
+coral reef,acidification,ssp245_near-term,#D48F90FF,2.3639746107708112e-4
+coral reef,acidification,ssp585_current,#D48F90FF,9.983361769273282e-5
+coral reef,acidification,ssp585_medium-term,#D48F90FF,0.008656720550610928
+coral reef,acidification,ssp585_near-term,#D48F90FF,2.7231609527467106e-4
+coral reef,air heat index,ssp245_current,#D2A54BFF,0
+coral reef,air heat index,ssp245_medium-term,#D2A54BFF,0
+coral reef,air heat index,ssp245_near-term,#D2A54BFF,0
+coral reef,air heat index,ssp585_current,#D2A54BFF,0
+coral reef,air heat index,ssp585_medium-term,#D2A54BFF,0
+coral reef,air heat index,ssp585_near-term,#D2A54BFF,0
+coral reef,coastal disturbance,ssp245_current,#90D8C8FF,0.06534787723511977
+coral reef,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.06745625438619475
+coral reef,coastal disturbance,ssp245_near-term,#90D8C8FF,0.06667400115676955
+coral reef,coastal disturbance,ssp585_current,#90D8C8FF,0.06500428417775077
+coral reef,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.065329573097988
+coral reef,coastal disturbance,ssp585_near-term,#90D8C8FF,0.06568202934726759
+coral reef,fisheries biomass loss,ssp245_current,#87A5A5FF,0.1381873617339375
+coral reef,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.20829260544467357
+coral reef,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.1777041907177737
+coral reef,fisheries biomass loss,ssp585_current,#87A5A5FF,0.14125204619181334
+coral reef,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.23363449070941028
+coral reef,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.19267445599766791
+coral reef,light pollution,ssp245_current,#B4B45AFF,0.0012394463502020743
+coral reef,light pollution,ssp245_medium-term,#B4B45AFF,0.002070158382629586
+coral reef,light pollution,ssp245_near-term,#B4B45AFF,0.0016102910062998058
+coral reef,light pollution,ssp585_current,#B4B45AFF,0.0012514743541775378
+coral reef,light pollution,ssp585_medium-term,#B4B45AFF,0.002479598561521888
+coral reef,light pollution,ssp585_near-term,#B4B45AFF,0.001727143889673236
+coral reef,nutrient pollution,ssp245_current,#1E4B3CFF,0.0037705052125588737
+coral reef,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.005552217922034693
+coral reef,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.004788134146288024
+coral reef,nutrient pollution,ssp585_current,#1E4B3CFF,0.003780252031592145
+coral reef,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.005416096602466569
+coral reef,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.004836079315444142
+coral reef,ocean warming,ssp245_current,#B4783CFF,0.09741654238071239
+coral reef,ocean warming,ssp245_medium-term,#B4783CFF,0.33048831530181066
+coral reef,ocean warming,ssp245_near-term,#B4783CFF,0.1965337621355232
+coral reef,ocean warming,ssp585_current,#B4783CFF,0.10882681952115927
+coral reef,ocean warming,ssp585_medium-term,#B4783CFF,0.4210090042211679
+coral reef,ocean warming,ssp585_near-term,#B4783CFF,0.22004539516358618
+coral reef,primary productivity,ssp245_current,#AB84A5FF,0.001290150589590493
+coral reef,primary productivity,ssp245_medium-term,#AB84A5FF,0.007749417726077665
+coral reef,primary productivity,ssp245_near-term,#AB84A5FF,0.005868278792634442
+coral reef,primary productivity,ssp585_current,#AB84A5FF,0.0012669374058715587
+coral reef,primary productivity,ssp585_medium-term,#AB84A5FF,0.009043637412504777
+coral reef,primary productivity,ssp585_near-term,#AB84A5FF,0.005651245612639411
+coral reef,reduced oxygen,ssp245_current,#78963CFF,2.550184009053124e-4
+coral reef,reduced oxygen,ssp245_medium-term,#78963CFF,0.0024729323055356755
+coral reef,reduced oxygen,ssp245_near-term,#78963CFF,0.0010188520471431505
+coral reef,reduced oxygen,ssp585_current,#78963CFF,2.550184009053124e-4
+coral reef,reduced oxygen,ssp585_medium-term,#78963CFF,0.003573343358232627
+coral reef,reduced oxygen,ssp585_near-term,#78963CFF,0.001154161806244548
+coral reef,sea level rise,ssp245_current,#D2D2C3FF,0.0131704392978197
+coral reef,sea level rise,ssp245_medium-term,#D2D2C3FF,0.06251124882672514
+coral reef,sea level rise,ssp245_near-term,#D2D2C3FF,0.0131704392978197
+coral reef,sea level rise,ssp585_current,#D2D2C3FF,0.019528252060127052
+coral reef,sea level rise,ssp585_medium-term,#D2D2C3FF,0.1006902002575607
+coral reef,sea level rise,ssp585_near-term,#D2D2C3FF,0.019528252060127052
+deep hard-bottom,acidification,ssp245_current,#D48F90FF,0.0801649669835005
+deep hard-bottom,acidification,ssp245_medium-term,#D48F90FF,0.14156748053374243
+deep hard-bottom,acidification,ssp245_near-term,#D48F90FF,0.1061338493805176
+deep hard-bottom,acidification,ssp585_current,#D48F90FF,0.07983269948394513
+deep hard-bottom,acidification,ssp585_medium-term,#D48F90FF,0.1829102601180244
+deep hard-bottom,acidification,ssp585_near-term,#D48F90FF,0.11390476326367287
+deep hard-bottom,air heat index,ssp245_current,#D2A54BFF,0
+deep hard-bottom,air heat index,ssp245_medium-term,#D2A54BFF,0
+deep hard-bottom,air heat index,ssp245_near-term,#D2A54BFF,0
+deep hard-bottom,air heat index,ssp585_current,#D2A54BFF,0
+deep hard-bottom,air heat index,ssp585_medium-term,#D2A54BFF,0
+deep hard-bottom,air heat index,ssp585_near-term,#D2A54BFF,0
+deep hard-bottom,coastal disturbance,ssp245_current,#90D8C8FF,0
+deep hard-bottom,coastal disturbance,ssp245_medium-term,#90D8C8FF,0
+deep hard-bottom,coastal disturbance,ssp245_near-term,#90D8C8FF,0
+deep hard-bottom,coastal disturbance,ssp585_current,#90D8C8FF,0
+deep hard-bottom,coastal disturbance,ssp585_medium-term,#90D8C8FF,0
+deep hard-bottom,coastal disturbance,ssp585_near-term,#90D8C8FF,0
+deep hard-bottom,fisheries biomass loss,ssp245_current,#87A5A5FF,0.017982400358754928
+deep hard-bottom,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.03150254502300961
+deep hard-bottom,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.025183486930202514
+deep hard-bottom,fisheries biomass loss,ssp585_current,#87A5A5FF,0.018287505618177675
+deep hard-bottom,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.034691377473070335
+deep hard-bottom,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.026918509837587267
+deep hard-bottom,light pollution,ssp245_current,#B4B45AFF,0
+deep hard-bottom,light pollution,ssp245_medium-term,#B4B45AFF,0
+deep hard-bottom,light pollution,ssp245_near-term,#B4B45AFF,0
+deep hard-bottom,light pollution,ssp585_current,#B4B45AFF,0
+deep hard-bottom,light pollution,ssp585_medium-term,#B4B45AFF,0
+deep hard-bottom,light pollution,ssp585_near-term,#B4B45AFF,0
+deep hard-bottom,nutrient pollution,ssp245_current,#1E4B3CFF,0
+deep hard-bottom,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0
+deep hard-bottom,nutrient pollution,ssp245_near-term,#1E4B3CFF,0
+deep hard-bottom,nutrient pollution,ssp585_current,#1E4B3CFF,0
+deep hard-bottom,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0
+deep hard-bottom,nutrient pollution,ssp585_near-term,#1E4B3CFF,0
+deep hard-bottom,ocean warming,ssp245_current,#B4783CFF,0.07757016350451557
+deep hard-bottom,ocean warming,ssp245_medium-term,#B4783CFF,0.11687101633872646
+deep hard-bottom,ocean warming,ssp245_near-term,#B4783CFF,0.08786843117792419
+deep hard-bottom,ocean warming,ssp585_current,#B4783CFF,0.07757016350451557
+deep hard-bottom,ocean warming,ssp585_medium-term,#B4783CFF,0.1184142952356442
+deep hard-bottom,ocean warming,ssp585_near-term,#B4783CFF,0.088793133332669
+deep hard-bottom,primary productivity,ssp245_current,#AB84A5FF,0.008305102480522174
+deep hard-bottom,primary productivity,ssp245_medium-term,#AB84A5FF,0.0293419261720328
+deep hard-bottom,primary productivity,ssp245_near-term,#AB84A5FF,0.022251364201315956
+deep hard-bottom,primary productivity,ssp585_current,#AB84A5FF,0.008256337998167928
+deep hard-bottom,primary productivity,ssp585_medium-term,#AB84A5FF,0.033586302509313555
+deep hard-bottom,primary productivity,ssp585_near-term,#AB84A5FF,0.02286610071276497
+deep hard-bottom,reduced oxygen,ssp245_current,#78963CFF,0.00919920336763675
+deep hard-bottom,reduced oxygen,ssp245_medium-term,#78963CFF,0.013353456035052856
+deep hard-bottom,reduced oxygen,ssp245_near-term,#78963CFF,0.01046491061734943
+deep hard-bottom,reduced oxygen,ssp585_current,#78963CFF,0.00919920336763675
+deep hard-bottom,reduced oxygen,ssp585_medium-term,#78963CFF,0.012563504602458319
+deep hard-bottom,reduced oxygen,ssp585_near-term,#78963CFF,0.010332111601203939
+deep hard-bottom,sea level rise,ssp245_current,#D2D2C3FF,0
+deep hard-bottom,sea level rise,ssp245_medium-term,#D2D2C3FF,0
+deep hard-bottom,sea level rise,ssp245_near-term,#D2D2C3FF,0
+deep hard-bottom,sea level rise,ssp585_current,#D2D2C3FF,0
+deep hard-bottom,sea level rise,ssp585_medium-term,#D2D2C3FF,0
+deep hard-bottom,sea level rise,ssp585_near-term,#D2D2C3FF,0
+deep soft-bottom,acidification,ssp245_current,#D48F90FF,0.0718368552172642
+deep soft-bottom,acidification,ssp245_medium-term,#D48F90FF,0.12848880465993462
+deep soft-bottom,acidification,ssp245_near-term,#D48F90FF,0.09601258623134136
+deep soft-bottom,acidification,ssp585_current,#D48F90FF,0.071519579259038693
+deep soft-bottom,acidification,ssp585_medium-term,#D48F90FF,0.166351040698942
+deep soft-bottom,acidification,ssp585_near-term,#D48F90FF,0.10264571258681508
+deep soft-bottom,air heat index,ssp245_current,#D2A54BFF,0
+deep soft-bottom,air heat index,ssp245_medium-term,#D2A54BFF,0
+deep soft-bottom,air heat index,ssp245_near-term,#D2A54BFF,0
+deep soft-bottom,air heat index,ssp585_current,#D2A54BFF,0
+deep soft-bottom,air heat index,ssp585_medium-term,#D2A54BFF,0
+deep soft-bottom,air heat index,ssp585_near-term,#D2A54BFF,0
+deep soft-bottom,coastal disturbance,ssp245_current,#90D8C8FF,2.053934311405468e-5
+deep soft-bottom,coastal disturbance,ssp245_medium-term,#90D8C8FF,2.0810219091156335e-5
+deep soft-bottom,coastal disturbance,ssp245_near-term,#90D8C8FF,2.080693962881668e-5
+deep soft-bottom,coastal disturbance,ssp585_current,#90D8C8FF,2.0434646224900605e-5
+deep soft-bottom,coastal disturbance,ssp585_medium-term,#90D8C8FF,2.01434462068174e-5
+deep soft-bottom,coastal disturbance,ssp585_near-term,#90D8C8FF,2.047607926623728e-5
+deep soft-bottom,fisheries biomass loss,ssp245_current,#87A5A5FF,0.018917431796566908
+deep soft-bottom,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.03371289549664137
+deep soft-bottom,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.02686525458124641
+deep soft-bottom,fisheries biomass loss,ssp585_current,#87A5A5FF,0.01907502540038236
+deep soft-bottom,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.03531798258277466
+deep soft-bottom,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.02777763925927363
+deep soft-bottom,light pollution,ssp245_current,#B4B45AFF,0
+deep soft-bottom,light pollution,ssp245_medium-term,#B4B45AFF,0
+deep soft-bottom,light pollution,ssp245_near-term,#B4B45AFF,0
+deep soft-bottom,light pollution,ssp585_current,#B4B45AFF,0
+deep soft-bottom,light pollution,ssp585_medium-term,#B4B45AFF,0
+deep soft-bottom,light pollution,ssp585_near-term,#B4B45AFF,0
+deep soft-bottom,nutrient pollution,ssp245_current,#1E4B3CFF,5.122293426593859e-7
+deep soft-bottom,nutrient pollution,ssp245_medium-term,#1E4B3CFF,6.586784063919452e-7
+deep soft-bottom,nutrient pollution,ssp245_near-term,#1E4B3CFF,6.604934618172037e-7
+deep soft-bottom,nutrient pollution,ssp585_current,#1E4B3CFF,5.126527995746768e-7
+deep soft-bottom,nutrient pollution,ssp585_medium-term,#1E4B3CFF,6.942673564579918e-7
+deep soft-bottom,nutrient pollution,ssp585_near-term,#1E4B3CFF,6.578689599005428e-7
+deep soft-bottom,ocean warming,ssp245_current,#B4783CFF,0.12054099113370648
+deep soft-bottom,ocean warming,ssp245_medium-term,#B4783CFF,0.23225266370693073
+deep soft-bottom,ocean warming,ssp245_near-term,#B4783CFF,0.15886123432404645
+deep soft-bottom,ocean warming,ssp585_current,#B4783CFF,0.12054099113370648
+deep soft-bottom,ocean warming,ssp585_medium-term,#B4783CFF,0.23320918254916143
+deep soft-bottom,ocean warming,ssp585_near-term,#B4783CFF,0.15949661957502548
+deep soft-bottom,primary productivity,ssp245_current,#AB84A5FF,0.009103936498419422
+deep soft-bottom,primary productivity,ssp245_medium-term,#AB84A5FF,0.029553012938701592
+deep soft-bottom,primary productivity,ssp245_near-term,#AB84A5FF,0.023843430778898222
+deep soft-bottom,primary productivity,ssp585_current,#AB84A5FF,0.009118885038361054
+deep soft-bottom,primary productivity,ssp585_medium-term,#AB84A5FF,0.035376412444780875
+deep soft-bottom,primary productivity,ssp585_near-term,#AB84A5FF,0.024989898158162226
+deep soft-bottom,reduced oxygen,ssp245_current,#78963CFF,0.009728629750334492
+deep soft-bottom,reduced oxygen,ssp245_medium-term,#78963CFF,0.0141681531943829
+deep soft-bottom,reduced oxygen,ssp245_near-term,#78963CFF,0.01116148175979123
+deep soft-bottom,reduced oxygen,ssp585_current,#78963CFF,0.009728629750334492
+deep soft-bottom,reduced oxygen,ssp585_medium-term,#78963CFF,0.013063637726151241
+deep soft-bottom,reduced oxygen,ssp585_near-term,#78963CFF,0.010853351379705707
+deep soft-bottom,sea level rise,ssp245_current,#D2D2C3FF,0
+deep soft-bottom,sea level rise,ssp245_medium-term,#D2D2C3FF,0
+deep soft-bottom,sea level rise,ssp245_near-term,#D2D2C3FF,0
+deep soft-bottom,sea level rise,ssp585_current,#D2D2C3FF,0
+deep soft-bottom,sea level rise,ssp585_medium-term,#D2D2C3FF,0
+deep soft-bottom,sea level rise,ssp585_near-term,#D2D2C3FF,0
+deep pelagic,acidification,ssp245_current,#D48F90FF,0
+deep pelagic,acidification,ssp245_medium-term,#D48F90FF,0
+deep pelagic,acidification,ssp245_near-term,#D48F90FF,0
+deep pelagic,acidification,ssp585_current,#D48F90FF,0
+deep pelagic,acidification,ssp585_medium-term,#D48F90FF,0
+deep pelagic,acidification,ssp585_near-term,#D48F90FF,0
+deep pelagic,air heat index,ssp245_current,#D2A54BFF,0
+deep pelagic,air heat index,ssp245_medium-term,#D2A54BFF,0
+deep pelagic,air heat index,ssp245_near-term,#D2A54BFF,0
+deep pelagic,air heat index,ssp585_current,#D2A54BFF,0
+deep pelagic,air heat index,ssp585_medium-term,#D2A54BFF,0
+deep pelagic,air heat index,ssp585_near-term,#D2A54BFF,0
+deep pelagic,coastal disturbance,ssp245_current,#90D8C8FF,0
+deep pelagic,coastal disturbance,ssp245_medium-term,#90D8C8FF,0
+deep pelagic,coastal disturbance,ssp245_near-term,#90D8C8FF,0
+deep pelagic,coastal disturbance,ssp585_current,#90D8C8FF,0
+deep pelagic,coastal disturbance,ssp585_medium-term,#90D8C8FF,0
+deep pelagic,coastal disturbance,ssp585_near-term,#90D8C8FF,0
+deep pelagic,fisheries biomass loss,ssp245_current,#87A5A5FF,0.07997550582421879
+deep pelagic,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.13350067330565082
+deep pelagic,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.10907956857023593
+deep pelagic,fisheries biomass loss,ssp585_current,#87A5A5FF,0.08066950917935421
+deep pelagic,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.14061491994485137
+deep pelagic,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.11315617035373012
+deep pelagic,light pollution,ssp245_current,#B4B45AFF,0
+deep pelagic,light pollution,ssp245_medium-term,#B4B45AFF,0
+deep pelagic,light pollution,ssp245_near-term,#B4B45AFF,0
+deep pelagic,light pollution,ssp585_current,#B4B45AFF,0
+deep pelagic,light pollution,ssp585_medium-term,#B4B45AFF,0
+deep pelagic,light pollution,ssp585_near-term,#B4B45AFF,0
+deep pelagic,nutrient pollution,ssp245_current,#1E4B3CFF,0
+deep pelagic,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0
+deep pelagic,nutrient pollution,ssp245_near-term,#1E4B3CFF,0
+deep pelagic,nutrient pollution,ssp585_current,#1E4B3CFF,0
+deep pelagic,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0
+deep pelagic,nutrient pollution,ssp585_near-term,#1E4B3CFF,0
+deep pelagic,ocean warming,ssp245_current,#B4783CFF,0.07117803141046819
+deep pelagic,ocean warming,ssp245_medium-term,#B4783CFF,0.25015597078398155
+deep pelagic,ocean warming,ssp245_near-term,#B4783CFF,0.1311293636856941
+deep pelagic,ocean warming,ssp585_current,#B4783CFF,0.06949749659046663
+deep pelagic,ocean warming,ssp585_medium-term,#B4783CFF,0.33104555593184054
+deep pelagic,ocean warming,ssp585_near-term,#B4783CFF,0.15073487420219175
+deep pelagic,primary productivity,ssp245_current,#AB84A5FF,0.010968896602553155
+deep pelagic,primary productivity,ssp245_medium-term,#AB84A5FF,0.03738391825839647
+deep pelagic,primary productivity,ssp245_near-term,#AB84A5FF,0.02967338405412954
+deep pelagic,primary productivity,ssp585_current,#AB84A5FF,0.010972660637576447
+deep pelagic,primary productivity,ssp585_medium-term,#AB84A5FF,0.044407362832950006
+deep pelagic,primary productivity,ssp585_near-term,#AB84A5FF,0.03109613855520482
+deep pelagic,reduced oxygen,ssp245_current,#78963CFF,0.021284565091816487
+deep pelagic,reduced oxygen,ssp245_medium-term,#78963CFF,0.027133288881564434
+deep pelagic,reduced oxygen,ssp245_near-term,#78963CFF,0.023245090356439038
+deep pelagic,reduced oxygen,ssp585_current,#78963CFF,0.021284565091816487
+deep pelagic,reduced oxygen,ssp585_medium-term,#78963CFF,0.026531446071342734
+deep pelagic,reduced oxygen,ssp585_near-term,#78963CFF,0.023028628680728407
+deep pelagic,sea level rise,ssp245_current,#D2D2C3FF,0
+deep pelagic,sea level rise,ssp245_medium-term,#D2D2C3FF,0
+deep pelagic,sea level rise,ssp245_near-term,#D2D2C3FF,0
+deep pelagic,sea level rise,ssp585_current,#D2D2C3FF,0
+deep pelagic,sea level rise,ssp585_medium-term,#D2D2C3FF,0
+deep pelagic,sea level rise,ssp585_near-term,#D2D2C3FF,0
+hard shelf,acidification,ssp245_current,#D48F90FF,0.045615477187102293
+hard shelf,acidification,ssp245_medium-term,#D48F90FF,0.08362406250050133
+hard shelf,acidification,ssp245_near-term,#D48F90FF,0.06292043395517985
+hard shelf,acidification,ssp585_current,#D48F90FF,0.0448538571950541
+hard shelf,acidification,ssp585_medium-term,#D48F90FF,0.11504704659892138
+hard shelf,acidification,ssp585_near-term,#D48F90FF,0.0667942007746687
+hard shelf,air heat index,ssp245_current,#D2A54BFF,0
+hard shelf,air heat index,ssp245_medium-term,#D2A54BFF,0
+hard shelf,air heat index,ssp245_near-term,#D2A54BFF,0
+hard shelf,air heat index,ssp585_current,#D2A54BFF,0
+hard shelf,air heat index,ssp585_medium-term,#D2A54BFF,0
+hard shelf,air heat index,ssp585_near-term,#D2A54BFF,0
+hard shelf,coastal disturbance,ssp245_current,#90D8C8FF,0.046490238533601624
+hard shelf,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.047337210554816885
+hard shelf,coastal disturbance,ssp245_near-term,#90D8C8FF,0.047069596102922696
+hard shelf,coastal disturbance,ssp585_current,#90D8C8FF,0.046313839805433375
+hard shelf,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.04630338781949105
+hard shelf,coastal disturbance,ssp585_near-term,#90D8C8FF,0.04656636724103216
+hard shelf,fisheries biomass loss,ssp245_current,#87A5A5FF,0.23547776752780325
+hard shelf,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.3297048077953944
+hard shelf,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.2923159189935748
+hard shelf,fisheries biomass loss,ssp585_current,#87A5A5FF,0.23635823739426137
+hard shelf,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.33856663115913743
+hard shelf,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.297846903331521
+hard shelf,light pollution,ssp245_current,#B4B45AFF,0
+hard shelf,light pollution,ssp245_medium-term,#B4B45AFF,0
+hard shelf,light pollution,ssp245_near-term,#B4B45AFF,0
+hard shelf,light pollution,ssp585_current,#B4B45AFF,0
+hard shelf,light pollution,ssp585_medium-term,#B4B45AFF,0
+hard shelf,light pollution,ssp585_near-term,#B4B45AFF,0
+hard shelf,nutrient pollution,ssp245_current,#1E4B3CFF,0.0054799867517926525
+hard shelf,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.0072059860084885945
+hard shelf,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.006505816439828155
+hard shelf,nutrient pollution,ssp585_current,#1E4B3CFF,0.005490369528341114
+hard shelf,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.007115627062298949
+hard shelf,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.0066620079036420095
+hard shelf,ocean warming,ssp245_current,#B4783CFF,0.03502660779383485
+hard shelf,ocean warming,ssp245_medium-term,#B4783CFF,0.13665556239673443
+hard shelf,ocean warming,ssp245_near-term,#B4783CFF,0.0725126748391597
+hard shelf,ocean warming,ssp585_current,#B4783CFF,0.03502660779383485
+hard shelf,ocean warming,ssp585_medium-term,#B4783CFF,0.17087898892272885
+hard shelf,ocean warming,ssp585_near-term,#B4783CFF,0.08101198320571769
+hard shelf,primary productivity,ssp245_current,#AB84A5FF,0.0019195932936576288
+hard shelf,primary productivity,ssp245_medium-term,#AB84A5FF,0.016564698994275068
+hard shelf,primary productivity,ssp245_near-term,#AB84A5FF,0.01179748915071586
+hard shelf,primary productivity,ssp585_current,#AB84A5FF,0.001870016719864557
+hard shelf,primary productivity,ssp585_medium-term,#AB84A5FF,0.01818132212987109
+hard shelf,primary productivity,ssp585_near-term,#AB84A5FF,0.012790198492721467
+hard shelf,reduced oxygen,ssp245_current,#78963CFF,0.13018199537394004
+hard shelf,reduced oxygen,ssp245_medium-term,#78963CFF,0.1332011736443979
+hard shelf,reduced oxygen,ssp245_near-term,#78963CFF,0.13216464373842074
+hard shelf,reduced oxygen,ssp585_current,#78963CFF,0.13018199537394004
+hard shelf,reduced oxygen,ssp585_medium-term,#78963CFF,0.13437525171011072
+hard shelf,reduced oxygen,ssp585_near-term,#78963CFF,0.13238275793646942
+hard shelf,sea level rise,ssp245_current,#D2D2C3FF,0
+hard shelf,sea level rise,ssp245_medium-term,#D2D2C3FF,0
+hard shelf,sea level rise,ssp245_near-term,#D2D2C3FF,0
+hard shelf,sea level rise,ssp585_current,#D2D2C3FF,0
+hard shelf,sea level rise,ssp585_medium-term,#D2D2C3FF,0
+hard shelf,sea level rise,ssp585_near-term,#D2D2C3FF,0
+hard slope,acidification,ssp245_current,#D48F90FF,0.029647568700835205
+hard slope,acidification,ssp245_medium-term,#D48F90FF,0.05673694249307013
+hard slope,acidification,ssp245_near-term,#D48F90FF,0.04094422300113962
+hard slope,acidification,ssp585_current,#D48F90FF,0.029934618600645887
+hard slope,acidification,ssp585_medium-term,#D48F90FF,0.07713344371101602
+hard slope,acidification,ssp585_near-term,#D48F90FF,0.043780066136108985
+hard slope,air heat index,ssp245_current,#D2A54BFF,0
+hard slope,air heat index,ssp245_medium-term,#D2A54BFF,0
+hard slope,air heat index,ssp245_near-term,#D2A54BFF,0
+hard slope,air heat index,ssp585_current,#D2A54BFF,0
+hard slope,air heat index,ssp585_medium-term,#D2A54BFF,0
+hard slope,air heat index,ssp585_near-term,#D2A54BFF,0
+hard slope,coastal disturbance,ssp245_current,#90D8C8FF,0
+hard slope,coastal disturbance,ssp245_medium-term,#90D8C8FF,0
+hard slope,coastal disturbance,ssp245_near-term,#90D8C8FF,0
+hard slope,coastal disturbance,ssp585_current,#90D8C8FF,0
+hard slope,coastal disturbance,ssp585_medium-term,#90D8C8FF,0
+hard slope,coastal disturbance,ssp585_near-term,#90D8C8FF,0
+hard slope,fisheries biomass loss,ssp245_current,#87A5A5FF,0.12082025088597093
+hard slope,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.17944273538011407
+hard slope,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.1544385887959313
+hard slope,fisheries biomass loss,ssp585_current,#87A5A5FF,0.12238025982485863
+hard slope,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.19430120379453067
+hard slope,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.16320762620876797
+hard slope,light pollution,ssp245_current,#B4B45AFF,0
+hard slope,light pollution,ssp245_medium-term,#B4B45AFF,0
+hard slope,light pollution,ssp245_near-term,#B4B45AFF,0
+hard slope,light pollution,ssp585_current,#B4B45AFF,0
+hard slope,light pollution,ssp585_medium-term,#B4B45AFF,0
+hard slope,light pollution,ssp585_near-term,#B4B45AFF,0
+hard slope,nutrient pollution,ssp245_current,#1E4B3CFF,2.6142294569033385e-4
+hard slope,nutrient pollution,ssp245_medium-term,#1E4B3CFF,3.365988505470242e-4
+hard slope,nutrient pollution,ssp245_near-term,#1E4B3CFF,3.087703485366216e-4
+hard slope,nutrient pollution,ssp585_current,#1E4B3CFF,2.619656508262774e-4
+hard slope,nutrient pollution,ssp585_medium-term,#1E4B3CFF,3.2952643820166876e-4
+hard slope,nutrient pollution,ssp585_near-term,#1E4B3CFF,3.131343326559368e-4
+hard slope,ocean warming,ssp245_current,#B4783CFF,0.01760811302519218
+hard slope,ocean warming,ssp245_medium-term,#B4783CFF,0.042038736014329836
+hard slope,ocean warming,ssp245_near-term,#B4783CFF,0.024505129969534585
+hard slope,ocean warming,ssp585_current,#B4783CFF,0.01760811302519218
+hard slope,ocean warming,ssp585_medium-term,#B4783CFF,0.045560475853706754
+hard slope,ocean warming,ssp585_near-term,#B4783CFF,0.02547141162767563
+hard slope,primary productivity,ssp245_current,#AB84A5FF,0.005615411013944969
+hard slope,primary productivity,ssp245_medium-term,#AB84A5FF,0.031265863565105086
+hard slope,primary productivity,ssp245_near-term,#AB84A5FF,0.02271972779653749
+hard slope,primary productivity,ssp585_current,#AB84A5FF,0.005491471693458046
+hard slope,primary productivity,ssp585_medium-term,#AB84A5FF,0.03560058470633033
+hard slope,primary productivity,ssp585_near-term,#AB84A5FF,0.023430218203089957
+hard slope,reduced oxygen,ssp245_current,#78963CFF,0.06469988840082672
+hard slope,reduced oxygen,ssp245_medium-term,#78963CFF,0.06857049079762953
+hard slope,reduced oxygen,ssp245_near-term,#78963CFF,0.06602216019594755
+hard slope,reduced oxygen,ssp585_current,#78963CFF,0.06469988840082672
+hard slope,reduced oxygen,ssp585_medium-term,#78963CFF,0.06896580983806443
+hard slope,reduced oxygen,ssp585_near-term,#78963CFF,0.06604310633891183
+hard slope,sea level rise,ssp245_current,#D2D2C3FF,0
+hard slope,sea level rise,ssp245_medium-term,#D2D2C3FF,0
+hard slope,sea level rise,ssp245_near-term,#D2D2C3FF,0
+hard slope,sea level rise,ssp585_current,#D2D2C3FF,0
+hard slope,sea level rise,ssp585_medium-term,#D2D2C3FF,0
+hard slope,sea level rise,ssp585_near-term,#D2D2C3FF,0
+intertidal mud,acidification,ssp245_current,#D48F90FF,0.06647367376431541
+intertidal mud,acidification,ssp245_medium-term,#D48F90FF,0.10310840844713695
+intertidal mud,acidification,ssp245_near-term,#D48F90FF,0.08473034162915274
+intertidal mud,acidification,ssp585_current,#D48F90FF,0.0670802022617224
+intertidal mud,acidification,ssp585_medium-term,#D48F90FF,0.11950855958729677
+intertidal mud,acidification,ssp585_near-term,#D48F90FF,0.08870076851443595
+intertidal mud,air heat index,ssp245_current,#D2A54BFF,0.002250882156909685
+intertidal mud,air heat index,ssp245_medium-term,#D2A54BFF,0.01632597551503342
+intertidal mud,air heat index,ssp245_near-term,#D2A54BFF,0.006204794062443844
+intertidal mud,air heat index,ssp585_current,#D2A54BFF,0.002165782729265125
+intertidal mud,air heat index,ssp585_medium-term,#D2A54BFF,0.02935990596250614
+intertidal mud,air heat index,ssp585_near-term,#D2A54BFF,0.0074906599849853565
+intertidal mud,coastal disturbance,ssp245_current,#90D8C8FF,0.09584964111650081
+intertidal mud,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.09733067995791746
+intertidal mud,coastal disturbance,ssp245_near-term,#90D8C8FF,0.09690347531298289
+intertidal mud,coastal disturbance,ssp585_current,#90D8C8FF,0.09578079807816493
+intertidal mud,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.09710116016079678
+intertidal mud,coastal disturbance,ssp585_near-term,#90D8C8FF,0.09674061744858937
+intertidal mud,fisheries biomass loss,ssp245_current,#87A5A5FF,0.07811676537727555
+intertidal mud,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.10094652123166863
+intertidal mud,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.09169567359997474
+intertidal mud,fisheries biomass loss,ssp585_current,#87A5A5FF,0.07864154553917685
+intertidal mud,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.10754091582766716
+intertidal mud,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.09553834353974523
+intertidal mud,light pollution,ssp245_current,#B4B45AFF,0.007833515108566894
+intertidal mud,light pollution,ssp245_medium-term,#B4B45AFF,0.009869203270749962
+intertidal mud,light pollution,ssp245_near-term,#B4B45AFF,0.008753569472924317
+intertidal mud,light pollution,ssp585_current,#B4B45AFF,0.007836308058723694
+intertidal mud,light pollution,ssp585_medium-term,#B4B45AFF,0.011092858483480414
+intertidal mud,light pollution,ssp585_near-term,#B4B45AFF,0.009115861066228729
+intertidal mud,nutrient pollution,ssp245_current,#1E4B3CFF,0.01882727222354683
+intertidal mud,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.021512039160736976
+intertidal mud,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.020616734071829727
+intertidal mud,nutrient pollution,ssp585_current,#1E4B3CFF,0.01886278610484091
+intertidal mud,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.02089097564406066
+intertidal mud,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.0206336775899372
+intertidal mud,ocean warming,ssp245_current,#B4783CFF,0.06789250245170772
+intertidal mud,ocean warming,ssp245_medium-term,#B4783CFF,0.18592241211678082
+intertidal mud,ocean warming,ssp245_near-term,#B4783CFF,0.12080084730468509
+intertidal mud,ocean warming,ssp585_current,#B4783CFF,0.06778940572362589
+intertidal mud,ocean warming,ssp585_medium-term,#B4783CFF,0.22156052288913963
+intertidal mud,ocean warming,ssp585_near-term,#B4783CFF,0.11085927468508429
+intertidal mud,primary productivity,ssp245_current,#AB84A5FF,7.472036623353336e-4
+intertidal mud,primary productivity,ssp245_medium-term,#AB84A5FF,0.0060294338741445856
+intertidal mud,primary productivity,ssp245_near-term,#AB84A5FF,0.004023872337282427
+intertidal mud,primary productivity,ssp585_current,#AB84A5FF,7.4441535604267e-4
+intertidal mud,primary productivity,ssp585_medium-term,#AB84A5FF,0.006410923833410468
+intertidal mud,primary productivity,ssp585_near-term,#AB84A5FF,0.004185329487913789
+intertidal mud,reduced oxygen,ssp245_current,#78963CFF,0.0031209528242382425
+intertidal mud,reduced oxygen,ssp245_medium-term,#78963CFF,0.010680096937222928
+intertidal mud,reduced oxygen,ssp245_near-term,#78963CFF,0.00597183150257705
+intertidal mud,reduced oxygen,ssp585_current,#78963CFF,0.0031209528242382425
+intertidal mud,reduced oxygen,ssp585_medium-term,#78963CFF,0.014812058942652608
+intertidal mud,reduced oxygen,ssp585_near-term,#78963CFF,0.006374923888594952
+intertidal mud,sea level rise,ssp245_current,#D2D2C3FF,0.03138720419236508
+intertidal mud,sea level rise,ssp245_medium-term,#D2D2C3FF,0.09109872438719233
+intertidal mud,sea level rise,ssp245_near-term,#D2D2C3FF,0.03138720419236508
+intertidal mud,sea level rise,ssp585_current,#D2D2C3FF,0.039340307162447366
+intertidal mud,sea level rise,ssp585_medium-term,#D2D2C3FF,0.1427030632818982
+intertidal mud,sea level rise,ssp585_near-term,#D2D2C3FF,0.039340307162447366
+kelp forest,acidification,ssp245_current,#D48F90FF,0
+kelp forest,acidification,ssp245_medium-term,#D48F90FF,0
+kelp forest,acidification,ssp245_near-term,#D48F90FF,0
+kelp forest,acidification,ssp585_current,#D48F90FF,0
+kelp forest,acidification,ssp585_medium-term,#D48F90FF,0
+kelp forest,acidification,ssp585_near-term,#D48F90FF,0
+kelp forest,air heat index,ssp245_current,#D2A54BFF,0
+kelp forest,air heat index,ssp245_medium-term,#D2A54BFF,0
+kelp forest,air heat index,ssp245_near-term,#D2A54BFF,0
+kelp forest,air heat index,ssp585_current,#D2A54BFF,0
+kelp forest,air heat index,ssp585_medium-term,#D2A54BFF,0
+kelp forest,air heat index,ssp585_near-term,#D2A54BFF,0
+kelp forest,coastal disturbance,ssp245_current,#90D8C8FF,0.0619417078279656
+kelp forest,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.06284672269537447
+kelp forest,coastal disturbance,ssp245_near-term,#90D8C8FF,0.06254246565430122
+kelp forest,coastal disturbance,ssp585_current,#90D8C8FF,0.06223227530130794
+kelp forest,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.06503926468744428
+kelp forest,coastal disturbance,ssp585_near-term,#90D8C8FF,0.06348805263420133
+kelp forest,fisheries biomass loss,ssp245_current,#87A5A5FF,0.18358500207759848
+kelp forest,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.20406198692753127
+kelp forest,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.19819884679709723
+kelp forest,fisheries biomass loss,ssp585_current,#87A5A5FF,0.1848639842028897
+kelp forest,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.21891522869508903
+kelp forest,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.20710197715672746
+kelp forest,light pollution,ssp245_current,#B4B45AFF,0.0014956709565989575
+kelp forest,light pollution,ssp245_medium-term,#B4B45AFF,0.0019209789471274525
+kelp forest,light pollution,ssp245_near-term,#B4B45AFF,0.0017639975159098801
+kelp forest,light pollution,ssp585_current,#B4B45AFF,0.0015189308594849402
+kelp forest,light pollution,ssp585_medium-term,#B4B45AFF,0.002195783685419352
+kelp forest,light pollution,ssp585_near-term,#B4B45AFF,0.0018635021788200132
+kelp forest,nutrient pollution,ssp245_current,#1E4B3CFF,0.004936977065221274
+kelp forest,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.0047921047993013674
+kelp forest,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.0049106719647363335
+kelp forest,nutrient pollution,ssp585_current,#1E4B3CFF,0.004932860407725047
+kelp forest,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.004569365931358679
+kelp forest,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.00481483296357267
+kelp forest,ocean warming,ssp245_current,#B4783CFF,0.03564367185474597
+kelp forest,ocean warming,ssp245_medium-term,#B4783CFF,0.05055724875989338
+kelp forest,ocean warming,ssp245_near-term,#B4783CFF,0.04262181394128517
+kelp forest,ocean warming,ssp585_current,#B4783CFF,0.035510509427663
+kelp forest,ocean warming,ssp585_medium-term,#B4783CFF,0.060013156393444324
+kelp forest,ocean warming,ssp585_near-term,#B4783CFF,0.04400057562530047
+kelp forest,primary productivity,ssp245_current,#AB84A5FF,0.0026482885274266197
+kelp forest,primary productivity,ssp245_medium-term,#AB84A5FF,0.03869863593333981
+kelp forest,primary productivity,ssp245_near-term,#AB84A5FF,0.025707399886861756
+kelp forest,primary productivity,ssp585_current,#AB84A5FF,0.0025588267115700587
+kelp forest,primary productivity,ssp585_medium-term,#AB84A5FF,0.04207009865334903
+kelp forest,primary productivity,ssp585_near-term,#AB84A5FF,0.02739863568601719
+kelp forest,reduced oxygen,ssp245_current,#78963CFF,0.0015543210557860008
+kelp forest,reduced oxygen,ssp245_medium-term,#78963CFF,0.0048905314709711285
+kelp forest,reduced oxygen,ssp245_near-term,#78963CFF,0.0028345296258759324
+kelp forest,reduced oxygen,ssp585_current,#78963CFF,0.0015543210557860008
+kelp forest,reduced oxygen,ssp585_medium-term,#78963CFF,0.007025549585747455
+kelp forest,reduced oxygen,ssp585_near-term,#78963CFF,0.0031851292278028084
+kelp forest,sea level rise,ssp245_current,#D2D2C3FF,0.012019832880050684
+kelp forest,sea level rise,ssp245_medium-term,#D2D2C3FF,0.035060333078393596
+kelp forest,sea level rise,ssp245_near-term,#D2D2C3FF,0.012019832880050684
+kelp forest,sea level rise,ssp585_current,#D2D2C3FF,0.015104948231843005
+kelp forest,sea level rise,ssp585_medium-term,#D2D2C3FF,0.06108204849661501
+kelp forest,sea level rise,ssp585_near-term,#D2D2C3FF,0.015104948231843005
+mangrove,acidification,ssp245_current,#D48F90FF,0.00199711299212381
+mangrove,acidification,ssp245_medium-term,#D48F90FF,0.008430984000526434
+mangrove,acidification,ssp245_near-term,#D48F90FF,0.004274051699795392
+mangrove,acidification,ssp585_current,#D48F90FF,0.002067697559909992
+mangrove,acidification,ssp585_medium-term,#D48F90FF,0.01823671909944658
+mangrove,acidification,ssp585_near-term,#D48F90FF,0.004784120626169269
+mangrove,air heat index,ssp245_current,#D2A54BFF,0
+mangrove,air heat index,ssp245_medium-term,#D2A54BFF,0
+mangrove,air heat index,ssp245_near-term,#D2A54BFF,0
+mangrove,air heat index,ssp585_current,#D2A54BFF,0
+mangrove,air heat index,ssp585_medium-term,#D2A54BFF,0
+mangrove,air heat index,ssp585_near-term,#D2A54BFF,0
+mangrove,coastal disturbance,ssp245_current,#90D8C8FF,0.23506661904374215
+mangrove,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.2415170190210497
+mangrove,coastal disturbance,ssp245_near-term,#90D8C8FF,0.23909231614674908
+mangrove,coastal disturbance,ssp585_current,#90D8C8FF,0.23396400383745494
+mangrove,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.23562945792281084
+mangrove,coastal disturbance,ssp585_near-term,#90D8C8FF,0.23608325914391887
+mangrove,fisheries biomass loss,ssp245_current,#87A5A5FF,0.14599672434802796
+mangrove,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.22816863642731833
+mangrove,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.19521889274629858
+mangrove,fisheries biomass loss,ssp585_current,#87A5A5FF,0.14709220591590455
+mangrove,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.23687476697603913
+mangrove,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.2004442742212554
+mangrove,light pollution,ssp245_current,#B4B45AFF,0.003913557308792357
+mangrove,light pollution,ssp245_medium-term,#B4B45AFF,0.0071069915106866804
+mangrove,light pollution,ssp245_near-term,#B4B45AFF,0.005345549732020301
+mangrove,light pollution,ssp585_current,#B4B45AFF,0.0037934191413733775
+mangrove,light pollution,ssp585_medium-term,#B4B45AFF,0.00880246108130797
+mangrove,light pollution,ssp585_near-term,#B4B45AFF,0.005596509321248082
+mangrove,nutrient pollution,ssp245_current,#1E4B3CFF,0.05767523200594181
+mangrove,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.07362666263864713
+mangrove,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.06702736139868336
+mangrove,nutrient pollution,ssp585_current,#1E4B3CFF,0.0578538120211784
+mangrove,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.0758854437196343
+mangrove,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.06840163576394914
+mangrove,ocean warming,ssp245_current,#B4783CFF,0
+mangrove,ocean warming,ssp245_medium-term,#B4783CFF,0
+mangrove,ocean warming,ssp245_near-term,#B4783CFF,0
+mangrove,ocean warming,ssp585_current,#B4783CFF,0
+mangrove,ocean warming,ssp585_medium-term,#B4783CFF,0
+mangrove,ocean warming,ssp585_near-term,#B4783CFF,0
+mangrove,primary productivity,ssp245_current,#AB84A5FF,6.023954517931601e-4
+mangrove,primary productivity,ssp245_medium-term,#AB84A5FF,0.002448611553834173
+mangrove,primary productivity,ssp245_near-term,#AB84A5FF,0.001769419361916604
+mangrove,primary productivity,ssp585_current,#AB84A5FF,5.722139758497492e-4
+mangrove,primary productivity,ssp585_medium-term,#AB84A5FF,0.002272090716219056
+mangrove,primary productivity,ssp585_near-term,#AB84A5FF,0.0016613262967997704
+mangrove,reduced oxygen,ssp245_current,#78963CFF,2.7909668560796813e-4
+mangrove,reduced oxygen,ssp245_medium-term,#78963CFF,0.0021686122877106963
+mangrove,reduced oxygen,ssp245_near-term,#78963CFF,9.528028484146213e-4
+mangrove,reduced oxygen,ssp585_current,#78963CFF,2.7909668560796813e-4
+mangrove,reduced oxygen,ssp585_medium-term,#78963CFF,0.0026416438158046915
+mangrove,reduced oxygen,ssp585_near-term,#78963CFF,9.018752368873135e-4
+mangrove,sea level rise,ssp245_current,#D2D2C3FF,0.040642686650788476
+mangrove,sea level rise,ssp245_medium-term,#D2D2C3FF,0.19486867846659636
+mangrove,sea level rise,ssp245_near-term,#D2D2C3FF,0.040642686650788476
+mangrove,sea level rise,ssp585_current,#D2D2C3FF,0.055408016510778826
+mangrove,sea level rise,ssp585_medium-term,#D2D2C3FF,0.3261295836148166
+mangrove,sea level rise,ssp585_near-term,#D2D2C3FF,0.055408016510778826
+rocky intertidal,acidification,ssp245_current,#D48F90FF,0.05982630635392164
+rocky intertidal,acidification,ssp245_medium-term,#D48F90FF,0.09279756757390953
+rocky intertidal,acidification,ssp245_near-term,#D48F90FF,0.07625730743414894
+rocky intertidal,acidification,ssp585_current,#D48F90FF,0.06037218202460112
+rocky intertidal,acidification,ssp585_medium-term,#D48F90FF,0.10755770360761288
+rocky intertidal,acidification,ssp585_near-term,#D48F90FF,0.07983069162565637
+rocky intertidal,air heat index,ssp245_current,#D2A54BFF,0.00450176431381937
+rocky intertidal,air heat index,ssp245_medium-term,#D2A54BFF,0.03265195103006684
+rocky intertidal,air heat index,ssp245_near-term,#D2A54BFF,0.012409588124887688
+rocky intertidal,air heat index,ssp585_current,#D2A54BFF,0.00433156545853025
+rocky intertidal,air heat index,ssp585_medium-term,#D2A54BFF,0.05871981192501228
+rocky intertidal,air heat index,ssp585_near-term,#D2A54BFF,0.014981319969970713
+rocky intertidal,coastal disturbance,ssp245_current,#90D8C8FF,0.12199045235864744
+rocky intertidal,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.12387541086365925
+rocky intertidal,coastal disturbance,ssp245_near-term,#90D8C8FF,0.12333169581835911
+rocky intertidal,coastal disturbance,ssp585_current,#90D8C8FF,0.12190283392173076
+rocky intertidal,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.1235832947163306
+rocky intertidal,coastal disturbance,ssp585_near-term,#90D8C8FF,0.12312442224058162
+rocky intertidal,fisheries biomass loss,ssp245_current,#87A5A5FF,0.12693974562844024
+rocky intertidal,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.16403809598033192
+rocky intertidal,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.1490054699952833
+rocky intertidal,fisheries biomass loss,ssp585_current,#87A5A5FF,0.1277925127767166
+rocky intertidal,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.17475398818101848
+rocky intertidal,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.1552498075700054
+rocky intertidal,light pollution,ssp245_current,#B4B45AFF,0.007833515108566894
+rocky intertidal,light pollution,ssp245_medium-term,#B4B45AFF,0.009869203270749962
+rocky intertidal,light pollution,ssp245_near-term,#B4B45AFF,0.008753569472924317
+rocky intertidal,light pollution,ssp585_current,#B4B45AFF,0.007836308058723694
+rocky intertidal,light pollution,ssp585_medium-term,#B4B45AFF,0.011092858483480414
+rocky intertidal,light pollution,ssp585_near-term,#B4B45AFF,0.009115861066228729
+rocky intertidal,nutrient pollution,ssp245_current,#1E4B3CFF,0.01882727222354683
+rocky intertidal,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.021512039160736976
+rocky intertidal,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.020616734071829727
+rocky intertidal,nutrient pollution,ssp585_current,#1E4B3CFF,0.01886278610484091
+rocky intertidal,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.02089097564406066
+rocky intertidal,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.0206336775899372
+rocky intertidal,ocean warming,ssp245_current,#B4783CFF,0.13578500490341544
+rocky intertidal,ocean warming,ssp245_medium-term,#B4783CFF,0.37184482423356163
+rocky intertidal,ocean warming,ssp245_near-term,#B4783CFF,0.24160169460937017
+rocky intertidal,ocean warming,ssp585_current,#B4783CFF,0.13557881144725178
+rocky intertidal,ocean warming,ssp585_medium-term,#B4783CFF,0.44312104577827927
+rocky intertidal,ocean warming,ssp585_near-term,#B4783CFF,0.22171854937016858
+rocky intertidal,primary productivity,ssp245_current,#AB84A5FF,0.0014944073246706672
+rocky intertidal,primary productivity,ssp245_medium-term,#AB84A5FF,0.012058867748289171
+rocky intertidal,primary productivity,ssp245_near-term,#AB84A5FF,0.008047744674564854
+rocky intertidal,primary productivity,ssp585_current,#AB84A5FF,0.00148883071208534
+rocky intertidal,primary productivity,ssp585_medium-term,#AB84A5FF,0.012821847666820936
+rocky intertidal,primary productivity,ssp585_near-term,#AB84A5FF,0.008370658975827578
+rocky intertidal,reduced oxygen,ssp245_current,#78963CFF,0.001783401612749507
+rocky intertidal,reduced oxygen,ssp245_medium-term,#78963CFF,0.006102912533195253
+rocky intertidal,reduced oxygen,ssp245_near-term,#78963CFF,0.0034124751448595435
+rocky intertidal,reduced oxygen,ssp585_current,#78963CFF,0.001783401612749507
+rocky intertidal,reduced oxygen,ssp585_medium-term,#78963CFF,0.008464033680080921
+rocky intertidal,reduced oxygen,ssp585_near-term,#78963CFF,0.003642813650624852
+rocky intertidal,sea level rise,ssp245_current,#D2D2C3FF,0.04129895292828162
+rocky intertidal,sea level rise,ssp245_medium-term,#D2D2C3FF,0.11986674264440896
+rocky intertidal,sea level rise,ssp245_near-term,#D2D2C3FF,0.04129895292828162
+rocky intertidal,sea level rise,ssp585_current,#D2D2C3FF,0.051763562080261616
+rocky intertidal,sea level rise,ssp585_medium-term,#D2D2C3FF,0.1877671887643523
+rocky intertidal,sea level rise,ssp585_near-term,#D2D2C3FF,0.051763562080261616
+rocky reef,acidification,ssp245_current,#D48F90FF,0.008378997540966247
+rocky reef,acidification,ssp245_medium-term,#D48F90FF,0.017287008643524823
+rocky reef,acidification,ssp245_near-term,#D48F90FF,0.012106097916191482
+rocky reef,acidification,ssp585_current,#D48F90FF,0.008270146382318357
+rocky reef,acidification,ssp585_medium-term,#D48F90FF,0.027920838340315116
+rocky reef,acidification,ssp585_near-term,#D48F90FF,0.012981153896544376
+rocky reef,air heat index,ssp245_current,#D2A54BFF,0
+rocky reef,air heat index,ssp245_medium-term,#D2A54BFF,0
+rocky reef,air heat index,ssp245_near-term,#D2A54BFF,0
+rocky reef,air heat index,ssp585_current,#D2A54BFF,0
+rocky reef,air heat index,ssp585_medium-term,#D2A54BFF,0
+rocky reef,air heat index,ssp585_near-term,#D2A54BFF,0
+rocky reef,coastal disturbance,ssp245_current,#90D8C8FF,0.07815794945609139
+rocky reef,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.07945936702704333
+rocky reef,coastal disturbance,ssp245_near-term,#90D8C8FF,0.07908719476812973
+rocky reef,coastal disturbance,ssp585_current,#90D8C8FF,0.0778693891625497
+rocky reef,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.07773884663575287
+rocky reef,coastal disturbance,ssp585_near-term,#90D8C8FF,0.07827160915197995
+rocky reef,fisheries biomass loss,ssp245_current,#87A5A5FF,0.21509082267645832
+rocky reef,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.3160994771696642
+rocky reef,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.27400372451042
+rocky reef,fisheries biomass loss,ssp585_current,#87A5A5FF,0.21661309832859482
+rocky reef,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.32907444488745274
+rocky reef,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.28190434045955076
+rocky reef,light pollution,ssp245_current,#B4B45AFF,8.985935189062912e-4
+rocky reef,light pollution,ssp245_medium-term,#B4B45AFF,0.0016729694607222462
+rocky reef,light pollution,ssp245_near-term,#B4B45AFF,0.0013385725004963476
+rocky reef,light pollution,ssp585_current,#B4B45AFF,9.21567218170763e-4
+rocky reef,light pollution,ssp585_medium-term,#B4B45AFF,0.0019810218915962117
+rocky reef,light pollution,ssp585_near-term,#B4B45AFF,0.0014102005610317552
+rocky reef,nutrient pollution,ssp245_current,#1E4B3CFF,0.01311589956230466
+rocky reef,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.01671168371314708
+rocky reef,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.015263284422736471
+rocky reef,nutrient pollution,ssp585_current,#1E4B3CFF,0.01313381438242583
+rocky reef,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.01640215936855189
+rocky reef,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.015560666453862589
+rocky reef,ocean warming,ssp245_current,#B4783CFF,0.05892870291450292
+rocky reef,ocean warming,ssp245_medium-term,#B4783CFF,0.2526259765519137
+rocky reef,ocean warming,ssp245_near-term,#B4783CFF,0.13487330128259395
+rocky reef,ocean warming,ssp585_current,#B4783CFF,0.05669391494705141
+rocky reef,ocean warming,ssp585_medium-term,#B4783CFF,0.3338644447118847
+rocky reef,ocean warming,ssp585_near-term,#B4783CFF,0.15669831493670924
+rocky reef,primary productivity,ssp245_current,#AB84A5FF,0.0019212803028894557
+rocky reef,primary productivity,ssp245_medium-term,#AB84A5FF,0.01366361998162343
+rocky reef,primary productivity,ssp245_near-term,#AB84A5FF,0.010036584642690466
+rocky reef,primary productivity,ssp585_current,#AB84A5FF,0.0018783933228612361
+rocky reef,primary productivity,ssp585_medium-term,#AB84A5FF,0.015025734566992958
+rocky reef,primary productivity,ssp585_near-term,#AB84A5FF,0.01048781774553681
+rocky reef,reduced oxygen,ssp245_current,#78963CFF,6.756028543909092e-4
+rocky reef,reduced oxygen,ssp245_medium-term,#78963CFF,0.005297304903666891
+rocky reef,reduced oxygen,ssp245_near-term,#78963CFF,0.0023469803184978113
+rocky reef,reduced oxygen,ssp585_current,#78963CFF,6.756028543909092e-4
+rocky reef,reduced oxygen,ssp585_medium-term,#78963CFF,0.00761639542532651
+rocky reef,reduced oxygen,ssp585_near-term,#78963CFF,0.0025910890076215067
+rocky reef,sea level rise,ssp245_current,#D2D2C3FF,0.008981289672411635
+rocky reef,sea level rise,ssp245_medium-term,#D2D2C3FF,0.033227558627774406
+rocky reef,sea level rise,ssp245_near-term,#D2D2C3FF,0.008981289672411635
+rocky reef,sea level rise,ssp585_current,#D2D2C3FF,0.012089951856581608
+rocky reef,sea level rise,ssp585_medium-term,#D2D2C3FF,0.051694036214124
+rocky reef,sea level rise,ssp585_near-term,#D2D2C3FF,0.012089951856581608
+subtidal soft bottom,acidification,ssp245_current,#D48F90FF,0.006882007297347556
+subtidal soft bottom,acidification,ssp245_medium-term,#D48F90FF,0.01056716645682897
+subtidal soft bottom,acidification,ssp245_near-term,#D48F90FF,0.008651060134074441
+subtidal soft bottom,acidification,ssp585_current,#D48F90FF,0.006894211422748635
+subtidal soft bottom,acidification,ssp585_medium-term,#D48F90FF,0.012255076520033582
+subtidal soft bottom,acidification,ssp585_near-term,#D48F90FF,0.009031910119969445
+subtidal soft bottom,air heat index,ssp245_current,#D2A54BFF,0
+subtidal soft bottom,air heat index,ssp245_medium-term,#D2A54BFF,0
+subtidal soft bottom,air heat index,ssp245_near-term,#D2A54BFF,0
+subtidal soft bottom,air heat index,ssp585_current,#D2A54BFF,0
+subtidal soft bottom,air heat index,ssp585_medium-term,#D2A54BFF,0
+subtidal soft bottom,air heat index,ssp585_near-term,#D2A54BFF,0
+subtidal soft bottom,coastal disturbance,ssp245_current,#90D8C8FF,0.027584338971200356
+subtidal soft bottom,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.02819963442715418
+subtidal soft bottom,coastal disturbance,ssp245_near-term,#90D8C8FF,0.027988631845080755
+subtidal soft bottom,coastal disturbance,ssp585_current,#90D8C8FF,0.02755970487593971
+subtidal soft bottom,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.0281055518662067
+subtidal soft bottom,coastal disturbance,ssp585_near-term,#90D8C8FF,0.02792808252009098
+subtidal soft bottom,fisheries biomass loss,ssp245_current,#87A5A5FF,0.20404738567012343
+subtidal soft bottom,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.27391856014811605
+subtidal soft bottom,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.24556709194847995
+subtidal soft bottom,fisheries biomass loss,ssp585_current,#87A5A5FF,0.20505242909980873
+subtidal soft bottom,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.2840410615476677
+subtidal soft bottom,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.2516501700873386
+subtidal soft bottom,light pollution,ssp245_current,#B4B45AFF,5.369062054992666e-4
+subtidal soft bottom,light pollution,ssp245_medium-term,#B4B45AFF,6.673439267923532e-4
+subtidal soft bottom,light pollution,ssp245_near-term,#B4B45AFF,5.836390993092834e-4
+subtidal soft bottom,light pollution,ssp585_current,#B4B45AFF,5.381429227070955e-4
+subtidal soft bottom,light pollution,ssp585_medium-term,#B4B45AFF,7.604051669857984e-4
+subtidal soft bottom,light pollution,ssp585_near-term,#B4B45AFF,6.128054916520695e-4
+subtidal soft bottom,nutrient pollution,ssp245_current,#1E4B3CFF,0.010813965617399992
+subtidal soft bottom,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.012577635818922574
+subtidal soft bottom,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.011996811188936635
+subtidal soft bottom,nutrient pollution,ssp585_current,#1E4B3CFF,0.01084081651622941
+subtidal soft bottom,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.012244197845791553
+subtidal soft bottom,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.012005377078864161
+subtidal soft bottom,ocean warming,ssp245_current,#B4783CFF,0.02429105584736478
+subtidal soft bottom,ocean warming,ssp245_medium-term,#B4783CFF,0.06794249033258996
+subtidal soft bottom,ocean warming,ssp245_near-term,#B4783CFF,0.0443361392517125
+subtidal soft bottom,ocean warming,ssp585_current,#B4783CFF,0.023637060444902623
+subtidal soft bottom,ocean warming,ssp585_medium-term,#B4783CFF,0.07977606152831604
+subtidal soft bottom,ocean warming,ssp585_near-term,#B4783CFF,0.0416591564867764
+subtidal soft bottom,primary productivity,ssp245_current,#AB84A5FF,0.001601484313723725
+subtidal soft bottom,primary productivity,ssp245_medium-term,#AB84A5FF,0.007675680475711215
+subtidal soft bottom,primary productivity,ssp245_near-term,#AB84A5FF,0.005402072658554441
+subtidal soft bottom,primary productivity,ssp585_current,#AB84A5FF,0.0015368431323820849
+subtidal soft bottom,primary productivity,ssp585_medium-term,#AB84A5FF,0.007829685670865744
+subtidal soft bottom,primary productivity,ssp585_near-term,#AB84A5FF,0.005399797749374392
+subtidal soft bottom,reduced oxygen,ssp245_current,#78963CFF,0.002773786756304993
+subtidal soft bottom,reduced oxygen,ssp245_medium-term,#78963CFF,0.008837738395222542
+subtidal soft bottom,reduced oxygen,ssp245_near-term,#78963CFF,0.005000469882188354
+subtidal soft bottom,reduced oxygen,ssp585_current,#78963CFF,0.002773786756304993
+subtidal soft bottom,reduced oxygen,ssp585_medium-term,#78963CFF,0.012001394413270784
+subtidal soft bottom,reduced oxygen,ssp585_near-term,#78963CFF,0.005310803061434784
+subtidal soft bottom,sea level rise,ssp245_current,#D2D2C3FF,0.008109955677423036
+subtidal soft bottom,sea level rise,ssp245_medium-term,#D2D2C3FF,0.024603681621732466
+subtidal soft bottom,sea level rise,ssp245_near-term,#D2D2C3FF,0.008109955677423036
+subtidal soft bottom,sea level rise,ssp585_current,#D2D2C3FF,0.010295049416904581
+subtidal soft bottom,sea level rise,ssp585_medium-term,#D2D2C3FF,0.03977380806261248
+subtidal soft bottom,sea level rise,ssp585_near-term,#D2D2C3FF,0.010295049416904581
+salt marsh,acidification,ssp245_current,#D48F90FF,0.0789829373923966
+salt marsh,acidification,ssp245_medium-term,#D48F90FF,0.10496485566533846
+salt marsh,acidification,ssp245_near-term,#D48F90FF,0.090829788949170015
+salt marsh,acidification,ssp585_current,#D48F90FF,0.07923153143761637
+salt marsh,acidification,ssp585_medium-term,#D48F90FF,0.12144231074753023
+salt marsh,acidification,ssp585_near-term,#D48F90FF,0.09422161616713208
+salt marsh,air heat index,ssp245_current,#D2A54BFF,0
+salt marsh,air heat index,ssp245_medium-term,#D2A54BFF,0.3308232412310851
+salt marsh,air heat index,ssp245_near-term,#D2A54BFF,0.10329342838509413
+salt marsh,air heat index,ssp585_current,#D2A54BFF,7.75663633793731e-5
+salt marsh,air heat index,ssp585_medium-term,#D2A54BFF,0.3968844494439003
+salt marsh,air heat index,ssp585_near-term,#D2A54BFF,0.13409671532182593
+salt marsh,coastal disturbance,ssp245_current,#90D8C8FF,0.09432386298224726
+salt marsh,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.0967086807365243
+salt marsh,coastal disturbance,ssp245_near-term,#90D8C8FF,0.09567489644918548
+salt marsh,coastal disturbance,ssp585_current,#90D8C8FF,0.09459385577994701
+salt marsh,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.09899594898234872
+salt marsh,coastal disturbance,ssp585_near-term,#90D8C8FF,0.09660059642605154
+salt marsh,fisheries biomass loss,ssp245_current,#87A5A5FF,0.12070512614070567
+salt marsh,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.13767457234753416
+salt marsh,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.13132660678396466
+salt marsh,fisheries biomass loss,ssp585_current,#87A5A5FF,0.12137254282245283
+salt marsh,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.14358836667276
+salt marsh,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.13509749672173127
+salt marsh,light pollution,ssp245_current,#B4B45AFF,0.032366303117065245
+salt marsh,light pollution,ssp245_medium-term,#B4B45AFF,0.03590432296025647
+salt marsh,light pollution,ssp245_near-term,#B4B45AFF,0.03325941144705185
+salt marsh,light pollution,ssp585_current,#B4B45AFF,0.0321609140971748
+salt marsh,light pollution,ssp585_medium-term,#B4B45AFF,0.038732489722891776
+salt marsh,light pollution,ssp585_near-term,#B4B45AFF,0.03476661157865926
+salt marsh,nutrient pollution,ssp245_current,#1E4B3CFF,0.0740569936984068
+salt marsh,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.07226697222316844
+salt marsh,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.07334172753411583
+salt marsh,nutrient pollution,ssp585_current,#1E4B3CFF,0.07436012808179791
+salt marsh,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.06697753068169093
+salt marsh,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.07229190102259929
+salt marsh,ocean warming,ssp245_current,#B4783CFF,0.03903652139421429
+salt marsh,ocean warming,ssp245_medium-term,#B4783CFF,0.14873362183672387
+salt marsh,ocean warming,ssp245_near-term,#B4783CFF,0.08776027127973499
+salt marsh,ocean warming,ssp585_current,#B4783CFF,0.040815963153476305
+salt marsh,ocean warming,ssp585_medium-term,#B4783CFF,0.1880740138438379
+salt marsh,ocean warming,ssp585_near-term,#B4783CFF,0.0878022592669202
+salt marsh,primary productivity,ssp245_current,#AB84A5FF,1.314252327937407e-4
+salt marsh,primary productivity,ssp245_medium-term,#AB84A5FF,0.001465067263071542
+salt marsh,primary productivity,ssp245_near-term,#AB84A5FF,0.0010312452330343048
+salt marsh,primary productivity,ssp585_current,#AB84A5FF,1.2826229584942273e-4
+salt marsh,primary productivity,ssp585_medium-term,#AB84A5FF,0.0013534897797240278
+salt marsh,primary productivity,ssp585_near-term,#AB84A5FF,9.447609838699904e-4
+salt marsh,reduced oxygen,ssp245_current,#78963CFF,0.002266403840980777
+salt marsh,reduced oxygen,ssp245_medium-term,#78963CFF,0.008868714612264786
+salt marsh,reduced oxygen,ssp245_near-term,#78963CFF,0.004533344918456066
+salt marsh,reduced oxygen,ssp585_current,#78963CFF,0.002266403840980777
+salt marsh,reduced oxygen,ssp585_medium-term,#78963CFF,0.01273295057987868
+salt marsh,reduced oxygen,ssp585_near-term,#78963CFF,0.004751977906567439
+salt marsh,sea level rise,ssp245_current,#D2D2C3FF,0.2222076760873125
+salt marsh,sea level rise,ssp245_medium-term,#D2D2C3FF,0.38335469061388355
+salt marsh,sea level rise,ssp245_near-term,#D2D2C3FF,0.2222076760873125
+salt marsh,sea level rise,ssp585_current,#D2D2C3FF,0.25070216729277
+salt marsh,sea level rise,ssp585_medium-term,#D2D2C3FF,0.49019045235813036
+salt marsh,sea level rise,ssp585_near-term,#D2D2C3FF,0.25070216729277
+seagrass,acidification,ssp245_current,#D48F90FF,0.006018550436981386
+seagrass,acidification,ssp245_medium-term,#D48F90FF,0.0193722661468223
+seagrass,acidification,ssp245_near-term,#D48F90FF,0.010922112689646763
+seagrass,acidification,ssp585_current,#D48F90FF,0.006158157675151744
+seagrass,acidification,ssp585_medium-term,#D48F90FF,0.03276077602469536
+seagrass,acidification,ssp585_near-term,#D48F90FF,0.012882696895856038
+seagrass,air heat index,ssp245_current,#D2A54BFF,5.7981516098707905e-5
+seagrass,air heat index,ssp245_medium-term,#D2A54BFF,0.31221354538781154
+seagrass,air heat index,ssp245_near-term,#D2A54BFF,0.08710118928352906
+seagrass,air heat index,ssp585_current,#D2A54BFF,2.7602833631731246e-5
+seagrass,air heat index,ssp585_medium-term,#D2A54BFF,0.44117554086487454
+seagrass,air heat index,ssp585_near-term,#D2A54BFF,0.12581297831781277
+seagrass,coastal disturbance,ssp245_current,#90D8C8FF,0.15857573290774718
+seagrass,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.16644416087428945
+seagrass,coastal disturbance,ssp245_near-term,#90D8C8FF,0.16312880221579784
+seagrass,coastal disturbance,ssp585_current,#90D8C8FF,0.1581055046206653
+seagrass,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.16349133470071575
+seagrass,coastal disturbance,ssp585_near-term,#90D8C8FF,0.16176272272598566
+seagrass,fisheries biomass loss,ssp245_current,#87A5A5FF,0.11758984980331126
+seagrass,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.16633169870770614
+seagrass,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.14730352986198364
+seagrass,fisheries biomass loss,ssp585_current,#87A5A5FF,0.11854087846030002
+seagrass,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.17395191656958725
+seagrass,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.15195904113461778
+seagrass,light pollution,ssp245_current,#B4B45AFF,0.002655774712172115
+seagrass,light pollution,ssp245_medium-term,#B4B45AFF,0.003826766266303318
+seagrass,light pollution,ssp245_near-term,#B4B45AFF,0.0031974397655166083
+seagrass,light pollution,ssp585_current,#B4B45AFF,0.0026431361246015018
+seagrass,light pollution,ssp585_medium-term,#B4B45AFF,0.004323309183016399
+seagrass,light pollution,ssp585_near-term,#B4B45AFF,0.0033127224748207757
+seagrass,nutrient pollution,ssp245_current,#1E4B3CFF,0.033464684142959306
+seagrass,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.043590283806345345
+seagrass,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.040036675690646624
+seagrass,nutrient pollution,ssp585_current,#1E4B3CFF,0.033539073771131744
+seagrass,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.042021187080670715
+seagrass,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.0403750878491316
+seagrass,ocean warming,ssp245_current,#B4783CFF,0.058198059323622715
+seagrass,ocean warming,ssp245_medium-term,#B4783CFF,0.2609778204609317
+seagrass,ocean warming,ssp245_near-term,#B4783CFF,0.14265705346114077
+seagrass,ocean warming,ssp585_current,#B4783CFF,0.06038273582461043
+seagrass,ocean warming,ssp585_medium-term,#B4783CFF,0.3354941123383899
+seagrass,ocean warming,ssp585_near-term,#B4783CFF,0.1537594816579712
+seagrass,primary productivity,ssp245_current,#AB84A5FF,0.001617121515150325
+seagrass,primary productivity,ssp245_medium-term,#AB84A5FF,0.007587866377052883
+seagrass,primary productivity,ssp245_near-term,#AB84A5FF,0.005528299576254329
+seagrass,primary productivity,ssp585_current,#AB84A5FF,0.0015547277273568782
+seagrass,primary productivity,ssp585_medium-term,#AB84A5FF,0.007228656504550865
+seagrass,primary productivity,ssp585_near-term,#AB84A5FF,0.004955027370413646
+seagrass,reduced oxygen,ssp245_current,#78963CFF,8.574934678010573e-4
+seagrass,reduced oxygen,ssp245_medium-term,#78963CFF,0.005464504137430127
+seagrass,reduced oxygen,ssp245_near-term,#78963CFF,0.002637226420252514
+seagrass,reduced oxygen,ssp585_current,#78963CFF,8.574934678010573e-4
+seagrass,reduced oxygen,ssp585_medium-term,#78963CFF,0.00695858748012005
+seagrass,reduced oxygen,ssp585_near-term,#78963CFF,0.002655856418901598
+seagrass,sea level rise,ssp245_current,#D2D2C3FF,0.03652507343446137
+seagrass,sea level rise,ssp245_medium-term,#D2D2C3FF,0.1184533840686595
+seagrass,sea level rise,ssp245_near-term,#D2D2C3FF,0.03652507343446137
+seagrass,sea level rise,ssp585_current,#D2D2C3FF,0.0471615250828189
+seagrass,sea level rise,ssp585_medium-term,#D2D2C3FF,0.18503687193393528
+seagrass,sea level rise,ssp585_near-term,#D2D2C3FF,0.0471615250828189
+seamounts,acidification,ssp245_current,#D48F90FF,0.05623750310403452
+seamounts,acidification,ssp245_medium-term,#D48F90FF,0.10497747862783464
+seamounts,acidification,ssp245_near-term,#D48F90FF,0.0763272733632183
+seamounts,acidification,ssp585_current,#D48F90FF,0.05606749117011415
+seamounts,acidification,ssp585_medium-term,#D48F90FF,0.14189358149609116
+seamounts,acidification,ssp585_near-term,#D48F90FF,0.08219029333630641
+seamounts,air heat index,ssp245_current,#D2A54BFF,0
+seamounts,air heat index,ssp245_medium-term,#D2A54BFF,0
+seamounts,air heat index,ssp245_near-term,#D2A54BFF,0
+seamounts,air heat index,ssp585_current,#D2A54BFF,0
+seamounts,air heat index,ssp585_medium-term,#D2A54BFF,0
+seamounts,air heat index,ssp585_near-term,#D2A54BFF,0
+seamounts,coastal disturbance,ssp245_current,#90D8C8FF,0
+seamounts,coastal disturbance,ssp245_medium-term,#90D8C8FF,0
+seamounts,coastal disturbance,ssp245_near-term,#90D8C8FF,0
+seamounts,coastal disturbance,ssp585_current,#90D8C8FF,0
+seamounts,coastal disturbance,ssp585_medium-term,#90D8C8FF,0
+seamounts,coastal disturbance,ssp585_near-term,#90D8C8FF,0
+seamounts,fisheries biomass loss,ssp245_current,#87A5A5FF,0.06745713693952653
+seamounts,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.11095446654270495
+seamounts,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.0910074621481191
+seamounts,fisheries biomass loss,ssp585_current,#87A5A5FF,0.06858354194248711
+seamounts,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.12179054006869898
+seamounts,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.09728097118831801
+seamounts,light pollution,ssp245_current,#B4B45AFF,0
+seamounts,light pollution,ssp245_medium-term,#B4B45AFF,0
+seamounts,light pollution,ssp245_near-term,#B4B45AFF,0
+seamounts,light pollution,ssp585_current,#B4B45AFF,0
+seamounts,light pollution,ssp585_medium-term,#B4B45AFF,0
+seamounts,light pollution,ssp585_near-term,#B4B45AFF,0
+seamounts,nutrient pollution,ssp245_current,#1E4B3CFF,0
+seamounts,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0
+seamounts,nutrient pollution,ssp245_near-term,#1E4B3CFF,0
+seamounts,nutrient pollution,ssp585_current,#1E4B3CFF,0
+seamounts,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0
+seamounts,nutrient pollution,ssp585_near-term,#1E4B3CFF,0
+seamounts,ocean warming,ssp245_current,#B4783CFF,0.06448140845519514
+seamounts,ocean warming,ssp245_medium-term,#B4783CFF,0.12015100507931467
+seamounts,ocean warming,ssp245_near-term,#B4783CFF,0.08217089012883083
+seamounts,ocean warming,ssp585_current,#B4783CFF,0.06448140845519514
+seamounts,ocean warming,ssp585_medium-term,#B4783CFF,0.12207842283421352
+seamounts,ocean warming,ssp585_near-term,#B4783CFF,0.0825679149353467
+seamounts,primary productivity,ssp245_current,#AB84A5FF,0.009500287973399212
+seamounts,primary productivity,ssp245_medium-term,#AB84A5FF,0.03476983671773324
+seamounts,primary productivity,ssp245_near-term,#AB84A5FF,0.027778891694251122
+seamounts,primary productivity,ssp585_current,#AB84A5FF,0.009479136872846593
+seamounts,primary productivity,ssp585_medium-term,#AB84A5FF,0.04085143991398785
+seamounts,primary productivity,ssp585_near-term,#AB84A5FF,0.0288801658771312
+seamounts,reduced oxygen,ssp245_current,#78963CFF,0.013792905918229542
+seamounts,reduced oxygen,ssp245_medium-term,#78963CFF,0.01670685109763847
+seamounts,reduced oxygen,ssp245_near-term,#78963CFF,0.01467557549502108
+seamounts,reduced oxygen,ssp585_current,#78963CFF,0.013792905918229542
+seamounts,reduced oxygen,ssp585_medium-term,#78963CFF,0.016398339074265716
+seamounts,reduced oxygen,ssp585_near-term,#78963CFF,0.014592785274378033
+seamounts,sea level rise,ssp245_current,#D2D2C3FF,0
+seamounts,sea level rise,ssp245_medium-term,#D2D2C3FF,0
+seamounts,sea level rise,ssp245_near-term,#D2D2C3FF,0
+seamounts,sea level rise,ssp585_current,#D2D2C3FF,0
+seamounts,sea level rise,ssp585_medium-term,#D2D2C3FF,0
+seamounts,sea level rise,ssp585_near-term,#D2D2C3FF,0
+soft shelf,acidification,ssp245_current,#D48F90FF,0.11294624123633774
+soft shelf,acidification,ssp245_medium-term,#D48F90FF,0.1811808286620425
+soft shelf,acidification,ssp245_near-term,#D48F90FF,0.14515967321223938
+soft shelf,acidification,ssp585_current,#D48F90FF,0.11345076045855326
+soft shelf,acidification,ssp585_medium-term,#D48F90FF,0.2151127200698769
+soft shelf,acidification,ssp585_near-term,#D48F90FF,0.15291974006982756
+soft shelf,air heat index,ssp245_current,#D2A54BFF,0
+soft shelf,air heat index,ssp245_medium-term,#D2A54BFF,0
+soft shelf,air heat index,ssp245_near-term,#D2A54BFF,0
+soft shelf,air heat index,ssp585_current,#D2A54BFF,0
+soft shelf,air heat index,ssp585_medium-term,#D2A54BFF,0
+soft shelf,air heat index,ssp585_near-term,#D2A54BFF,0
+soft shelf,coastal disturbance,ssp245_current,#90D8C8FF,0.004709759815748064
+soft shelf,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.0048347192516990005
+soft shelf,coastal disturbance,ssp245_near-term,#90D8C8FF,0.004787244102344952
+soft shelf,coastal disturbance,ssp585_current,#90D8C8FF,0.004706486773993018
+soft shelf,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.004825234254217056
+soft shelf,coastal disturbance,ssp585_near-term,#90D8C8FF,0.004779190486969187
+soft shelf,fisheries biomass loss,ssp245_current,#87A5A5FF,0.21649299592139015
+soft shelf,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.27784354368673647
+soft shelf,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.2532159372061373
+soft shelf,fisheries biomass loss,ssp585_current,#87A5A5FF,0.2178795967417015
+soft shelf,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.2928728860319698
+soft shelf,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.26225968429377916
+soft shelf,light pollution,ssp245_current,#B4B45AFF,0
+soft shelf,light pollution,ssp245_medium-term,#B4B45AFF,0
+soft shelf,light pollution,ssp245_near-term,#B4B45AFF,0
+soft shelf,light pollution,ssp585_current,#B4B45AFF,0
+soft shelf,light pollution,ssp585_medium-term,#B4B45AFF,0
+soft shelf,light pollution,ssp585_near-term,#B4B45AFF,0
+soft shelf,nutrient pollution,ssp245_current,#1E4B3CFF,0.00171272535253187
+soft shelf,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.0020722068729951584
+soft shelf,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.0019706815420756276
+soft shelf,nutrient pollution,ssp585_current,#1E4B3CFF,0.0017152469737705734
+soft shelf,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.0020247605484806906
+soft shelf,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.0019746500420207334
+soft shelf,ocean warming,ssp245_current,#B4783CFF,0.04207970186390229
+soft shelf,ocean warming,ssp245_medium-term,#B4783CFF,0.16882419103869228
+soft shelf,ocean warming,ssp245_near-term,#B4783CFF,0.08906617228740293
+soft shelf,ocean warming,ssp585_current,#B4783CFF,0.04207970186390229
+soft shelf,ocean warming,ssp585_medium-term,#B4783CFF,0.20933271538329326
+soft shelf,ocean warming,ssp585_near-term,#B4783CFF,0.0941208515644744
+soft shelf,primary productivity,ssp245_current,#AB84A5FF,0.0013352645262432556
+soft shelf,primary productivity,ssp245_medium-term,#AB84A5FF,0.010399099338894829
+soft shelf,primary productivity,ssp245_near-term,#AB84A5FF,0.0067740553703885854
+soft shelf,primary productivity,ssp585_current,#AB84A5FF,0.0013093819370816819
+soft shelf,primary productivity,ssp585_medium-term,#AB84A5FF,0.01120865663615949
+soft shelf,primary productivity,ssp585_near-term,#AB84A5FF,0.007332351993206148
+soft shelf,reduced oxygen,ssp245_current,#78963CFF,0.03404717272528239
+soft shelf,reduced oxygen,ssp245_medium-term,#78963CFF,0.040394439770503436
+soft shelf,reduced oxygen,ssp245_near-term,#78963CFF,0.03629958385861516
+soft shelf,reduced oxygen,ssp585_current,#78963CFF,0.03404717272528239
+soft shelf,reduced oxygen,ssp585_medium-term,#78963CFF,0.04368246196025821
+soft shelf,reduced oxygen,ssp585_near-term,#78963CFF,0.036502834572846025
+soft shelf,sea level rise,ssp245_current,#D2D2C3FF,0
+soft shelf,sea level rise,ssp245_medium-term,#D2D2C3FF,0
+soft shelf,sea level rise,ssp245_near-term,#D2D2C3FF,0
+soft shelf,sea level rise,ssp585_current,#D2D2C3FF,0
+soft shelf,sea level rise,ssp585_medium-term,#D2D2C3FF,0
+soft shelf,sea level rise,ssp585_near-term,#D2D2C3FF,0
+soft slope,acidification,ssp245_current,#D48F90FF,0.11775428078251385
+soft slope,acidification,ssp245_medium-term,#D48F90FF,0.1975274530199455
+soft slope,acidification,ssp245_near-term,#D48F90FF,0.15385414999733033
+soft slope,acidification,ssp585_current,#D48F90FF,0.11748070107176178
+soft slope,acidification,ssp585_medium-term,#D48F90FF,0.23593441191788309
+soft slope,acidification,ssp585_near-term,#D48F90FF,0.16244139019082693
+soft slope,air heat index,ssp245_current,#D2A54BFF,0
+soft slope,air heat index,ssp245_medium-term,#D2A54BFF,0
+soft slope,air heat index,ssp245_near-term,#D2A54BFF,0
+soft slope,air heat index,ssp585_current,#D2A54BFF,0
+soft slope,air heat index,ssp585_medium-term,#D2A54BFF,0
+soft slope,air heat index,ssp585_near-term,#D2A54BFF,0
+soft slope,coastal disturbance,ssp245_current,#90D8C8FF,0
+soft slope,coastal disturbance,ssp245_medium-term,#90D8C8FF,0
+soft slope,coastal disturbance,ssp245_near-term,#90D8C8FF,0
+soft slope,coastal disturbance,ssp585_current,#90D8C8FF,0
+soft slope,coastal disturbance,ssp585_medium-term,#90D8C8FF,0
+soft slope,coastal disturbance,ssp585_near-term,#90D8C8FF,0
+soft slope,fisheries biomass loss,ssp245_current,#87A5A5FF,0.1346383797123828
+soft slope,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.19186914516724296
+soft slope,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.16738475734014635
+soft slope,fisheries biomass loss,ssp585_current,#87A5A5FF,0.13590514174967414
+soft slope,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.20498356396139425
+soft slope,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.17517178416180762
+soft slope,light pollution,ssp245_current,#B4B45AFF,0
+soft slope,light pollution,ssp245_medium-term,#B4B45AFF,0
+soft slope,light pollution,ssp245_near-term,#B4B45AFF,0
+soft slope,light pollution,ssp585_current,#B4B45AFF,0
+soft slope,light pollution,ssp585_medium-term,#B4B45AFF,0
+soft slope,light pollution,ssp585_near-term,#B4B45AFF,0
+soft slope,nutrient pollution,ssp245_current,#1E4B3CFF,4.7017306912787123e-4
+soft slope,nutrient pollution,ssp245_medium-term,#1E4B3CFF,5.986853810530966e-4
+soft slope,nutrient pollution,ssp245_near-term,#1E4B3CFF,5.574813405866451e-4
+soft slope,nutrient pollution,ssp585_current,#1E4B3CFF,4.711764508876408e-4
+soft slope,nutrient pollution,ssp585_medium-term,#1E4B3CFF,5.875055794990218e-4
+soft slope,nutrient pollution,ssp585_near-term,#1E4B3CFF,5.595612378177401e-4
+soft slope,ocean warming,ssp245_current,#B4783CFF,0.051063458333699754
+soft slope,ocean warming,ssp245_medium-term,#B4783CFF,0.16604231250047324
+soft slope,ocean warming,ssp245_near-term,#B4783CFF,0.09175261532102028
+soft slope,ocean warming,ssp585_current,#B4783CFF,0.051063458333699754
+soft slope,ocean warming,ssp585_medium-term,#B4783CFF,0.18317676416441772
+soft slope,ocean warming,ssp585_near-term,#B4783CFF,0.09580176224302461
+soft slope,primary productivity,ssp245_current,#AB84A5FF,0.0038424523782084833
+soft slope,primary productivity,ssp245_medium-term,#AB84A5FF,0.01999004558141479
+soft slope,primary productivity,ssp245_near-term,#AB84A5FF,0.01431236030941855
+soft slope,primary productivity,ssp585_current,#AB84A5FF,0.0038140708499712
+soft slope,primary productivity,ssp585_medium-term,#AB84A5FF,0.02346204618220791
+soft slope,primary productivity,ssp585_near-term,#AB84A5FF,0.015268039231986462
+soft slope,reduced oxygen,ssp245_current,#78963CFF,0.08330120660023456
+soft slope,reduced oxygen,ssp245_medium-term,#78963CFF,0.09340455880600426
+soft slope,reduced oxygen,ssp245_near-term,#78963CFF,0.08710835013268536
+soft slope,reduced oxygen,ssp585_current,#78963CFF,0.08330120660023456
+soft slope,reduced oxygen,ssp585_medium-term,#78963CFF,0.09547390951522816
+soft slope,reduced oxygen,ssp585_near-term,#78963CFF,0.08792189102135593
+soft slope,sea level rise,ssp245_current,#D2D2C3FF,0
+soft slope,sea level rise,ssp245_medium-term,#D2D2C3FF,0
+soft slope,sea level rise,ssp245_near-term,#D2D2C3FF,0
+soft slope,sea level rise,ssp585_current,#D2D2C3FF,0
+soft slope,sea level rise,ssp585_medium-term,#D2D2C3FF,0
+soft slope,sea level rise,ssp585_near-term,#D2D2C3FF,0
+shallow pelagic,acidification,ssp245_current,#D48F90FF,0.0643572423945331
+shallow pelagic,acidification,ssp245_medium-term,#D48F90FF,0.11291454089868493
+shallow pelagic,acidification,ssp245_near-term,#D48F90FF,0.08538487070893067
+shallow pelagic,acidification,ssp585_current,#D48F90FF,0.06414058187402354
+shallow pelagic,acidification,ssp585_medium-term,#D48F90FF,0.14387189802595646
+shallow pelagic,acidification,ssp585_near-term,#D48F90FF,0.09102191514337317
+shallow pelagic,air heat index,ssp245_current,#D2A54BFF,0
+shallow pelagic,air heat index,ssp245_medium-term,#D2A54BFF,0
+shallow pelagic,air heat index,ssp245_near-term,#D2A54BFF,0
+shallow pelagic,air heat index,ssp585_current,#D2A54BFF,0
+shallow pelagic,air heat index,ssp585_medium-term,#D2A54BFF,0
+shallow pelagic,air heat index,ssp585_near-term,#D2A54BFF,0
+shallow pelagic,coastal disturbance,ssp245_current,#90D8C8FF,4.542222717851653e-4
+shallow pelagic,coastal disturbance,ssp245_medium-term,#90D8C8FF,4.654349691308259e-4
+shallow pelagic,coastal disturbance,ssp245_near-term,#90D8C8FF,4.615775877042698e-4
+shallow pelagic,coastal disturbance,ssp585_current,#90D8C8FF,4.5320338189030156e-4
+shallow pelagic,coastal disturbance,ssp585_medium-term,#90D8C8FF,4.5969865199082654e-4
+shallow pelagic,coastal disturbance,ssp585_near-term,#90D8C8FF,4.586449721762909e-4
+shallow pelagic,fisheries biomass loss,ssp245_current,#87A5A5FF,0.10663400848791534
+shallow pelagic,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.17800089745926928
+shallow pelagic,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.14543942484793101
+shallow pelagic,fisheries biomass loss,ssp585_current,#87A5A5FF,0.10755934622547868
+shallow pelagic,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.18748656017376072
+shallow pelagic,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.15087489274505408
+shallow pelagic,light pollution,ssp245_current,#B4B45AFF,5.134345149252297e-6
+shallow pelagic,light pollution,ssp245_medium-term,#B4B45AFF,7.045981559351429e-6
+shallow pelagic,light pollution,ssp245_near-term,#B4B45AFF,6.007573968895335e-6
+shallow pelagic,light pollution,ssp585_current,#B4B45AFF,5.197342768001442e-6
+shallow pelagic,light pollution,ssp585_medium-term,#B4B45AFF,8.209883692360412e-6
+shallow pelagic,light pollution,ssp585_near-term,#B4B45AFF,6.282383179762861e-6
+shallow pelagic,nutrient pollution,ssp245_current,#1E4B3CFF,1.449444665401405e-4
+shallow pelagic,nutrient pollution,ssp245_medium-term,#1E4B3CFF,1.7539505552735803e-4
+shallow pelagic,nutrient pollution,ssp245_near-term,#1E4B3CFF,1.6626859106259645e-4
+shallow pelagic,nutrient pollution,ssp585_current,#1E4B3CFF,1.4517657461960627e-4
+shallow pelagic,nutrient pollution,ssp585_medium-term,#1E4B3CFF,1.7098667139388673e-4
+shallow pelagic,nutrient pollution,ssp585_near-term,#1E4B3CFF,1.6667415060405593e-4
+shallow pelagic,ocean warming,ssp245_current,#B4783CFF,0.10212500177591795
+shallow pelagic,ocean warming,ssp245_medium-term,#B4783CFF,0.35891943650084046
+shallow pelagic,ocean warming,ssp245_near-term,#B4783CFF,0.18814213058878415
+shallow pelagic,ocean warming,ssp585_current,#B4783CFF,0.09971379967592217
+shallow pelagic,ocean warming,ssp585_medium-term,#B4783CFF,0.47497840653414086
+shallow pelagic,ocean warming,ssp585_near-term,#B4783CFF,0.21627177606475487
+shallow pelagic,primary productivity,ssp245_current,#AB84A5FF,0.010968896602553155
+shallow pelagic,primary productivity,ssp245_medium-term,#AB84A5FF,0.03738391825839647
+shallow pelagic,primary productivity,ssp245_near-term,#AB84A5FF,0.02967338405412954
+shallow pelagic,primary productivity,ssp585_current,#AB84A5FF,0.010972660637576447
+shallow pelagic,primary productivity,ssp585_medium-term,#AB84A5FF,0.044407362832950006
+shallow pelagic,primary productivity,ssp585_near-term,#AB84A5FF,0.03109613855520482
+shallow pelagic,reduced oxygen,ssp245_current,#78963CFF,0
+shallow pelagic,reduced oxygen,ssp245_medium-term,#78963CFF,0
+shallow pelagic,reduced oxygen,ssp245_near-term,#78963CFF,0
+shallow pelagic,reduced oxygen,ssp585_current,#78963CFF,0
+shallow pelagic,reduced oxygen,ssp585_medium-term,#78963CFF,0
+shallow pelagic,reduced oxygen,ssp585_near-term,#78963CFF,0
+shallow pelagic,sea level rise,ssp245_current,#D2D2C3FF,0
+shallow pelagic,sea level rise,ssp245_medium-term,#D2D2C3FF,0
+shallow pelagic,sea level rise,ssp245_near-term,#D2D2C3FF,0
+shallow pelagic,sea level rise,ssp585_current,#D2D2C3FF,0
+shallow pelagic,sea level rise,ssp585_medium-term,#D2D2C3FF,0
+shallow pelagic,sea level rise,ssp585_near-term,#D2D2C3FF,0
+shellfish reef,acidification,ssp245_current,#D48F90FF,0.04653157154352057
+shellfish reef,acidification,ssp245_medium-term,#D48F90FF,0.07217588529766786
+shellfish reef,acidification,ssp245_near-term,#D48F90FF,0.0593112388346198
+shellfish reef,acidification,ssp585_current,#D48F90FF,0.04695614139458815
+shellfish reef,acidification,ssp585_medium-term,#D48F90FF,0.08365599110064374
+shellfish reef,acidification,ssp585_near-term,#D48F90FF,0.06209053763796695
+shellfish reef,air heat index,ssp245_current,#D2A54BFF,0
+shellfish reef,air heat index,ssp245_medium-term,#D2A54BFF,0
+shellfish reef,air heat index,ssp245_near-term,#D2A54BFF,0
+shellfish reef,air heat index,ssp585_current,#D2A54BFF,0
+shellfish reef,air heat index,ssp585_medium-term,#D2A54BFF,0
+shellfish reef,air heat index,ssp585_near-term,#D2A54BFF,0
+shellfish reef,coastal disturbance,ssp245_current,#90D8C8FF,0.13070405606569105
+shellfish reef,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.13272365450703594
+shellfish reef,coastal disturbance,ssp245_near-term,#90D8C8FF,0.13214110264884338
+shellfish reef,coastal disturbance,ssp585_current,#90D8C8FF,0.13061017930846502
+shellfish reef,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.1324106729248241
+shellfish reef,coastal disturbance,ssp585_near-term,#90D8C8FF,0.1319190238402235
+shellfish reef,fisheries biomass loss,ssp245_current,#87A5A5FF,0.18552732004009148
+shellfish reef,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.23974798519831986
+shellfish reef,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.21777722383320539
+shellfish reef,fisheries biomass loss,ssp585_current,#87A5A5FF,0.18677367323474367
+shellfish reef,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.2554096732106452
+shellfish reef,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.22690356640180614
+shellfish reef,light pollution,ssp245_current,#B4B45AFF,0.005595367942115227
+shellfish reef,light pollution,ssp245_medium-term,#B4B45AFF,0.007049430908993575
+shellfish reef,light pollution,ssp245_near-term,#B4B45AFF,0.006252549618072619
+shellfish reef,light pollution,ssp585_current,#B4B45AFF,0.005597362902548686
+shellfish reef,light pollution,ssp585_medium-term,#B4B45AFF,0.007923470347231325
+shellfish reef,light pollution,ssp585_near-term,#B4B45AFF,0.006511329333285892
+shellfish reef,nutrient pollution,ssp245_current,#1E4B3CFF,0.016473863159504536
+shellfish reef,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.018823034217020227
+shellfish reef,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.01803964225808653
+shellfish reef,nutrient pollution,ssp585_current,#1E4B3CFF,0.016504937799623254
+shellfish reef,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.01827960363291643
+shellfish reef,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.018054467841167748
+shellfish reef,ocean warming,ssp245_current,#B4783CFF,0.03879571564429809
+shellfish reef,ocean warming,ssp245_medium-term,#B4783CFF,0.10624137838935774
+shellfish reef,ocean warming,ssp245_near-term,#B4783CFF,0.0690290556344872
+shellfish reef,ocean warming,ssp585_current,#B4783CFF,0.038736803228434334
+shellfish reef,ocean warming,ssp585_medium-term,#B4783CFF,0.12660601308882752
+shellfish reef,ocean warming,ssp585_near-term,#B4783CFF,0.06334815695606331
+shellfish reef,primary productivity,ssp245_current,#AB84A5FF,0.002241610988136743
+shellfish reef,primary productivity,ssp245_medium-term,#AB84A5FF,0.018088301623388845
+shellfish reef,primary productivity,ssp245_near-term,#AB84A5FF,0.0120716170201761
+shellfish reef,primary productivity,ssp585_current,#AB84A5FF,0.0022332460671732773
+shellfish reef,primary productivity,ssp585_medium-term,#AB84A5FF,0.01923277151759074
+shellfish reef,primary productivity,ssp585_near-term,#AB84A5FF,0.012555988458631605
+shellfish reef,reduced oxygen,ssp245_current,#78963CFF,0.0043098872333280054
+shellfish reef,reduced oxygen,ssp245_medium-term,#78963CFF,0.014748705290885641
+shellfish reef,reduced oxygen,ssp245_near-term,#78963CFF,0.008246814931062321
+shellfish reef,reduced oxygen,ssp585_current,#78963CFF,0.0043098872333280054
+shellfish reef,reduced oxygen,ssp585_medium-term,#78963CFF,0.02045474806681404
+shellfish reef,reduced oxygen,ssp585_near-term,#78963CFF,0.008803466321330135
+shellfish reef,sea level rise,ssp245_current,#D2D2C3FF,0.029735246091724288
+shellfish reef,sea level rise,ssp245_medium-term,#D2D2C3FF,0.0863040546923394
+shellfish reef,sea level rise,ssp245_near-term,#D2D2C3FF,0.029735246091724288
+shellfish reef,sea level rise,ssp585_current,#D2D2C3FF,0.03726976469232207
+shellfish reef,sea level rise,ssp585_medium-term,#D2D2C3FF,0.13519237574993068
+shellfish reef,sea level rise,ssp585_near-term,#D2D2C3FF,0.03726976469232207

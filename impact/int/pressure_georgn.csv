@@ -1,0 +1,1501 @@
+georgn,pressure,scen_time,color,avg_impact
+Antarctica,acidification,ssp245_current,#D48F90FF,0.04635342205617555
+Atlantic Eastern Central,acidification,ssp245_current,#D48F90FF,0
+Australia and New Zealand,acidification,ssp245_current,#D48F90FF,0.011688530315536178
+Caribbean,acidification,ssp245_current,#D48F90FF,0
+Central America,acidification,ssp245_current,#D48F90FF,0.0077584691755856776
+Eastern Africa,acidification,ssp245_current,#D48F90FF,1.4892684839128636e-5
+Eastern Asia,acidification,ssp245_current,#D48F90FF,0.012547894119300795
+Eastern Europe,acidification,ssp245_current,#D48F90FF,0.06810518537623629
+Melanesia,acidification,ssp245_current,#D48F90FF,0
+Micronesia,acidification,ssp245_current,#D48F90FF,0
+Middle Africa,acidification,ssp245_current,#D48F90FF,0.007669304855468682
+Northern Africa,acidification,ssp245_current,#D48F90FF,0.0026889968405475286
+Northern America,acidification,ssp245_current,#D48F90FF,0.0802811997472445
+Northern Europe,acidification,ssp245_current,#D48F90FF,0.03757339021100974
+Polynesia,acidification,ssp245_current,#D48F90FF,0
+South America,acidification,ssp245_current,#D48F90FF,0.025269028980927682
+South-Eastern Asia,acidification,ssp245_current,#D48F90FF,0
+South-eastern Asia,acidification,ssp245_current,#D48F90FF,3.7425016438580526e-5
+Southern Africa,acidification,ssp245_current,#D48F90FF,0.010258225812347437
+Southern Asia,acidification,ssp245_current,#D48F90FF,0
+Southern Europe,acidification,ssp245_current,#D48F90FF,0.0676458809194444
+Southern Islands,acidification,ssp245_current,#D48F90FF,0.08608366568521716
+Western Africa,acidification,ssp245_current,#D48F90FF,0.0022256892886192334
+Western Asia,acidification,ssp245_current,#D48F90FF,0.040761426270756636
+Western Europe,acidification,ssp245_current,#D48F90FF,0.029793715196244755
+Antarctica,acidification,ssp245_medium-term,#D48F90FF,0.0828510285673751
+Atlantic Eastern Central,acidification,ssp245_medium-term,#D48F90FF,0
+Australia and New Zealand,acidification,ssp245_medium-term,#D48F90FF,0.025449011416195058
+Caribbean,acidification,ssp245_medium-term,#D48F90FF,0
+Central America,acidification,ssp245_medium-term,#D48F90FF,0.0180464049747412
+Eastern Africa,acidification,ssp245_medium-term,#D48F90FF,4.696472551959996e-4
+Eastern Asia,acidification,ssp245_medium-term,#D48F90FF,0.031662079767706935
+Eastern Europe,acidification,ssp245_medium-term,#D48F90FF,0.0974598572289492
+Melanesia,acidification,ssp245_medium-term,#D48F90FF,2.8790700322739206e-5
+Micronesia,acidification,ssp245_medium-term,#D48F90FF,2.4222937974734793e-4
+Middle Africa,acidification,ssp245_medium-term,#D48F90FF,0.025657868020996125
+Northern Africa,acidification,ssp245_medium-term,#D48F90FF,0.02400924437895751
+Northern America,acidification,ssp245_medium-term,#D48F90FF,0.12223877446271406
+Northern Europe,acidification,ssp245_medium-term,#D48F90FF,0.060709801385483896
+Polynesia,acidification,ssp245_medium-term,#D48F90FF,6.947773819568919e-5
+South America,acidification,ssp245_medium-term,#D48F90FF,0.04352873219094906
+South-Eastern Asia,acidification,ssp245_medium-term,#D48F90FF,0.00390138020173379
+South-eastern Asia,acidification,ssp245_medium-term,#D48F90FF,0.002202338580431046
+Southern Africa,acidification,ssp245_medium-term,#D48F90FF,0.024275614677064225
+Southern Asia,acidification,ssp245_medium-term,#D48F90FF,0.0013698628913139984
+Southern Europe,acidification,ssp245_medium-term,#D48F90FF,0.0993709696510281
+Southern Islands,acidification,ssp245_medium-term,#D48F90FF,0.13469179088774014
+Western Africa,acidification,ssp245_medium-term,#D48F90FF,0.01099806804460858
+Western Asia,acidification,ssp245_medium-term,#D48F90FF,0.043961999925137704
+Western Europe,acidification,ssp245_medium-term,#D48F90FF,0.05276695558289767
+Antarctica,acidification,ssp245_near-term,#D48F90FF,0.06255487189272413
+Atlantic Eastern Central,acidification,ssp245_near-term,#D48F90FF,0
+Australia and New Zealand,acidification,ssp245_near-term,#D48F90FF,0.01736635813676694
+Caribbean,acidification,ssp245_near-term,#D48F90FF,0
+Central America,acidification,ssp245_near-term,#D48F90FF,0.01149102460116871
+Eastern Africa,acidification,ssp245_near-term,#D48F90FF,1.1768196138394766e-4
+Eastern Asia,acidification,ssp245_near-term,#D48F90FF,0.019875446384985968
+Eastern Europe,acidification,ssp245_near-term,#D48F90FF,0.08387364350427594
+Melanesia,acidification,ssp245_near-term,#D48F90FF,0
+Micronesia,acidification,ssp245_near-term,#D48F90FF,0
+Middle Africa,acidification,ssp245_near-term,#D48F90FF,0.01236663730283674
+Northern Africa,acidification,ssp245_near-term,#D48F90FF,0.011407153579751313
+Northern America,acidification,ssp245_near-term,#D48F90FF,0.10250837165098496
+Northern Europe,acidification,ssp245_near-term,#D48F90FF,0.04843457190675018
+Polynesia,acidification,ssp245_near-term,#D48F90FF,0
+South America,acidification,ssp245_near-term,#D48F90FF,0.03314811336212326
+South-Eastern Asia,acidification,ssp245_near-term,#D48F90FF,0
+South-eastern Asia,acidification,ssp245_near-term,#D48F90FF,1.570035397465325e-4
+Southern Africa,acidification,ssp245_near-term,#D48F90FF,0.015185715726880027
+Southern Asia,acidification,ssp245_near-term,#D48F90FF,5.354032818489257e-4
+Southern Europe,acidification,ssp245_near-term,#D48F90FF,0.08275340952340203
+Southern Islands,acidification,ssp245_near-term,#D48F90FF,0.10732398782262191
+Western Africa,acidification,ssp245_near-term,#D48F90FF,0.00558147028843322
+Western Asia,acidification,ssp245_near-term,#D48F90FF,0.04151648004894671
+Western Europe,acidification,ssp245_near-term,#D48F90FF,0.041307346730669964
+Antarctica,acidification,ssp585_current,#D48F90FF,0.04626076861092581
+Atlantic Eastern Central,acidification,ssp585_current,#D48F90FF,0
+Australia and New Zealand,acidification,ssp585_current,#D48F90FF,0.011735091506115613
+Caribbean,acidification,ssp585_current,#D48F90FF,0
+Central America,acidification,ssp585_current,#D48F90FF,0.007665392987353517
+Eastern Africa,acidification,ssp585_current,#D48F90FF,1.4892684839128636e-5
+Eastern Asia,acidification,ssp585_current,#D48F90FF,0.013210650764293022
+Eastern Europe,acidification,ssp585_current,#D48F90FF,0.06787523708702617
+Melanesia,acidification,ssp585_current,#D48F90FF,0
+Micronesia,acidification,ssp585_current,#D48F90FF,0
+Middle Africa,acidification,ssp585_current,#D48F90FF,0.008105876081677
+Northern Africa,acidification,ssp585_current,#D48F90FF,0.002099542449100782
+Northern America,acidification,ssp585_current,#D48F90FF,0.08121670439703568
+Northern Europe,acidification,ssp585_current,#D48F90FF,0.03795303214687348
+Polynesia,acidification,ssp585_current,#D48F90FF,0
+South America,acidification,ssp585_current,#D48F90FF,0.025483431222773415
+South-Eastern Asia,acidification,ssp585_current,#D48F90FF,0
+South-eastern Asia,acidification,ssp585_current,#D48F90FF,3.7425016438580526e-5
+Southern Africa,acidification,ssp585_current,#D48F90FF,0.010244455130033508
+Southern Asia,acidification,ssp585_current,#D48F90FF,0
+Southern Europe,acidification,ssp585_current,#D48F90FF,0.06649758092359465
+Southern Islands,acidification,ssp585_current,#D48F90FF,0.08495762313432718
+Western Africa,acidification,ssp585_current,#D48F90FF,0.0022913892804174245
+Western Asia,acidification,ssp585_current,#D48F90FF,0.04107581059430759
+Western Europe,acidification,ssp585_current,#D48F90FF,0.028636067132867794
+Antarctica,acidification,ssp585_medium-term,#D48F90FF,0.09491102023093118
+Atlantic Eastern Central,acidification,ssp585_medium-term,#D48F90FF,0
+Australia and New Zealand,acidification,ssp585_medium-term,#D48F90FF,0.03658110945753959
+Caribbean,acidification,ssp585_medium-term,#D48F90FF,1.4995265564129922e-4
+Central America,acidification,ssp585_medium-term,#D48F90FF,0.025367379416545856
+Eastern Africa,acidification,ssp585_medium-term,#D48F90FF,0.0029420939043855528
+Eastern Asia,acidification,ssp585_medium-term,#D48F90FF,0.046611839816648445
+Eastern Europe,acidification,ssp585_medium-term,#D48F90FF,0.11010528681309316
+Melanesia,acidification,ssp585_medium-term,#D48F90FF,9.958648182930745e-4
+Micronesia,acidification,ssp585_medium-term,#D48F90FF,0.0017152698475239475
+Middle Africa,acidification,ssp585_medium-term,#D48F90FF,0.04052198631635103
+Northern Africa,acidification,ssp585_medium-term,#D48F90FF,0.03671451602864472
+Northern America,acidification,ssp585_medium-term,#D48F90FF,0.13491446971327725
+Northern Europe,acidification,ssp585_medium-term,#D48F90FF,0.0727988134048253
+Polynesia,acidification,ssp585_medium-term,#D48F90FF,7.009589954841904e-4
+South America,acidification,ssp585_medium-term,#D48F90FF,0.053269783705217344
+South-Eastern Asia,acidification,ssp585_medium-term,#D48F90FF,0.025759882144373483
+South-eastern Asia,acidification,ssp585_medium-term,#D48F90FF,0.010347764248514153
+Southern Africa,acidification,ssp585_medium-term,#D48F90FF,0.03268170061757607
+Southern Asia,acidification,ssp585_medium-term,#D48F90FF,0.004795182388665767
+Southern Europe,acidification,ssp585_medium-term,#D48F90FF,0.11948492572491053
+Southern Islands,acidification,ssp585_medium-term,#D48F90FF,0.1637205434473756
+Western Africa,acidification,ssp585_medium-term,#D48F90FF,0.01748588173229344
+Western Asia,acidification,ssp585_medium-term,#D48F90FF,0.04733750044395732
+Western Europe,acidification,ssp585_medium-term,#D48F90FF,0.0664512883408375
+Antarctica,acidification,ssp585_near-term,#D48F90FF,0.06619268772309828
+Atlantic Eastern Central,acidification,ssp585_near-term,#D48F90FF,0
+Australia and New Zealand,acidification,ssp585_near-term,#D48F90FF,0.01912121746315468
+Caribbean,acidification,ssp585_near-term,#D48F90FF,0
+Central America,acidification,ssp585_near-term,#D48F90FF,0.012780684890099306
+Eastern Africa,acidification,ssp585_near-term,#D48F90FF,1.4614066371423167e-4
+Eastern Asia,acidification,ssp585_near-term,#D48F90FF,0.022186851126429916
+Eastern Europe,acidification,ssp585_near-term,#D48F90FF,0.08780776372029452
+Melanesia,acidification,ssp585_near-term,#D48F90FF,0
+Micronesia,acidification,ssp585_near-term,#D48F90FF,0
+Middle Africa,acidification,ssp585_near-term,#D48F90FF,0.014249877308948541
+Northern Africa,acidification,ssp585_near-term,#D48F90FF,0.014299804428499957
+Northern America,acidification,ssp585_near-term,#D48F90FF,0.10634706339605464
+Northern Europe,acidification,ssp585_near-term,#D48F90FF,0.05212086742281749
+Polynesia,acidification,ssp585_near-term,#D48F90FF,0
+South America,acidification,ssp585_near-term,#D48F90FF,0.0349725456209139
+South-Eastern Asia,acidification,ssp585_near-term,#D48F90FF,0
+South-eastern Asia,acidification,ssp585_near-term,#D48F90FF,2.124295439897287e-4
+Southern Africa,acidification,ssp585_near-term,#D48F90FF,0.01622691312785912
+Southern Asia,acidification,ssp585_near-term,#D48F90FF,6.3876317073631e-4
+Southern Europe,acidification,ssp585_near-term,#D48F90FF,0.08705292562425863
+Southern Islands,acidification,ssp585_near-term,#D48F90FF,0.11419287546208953
+Western Africa,acidification,ssp585_near-term,#D48F90FF,0.006729381409725721
+Western Asia,acidification,ssp585_near-term,#D48F90FF,0.04264467474792323
+Western Europe,acidification,ssp585_near-term,#D48F90FF,0.044196305443870244
+Antarctica,air heat index,ssp245_current,#D2A54BFF,0
+Atlantic Eastern Central,air heat index,ssp245_current,#D2A54BFF,0
+Australia and New Zealand,air heat index,ssp245_current,#D2A54BFF,0.0016196867489201338
+Caribbean,air heat index,ssp245_current,#D2A54BFF,3.264005711821888e-4
+Central America,air heat index,ssp245_current,#D2A54BFF,0.001428396227903123
+Eastern Africa,air heat index,ssp245_current,#D2A54BFF,6.575349669766776e-4
+Eastern Asia,air heat index,ssp245_current,#D2A54BFF,0.0015457961916594176
+Eastern Europe,air heat index,ssp245_current,#D2A54BFF,0
+Melanesia,air heat index,ssp245_current,#D2A54BFF,4.156942785068867e-5
+Micronesia,air heat index,ssp245_current,#D2A54BFF,5.0669467050937466e-8
+Middle Africa,air heat index,ssp245_current,#D2A54BFF,1.0042919686397196e-5
+Northern Africa,air heat index,ssp245_current,#D2A54BFF,4.3264348688250976e-4
+Northern America,air heat index,ssp245_current,#D2A54BFF,1.1009380860415766e-4
+Northern Europe,air heat index,ssp245_current,#D2A54BFF,0
+Polynesia,air heat index,ssp245_current,#D2A54BFF,0
+South America,air heat index,ssp245_current,#D2A54BFF,3.086054744031213e-4
+South-Eastern Asia,air heat index,ssp245_current,#D2A54BFF,2.8174881967226947e-4
+South-eastern Asia,air heat index,ssp245_current,#D2A54BFF,6.990103228815038e-4
+Southern Africa,air heat index,ssp245_current,#D2A54BFF,3.978461735796234e-8
+Southern Asia,air heat index,ssp245_current,#D2A54BFF,0.002851782670431159
+Southern Europe,air heat index,ssp245_current,#D2A54BFF,3.485941330996897e-8
+Southern Islands,air heat index,ssp245_current,#D2A54BFF,0
+Western Africa,air heat index,ssp245_current,#D2A54BFF,1.8830733599322933e-4
+Western Asia,air heat index,ssp245_current,#D2A54BFF,0.001440670451338693
+Western Europe,air heat index,ssp245_current,#D2A54BFF,0
+Antarctica,air heat index,ssp245_medium-term,#D2A54BFF,0
+Atlantic Eastern Central,air heat index,ssp245_medium-term,#D2A54BFF,0
+Australia and New Zealand,air heat index,ssp245_medium-term,#D2A54BFF,0.026931064388138803
+Caribbean,air heat index,ssp245_medium-term,#D2A54BFF,0.02865567344237325
+Central America,air heat index,ssp245_medium-term,#D2A54BFF,0.03138670934297197
+Eastern Africa,air heat index,ssp245_medium-term,#D2A54BFF,0.006356245184152711
+Eastern Asia,air heat index,ssp245_medium-term,#D2A54BFF,0.018406909444073232
+Eastern Europe,air heat index,ssp245_medium-term,#D2A54BFF,4.890060794058096e-6
+Melanesia,air heat index,ssp245_medium-term,#D2A54BFF,0.0015296096269748864
+Micronesia,air heat index,ssp245_medium-term,#D2A54BFF,0.0010403554332042238
+Middle Africa,air heat index,ssp245_medium-term,#D2A54BFF,0.0017384840117529166
+Northern Africa,air heat index,ssp245_medium-term,#D2A54BFF,0.005650163058124042
+Northern America,air heat index,ssp245_medium-term,#D2A54BFF,0.004515709879308199
+Northern Europe,air heat index,ssp245_medium-term,#D2A54BFF,0
+Polynesia,air heat index,ssp245_medium-term,#D2A54BFF,1.454309391765348e-4
+South America,air heat index,ssp245_medium-term,#D2A54BFF,0.004225974606519393
+South-Eastern Asia,air heat index,ssp245_medium-term,#D2A54BFF,0.030187557490182083
+South-eastern Asia,air heat index,ssp245_medium-term,#D2A54BFF,0.0157579529672814
+Southern Africa,air heat index,ssp245_medium-term,#D2A54BFF,3.222175079813252e-5
+Southern Asia,air heat index,ssp245_medium-term,#D2A54BFF,0.020725795313835366
+Southern Europe,air heat index,ssp245_medium-term,#D2A54BFF,6.439769944217836e-5
+Southern Islands,air heat index,ssp245_medium-term,#D2A54BFF,0
+Western Africa,air heat index,ssp245_medium-term,#D2A54BFF,0.04649629873085803
+Western Asia,air heat index,ssp245_medium-term,#D2A54BFF,0.014208535417147674
+Western Europe,air heat index,ssp245_medium-term,#D2A54BFF,1.954503436827987e-8
+Antarctica,air heat index,ssp245_near-term,#D2A54BFF,0
+Atlantic Eastern Central,air heat index,ssp245_near-term,#D2A54BFF,0
+Australia and New Zealand,air heat index,ssp245_near-term,#D2A54BFF,0.012546368177292566
+Caribbean,air heat index,ssp245_near-term,#D2A54BFF,0.002552014313368035
+Central America,air heat index,ssp245_near-term,#D2A54BFF,0.010231776939144087
+Eastern Africa,air heat index,ssp245_near-term,#D2A54BFF,0.0017818573091713035
+Eastern Asia,air heat index,ssp245_near-term,#D2A54BFF,0.010207915973830896
+Eastern Europe,air heat index,ssp245_near-term,#D2A54BFF,6.505305138487398e-7
+Melanesia,air heat index,ssp245_near-term,#D2A54BFF,2.0773362716342404e-4
+Micronesia,air heat index,ssp245_near-term,#D2A54BFF,5.641094700871396e-5
+Middle Africa,air heat index,ssp245_near-term,#D2A54BFF,1.7053531631341503e-4
+Northern Africa,air heat index,ssp245_near-term,#D2A54BFF,0.002167230613050987
+Northern America,air heat index,ssp245_near-term,#D2A54BFF,7.18365585651014e-4
+Northern Europe,air heat index,ssp245_near-term,#D2A54BFF,0
+Polynesia,air heat index,ssp245_near-term,#D2A54BFF,5.28055383107138e-6
+South America,air heat index,ssp245_near-term,#D2A54BFF,0.001379663769351024
+South-Eastern Asia,air heat index,ssp245_near-term,#D2A54BFF,0.002647110641967713
+South-eastern Asia,air heat index,ssp245_near-term,#D2A54BFF,0.0031125619540901825
+Southern Africa,air heat index,ssp245_near-term,#D2A54BFF,6.70852582912313e-6
+Southern Asia,air heat index,ssp245_near-term,#D2A54BFF,0.01151980062962318
+Southern Europe,air heat index,ssp245_near-term,#D2A54BFF,3.479181711968087e-6
+Southern Islands,air heat index,ssp245_near-term,#D2A54BFF,0
+Western Africa,air heat index,ssp245_near-term,#D2A54BFF,0.004008575421220402
+Western Asia,air heat index,ssp245_near-term,#D2A54BFF,0.009323785242207833
+Western Europe,air heat index,ssp245_near-term,#D2A54BFF,0
+Antarctica,air heat index,ssp585_current,#D2A54BFF,0
+Atlantic Eastern Central,air heat index,ssp585_current,#D2A54BFF,0
+Australia and New Zealand,air heat index,ssp585_current,#D2A54BFF,0.0013348758154536507
+Caribbean,air heat index,ssp585_current,#D2A54BFF,4.062200424982956e-4
+Central America,air heat index,ssp585_current,#D2A54BFF,0.0014859629315462535
+Eastern Africa,air heat index,ssp585_current,#D2A54BFF,7.156276307974581e-4
+Eastern Asia,air heat index,ssp585_current,#D2A54BFF,0.001513363796706609
+Eastern Europe,air heat index,ssp585_current,#D2A54BFF,0
+Melanesia,air heat index,ssp585_current,#D2A54BFF,3.641482918638202e-5
+Micronesia,air heat index,ssp585_current,#D2A54BFF,2.567294422338062e-7
+Middle Africa,air heat index,ssp585_current,#D2A54BFF,6.840134361901053e-6
+Northern Africa,air heat index,ssp585_current,#D2A54BFF,4.518653014407388e-4
+Northern America,air heat index,ssp585_current,#D2A54BFF,1.170368077948142e-4
+Northern Europe,air heat index,ssp585_current,#D2A54BFF,0
+Polynesia,air heat index,ssp585_current,#D2A54BFF,0
+South America,air heat index,ssp585_current,#D2A54BFF,3.710078681309532e-4
+South-Eastern Asia,air heat index,ssp585_current,#D2A54BFF,2.615788254018492e-4
+South-eastern Asia,air heat index,ssp585_current,#D2A54BFF,6.386925099244532e-4
+Southern Africa,air heat index,ssp585_current,#D2A54BFF,1.9990053080188516e-8
+Southern Asia,air heat index,ssp585_current,#D2A54BFF,0.002808957289868053
+Southern Europe,air heat index,ssp585_current,#D2A54BFF,9.308565654465027e-8
+Southern Islands,air heat index,ssp585_current,#D2A54BFF,0
+Western Africa,air heat index,ssp585_current,#D2A54BFF,1.928260342359741e-4
+Western Asia,air heat index,ssp585_current,#D2A54BFF,0.0014350295124758914
+Western Europe,air heat index,ssp585_current,#D2A54BFF,0
+Antarctica,air heat index,ssp585_medium-term,#D2A54BFF,0
+Atlantic Eastern Central,air heat index,ssp585_medium-term,#D2A54BFF,0
+Australia and New Zealand,air heat index,ssp585_medium-term,#D2A54BFF,0.030027352519745906
+Caribbean,air heat index,ssp585_medium-term,#D2A54BFF,0.040907425497677195
+Central America,air heat index,ssp585_medium-term,#D2A54BFF,0.04469983885457637
+Eastern Africa,air heat index,ssp585_medium-term,#D2A54BFF,0.013643408528170968
+Eastern Asia,air heat index,ssp585_medium-term,#D2A54BFF,0.02077635882632093
+Eastern Europe,air heat index,ssp585_medium-term,#D2A54BFF,1.881590752612197e-5
+Melanesia,air heat index,ssp585_medium-term,#D2A54BFF,0.008838880208276861
+Micronesia,air heat index,ssp585_medium-term,#D2A54BFF,0.012356736440772106
+Middle Africa,air heat index,ssp585_medium-term,#D2A54BFF,0.005371653226426766
+Northern Africa,air heat index,ssp585_medium-term,#D2A54BFF,0.009851866109375556
+Northern America,air heat index,ssp585_medium-term,#D2A54BFF,0.006467746138914637
+Northern Europe,air heat index,ssp585_medium-term,#D2A54BFF,0
+Polynesia,air heat index,ssp585_medium-term,#D2A54BFF,6.843088407126852e-4
+South America,air heat index,ssp585_medium-term,#D2A54BFF,0.007299897207905325
+South-Eastern Asia,air heat index,ssp585_medium-term,#D2A54BFF,0.04244989490006887
+South-eastern Asia,air heat index,ssp585_medium-term,#D2A54BFF,0.02914242487435182
+Southern Africa,air heat index,ssp585_medium-term,#D2A54BFF,9.02677854922638e-5
+Southern Asia,air heat index,ssp585_medium-term,#D2A54BFF,0.029383022421591413
+Southern Europe,air heat index,ssp585_medium-term,#D2A54BFF,4.2539503823008426e-4
+Southern Islands,air heat index,ssp585_medium-term,#D2A54BFF,0
+Western Africa,air heat index,ssp585_medium-term,#D2A54BFF,0.07977592334158012
+Western Asia,air heat index,ssp585_medium-term,#D2A54BFF,0.012737501022761819
+Western Europe,air heat index,ssp585_medium-term,#D2A54BFF,3.046907381675378e-6
+Antarctica,air heat index,ssp585_near-term,#D2A54BFF,0
+Atlantic Eastern Central,air heat index,ssp585_near-term,#D2A54BFF,0
+Australia and New Zealand,air heat index,ssp585_near-term,#D2A54BFF,0.016321798803398405
+Caribbean,air heat index,ssp585_near-term,#D2A54BFF,0.008039916973814738
+Central America,air heat index,ssp585_near-term,#D2A54BFF,0.012534422354210765
+Eastern Africa,air heat index,ssp585_near-term,#D2A54BFF,0.0020446004845709013
+Eastern Asia,air heat index,ssp585_near-term,#D2A54BFF,0.01320582676647293
+Eastern Europe,air heat index,ssp585_near-term,#D2A54BFF,1.3583808304898981e-6
+Melanesia,air heat index,ssp585_near-term,#D2A54BFF,3.4890452297976565e-4
+Micronesia,air heat index,ssp585_near-term,#D2A54BFF,1.250466590667064e-4
+Middle Africa,air heat index,ssp585_near-term,#D2A54BFF,2.999168476625179e-4
+Northern Africa,air heat index,ssp585_near-term,#D2A54BFF,0.002807993489908044
+Northern America,air heat index,ssp585_near-term,#D2A54BFF,7.907384949175909e-4
+Northern Europe,air heat index,ssp585_near-term,#D2A54BFF,0
+Polynesia,air heat index,ssp585_near-term,#D2A54BFF,1.590288699863217e-5
+South America,air heat index,ssp585_near-term,#D2A54BFF,0.00175085504021142
+South-Eastern Asia,air heat index,ssp585_near-term,#D2A54BFF,0.0033614775977803594
+South-eastern Asia,air heat index,ssp585_near-term,#D2A54BFF,0.0050314900764543815
+Southern Africa,air heat index,ssp585_near-term,#D2A54BFF,9.23015391835982e-6
+Southern Asia,air heat index,ssp585_near-term,#D2A54BFF,0.013081153521398072
+Southern Europe,air heat index,ssp585_near-term,#D2A54BFF,1.7397606708458385e-5
+Southern Islands,air heat index,ssp585_near-term,#D2A54BFF,0
+Western Africa,air heat index,ssp585_near-term,#D2A54BFF,0.006272256441639339
+Western Asia,air heat index,ssp585_near-term,#D2A54BFF,0.010259392540770032
+Western Europe,air heat index,ssp585_near-term,#D2A54BFF,3.6717885291210284e-9
+Antarctica,coastal disturbance,ssp245_current,#90D8C8FF,0
+Atlantic Eastern Central,coastal disturbance,ssp245_current,#90D8C8FF,0
+Australia and New Zealand,coastal disturbance,ssp245_current,#90D8C8FF,0.02780024866301075
+Caribbean,coastal disturbance,ssp245_current,#90D8C8FF,0.07687318068576905
+Central America,coastal disturbance,ssp245_current,#90D8C8FF,0.07122099364539351
+Eastern Africa,coastal disturbance,ssp245_current,#90D8C8FF,0.10290008580421389
+Eastern Asia,coastal disturbance,ssp245_current,#90D8C8FF,0.15723898795360228
+Eastern Europe,coastal disturbance,ssp245_current,#90D8C8FF,0.011710321910154867
+Melanesia,coastal disturbance,ssp245_current,#90D8C8FF,0.04401467765787719
+Micronesia,coastal disturbance,ssp245_current,#90D8C8FF,0.012680690074360242
+Middle Africa,coastal disturbance,ssp245_current,#90D8C8FF,0.08451062721150544
+Northern Africa,coastal disturbance,ssp245_current,#90D8C8FF,0.10907379467096778
+Northern America,coastal disturbance,ssp245_current,#90D8C8FF,0.020770300542288105
+Northern Europe,coastal disturbance,ssp245_current,#90D8C8FF,0.0759873302316401
+Polynesia,coastal disturbance,ssp245_current,#90D8C8FF,0.016642238200406192
+South America,coastal disturbance,ssp245_current,#90D8C8FF,0.06262147902567575
+South-Eastern Asia,coastal disturbance,ssp245_current,#90D8C8FF,0.0812469953911143
+South-eastern Asia,coastal disturbance,ssp245_current,#90D8C8FF,0.11770517850554808
+Southern Africa,coastal disturbance,ssp245_current,#90D8C8FF,0.05819616380566287
+Southern Asia,coastal disturbance,ssp245_current,#90D8C8FF,0.15421271786033183
+Southern Europe,coastal disturbance,ssp245_current,#90D8C8FF,0.09890691385653691
+Southern Islands,coastal disturbance,ssp245_current,#90D8C8FF,0
+Western Africa,coastal disturbance,ssp245_current,#90D8C8FF,0.144177571939195
+Western Asia,coastal disturbance,ssp245_current,#90D8C8FF,0.11427700387124907
+Western Europe,coastal disturbance,ssp245_current,#90D8C8FF,0.15048302313340933
+Antarctica,coastal disturbance,ssp245_medium-term,#90D8C8FF,0
+Atlantic Eastern Central,coastal disturbance,ssp245_medium-term,#90D8C8FF,0
+Australia and New Zealand,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.02975001047110346
+Caribbean,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.0776633612702489
+Central America,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.07567522263210229
+Eastern Africa,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.11545761646323989
+Eastern Asia,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.15064833267780678
+Eastern Europe,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.010889980433300767
+Melanesia,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.04716397521427032
+Micronesia,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.012452498295735703
+Middle Africa,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.09419238618871027
+Northern Africa,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.11732011525978503
+Northern America,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.02203874830627788
+Northern Europe,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.0790535638363635
+Polynesia,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.016548720219583056
+South America,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.0648908554268916
+South-Eastern Asia,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.0760383474743584
+South-eastern Asia,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.11356971974687517
+Southern Africa,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.0604066169428708
+Southern Asia,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.1598773904171254
+Southern Europe,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.09866076438243619
+Southern Islands,coastal disturbance,ssp245_medium-term,#90D8C8FF,0
+Western Africa,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.15876804161491245
+Western Asia,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.12488819284701842
+Western Europe,coastal disturbance,ssp245_medium-term,#90D8C8FF,0.15234897030773584
+Antarctica,coastal disturbance,ssp245_near-term,#90D8C8FF,0
+Atlantic Eastern Central,coastal disturbance,ssp245_near-term,#90D8C8FF,0
+Australia and New Zealand,coastal disturbance,ssp245_near-term,#90D8C8FF,0.028627520391873107
+Caribbean,coastal disturbance,ssp245_near-term,#90D8C8FF,0.07779917896740096
+Central America,coastal disturbance,ssp245_near-term,#90D8C8FF,0.07374291749055613
+Eastern Africa,coastal disturbance,ssp245_near-term,#90D8C8FF,0.1100991900381916
+Eastern Asia,coastal disturbance,ssp245_near-term,#90D8C8FF,0.1551222458346138
+Eastern Europe,coastal disturbance,ssp245_near-term,#90D8C8FF,0.011232658912072615
+Melanesia,coastal disturbance,ssp245_near-term,#90D8C8FF,0.04601346229334607
+Micronesia,coastal disturbance,ssp245_near-term,#90D8C8FF,0.01260558989570881
+Middle Africa,coastal disturbance,ssp245_near-term,#90D8C8FF,0.08893817925457793
+Northern Africa,coastal disturbance,ssp245_near-term,#90D8C8FF,0.1140144363014512
+Northern America,coastal disturbance,ssp245_near-term,#90D8C8FF,0.021298045234623444
+Northern Europe,coastal disturbance,ssp245_near-term,#90D8C8FF,0.07779873610222728
+Polynesia,coastal disturbance,ssp245_near-term,#90D8C8FF,0.016703402456724303
+South America,coastal disturbance,ssp245_near-term,#90D8C8FF,0.06402502378507195
+South-Eastern Asia,coastal disturbance,ssp245_near-term,#90D8C8FF,0.07882095194007079
+South-eastern Asia,coastal disturbance,ssp245_near-term,#90D8C8FF,0.11621852662707813
+Southern Africa,coastal disturbance,ssp245_near-term,#90D8C8FF,0.05933280054749682
+Southern Asia,coastal disturbance,ssp245_near-term,#90D8C8FF,0.1576158743530343
+Southern Europe,coastal disturbance,ssp245_near-term,#90D8C8FF,0.09893710230325921
+Southern Islands,coastal disturbance,ssp245_near-term,#90D8C8FF,0
+Western Africa,coastal disturbance,ssp245_near-term,#90D8C8FF,0.15152961229999126
+Western Asia,coastal disturbance,ssp245_near-term,#90D8C8FF,0.11938056592049517
+Western Europe,coastal disturbance,ssp245_near-term,#90D8C8FF,0.1514925596900453
+Antarctica,coastal disturbance,ssp585_current,#90D8C8FF,0
+Atlantic Eastern Central,coastal disturbance,ssp585_current,#90D8C8FF,0
+Australia and New Zealand,coastal disturbance,ssp585_current,#90D8C8FF,0.028082952806040555
+Caribbean,coastal disturbance,ssp585_current,#90D8C8FF,0.07655960364472543
+Central America,coastal disturbance,ssp585_current,#90D8C8FF,0.07061528699779532
+Eastern Africa,coastal disturbance,ssp585_current,#90D8C8FF,0.10188675300415673
+Eastern Asia,coastal disturbance,ssp585_current,#90D8C8FF,0.15734502069299117
+Eastern Europe,coastal disturbance,ssp585_current,#90D8C8FF,0.01171297585153145
+Melanesia,coastal disturbance,ssp585_current,#90D8C8FF,0.04360955095155062
+Micronesia,coastal disturbance,ssp585_current,#90D8C8FF,0.012571722375757146
+Middle Africa,coastal disturbance,ssp585_current,#90D8C8FF,0.08398244544321029
+Northern Africa,coastal disturbance,ssp585_current,#90D8C8FF,0.10853749171477772
+Northern America,coastal disturbance,ssp585_current,#90D8C8FF,0.02092221833399017
+Northern Europe,coastal disturbance,ssp585_current,#90D8C8FF,0.07652255516007708
+Polynesia,coastal disturbance,ssp585_current,#90D8C8FF,0.01646925363678251
+South America,coastal disturbance,ssp585_current,#90D8C8FF,0.06233998507445769
+South-Eastern Asia,coastal disturbance,ssp585_current,#90D8C8FF,0.08043645591485536
+South-eastern Asia,coastal disturbance,ssp585_current,#90D8C8FF,0.1172653064255638
+Southern Africa,coastal disturbance,ssp585_current,#90D8C8FF,0.058272914989607016
+Southern Asia,coastal disturbance,ssp585_current,#90D8C8FF,0.15353979591257194
+Southern Europe,coastal disturbance,ssp585_current,#90D8C8FF,0.09931326196234552
+Southern Islands,coastal disturbance,ssp585_current,#90D8C8FF,0
+Western Africa,coastal disturbance,ssp585_current,#90D8C8FF,0.14314989450173765
+Western Asia,coastal disturbance,ssp585_current,#90D8C8FF,0.11412548673984581
+Western Europe,coastal disturbance,ssp585_current,#90D8C8FF,0.151178923200726
+Antarctica,coastal disturbance,ssp585_medium-term,#90D8C8FF,0
+Atlantic Eastern Central,coastal disturbance,ssp585_medium-term,#90D8C8FF,0
+Australia and New Zealand,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.03182930119693438
+Caribbean,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.07549693487804887
+Central America,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.07131570852826849
+Eastern Africa,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.11023486826787691
+Eastern Asia,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.1523315313771746
+Eastern Europe,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.010940433319568765
+Melanesia,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.04480817100970741
+Micronesia,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.011537584701508808
+Middle Africa,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.09126331253933986
+Northern Africa,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.11315246648092867
+Northern America,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.02328558207621763
+Northern Europe,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.08249477114211637
+Polynesia,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.015167713870833818
+South America,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.06276831065263744
+South-Eastern Asia,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.07073934169637233
+South-eastern Asia,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.1109618122216942
+Southern Africa,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.060601024236118274
+Southern Asia,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.1561262661194032
+Southern Europe,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.10165503429473083
+Southern Islands,coastal disturbance,ssp585_medium-term,#90D8C8FF,0
+Western Africa,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.1526863925551019
+Western Asia,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.12181907831182787
+Western Europe,coastal disturbance,ssp585_medium-term,#90D8C8FF,0.15738465890750564
+Antarctica,coastal disturbance,ssp585_near-term,#90D8C8FF,0
+Atlantic Eastern Central,coastal disturbance,ssp585_near-term,#90D8C8FF,0
+Australia and New Zealand,coastal disturbance,ssp585_near-term,#90D8C8FF,0.029585505375967765
+Caribbean,coastal disturbance,ssp585_near-term,#90D8C8FF,0.07678663109091967
+Central America,coastal disturbance,ssp585_near-term,#90D8C8FF,0.0718108315193919
+Eastern Africa,coastal disturbance,ssp585_near-term,#90D8C8FF,0.10727997979243008
+Eastern Asia,coastal disturbance,ssp585_near-term,#90D8C8FF,0.15565457191629803
+Eastern Europe,coastal disturbance,ssp585_near-term,#90D8C8FF,0.011271898826355986
+Melanesia,coastal disturbance,ssp585_near-term,#90D8C8FF,0.04478201407188173
+Micronesia,coastal disturbance,ssp585_near-term,#90D8C8FF,0.012227657351625109
+Middle Africa,coastal disturbance,ssp585_near-term,#90D8C8FF,0.08745516862142029
+Northern Africa,coastal disturbance,ssp585_near-term,#90D8C8FF,0.11211011231899391
+Northern America,coastal disturbance,ssp585_near-term,#90D8C8FF,0.021811400378883964
+Northern Europe,coastal disturbance,ssp585_near-term,#90D8C8FF,0.07938866570934458
+Polynesia,coastal disturbance,ssp585_near-term,#90D8C8FF,0.016114314958126753
+South America,coastal disturbance,ssp585_near-term,#90D8C8FF,0.06306964786393818
+South-Eastern Asia,coastal disturbance,ssp585_near-term,#90D8C8FF,0.0766077124074408
+South-eastern Asia,coastal disturbance,ssp585_near-term,#90D8C8FF,0.11497924314525636
+Southern Africa,coastal disturbance,ssp585_near-term,#90D8C8FF,0.05958752037093323
+Southern Asia,coastal disturbance,ssp585_near-term,#90D8C8FF,0.15573402473901676
+Southern Europe,coastal disturbance,ssp585_near-term,#90D8C8FF,0.10022699282314955
+Southern Islands,coastal disturbance,ssp585_near-term,#90D8C8FF,0
+Western Africa,coastal disturbance,ssp585_near-term,#90D8C8FF,0.14862568275970758
+Western Asia,coastal disturbance,ssp585_near-term,#90D8C8FF,0.11857453125975857
+Western Europe,coastal disturbance,ssp585_near-term,#90D8C8FF,0.15368131069256827
+Antarctica,fisheries biomass loss,ssp245_current,#87A5A5FF,0.06318665537237642
+Atlantic Eastern Central,fisheries biomass loss,ssp245_current,#87A5A5FF,0.09480933379381895
+Australia and New Zealand,fisheries biomass loss,ssp245_current,#87A5A5FF,0.08442842303006029
+Caribbean,fisheries biomass loss,ssp245_current,#87A5A5FF,0.08157287490626237
+Central America,fisheries biomass loss,ssp245_current,#87A5A5FF,0.1788573643472435
+Eastern Africa,fisheries biomass loss,ssp245_current,#87A5A5FF,0.08119909422902558
+Eastern Asia,fisheries biomass loss,ssp245_current,#87A5A5FF,0.3037797363925785
+Eastern Europe,fisheries biomass loss,ssp245_current,#87A5A5FF,0.19790237488625495
+Melanesia,fisheries biomass loss,ssp245_current,#87A5A5FF,0.08205948174931726
+Micronesia,fisheries biomass loss,ssp245_current,#87A5A5FF,0.04498476753250173
+Middle Africa,fisheries biomass loss,ssp245_current,#87A5A5FF,0.14996409708996952
+Northern Africa,fisheries biomass loss,ssp245_current,#87A5A5FF,0.23686621517772496
+Northern America,fisheries biomass loss,ssp245_current,#87A5A5FF,0.16655113682797465
+Northern Europe,fisheries biomass loss,ssp245_current,#87A5A5FF,0.2298309759870644
+Polynesia,fisheries biomass loss,ssp245_current,#87A5A5FF,0.05942419509837451
+South America,fisheries biomass loss,ssp245_current,#87A5A5FF,0.16344773367665968
+South-Eastern Asia,fisheries biomass loss,ssp245_current,#87A5A5FF,0.16123799060995825
+South-eastern Asia,fisheries biomass loss,ssp245_current,#87A5A5FF,0.17070997403826763
+Southern Africa,fisheries biomass loss,ssp245_current,#87A5A5FF,0.11959796717853857
+Southern Asia,fisheries biomass loss,ssp245_current,#87A5A5FF,0.18008648812971342
+Southern Europe,fisheries biomass loss,ssp245_current,#87A5A5FF,0.20887995974291781
+Southern Islands,fisheries biomass loss,ssp245_current,#87A5A5FF,0.08325294724939031
+Western Africa,fisheries biomass loss,ssp245_current,#87A5A5FF,0.2277319022471408
+Western Asia,fisheries biomass loss,ssp245_current,#87A5A5FF,0.20190679906047282
+Western Europe,fisheries biomass loss,ssp245_current,#87A5A5FF,0.24177179225490697
+Antarctica,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.11773543964287134
+Atlantic Eastern Central,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.1327565498650074
+Australia and New Zealand,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.11331578995171648
+Caribbean,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.142639020180312
+Central America,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.28649322436051367
+Eastern Africa,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.18641627872106406
+Eastern Asia,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.31726976616089797
+Eastern Europe,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.29083697883075943
+Melanesia,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.11211426386496555
+Micronesia,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.08236377723398858
+Middle Africa,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.2060332915508883
+Northern Africa,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.3289884984366202
+Northern America,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.1864101021481455
+Northern Europe,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.2347618147718802
+Polynesia,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.0893857689788704
+South America,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.243022493097647
+South-Eastern Asia,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.24952548361024132
+South-eastern Asia,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.2626407118276701
+Southern Africa,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.19373784454774415
+Southern Asia,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.31207270769146545
+Southern Europe,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.2932270224103673
+Southern Islands,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.13318742111798862
+Western Africa,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.31287011146076904
+Western Asia,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.3430456051697709
+Western Europe,fisheries biomass loss,ssp245_medium-term,#87A5A5FF,0.24206115248214335
+Antarctica,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.0917154909745238
+Atlantic Eastern Central,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.11513755470514297
+Australia and New Zealand,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.099316863641164
+Caribbean,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.1151695876210026
+Central America,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.24079939223011848
+Eastern Africa,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.14101866475924452
+Eastern Asia,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.31521281525794215
+Eastern Europe,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.2507739220609076
+Melanesia,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.09756442267052962
+Micronesia,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.0642118221351969
+Middle Africa,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.18164620890945143
+Northern Africa,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.2926932689809047
+Northern America,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.1785345957870772
+Northern Europe,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.23841807782235896
+Polynesia,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.07482909742990515
+South America,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.21159430125300357
+South-Eastern Asia,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.20814622921418513
+South-eastern Asia,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.22334826150260614
+Southern Africa,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.160036653711442
+Southern Asia,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.2590388840409554
+Southern Europe,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.2589311603634821
+Southern Islands,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.10936106198727681
+Western Africa,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.28103552239842006
+Western Asia,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.29234939709020386
+Western Europe,fisheries biomass loss,ssp245_near-term,#87A5A5FF,0.25122488553296585
+Antarctica,fisheries biomass loss,ssp585_current,#87A5A5FF,0.06318665537237642
+Atlantic Eastern Central,fisheries biomass loss,ssp585_current,#87A5A5FF,0.09480933379381895
+Australia and New Zealand,fisheries biomass loss,ssp585_current,#87A5A5FF,0.08993235487112813
+Caribbean,fisheries biomass loss,ssp585_current,#87A5A5FF,0.08543452814025862
+Central America,fisheries biomass loss,ssp585_current,#87A5A5FF,0.1788573643472435
+Eastern Africa,fisheries biomass loss,ssp585_current,#87A5A5FF,0.08119909422902558
+Eastern Asia,fisheries biomass loss,ssp585_current,#87A5A5FF,0.3037797363925785
+Eastern Europe,fisheries biomass loss,ssp585_current,#87A5A5FF,0.19790237488625495
+Melanesia,fisheries biomass loss,ssp585_current,#87A5A5FF,0.08782945804688341
+Micronesia,fisheries biomass loss,ssp585_current,#87A5A5FF,0.049721622245333115
+Middle Africa,fisheries biomass loss,ssp585_current,#87A5A5FF,0.15187670106167955
+Northern Africa,fisheries biomass loss,ssp585_current,#87A5A5FF,0.23686621517772496
+Northern America,fisheries biomass loss,ssp585_current,#87A5A5FF,0.1680000521448383
+Northern Europe,fisheries biomass loss,ssp585_current,#87A5A5FF,0.2298309759870644
+Polynesia,fisheries biomass loss,ssp585_current,#87A5A5FF,0.06515694397817116
+South America,fisheries biomass loss,ssp585_current,#87A5A5FF,0.16394699708663693
+South-Eastern Asia,fisheries biomass loss,ssp585_current,#87A5A5FF,0.16123799060995825
+South-eastern Asia,fisheries biomass loss,ssp585_current,#87A5A5FF,0.17070997403826763
+Southern Africa,fisheries biomass loss,ssp585_current,#87A5A5FF,0.12098791397727295
+Southern Asia,fisheries biomass loss,ssp585_current,#87A5A5FF,0.18008648812971342
+Southern Europe,fisheries biomass loss,ssp585_current,#87A5A5FF,0.2092942061050009
+Southern Islands,fisheries biomass loss,ssp585_current,#87A5A5FF,0.08325294724939031
+Western Africa,fisheries biomass loss,ssp585_current,#87A5A5FF,0.2277319022471408
+Western Asia,fisheries biomass loss,ssp585_current,#87A5A5FF,0.20190679906047282
+Western Europe,fisheries biomass loss,ssp585_current,#87A5A5FF,0.24177179225490697
+Antarctica,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.11773543964287134
+Atlantic Eastern Central,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.13367806654423475
+Australia and New Zealand,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.15682640165245348
+Caribbean,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.17365132637098035
+Central America,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.28622916306557356
+Eastern Africa,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.19012143640010254
+Eastern Asia,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.3176965588086357
+Eastern Europe,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.29081773399299493
+Melanesia,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.157597427941203
+Micronesia,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.12294694416790167
+Middle Africa,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.22110980488622872
+Northern Africa,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.32899319659144305
+Northern America,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.2093276277941128
+Northern Europe,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.2393817700885536
+Polynesia,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.13573422374325111
+South America,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.2531056777762553
+South-Eastern Asia,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.24952548361024132
+South-eastern Asia,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.2626363003800178
+Southern Africa,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.20457794104044547
+Southern Asia,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.31207270769146545
+Southern Europe,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.29875366994319896
+Southern Islands,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.13318742111798862
+Western Africa,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.31323193482562184
+Western Asia,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.3430271965064902
+Western Europe,fisheries biomass loss,ssp585_medium-term,#87A5A5FF,0.24372578168219466
+Antarctica,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.0917154909745238
+Atlantic Eastern Central,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.11513755470514297
+Australia and New Zealand,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.12540298241980974
+Caribbean,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.13393293914876506
+Central America,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.24078827557106516
+Eastern Africa,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.14226270048054696
+Eastern Asia,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.31652768438029816
+Eastern Europe,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.2507720337127567
+Melanesia,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.12483755855868792
+Micronesia,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.08856648823704233
+Middle Africa,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.19068656734050837
+Northern Africa,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.29269386972312583
+Northern America,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.1917643480896979
+Northern Europe,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.24274586458229647
+Polynesia,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.10234269620042873
+South America,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.21616334207337357
+South-Eastern Asia,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.20814622921418513
+South-eastern Asia,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.22334826150260614
+Southern Africa,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.16656993485191607
+Southern Asia,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.2590388840409554
+Southern Europe,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.26168154857452414
+Southern Islands,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.10936106198727681
+Western Africa,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.28130478363454875
+Western Asia,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.2924281555262537
+Western Europe,fisheries biomass loss,ssp585_near-term,#87A5A5FF,0.2528979730807209
+Antarctica,light pollution,ssp245_current,#B4B45AFF,0
+Atlantic Eastern Central,light pollution,ssp245_current,#B4B45AFF,0
+Australia and New Zealand,light pollution,ssp245_current,#B4B45AFF,0.0010841624225085326
+Caribbean,light pollution,ssp245_current,#B4B45AFF,0.0022836488683790276
+Central America,light pollution,ssp245_current,#B4B45AFF,0.0014232677336140588
+Eastern Africa,light pollution,ssp245_current,#B4B45AFF,7.896686812339609e-4
+Eastern Asia,light pollution,ssp245_current,#B4B45AFF,0.014916794221955921
+Eastern Europe,light pollution,ssp245_current,#B4B45AFF,6.728500289686284e-4
+Melanesia,light pollution,ssp245_current,#B4B45AFF,1.0113423778734438e-4
+Micronesia,light pollution,ssp245_current,#B4B45AFF,2.3976257411667483e-4
+Middle Africa,light pollution,ssp245_current,#B4B45AFF,0.0030406482593000215
+Northern Africa,light pollution,ssp245_current,#B4B45AFF,0.0068696333505373006
+Northern America,light pollution,ssp245_current,#B4B45AFF,0.0019265865052551423
+Northern Europe,light pollution,ssp245_current,#B4B45AFF,0.004531848312426416
+Polynesia,light pollution,ssp245_current,#B4B45AFF,7.92057918536331e-5
+South America,light pollution,ssp245_current,#B4B45AFF,0.003067886486835946
+South-Eastern Asia,light pollution,ssp245_current,#B4B45AFF,0.00164731244510606
+South-eastern Asia,light pollution,ssp245_current,#B4B45AFF,0.0019242086448480356
+Southern Africa,light pollution,ssp245_current,#B4B45AFF,0.002829917102609972
+Southern Asia,light pollution,ssp245_current,#B4B45AFF,0.004469265067674045
+Southern Europe,light pollution,ssp245_current,#B4B45AFF,0.009217864491985828
+Southern Islands,light pollution,ssp245_current,#B4B45AFF,0
+Western Africa,light pollution,ssp245_current,#B4B45AFF,0.0026418230372198584
+Western Asia,light pollution,ssp245_current,#B4B45AFF,0.013072450056569823
+Western Europe,light pollution,ssp245_current,#B4B45AFF,0.009665585490173339
+Antarctica,light pollution,ssp245_medium-term,#B4B45AFF,0
+Atlantic Eastern Central,light pollution,ssp245_medium-term,#B4B45AFF,0
+Australia and New Zealand,light pollution,ssp245_medium-term,#B4B45AFF,0.0015799533624393494
+Caribbean,light pollution,ssp245_medium-term,#B4B45AFF,0.0028028454510748866
+Central America,light pollution,ssp245_medium-term,#B4B45AFF,0.0020025745212922715
+Eastern Africa,light pollution,ssp245_medium-term,#B4B45AFF,0.0029629422094351386
+Eastern Asia,light pollution,ssp245_medium-term,#B4B45AFF,0.016452238867704614
+Eastern Europe,light pollution,ssp245_medium-term,#B4B45AFF,6.419591147082452e-4
+Melanesia,light pollution,ssp245_medium-term,#B4B45AFF,2.0225769930285825e-4
+Micronesia,light pollution,ssp245_medium-term,#B4B45AFF,1.3386996613288707e-4
+Middle Africa,light pollution,ssp245_medium-term,#B4B45AFF,0.0053999984413855145
+Northern Africa,light pollution,ssp245_medium-term,#B4B45AFF,0.009054499515800717
+Northern America,light pollution,ssp245_medium-term,#B4B45AFF,0.0020774971675459664
+Northern Europe,light pollution,ssp245_medium-term,#B4B45AFF,0.005623591692155386
+Polynesia,light pollution,ssp245_medium-term,#B4B45AFF,1.7951167851787221e-4
+South America,light pollution,ssp245_medium-term,#B4B45AFF,0.003341053027551681
+South-Eastern Asia,light pollution,ssp245_medium-term,#B4B45AFF,0.008008052108479108
+South-eastern Asia,light pollution,ssp245_medium-term,#B4B45AFF,0.004450628844940376
+Southern Africa,light pollution,ssp245_medium-term,#B4B45AFF,0.0036566420120216765
+Southern Asia,light pollution,ssp245_medium-term,#B4B45AFF,0.008107099646638312
+Southern Europe,light pollution,ssp245_medium-term,#B4B45AFF,0.0085135626336565
+Southern Islands,light pollution,ssp245_medium-term,#B4B45AFF,0
+Western Africa,light pollution,ssp245_medium-term,#B4B45AFF,0.008202750474912831
+Western Asia,light pollution,ssp245_medium-term,#B4B45AFF,0.013581107620279372
+Western Europe,light pollution,ssp245_medium-term,#B4B45AFF,0.013501597685768621
+Antarctica,light pollution,ssp245_near-term,#B4B45AFF,0
+Atlantic Eastern Central,light pollution,ssp245_near-term,#B4B45AFF,0
+Australia and New Zealand,light pollution,ssp245_near-term,#B4B45AFF,0.0013091765903800571
+Caribbean,light pollution,ssp245_near-term,#B4B45AFF,0.002366924363351054
+Central America,light pollution,ssp245_near-term,#B4B45AFF,0.0015834657304112068
+Eastern Africa,light pollution,ssp245_near-term,#B4B45AFF,0.0015389783032413217
+Eastern Asia,light pollution,ssp245_near-term,#B4B45AFF,0.016075587460192303
+Eastern Europe,light pollution,ssp245_near-term,#B4B45AFF,6.147254489362977e-4
+Melanesia,light pollution,ssp245_near-term,#B4B45AFF,1.1879394093122565e-4
+Micronesia,light pollution,ssp245_near-term,#B4B45AFF,1.4616871783867637e-4
+Middle Africa,light pollution,ssp245_near-term,#B4B45AFF,0.0034328746698592304
+Northern Africa,light pollution,ssp245_near-term,#B4B45AFF,0.00789626942086048
+Northern America,light pollution,ssp245_near-term,#B4B45AFF,0.001903003259911303
+Northern Europe,light pollution,ssp245_near-term,#B4B45AFF,0.00516995842341712
+Polynesia,light pollution,ssp245_near-term,#B4B45AFF,1.2628383997600624e-4
+South America,light pollution,ssp245_near-term,#B4B45AFF,0.003084603193869173
+South-Eastern Asia,light pollution,ssp245_near-term,#B4B45AFF,0.007276002517148633
+South-eastern Asia,light pollution,ssp245_near-term,#B4B45AFF,0.0036363075258500606
+Southern Africa,light pollution,ssp245_near-term,#B4B45AFF,0.003163706586202137
+Southern Asia,light pollution,ssp245_near-term,#B4B45AFF,0.005972611828254224
+Southern Europe,light pollution,ssp245_near-term,#B4B45AFF,0.0082831104491698955
+Southern Islands,light pollution,ssp245_near-term,#B4B45AFF,0
+Western Africa,light pollution,ssp245_near-term,#B4B45AFF,0.00514529152967268
+Western Asia,light pollution,ssp245_near-term,#B4B45AFF,0.012106997558955123
+Western Europe,light pollution,ssp245_near-term,#B4B45AFF,0.012710685898784232
+Antarctica,light pollution,ssp585_current,#B4B45AFF,0
+Atlantic Eastern Central,light pollution,ssp585_current,#B4B45AFF,0
+Australia and New Zealand,light pollution,ssp585_current,#B4B45AFF,0.001104540725485202
+Caribbean,light pollution,ssp585_current,#B4B45AFF,0.0022428207016273885
+Central America,light pollution,ssp585_current,#B4B45AFF,0.0014078960001867459
+Eastern Africa,light pollution,ssp585_current,#B4B45AFF,7.737826160769233e-4
+Eastern Asia,light pollution,ssp585_current,#B4B45AFF,0.01489795719554427
+Eastern Europe,light pollution,ssp585_current,#B4B45AFF,6.731556042186043e-4
+Melanesia,light pollution,ssp585_current,#B4B45AFF,1.064703189100262e-4
+Micronesia,light pollution,ssp585_current,#B4B45AFF,2.3277037931670788e-4
+Middle Africa,light pollution,ssp585_current,#B4B45AFF,0.003180254673293573
+Northern Africa,light pollution,ssp585_current,#B4B45AFF,0.007049452696561161
+Northern America,light pollution,ssp585_current,#B4B45AFF,0.0018928996631708203
+Northern Europe,light pollution,ssp585_current,#B4B45AFF,0.00459832305889259
+Polynesia,light pollution,ssp585_current,#B4B45AFF,6.285156530526744e-5
+South America,light pollution,ssp585_current,#B4B45AFF,0.003115859170720936
+South-Eastern Asia,light pollution,ssp585_current,#B4B45AFF,0.0016788780416878654
+South-eastern Asia,light pollution,ssp585_current,#B4B45AFF,0.0019025951657665155
+Southern Africa,light pollution,ssp585_current,#B4B45AFF,0.002863240189576017
+Southern Asia,light pollution,ssp585_current,#B4B45AFF,0.004555711565079492
+Southern Europe,light pollution,ssp585_current,#B4B45AFF,0.009143508804832829
+Southern Islands,light pollution,ssp585_current,#B4B45AFF,0
+Western Africa,light pollution,ssp585_current,#B4B45AFF,0.0026426604732334795
+Western Asia,light pollution,ssp585_current,#B4B45AFF,0.012960432406943003
+Western Europe,light pollution,ssp585_current,#B4B45AFF,0.010208994003933155
+Antarctica,light pollution,ssp585_medium-term,#B4B45AFF,0
+Atlantic Eastern Central,light pollution,ssp585_medium-term,#B4B45AFF,0
+Australia and New Zealand,light pollution,ssp585_medium-term,#B4B45AFF,0.0019165855416969691
+Caribbean,light pollution,ssp585_medium-term,#B4B45AFF,0.003100053233033584
+Central America,light pollution,ssp585_medium-term,#B4B45AFF,0.0019447406576653954
+Eastern Africa,light pollution,ssp585_medium-term,#B4B45AFF,0.004638356527832313
+Eastern Asia,light pollution,ssp585_medium-term,#B4B45AFF,0.017891518136228166
+Eastern Europe,light pollution,ssp585_medium-term,#B4B45AFF,7.039612570985689e-4
+Melanesia,light pollution,ssp585_medium-term,#B4B45AFF,2.880369683973088e-4
+Micronesia,light pollution,ssp585_medium-term,#B4B45AFF,1.3867695823648946e-4
+Middle Africa,light pollution,ssp585_medium-term,#B4B45AFF,0.005882944942335247
+Northern Africa,light pollution,ssp585_medium-term,#B4B45AFF,0.009021362764433086
+Northern America,light pollution,ssp585_medium-term,#B4B45AFF,0.0023394503626763615
+Northern Europe,light pollution,ssp585_medium-term,#B4B45AFF,0.006455280635693028
+Polynesia,light pollution,ssp585_medium-term,#B4B45AFF,1.8768120037383946e-4
+South America,light pollution,ssp585_medium-term,#B4B45AFF,0.003442771133387635
+South-Eastern Asia,light pollution,ssp585_medium-term,#B4B45AFF,0.008184000108392262
+South-eastern Asia,light pollution,ssp585_medium-term,#B4B45AFF,0.0052270474076058894
+Southern Africa,light pollution,ssp585_medium-term,#B4B45AFF,0.0037843945100895456
+Southern Asia,light pollution,ssp585_medium-term,#B4B45AFF,0.010599225533447767
+Southern Europe,light pollution,ssp585_medium-term,#B4B45AFF,0.009517998631530421
+Southern Islands,light pollution,ssp585_medium-term,#B4B45AFF,0
+Western Africa,light pollution,ssp585_medium-term,#B4B45AFF,0.009024811041381987
+Western Asia,light pollution,ssp585_medium-term,#B4B45AFF,0.014028697634307087
+Western Europe,light pollution,ssp585_medium-term,#B4B45AFF,0.015505408551520447
+Antarctica,light pollution,ssp585_near-term,#B4B45AFF,0
+Atlantic Eastern Central,light pollution,ssp585_near-term,#B4B45AFF,0
+Australia and New Zealand,light pollution,ssp585_near-term,#B4B45AFF,0.001407044747489004
+Caribbean,light pollution,ssp585_near-term,#B4B45AFF,0.002361521921964501
+Central America,light pollution,ssp585_near-term,#B4B45AFF,0.001625307091386471
+Eastern Africa,light pollution,ssp585_near-term,#B4B45AFF,0.0016874230487109033
+Eastern Asia,light pollution,ssp585_near-term,#B4B45AFF,0.016773042346576155
+Eastern Europe,light pollution,ssp585_near-term,#B4B45AFF,6.389646663774739e-4
+Melanesia,light pollution,ssp585_near-term,#B4B45AFF,1.6194209546283004e-4
+Micronesia,light pollution,ssp585_near-term,#B4B45AFF,1.301446963439479e-4
+Middle Africa,light pollution,ssp585_near-term,#B4B45AFF,0.0036486542916715943
+Northern Africa,light pollution,ssp585_near-term,#B4B45AFF,0.0076472992209860565
+Northern America,light pollution,ssp585_near-term,#B4B45AFF,0.0020132153261415123
+Northern Europe,light pollution,ssp585_near-term,#B4B45AFF,0.005481993301375473
+Polynesia,light pollution,ssp585_near-term,#B4B45AFF,1.4993819404425109e-4
+South America,light pollution,ssp585_near-term,#B4B45AFF,0.0030637612078983256
+South-Eastern Asia,light pollution,ssp585_near-term,#B4B45AFF,0.007339748223512054
+South-eastern Asia,light pollution,ssp585_near-term,#B4B45AFF,0.0038202999661719706
+Southern Africa,light pollution,ssp585_near-term,#B4B45AFF,0.0032571976049397744
+Southern Asia,light pollution,ssp585_near-term,#B4B45AFF,0.00650558081588473
+Southern Europe,light pollution,ssp585_near-term,#B4B45AFF,0.008651586532210409
+Southern Islands,light pollution,ssp585_near-term,#B4B45AFF,0
+Western Africa,light pollution,ssp585_near-term,#B4B45AFF,0.005314896598089671
+Western Asia,light pollution,ssp585_near-term,#B4B45AFF,0.012330913620094681
+Western Europe,light pollution,ssp585_near-term,#B4B45AFF,0.013638340647515035
+Antarctica,nutrient pollution,ssp245_current,#1E4B3CFF,0
+Atlantic Eastern Central,nutrient pollution,ssp245_current,#1E4B3CFF,0
+Australia and New Zealand,nutrient pollution,ssp245_current,#1E4B3CFF,0.005241358663006136
+Caribbean,nutrient pollution,ssp245_current,#1E4B3CFF,0.00736786977236724
+Central America,nutrient pollution,ssp245_current,#1E4B3CFF,0.025928062643099884
+Eastern Africa,nutrient pollution,ssp245_current,#1E4B3CFF,0.01585938740470897
+Eastern Asia,nutrient pollution,ssp245_current,#1E4B3CFF,0.050719222747618115
+Eastern Europe,nutrient pollution,ssp245_current,#1E4B3CFF,0.0043600679905565
+Melanesia,nutrient pollution,ssp245_current,#1E4B3CFF,7.129611089822465e-4
+Micronesia,nutrient pollution,ssp245_current,#1E4B3CFF,0
+Middle Africa,nutrient pollution,ssp245_current,#1E4B3CFF,0.023603528734128076
+Northern Africa,nutrient pollution,ssp245_current,#1E4B3CFF,0.020799615853214316
+Northern America,nutrient pollution,ssp245_current,#1E4B3CFF,0.00429877980719353
+Northern Europe,nutrient pollution,ssp245_current,#1E4B3CFF,0.008912146854494108
+Polynesia,nutrient pollution,ssp245_current,#1E4B3CFF,3.879486946773293e-5
+South America,nutrient pollution,ssp245_current,#1E4B3CFF,0.021130147138090763
+South-Eastern Asia,nutrient pollution,ssp245_current,#1E4B3CFF,0.0026265678927366175
+South-eastern Asia,nutrient pollution,ssp245_current,#1E4B3CFF,0.014893383981460163
+Southern Africa,nutrient pollution,ssp245_current,#1E4B3CFF,0.019055183768068588
+Southern Asia,nutrient pollution,ssp245_current,#1E4B3CFF,0.06257461129279027
+Southern Europe,nutrient pollution,ssp245_current,#1E4B3CFF,0.019124255661455383
+Southern Islands,nutrient pollution,ssp245_current,#1E4B3CFF,0
+Western Africa,nutrient pollution,ssp245_current,#1E4B3CFF,0.03900134435087951
+Western Asia,nutrient pollution,ssp245_current,#1E4B3CFF,0.023120896226815908
+Western Europe,nutrient pollution,ssp245_current,#1E4B3CFF,0.0422799620526204
+Antarctica,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0
+Atlantic Eastern Central,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0
+Australia and New Zealand,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.005931329763340132
+Caribbean,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.008278192526609213
+Central America,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.029105768973582264
+Eastern Africa,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.025742549837392027
+Eastern Asia,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.04875027234631049
+Eastern Europe,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.004443221460784047
+Melanesia,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.0013111720413779631
+Micronesia,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0
+Middle Africa,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.040346342168409884
+Northern Africa,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.026119851518846323
+Northern America,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.00431687163436018
+Northern Europe,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.007635459597658357
+Polynesia,nutrient pollution,ssp245_medium-term,#1E4B3CFF,5.089360235374962e-5
+South America,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.026019983793592823
+South-Eastern Asia,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.006598796529513794
+South-eastern Asia,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.021824783697295454
+Southern Africa,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.02354846123671844
+Southern Asia,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.08565981363055708
+Southern Europe,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.01727186295033449
+Southern Islands,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0
+Western Africa,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.0628503365159074
+Western Asia,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.02620211268360563
+Western Europe,nutrient pollution,ssp245_medium-term,#1E4B3CFF,0.038075360526745206
+Antarctica,nutrient pollution,ssp245_near-term,#1E4B3CFF,0
+Atlantic Eastern Central,nutrient pollution,ssp245_near-term,#1E4B3CFF,0
+Australia and New Zealand,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.005740603367095051
+Caribbean,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.008738457194552414
+Central America,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.028920535704320814
+Eastern Africa,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.020371389324235708
+Eastern Asia,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.05151592421305967
+Eastern Europe,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.004374590178753484
+Melanesia,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.0010471567495666592
+Micronesia,nutrient pollution,ssp245_near-term,#1E4B3CFF,0
+Middle Africa,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.033297810023565445
+Northern Africa,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.024309768562292007
+Northern America,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.004355296418594933
+Northern Europe,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.007807359333451347
+Polynesia,nutrient pollution,ssp245_near-term,#1E4B3CFF,4.691230614032849e-5
+South America,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.0240441091218438
+South-Eastern Asia,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.004890262086614265
+South-eastern Asia,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.018429578549159043
+Southern Africa,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.02174532715477267
+Southern Asia,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.08010263678280935
+Southern Europe,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.018517487475573267
+Southern Islands,nutrient pollution,ssp245_near-term,#1E4B3CFF,0
+Western Africa,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.0525933596083161
+Western Asia,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.02556533094692983
+Western Europe,nutrient pollution,ssp245_near-term,#1E4B3CFF,0.03956916865878352
+Antarctica,nutrient pollution,ssp585_current,#1E4B3CFF,0
+Atlantic Eastern Central,nutrient pollution,ssp585_current,#1E4B3CFF,0
+Australia and New Zealand,nutrient pollution,ssp585_current,#1E4B3CFF,0.0051772872275159965
+Caribbean,nutrient pollution,ssp585_current,#1E4B3CFF,0.007409559272992275
+Central America,nutrient pollution,ssp585_current,#1E4B3CFF,0.025930094165019867
+Eastern Africa,nutrient pollution,ssp585_current,#1E4B3CFF,0.015926889470771307
+Eastern Asia,nutrient pollution,ssp585_current,#1E4B3CFF,0.05089532426370921
+Eastern Europe,nutrient pollution,ssp585_current,#1E4B3CFF,0.0043619618500327206
+Melanesia,nutrient pollution,ssp585_current,#1E4B3CFF,7.131502120792848e-4
+Micronesia,nutrient pollution,ssp585_current,#1E4B3CFF,0
+Middle Africa,nutrient pollution,ssp585_current,#1E4B3CFF,0.023647543407193834
+Northern Africa,nutrient pollution,ssp585_current,#1E4B3CFF,0.020872340677152983
+Northern America,nutrient pollution,ssp585_current,#1E4B3CFF,0.004350774643043157
+Northern Europe,nutrient pollution,ssp585_current,#1E4B3CFF,0.008871585766815009
+Polynesia,nutrient pollution,ssp585_current,#1E4B3CFF,3.877468115787613e-5
+South America,nutrient pollution,ssp585_current,#1E4B3CFF,0.021137012766836442
+South-Eastern Asia,nutrient pollution,ssp585_current,#1E4B3CFF,0.0026442082940516167
+South-eastern Asia,nutrient pollution,ssp585_current,#1E4B3CFF,0.014953063517560348
+Southern Africa,nutrient pollution,ssp585_current,#1E4B3CFF,0.019008933967188738
+Southern Asia,nutrient pollution,ssp585_current,#1E4B3CFF,0.06266399899788937
+Southern Europe,nutrient pollution,ssp585_current,#1E4B3CFF,0.01910726120677189
+Southern Islands,nutrient pollution,ssp585_current,#1E4B3CFF,0
+Western Africa,nutrient pollution,ssp585_current,#1E4B3CFF,0.03914582904513606
+Western Asia,nutrient pollution,ssp585_current,#1E4B3CFF,0.023173271409899002
+Western Europe,nutrient pollution,ssp585_current,#1E4B3CFF,0.042279199962347684
+Antarctica,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0
+Atlantic Eastern Central,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0
+Australia and New Zealand,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.005714545773821584
+Caribbean,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.007962537112925378
+Central America,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.028617317187361355
+Eastern Africa,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.028158086338432926
+Eastern Asia,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.045111927132038765
+Eastern Europe,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.004245239682911534
+Melanesia,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.0015159394289631421
+Micronesia,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0
+Middle Africa,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.039614372085722195
+Northern Africa,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.02490873411253857
+Northern America,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.003876580074635179
+Northern Europe,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.007249913402159807
+Polynesia,nutrient pollution,ssp585_medium-term,#1E4B3CFF,5.297503980101442e-5
+South America,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.026964157853810445
+South-Eastern Asia,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.006954108452669198
+South-eastern Asia,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.02144984808616003
+Southern Africa,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.025773926614129958
+Southern Asia,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.08465140391020612
+Southern Europe,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.016086285162819663
+Southern Islands,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0
+Western Africa,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.06377922990355232
+Western Asia,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.024128685023255773
+Western Europe,nutrient pollution,ssp585_medium-term,#1E4B3CFF,0.03703465623234077
+Antarctica,nutrient pollution,ssp585_near-term,#1E4B3CFF,0
+Atlantic Eastern Central,nutrient pollution,ssp585_near-term,#1E4B3CFF,0
+Australia and New Zealand,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.005487024824463453
+Caribbean,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.00866139697196163
+Central America,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.029185500672084645
+Eastern Africa,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.021385432299461573
+Eastern Asia,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.05066611441183796
+Eastern Europe,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.004357140675833663
+Melanesia,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.001118725061244092
+Micronesia,nutrient pollution,ssp585_near-term,#1E4B3CFF,0
+Middle Africa,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.03468863208173116
+Northern Africa,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.02430087693214653
+Northern America,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.0042620942929414585
+Northern Europe,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.007670240882968816
+Polynesia,nutrient pollution,ssp585_near-term,#1E4B3CFF,4.7202722324718064e-5
+South America,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.0244066486619701
+South-Eastern Asia,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.005319105381749705
+South-eastern Asia,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.018787936275389654
+Southern Africa,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.022893587672110284
+Southern Asia,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.08169016940566237
+Southern Europe,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.018181530584639758
+Southern Islands,nutrient pollution,ssp585_near-term,#1E4B3CFF,0
+Western Africa,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.0543211527457941
+Western Asia,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.024854976848563214
+Western Europe,nutrient pollution,ssp585_near-term,#1E4B3CFF,0.03948650534810328
+Antarctica,ocean warming,ssp245_current,#B4783CFF,0.07144127645050743
+Atlantic Eastern Central,ocean warming,ssp245_current,#B4783CFF,0.0381228293881577
+Australia and New Zealand,ocean warming,ssp245_current,#B4783CFF,0.034119777919509084
+Caribbean,ocean warming,ssp245_current,#B4783CFF,0.06566712724506384
+Central America,ocean warming,ssp245_current,#B4783CFF,0.057601873827507304
+Eastern Africa,ocean warming,ssp245_current,#B4783CFF,0.05706556956506589
+Eastern Asia,ocean warming,ssp245_current,#B4783CFF,0.04472695211257856
+Eastern Europe,ocean warming,ssp245_current,#B4783CFF,0.09071871283603522
+Melanesia,ocean warming,ssp245_current,#B4783CFF,0.04732089205690789
+Micronesia,ocean warming,ssp245_current,#B4783CFF,0.053598047544143206
+Middle Africa,ocean warming,ssp245_current,#B4783CFF,0.04844353064963325
+Northern Africa,ocean warming,ssp245_current,#B4783CFF,0.05577211280160428
+Northern America,ocean warming,ssp245_current,#B4783CFF,0.12608160558328738
+Northern Europe,ocean warming,ssp245_current,#B4783CFF,0.037858632608246706
+Polynesia,ocean warming,ssp245_current,#B4783CFF,0.04991092003990612
+South America,ocean warming,ssp245_current,#B4783CFF,0.03101165135461042
+South-Eastern Asia,ocean warming,ssp245_current,#B4783CFF,0.07021681386632014
+South-eastern Asia,ocean warming,ssp245_current,#B4783CFF,0.04790164150656139
+Southern Africa,ocean warming,ssp245_current,#B4783CFF,0.04866433981697495
+Southern Asia,ocean warming,ssp245_current,#B4783CFF,0.03401706401000133
+Southern Europe,ocean warming,ssp245_current,#B4783CFF,0.05700709906976015
+Southern Islands,ocean warming,ssp245_current,#B4783CFF,0.07567112734649196
+Western Africa,ocean warming,ssp245_current,#B4783CFF,0.026122767566057224
+Western Asia,ocean warming,ssp245_current,#B4783CFF,0.0458314852802586
+Western Europe,ocean warming,ssp245_current,#B4783CFF,0.028420936572362488
+Antarctica,ocean warming,ssp245_medium-term,#B4783CFF,0.14677850191915257
+Atlantic Eastern Central,ocean warming,ssp245_medium-term,#B4783CFF,0.27471924883623916
+Australia and New Zealand,ocean warming,ssp245_medium-term,#B4783CFF,0.12988031462797742
+Caribbean,ocean warming,ssp245_medium-term,#B4783CFF,0.3056953897412108
+Central America,ocean warming,ssp245_medium-term,#B4783CFF,0.20087034272505694
+Eastern Africa,ocean warming,ssp245_medium-term,#B4783CFF,0.2545834446100526
+Eastern Asia,ocean warming,ssp245_medium-term,#B4783CFF,0.1410957333096067
+Eastern Europe,ocean warming,ssp245_medium-term,#B4783CFF,0.2275046169336989
+Melanesia,ocean warming,ssp245_medium-term,#B4783CFF,0.21317361352385933
+Micronesia,ocean warming,ssp245_medium-term,#B4783CFF,0.28322869975506115
+Middle Africa,ocean warming,ssp245_medium-term,#B4783CFF,0.182756194698217
+Northern Africa,ocean warming,ssp245_medium-term,#B4783CFF,0.21518602762233385
+Northern America,ocean warming,ssp245_medium-term,#B4783CFF,0.2513904234328693
+Northern Europe,ocean warming,ssp245_medium-term,#B4783CFF,0.09886500847344928
+Polynesia,ocean warming,ssp245_medium-term,#B4783CFF,0.24383823569693766
+South America,ocean warming,ssp245_medium-term,#B4783CFF,0.12819507440362
+South-Eastern Asia,ocean warming,ssp245_medium-term,#B4783CFF,0.2739451905568016
+South-eastern Asia,ocean warming,ssp245_medium-term,#B4783CFF,0.1985971279081702
+Southern Africa,ocean warming,ssp245_medium-term,#B4783CFF,0.14762663415528188
+Southern Asia,ocean warming,ssp245_medium-term,#B4783CFF,0.17323007938049664
+Southern Europe,ocean warming,ssp245_medium-term,#B4783CFF,0.24032458997841688
+Southern Islands,ocean warming,ssp245_medium-term,#B4783CFF,0.2821679012750709
+Western Africa,ocean warming,ssp245_medium-term,#B4783CFF,0.16475361426279828
+Western Asia,ocean warming,ssp245_medium-term,#B4783CFF,0.19629677326326703
+Western Europe,ocean warming,ssp245_medium-term,#B4783CFF,0.09477271258347038
+Antarctica,ocean warming,ssp245_near-term,#B4783CFF,0.10618530353428739
+Atlantic Eastern Central,ocean warming,ssp245_near-term,#B4783CFF,0.12375444825738668
+Australia and New Zealand,ocean warming,ssp245_near-term,#B4783CFF,0.055164664875170556
+Caribbean,ocean warming,ssp245_near-term,#B4783CFF,0.1989517604693334
+Central America,ocean warming,ssp245_near-term,#B4783CFF,0.1217667634980678
+Eastern Africa,ocean warming,ssp245_near-term,#B4783CFF,0.13330523566405983
+Eastern Asia,ocean warming,ssp245_near-term,#B4783CFF,0.088785109268584
+Eastern Europe,ocean warming,ssp245_near-term,#B4783CFF,0.16851908693855439
+Melanesia,ocean warming,ssp245_near-term,#B4783CFF,0.10361279053235338
+Micronesia,ocean warming,ssp245_near-term,#B4783CFF,0.13934570453482015
+Middle Africa,ocean warming,ssp245_near-term,#B4783CFF,0.07999876301186089
+Northern Africa,ocean warming,ssp245_near-term,#B4783CFF,0.13783132050867758
+Northern America,ocean warming,ssp245_near-term,#B4783CFF,0.18216112879632612
+Northern Europe,ocean warming,ssp245_near-term,#B4783CFF,0.0850794832621956
+Polynesia,ocean warming,ssp245_near-term,#B4783CFF,0.11605406178944393
+South America,ocean warming,ssp245_near-term,#B4783CFF,0.06252448728776606
+South-Eastern Asia,ocean warming,ssp245_near-term,#B4783CFF,0.12970633860774244
+South-eastern Asia,ocean warming,ssp245_near-term,#B4783CFF,0.10147547766883214
+Southern Africa,ocean warming,ssp245_near-term,#B4783CFF,0.0897555726511497
+Southern Asia,ocean warming,ssp245_near-term,#B4783CFF,0.07723934854895008
+Southern Europe,ocean warming,ssp245_near-term,#B4783CFF,0.14254923418269616
+Southern Islands,ocean warming,ssp245_near-term,#B4783CFF,0.08890413778921945
+Western Africa,ocean warming,ssp245_near-term,#B4783CFF,0.08046542271874352
+Western Asia,ocean warming,ssp245_near-term,#B4783CFF,0.11136951053542386
+Western Europe,ocean warming,ssp245_near-term,#B4783CFF,0.06613803435985546
+Antarctica,ocean warming,ssp585_current,#B4783CFF,0.05926474595018712
+Atlantic Eastern Central,ocean warming,ssp585_current,#B4783CFF,0.0590629997010789
+Australia and New Zealand,ocean warming,ssp585_current,#B4783CFF,0.027184370063847392
+Caribbean,ocean warming,ssp585_current,#B4783CFF,0.07930942338156428
+Central America,ocean warming,ssp585_current,#B4783CFF,0.04092665669905772
+Eastern Africa,ocean warming,ssp585_current,#B4783CFF,0.05258891475103787
+Eastern Asia,ocean warming,ssp585_current,#B4783CFF,0.03232252507493514
+Eastern Europe,ocean warming,ssp585_current,#B4783CFF,0.11265635160340291
+Melanesia,ocean warming,ssp585_current,#B4783CFF,0.05626417344257169
+Micronesia,ocean warming,ssp585_current,#B4783CFF,0.06649694560848089
+Middle Africa,ocean warming,ssp585_current,#B4783CFF,0.04818023432272878
+Northern Africa,ocean warming,ssp585_current,#B4783CFF,0.07380773148324332
+Northern America,ocean warming,ssp585_current,#B4783CFF,0.10905954017144956
+Northern Europe,ocean warming,ssp585_current,#B4783CFF,0.06253398347542856
+Polynesia,ocean warming,ssp585_current,#B4783CFF,0.05128801670284718
+South America,ocean warming,ssp585_current,#B4783CFF,0.024121421773616945
+South-Eastern Asia,ocean warming,ssp585_current,#B4783CFF,0.0745563355284381
+South-eastern Asia,ocean warming,ssp585_current,#B4783CFF,0.0487810798027979
+Southern Africa,ocean warming,ssp585_current,#B4783CFF,0.054366272128270436
+Southern Asia,ocean warming,ssp585_current,#B4783CFF,0.042109735808928246
+Southern Europe,ocean warming,ssp585_current,#B4783CFF,0.08123928994989299
+Southern Islands,ocean warming,ssp585_current,#B4783CFF,0.04362822329577431
+Western Africa,ocean warming,ssp585_current,#B4783CFF,0.028897503096563863
+Western Asia,ocean warming,ssp585_current,#B4783CFF,0.050929268544757024
+Western Europe,ocean warming,ssp585_current,#B4783CFF,0.02722795891909767
+Antarctica,ocean warming,ssp585_medium-term,#B4783CFF,0.16080600217394964
+Atlantic Eastern Central,ocean warming,ssp585_medium-term,#B4783CFF,0.3299846355027209
+Australia and New Zealand,ocean warming,ssp585_medium-term,#B4783CFF,0.18209605940083895
+Caribbean,ocean warming,ssp585_medium-term,#B4783CFF,0.35788876423923
+Central America,ocean warming,ssp585_medium-term,#B4783CFF,0.2527150507549602
+Eastern Africa,ocean warming,ssp585_medium-term,#B4783CFF,0.31286267109113036
+Eastern Asia,ocean warming,ssp585_medium-term,#B4783CFF,0.20140281049265862
+Eastern Europe,ocean warming,ssp585_medium-term,#B4783CFF,0.2648629479224248
+Melanesia,ocean warming,ssp585_medium-term,#B4783CFF,0.2939528844119107
+Micronesia,ocean warming,ssp585_medium-term,#B4783CFF,0.35669139806717215
+Middle Africa,ocean warming,ssp585_medium-term,#B4783CFF,0.24348405196138664
+Northern Africa,ocean warming,ssp585_medium-term,#B4783CFF,0.2554746994172578
+Northern America,ocean warming,ssp585_medium-term,#B4783CFF,0.25390130363498375
+Northern Europe,ocean warming,ssp585_medium-term,#B4783CFF,0.1466249419584419
+Polynesia,ocean warming,ssp585_medium-term,#B4783CFF,0.297875621342303
+South America,ocean warming,ssp585_medium-term,#B4783CFF,0.1628949349125953
+South-Eastern Asia,ocean warming,ssp585_medium-term,#B4783CFF,0.3643525098802528
+South-eastern Asia,ocean warming,ssp585_medium-term,#B4783CFF,0.27542817401486436
+Southern Africa,ocean warming,ssp585_medium-term,#B4783CFF,0.20961440299038075
+Southern Asia,ocean warming,ssp585_medium-term,#B4783CFF,0.22897696570908332
+Southern Europe,ocean warming,ssp585_medium-term,#B4783CFF,0.28093573733771243
+Southern Islands,ocean warming,ssp585_medium-term,#B4783CFF,0.30142711689566365
+Western Africa,ocean warming,ssp585_medium-term,#B4783CFF,0.1873943235268728
+Western Asia,ocean warming,ssp585_medium-term,#B4783CFF,0.24396138527235256
+Western Europe,ocean warming,ssp585_medium-term,#B4783CFF,0.13068498255236574
+Antarctica,ocean warming,ssp585_near-term,#B4783CFF,0.10076929586300669
+Atlantic Eastern Central,ocean warming,ssp585_near-term,#B4783CFF,0.15570980201785764
+Australia and New Zealand,ocean warming,ssp585_near-term,#B4783CFF,0.07000497983728415
+Caribbean,ocean warming,ssp585_near-term,#B4783CFF,0.20346905096552872
+Central America,ocean warming,ssp585_near-term,#B4783CFF,0.1339841538871844
+Eastern Africa,ocean warming,ssp585_near-term,#B4783CFF,0.14001171081185784
+Eastern Asia,ocean warming,ssp585_near-term,#B4783CFF,0.10313404174713774
+Eastern Europe,ocean warming,ssp585_near-term,#B4783CFF,0.15459295998005448
+Melanesia,ocean warming,ssp585_near-term,#B4783CFF,0.11720423018271377
+Micronesia,ocean warming,ssp585_near-term,#B4783CFF,0.1665276313109764
+Middle Africa,ocean warming,ssp585_near-term,#B4783CFF,0.11206069164791638
+Northern Africa,ocean warming,ssp585_near-term,#B4783CFF,0.12916677478972918
+Northern America,ocean warming,ssp585_near-term,#B4783CFF,0.13587668110471485
+Northern Europe,ocean warming,ssp585_near-term,#B4783CFF,0.07856545963289868
+Polynesia,ocean warming,ssp585_near-term,#B4783CFF,0.1331182335750946
+South America,ocean warming,ssp585_near-term,#B4783CFF,0.07868817655818659
+South-Eastern Asia,ocean warming,ssp585_near-term,#B4783CFF,0.1576821587587892
+South-eastern Asia,ocean warming,ssp585_near-term,#B4783CFF,0.12603026945645465
+Southern Africa,ocean warming,ssp585_near-term,#B4783CFF,0.0734982031225764
+Southern Asia,ocean warming,ssp585_near-term,#B4783CFF,0.08662189810247739
+Southern Europe,ocean warming,ssp585_near-term,#B4783CFF,0.14350854904119753
+Southern Islands,ocean warming,ssp585_near-term,#B4783CFF,0.15530205006890854
+Western Africa,ocean warming,ssp585_near-term,#B4783CFF,0.08906265015378416
+Western Asia,ocean warming,ssp585_near-term,#B4783CFF,0.108539100742737
+Western Europe,ocean warming,ssp585_near-term,#B4783CFF,0.06789193830599903
+Antarctica,primary productivity,ssp245_current,#AB84A5FF,0.003006118401282986
+Atlantic Eastern Central,primary productivity,ssp245_current,#AB84A5FF,0.0321424484718591
+Australia and New Zealand,primary productivity,ssp245_current,#AB84A5FF,0.0038877329751757553
+Caribbean,primary productivity,ssp245_current,#AB84A5FF,1.500614121204517e-4
+Central America,primary productivity,ssp245_current,#AB84A5FF,0.0014302727645850097
+Eastern Africa,primary productivity,ssp245_current,#AB84A5FF,0.00211410275959889
+Eastern Asia,primary productivity,ssp245_current,#AB84A5FF,0.003250331922133162
+Eastern Europe,primary productivity,ssp245_current,#AB84A5FF,1.1528170638096008e-4
+Melanesia,primary productivity,ssp245_current,#AB84A5FF,0.008816770432896878
+Micronesia,primary productivity,ssp245_current,#AB84A5FF,0.018408643256392
+Middle Africa,primary productivity,ssp245_current,#AB84A5FF,0.009909618180849242
+Northern Africa,primary productivity,ssp245_current,#AB84A5FF,3.1534144792132434e-4
+Northern America,primary productivity,ssp245_current,#AB84A5FF,3.5337200698648736e-4
+Northern Europe,primary productivity,ssp245_current,#AB84A5FF,3.562340322647306e-4
+Polynesia,primary productivity,ssp245_current,#AB84A5FF,0.006802798209650013
+South America,primary productivity,ssp245_current,#AB84A5FF,0.0024858701463767218
+South-Eastern Asia,primary productivity,ssp245_current,#AB84A5FF,2.2762952457694004e-6
+South-eastern Asia,primary productivity,ssp245_current,#AB84A5FF,0.001442371242994975
+Southern Africa,primary productivity,ssp245_current,#AB84A5FF,0.0046861671415056524
+Southern Asia,primary productivity,ssp245_current,#AB84A5FF,0.01556456058232156
+Southern Europe,primary productivity,ssp245_current,#AB84A5FF,0.003612867528060517
+Southern Islands,primary productivity,ssp245_current,#AB84A5FF,3.1198913154218674e-4
+Western Africa,primary productivity,ssp245_current,#AB84A5FF,0.007539271781233934
+Western Asia,primary productivity,ssp245_current,#AB84A5FF,0.005164871899589478
+Western Europe,primary productivity,ssp245_current,#AB84A5FF,0.002613342391290118
+Antarctica,primary productivity,ssp245_medium-term,#AB84A5FF,4.461766123628989e-6
+Atlantic Eastern Central,primary productivity,ssp245_medium-term,#AB84A5FF,0.106116841857632
+Australia and New Zealand,primary productivity,ssp245_medium-term,#AB84A5FF,0.013922155780499962
+Caribbean,primary productivity,ssp245_medium-term,#AB84A5FF,0.016218202209753188
+Central America,primary productivity,ssp245_medium-term,#AB84A5FF,0.002863157394798775
+Eastern Africa,primary productivity,ssp245_medium-term,#AB84A5FF,0.019540406975237498
+Eastern Asia,primary productivity,ssp245_medium-term,#AB84A5FF,0.009690965772630773
+Eastern Europe,primary productivity,ssp245_medium-term,#AB84A5FF,0.003428962255487722
+Melanesia,primary productivity,ssp245_medium-term,#AB84A5FF,0.059216200105217956
+Micronesia,primary productivity,ssp245_medium-term,#AB84A5FF,0.08268568069310112
+Middle Africa,primary productivity,ssp245_medium-term,#AB84A5FF,0.041669541826535074
+Northern Africa,primary productivity,ssp245_medium-term,#AB84A5FF,0.006455881438884969
+Northern America,primary productivity,ssp245_medium-term,#AB84A5FF,0.0044121332254770055
+Northern Europe,primary productivity,ssp245_medium-term,#AB84A5FF,0.06430498433683046
+Polynesia,primary productivity,ssp245_medium-term,#AB84A5FF,0.028014317391803517
+South America,primary productivity,ssp245_medium-term,#AB84A5FF,0.007412036191987688
+South-Eastern Asia,primary productivity,ssp245_medium-term,#AB84A5FF,9.548790500943624e-5
+South-eastern Asia,primary productivity,ssp245_medium-term,#AB84A5FF,0.008663470552448704
+Southern Africa,primary productivity,ssp245_medium-term,#AB84A5FF,0.024752566260328655
+Southern Asia,primary productivity,ssp245_medium-term,#AB84A5FF,0.037421968078823004
+Southern Europe,primary productivity,ssp245_medium-term,#AB84A5FF,0.02226222207109927
+Southern Islands,primary productivity,ssp245_medium-term,#AB84A5FF,0
+Western Africa,primary productivity,ssp245_medium-term,#AB84A5FF,0.033921704531079476
+Western Asia,primary productivity,ssp245_medium-term,#AB84A5FF,0.010032624380966375
+Western Europe,primary productivity,ssp245_medium-term,#AB84A5FF,0.061286092968800124
+Antarctica,primary productivity,ssp245_near-term,#AB84A5FF,1.9149290995636734e-4
+Atlantic Eastern Central,primary productivity,ssp245_near-term,#AB84A5FF,0.08762128759796421
+Australia and New Zealand,primary productivity,ssp245_near-term,#AB84A5FF,0.009274219536821513
+Caribbean,primary productivity,ssp245_near-term,#AB84A5FF,0.01856611211957825
+Central America,primary productivity,ssp245_near-term,#AB84A5FF,0.0018909543508675057
+Eastern Africa,primary productivity,ssp245_near-term,#AB84A5FF,0.014513167172828448
+Eastern Asia,primary productivity,ssp245_near-term,#AB84A5FF,0.009142898908661781
+Eastern Europe,primary productivity,ssp245_near-term,#AB84A5FF,0.002792321739079464
+Melanesia,primary productivity,ssp245_near-term,#AB84A5FF,0.04296323648528564
+Micronesia,primary productivity,ssp245_near-term,#AB84A5FF,0.05841783176898849
+Middle Africa,primary productivity,ssp245_near-term,#AB84A5FF,0.037385267700166765
+Northern Africa,primary productivity,ssp245_near-term,#AB84A5FF,0.004933382283592778
+Northern America,primary productivity,ssp245_near-term,#AB84A5FF,0.001627387235528949
+Northern Europe,primary productivity,ssp245_near-term,#AB84A5FF,0.04136584968355956
+Polynesia,primary productivity,ssp245_near-term,#AB84A5FF,0.018380330434324403
+South America,primary productivity,ssp245_near-term,#AB84A5FF,0.00554490243905201
+South-Eastern Asia,primary productivity,ssp245_near-term,#AB84A5FF,9.309371586732469e-5
+South-eastern Asia,primary productivity,ssp245_near-term,#AB84A5FF,0.006938333983953879
+Southern Africa,primary productivity,ssp245_near-term,#AB84A5FF,0.02177496180567261
+Southern Asia,primary productivity,ssp245_near-term,#AB84A5FF,0.029073508896089936
+Southern Europe,primary productivity,ssp245_near-term,#AB84A5FF,0.01607523556233798
+Southern Islands,primary productivity,ssp245_near-term,#AB84A5FF,0
+Western Africa,primary productivity,ssp245_near-term,#AB84A5FF,0.02596371247160242
+Western Asia,primary productivity,ssp245_near-term,#AB84A5FF,0.008567587582741702
+Western Europe,primary productivity,ssp245_near-term,#AB84A5FF,0.04447229748569252
+Antarctica,primary productivity,ssp585_current,#AB84A5FF,0.0029729658791555692
+Atlantic Eastern Central,primary productivity,ssp585_current,#AB84A5FF,0.03314036984617511
+Australia and New Zealand,primary productivity,ssp585_current,#AB84A5FF,0.003743113883585682
+Caribbean,primary productivity,ssp585_current,#AB84A5FF,1.9210790028222278e-4
+Central America,primary productivity,ssp585_current,#AB84A5FF,0.0014031293879858044
+Eastern Africa,primary productivity,ssp585_current,#AB84A5FF,0.001857674318222976
+Eastern Asia,primary productivity,ssp585_current,#AB84A5FF,0.0034099099493657896
+Eastern Europe,primary productivity,ssp585_current,#AB84A5FF,1.4212169260496534e-4
+Melanesia,primary productivity,ssp585_current,#AB84A5FF,0.008857414983822778
+Micronesia,primary productivity,ssp585_current,#AB84A5FF,0.01803522197429876
+Middle Africa,primary productivity,ssp585_current,#AB84A5FF,0.010566973427240597
+Northern Africa,primary productivity,ssp585_current,#AB84A5FF,3.3074886826222277e-4
+Northern America,primary productivity,ssp585_current,#AB84A5FF,3.599593499374136e-4
+Northern Europe,primary productivity,ssp585_current,#AB84A5FF,3.261003027909672e-4
+Polynesia,primary productivity,ssp585_current,#AB84A5FF,0.007257365186139521
+South America,primary productivity,ssp585_current,#AB84A5FF,0.002544059603740732
+South-Eastern Asia,primary productivity,ssp585_current,#AB84A5FF,3.5032003660013434e-6
+South-eastern Asia,primary productivity,ssp585_current,#AB84A5FF,0.001714205024744083
+Southern Africa,primary productivity,ssp585_current,#AB84A5FF,0.0046255644876032264
+Southern Asia,primary productivity,ssp585_current,#AB84A5FF,0.014188661301723022
+Southern Europe,primary productivity,ssp585_current,#AB84A5FF,0.0034743019403116926
+Southern Islands,primary productivity,ssp585_current,#AB84A5FF,3.132603935276958e-4
+Western Africa,primary productivity,ssp585_current,#AB84A5FF,0.0072460997932599506
+Western Asia,primary productivity,ssp585_current,#AB84A5FF,0.0047418091892418
+Western Europe,primary productivity,ssp585_current,#AB84A5FF,0.0024008490522642485
+Antarctica,primary productivity,ssp585_medium-term,#AB84A5FF,0
+Atlantic Eastern Central,primary productivity,ssp585_medium-term,#AB84A5FF,0.1462957098459204
+Australia and New Zealand,primary productivity,ssp585_medium-term,#AB84A5FF,0.01533690217311247
+Caribbean,primary productivity,ssp585_medium-term,#AB84A5FF,0.013942718182524268
+Central America,primary productivity,ssp585_medium-term,#AB84A5FF,0.0048839547718171755
+Eastern Africa,primary productivity,ssp585_medium-term,#AB84A5FF,0.022849394900854778
+Eastern Asia,primary productivity,ssp585_medium-term,#AB84A5FF,0.009384757502493962
+Eastern Europe,primary productivity,ssp585_medium-term,#AB84A5FF,0.00290011720615254
+Melanesia,primary productivity,ssp585_medium-term,#AB84A5FF,0.07394007495136559
+Micronesia,primary productivity,ssp585_medium-term,#AB84A5FF,0.09892600029254002
+Middle Africa,primary productivity,ssp585_medium-term,#AB84A5FF,0.06165139917842739
+Northern Africa,primary productivity,ssp585_medium-term,#AB84A5FF,0.0043873060027182385
+Northern America,primary productivity,ssp585_medium-term,#AB84A5FF,0.004664760664952351
+Northern Europe,primary productivity,ssp585_medium-term,#AB84A5FF,0.06867710018324594
+Polynesia,primary productivity,ssp585_medium-term,#AB84A5FF,0.03230117583314326
+South America,primary productivity,ssp585_medium-term,#AB84A5FF,0.006132894673153658
+South-Eastern Asia,primary productivity,ssp585_medium-term,#AB84A5FF,1.4810673864572466e-6
+South-eastern Asia,primary productivity,ssp585_medium-term,#AB84A5FF,0.008316551298725817
+Southern Africa,primary productivity,ssp585_medium-term,#AB84A5FF,0.03704918653479013
+Southern Asia,primary productivity,ssp585_medium-term,#AB84A5FF,0.04364137629534022
+Southern Europe,primary productivity,ssp585_medium-term,#AB84A5FF,0.021353229987441397
+Southern Islands,primary productivity,ssp585_medium-term,#AB84A5FF,2.2158558521895464e-5
+Western Africa,primary productivity,ssp585_medium-term,#AB84A5FF,0.034731695845294557
+Western Asia,primary productivity,ssp585_medium-term,#AB84A5FF,0.012851570241350177
+Western Europe,primary productivity,ssp585_medium-term,#AB84A5FF,0.06517085673927697
+Antarctica,primary productivity,ssp585_near-term,#AB84A5FF,3.9338630709148377e-4
+Atlantic Eastern Central,primary productivity,ssp585_near-term,#AB84A5FF,0.11188405519351363
+Australia and New Zealand,primary productivity,ssp585_near-term,#AB84A5FF,0.007116314494583391
+Caribbean,primary productivity,ssp585_near-term,#AB84A5FF,0.012319060516136519
+Central America,primary productivity,ssp585_near-term,#AB84A5FF,0.0021435458549256834
+Eastern Africa,primary productivity,ssp585_near-term,#AB84A5FF,0.015219290007557597
+Eastern Asia,primary productivity,ssp585_near-term,#AB84A5FF,0.008560575134953658
+Eastern Europe,primary productivity,ssp585_near-term,#AB84A5FF,0.002683138978161549
+Melanesia,primary productivity,ssp585_near-term,#AB84A5FF,0.04812135032555621
+Micronesia,primary productivity,ssp585_near-term,#AB84A5FF,0.07240668935322031
+Middle Africa,primary productivity,ssp585_near-term,#AB84A5FF,0.04385119146864611
+Northern Africa,primary productivity,ssp585_near-term,#AB84A5FF,0.007309407081401714
+Northern America,primary productivity,ssp585_near-term,#AB84A5FF,0.0020468307232911517
+Northern Europe,primary productivity,ssp585_near-term,#AB84A5FF,0.045812150003775434
+Polynesia,primary productivity,ssp585_near-term,#AB84A5FF,0.01803630160447898
+South America,primary productivity,ssp585_near-term,#AB84A5FF,0.004781029855064203
+South-Eastern Asia,primary productivity,ssp585_near-term,#AB84A5FF,8.4136726683244e-6
+South-eastern Asia,primary productivity,ssp585_near-term,#AB84A5FF,0.005991891304110451
+Southern Africa,primary productivity,ssp585_near-term,#AB84A5FF,0.022003853219432237
+Southern Asia,primary productivity,ssp585_near-term,#AB84A5FF,0.035318565435156414
+Southern Europe,primary productivity,ssp585_near-term,#AB84A5FF,0.016936010917103502
+Southern Islands,primary productivity,ssp585_near-term,#AB84A5FF,4.12693110589825e-6
+Western Africa,primary productivity,ssp585_near-term,#AB84A5FF,0.021689589705904497
+Western Asia,primary productivity,ssp585_near-term,#AB84A5FF,0.010151315054783644
+Western Europe,primary productivity,ssp585_near-term,#AB84A5FF,0.04712382432096185
+Antarctica,reduced oxygen,ssp245_current,#78963CFF,0.0011642021769858733
+Atlantic Eastern Central,reduced oxygen,ssp245_current,#78963CFF,0.007945255259983242
+Australia and New Zealand,reduced oxygen,ssp245_current,#78963CFF,0.0018406580374891305
+Caribbean,reduced oxygen,ssp245_current,#78963CFF,0.003606719089421845
+Central America,reduced oxygen,ssp245_current,#78963CFF,0.0840626018758314
+Eastern Africa,reduced oxygen,ssp245_current,#78963CFF,0.03845620211568519
+Eastern Asia,reduced oxygen,ssp245_current,#78963CFF,0.016720742545734354
+Eastern Europe,reduced oxygen,ssp245_current,#78963CFF,0.0134450473964242
+Melanesia,reduced oxygen,ssp245_current,#78963CFF,0.00891999241071581
+Micronesia,reduced oxygen,ssp245_current,#78963CFF,0.022193069229199693
+Middle Africa,reduced oxygen,ssp245_current,#78963CFF,0.10489311014534351
+Northern Africa,reduced oxygen,ssp245_current,#78963CFF,0.021659859517106812
+Northern America,reduced oxygen,ssp245_current,#78963CFF,0.015456742365292675
+Northern Europe,reduced oxygen,ssp245_current,#78963CFF,0.001118658016531539
+Polynesia,reduced oxygen,ssp245_current,#78963CFF,0.004548917952649101
+South America,reduced oxygen,ssp245_current,#78963CFF,0.04273363465913752
+South-Eastern Asia,reduced oxygen,ssp245_current,#78963CFF,0.07130855893177536
+South-eastern Asia,reduced oxygen,ssp245_current,#78963CFF,0.02828416741302736
+Southern Africa,reduced oxygen,ssp245_current,#78963CFF,0.07119798631530962
+Southern Asia,reduced oxygen,ssp245_current,#78963CFF,0.03244736407554952
+Southern Europe,reduced oxygen,ssp245_current,#78963CFF,0.009455754892809741
+Southern Islands,reduced oxygen,ssp245_current,#78963CFF,0.0017196903522491863
+Western Africa,reduced oxygen,ssp245_current,#78963CFF,0.05472382978781219
+Western Asia,reduced oxygen,ssp245_current,#78963CFF,0.06576209175250901
+Western Europe,reduced oxygen,ssp245_current,#78963CFF,0.002197430162795845
+Antarctica,reduced oxygen,ssp245_medium-term,#78963CFF,9.172527451610811e-4
+Atlantic Eastern Central,reduced oxygen,ssp245_medium-term,#78963CFF,0.010359795259622237
+Australia and New Zealand,reduced oxygen,ssp245_medium-term,#78963CFF,0.006291296352703135
+Caribbean,reduced oxygen,ssp245_medium-term,#78963CFF,0.008614588386811917
+Central America,reduced oxygen,ssp245_medium-term,#78963CFF,0.08718206034880646
+Eastern Africa,reduced oxygen,ssp245_medium-term,#78963CFF,0.043002417758174163
+Eastern Asia,reduced oxygen,ssp245_medium-term,#78963CFF,0.024996312491408886
+Eastern Europe,reduced oxygen,ssp245_medium-term,#78963CFF,0.022737499469148614
+Melanesia,reduced oxygen,ssp245_medium-term,#78963CFF,0.011257484120341648
+Micronesia,reduced oxygen,ssp245_medium-term,#78963CFF,0.02393548561619945
+Middle Africa,reduced oxygen,ssp245_medium-term,#78963CFF,0.10698335295128344
+Northern Africa,reduced oxygen,ssp245_medium-term,#78963CFF,0.029076719644638004
+Northern America,reduced oxygen,ssp245_medium-term,#78963CFF,0.022022200226227612
+Northern Europe,reduced oxygen,ssp245_medium-term,#78963CFF,0.004866846846844913
+Polynesia,reduced oxygen,ssp245_medium-term,#78963CFF,0.006037176050289494
+South America,reduced oxygen,ssp245_medium-term,#78963CFF,0.045758788475117655
+South-Eastern Asia,reduced oxygen,ssp245_medium-term,#78963CFF,0.07958500638615952
+South-eastern Asia,reduced oxygen,ssp245_medium-term,#78963CFF,0.034184829086508606
+Southern Africa,reduced oxygen,ssp245_medium-term,#78963CFF,0.07271404973579423
+Southern Asia,reduced oxygen,ssp245_medium-term,#78963CFF,0.03909826442589856
+Southern Europe,reduced oxygen,ssp245_medium-term,#78963CFF,0.01851512371223464
+Southern Islands,reduced oxygen,ssp245_medium-term,#78963CFF,0.00504016041786133
+Western Africa,reduced oxygen,ssp245_medium-term,#78963CFF,0.05793332569031832
+Western Asia,reduced oxygen,ssp245_medium-term,#78963CFF,0.07347784945000219
+Western Europe,reduced oxygen,ssp245_medium-term,#78963CFF,0.0069730530697499375
+Antarctica,reduced oxygen,ssp245_near-term,#78963CFF,0.001005759736884464
+Atlantic Eastern Central,reduced oxygen,ssp245_near-term,#78963CFF,0.009498337710586688
+Australia and New Zealand,reduced oxygen,ssp245_near-term,#78963CFF,0.0031578865778983537
+Caribbean,reduced oxygen,ssp245_near-term,#78963CFF,0.005610812243910194
+Central America,reduced oxygen,ssp245_near-term,#78963CFF,0.08489587437603029
+Eastern Africa,reduced oxygen,ssp245_near-term,#78963CFF,0.03966201931192277
+Eastern Asia,reduced oxygen,ssp245_near-term,#78963CFF,0.01963867661023615
+Eastern Europe,reduced oxygen,ssp245_near-term,#78963CFF,0.017046132755916057
+Melanesia,reduced oxygen,ssp245_near-term,#78963CFF,0.010445287901417567
+Micronesia,reduced oxygen,ssp245_near-term,#78963CFF,0.022973474242451417
+Middle Africa,reduced oxygen,ssp245_near-term,#78963CFF,0.10386292163232443
+Northern Africa,reduced oxygen,ssp245_near-term,#78963CFF,0.024757923700709412
+Northern America,reduced oxygen,ssp245_near-term,#78963CFF,0.017573313731537674
+Northern Europe,reduced oxygen,ssp245_near-term,#78963CFF,0.0027639176712957836
+Polynesia,reduced oxygen,ssp245_near-term,#78963CFF,0.004735965248122238
+South America,reduced oxygen,ssp245_near-term,#78963CFF,0.04379581031686215
+South-Eastern Asia,reduced oxygen,ssp245_near-term,#78963CFF,0.07486642783489122
+South-eastern Asia,reduced oxygen,ssp245_near-term,#78963CFF,0.03057212928753621
+Southern Africa,reduced oxygen,ssp245_near-term,#78963CFF,0.07123536313464206
+Southern Asia,reduced oxygen,ssp245_near-term,#78963CFF,0.0347110395443834
+Southern Europe,reduced oxygen,ssp245_near-term,#78963CFF,0.014325441704429738
+Southern Islands,reduced oxygen,ssp245_near-term,#78963CFF,0.002619298724252956
+Western Africa,reduced oxygen,ssp245_near-term,#78963CFF,0.05510054709122946
+Western Asia,reduced oxygen,ssp245_near-term,#78963CFF,0.06876951115850471
+Western Europe,reduced oxygen,ssp245_near-term,#78963CFF,0.004119033728534408
+Antarctica,reduced oxygen,ssp585_current,#78963CFF,0.0011642021769858733
+Atlantic Eastern Central,reduced oxygen,ssp585_current,#78963CFF,0.007945255259983242
+Australia and New Zealand,reduced oxygen,ssp585_current,#78963CFF,0.0018406580374891305
+Caribbean,reduced oxygen,ssp585_current,#78963CFF,0.003606719089421845
+Central America,reduced oxygen,ssp585_current,#78963CFF,0.0840626018758314
+Eastern Africa,reduced oxygen,ssp585_current,#78963CFF,0.03845620211568519
+Eastern Asia,reduced oxygen,ssp585_current,#78963CFF,0.016720742545734354
+Eastern Europe,reduced oxygen,ssp585_current,#78963CFF,0.0134450473964242
+Melanesia,reduced oxygen,ssp585_current,#78963CFF,0.00891999241071581
+Micronesia,reduced oxygen,ssp585_current,#78963CFF,0.022193069229199693
+Middle Africa,reduced oxygen,ssp585_current,#78963CFF,0.10489311014534351
+Northern Africa,reduced oxygen,ssp585_current,#78963CFF,0.021659859517106812
+Northern America,reduced oxygen,ssp585_current,#78963CFF,0.015456742365292675
+Northern Europe,reduced oxygen,ssp585_current,#78963CFF,0.001118658016531539
+Polynesia,reduced oxygen,ssp585_current,#78963CFF,0.004548917952649101
+South America,reduced oxygen,ssp585_current,#78963CFF,0.04273363465913752
+South-Eastern Asia,reduced oxygen,ssp585_current,#78963CFF,0.07130855893177536
+South-eastern Asia,reduced oxygen,ssp585_current,#78963CFF,0.02828416741302736
+Southern Africa,reduced oxygen,ssp585_current,#78963CFF,0.07119798631530962
+Southern Asia,reduced oxygen,ssp585_current,#78963CFF,0.03244736407554952
+Southern Europe,reduced oxygen,ssp585_current,#78963CFF,0.009455754892809741
+Southern Islands,reduced oxygen,ssp585_current,#78963CFF,0.0017196903522491863
+Western Africa,reduced oxygen,ssp585_current,#78963CFF,0.05472382978781219
+Western Asia,reduced oxygen,ssp585_current,#78963CFF,0.06576209175250901
+Western Europe,reduced oxygen,ssp585_current,#78963CFF,0.002197430162795845
+Antarctica,reduced oxygen,ssp585_medium-term,#78963CFF,8.990264723958091e-4
+Atlantic Eastern Central,reduced oxygen,ssp585_medium-term,#78963CFF,0.008921821873324612
+Australia and New Zealand,reduced oxygen,ssp585_medium-term,#78963CFF,0.00814983434080212
+Caribbean,reduced oxygen,ssp585_medium-term,#78963CFF,0.009969792122452371
+Central America,reduced oxygen,ssp585_medium-term,#78963CFF,0.08896656677298828
+Eastern Africa,reduced oxygen,ssp585_medium-term,#78963CFF,0.045168801213497235
+Eastern Asia,reduced oxygen,ssp585_medium-term,#78963CFF,0.028507442125772955
+Eastern Europe,reduced oxygen,ssp585_medium-term,#78963CFF,0.02632382734527735
+Melanesia,reduced oxygen,ssp585_medium-term,#78963CFF,0.012453713502066178
+Micronesia,reduced oxygen,ssp585_medium-term,#78963CFF,0.025400367959736738
+Middle Africa,reduced oxygen,ssp585_medium-term,#78963CFF,0.1007362167623202
+Northern Africa,reduced oxygen,ssp585_medium-term,#78963CFF,0.03185528064865199
+Northern America,reduced oxygen,ssp585_medium-term,#78963CFF,0.026767755605766965
+Northern Europe,reduced oxygen,ssp585_medium-term,#78963CFF,0.007996451540857735
+Polynesia,reduced oxygen,ssp585_medium-term,#78963CFF,0.006354701308550492
+South America,reduced oxygen,ssp585_medium-term,#78963CFF,0.047315887288696686
+South-Eastern Asia,reduced oxygen,ssp585_medium-term,#78963CFF,0.07955365650420931
+South-eastern Asia,reduced oxygen,ssp585_medium-term,#78963CFF,0.034306254079609334
+Southern Africa,reduced oxygen,ssp585_medium-term,#78963CFF,0.07479526686538235
+Southern Asia,reduced oxygen,ssp585_medium-term,#78963CFF,0.03672124309936587
+Southern Europe,reduced oxygen,ssp585_medium-term,#78963CFF,0.021075409086860772
+Southern Islands,reduced oxygen,ssp585_medium-term,#78963CFF,0.006655935087070934
+Western Africa,reduced oxygen,ssp585_medium-term,#78963CFF,0.0578470716837313
+Western Asia,reduced oxygen,ssp585_medium-term,#78963CFF,0.07410970497835401
+Western Europe,reduced oxygen,ssp585_medium-term,#78963CFF,0.010231342154367084
+Antarctica,reduced oxygen,ssp585_near-term,#78963CFF,0.001194633710011184
+Atlantic Eastern Central,reduced oxygen,ssp585_near-term,#78963CFF,0.008250363248710832
+Australia and New Zealand,reduced oxygen,ssp585_near-term,#78963CFF,0.0036976552882803495
+Caribbean,reduced oxygen,ssp585_near-term,#78963CFF,0.0053273374316067795
+Central America,reduced oxygen,ssp585_near-term,#78963CFF,0.08579526376502548
+Eastern Africa,reduced oxygen,ssp585_near-term,#78963CFF,0.04031912617525576
+Eastern Asia,reduced oxygen,ssp585_near-term,#78963CFF,0.021164724162639523
+Eastern Europe,reduced oxygen,ssp585_near-term,#78963CFF,0.017205031515455053
+Melanesia,reduced oxygen,ssp585_near-term,#78963CFF,0.009967760034437619
+Micronesia,reduced oxygen,ssp585_near-term,#78963CFF,0.02300139248715347
+Middle Africa,reduced oxygen,ssp585_near-term,#78963CFF,0.1021933057502078
+Northern Africa,reduced oxygen,ssp585_near-term,#78963CFF,0.024763959522413365
+Northern America,reduced oxygen,ssp585_near-term,#78963CFF,0.01811155679113057
+Northern Europe,reduced oxygen,ssp585_near-term,#78963CFF,0.002695496432634996
+Polynesia,reduced oxygen,ssp585_near-term,#78963CFF,0.0046341357232640564
+South America,reduced oxygen,ssp585_near-term,#78963CFF,0.043898578489499386
+South-Eastern Asia,reduced oxygen,ssp585_near-term,#78963CFF,0.0740680687545788
+South-eastern Asia,reduced oxygen,ssp585_near-term,#78963CFF,0.030375267558323534
+Southern Africa,reduced oxygen,ssp585_near-term,#78963CFF,0.07238876285175636
+Southern Asia,reduced oxygen,ssp585_near-term,#78963CFF,0.033294516844829106
+Southern Europe,reduced oxygen,ssp585_near-term,#78963CFF,0.013401580188975248
+Southern Islands,reduced oxygen,ssp585_near-term,#78963CFF,0.002733681351280124
+Western Africa,reduced oxygen,ssp585_near-term,#78963CFF,0.05505522716291292
+Western Asia,reduced oxygen,ssp585_near-term,#78963CFF,0.06812637401389834
+Western Europe,reduced oxygen,ssp585_near-term,#78963CFF,0.004017507275963008
+Antarctica,sea level rise,ssp245_current,#D2D2C3FF,4.1551052508321347e-4
+Atlantic Eastern Central,sea level rise,ssp245_current,#D2D2C3FF,0
+Australia and New Zealand,sea level rise,ssp245_current,#D2D2C3FF,0.005029922517725042
+Caribbean,sea level rise,ssp245_current,#D2D2C3FF,0.01847798946307554
+Central America,sea level rise,ssp245_current,#D2D2C3FF,0.04040669275850901
+Eastern Africa,sea level rise,ssp245_current,#D2D2C3FF,0.010269857873595472
+Eastern Asia,sea level rise,ssp245_current,#D2D2C3FF,0.0023075831175274134
+Eastern Europe,sea level rise,ssp245_current,#D2D2C3FF,0.024207673093192786
+Melanesia,sea level rise,ssp245_current,#D2D2C3FF,7.096542357109854e-4
+Micronesia,sea level rise,ssp245_current,#D2D2C3FF,7.095069056003722e-4
+Middle Africa,sea level rise,ssp245_current,#D2D2C3FF,0.018231803757586058
+Northern Africa,sea level rise,ssp245_current,#D2D2C3FF,0.012779266344847585
+Northern America,sea level rise,ssp245_current,#D2D2C3FF,0.03299585551086113
+Northern Europe,sea level rise,ssp245_current,#D2D2C3FF,0.007827026975563542
+Polynesia,sea level rise,ssp245_current,#D2D2C3FF,0.0024299813296950446
+South America,sea level rise,ssp245_current,#D2D2C3FF,0.006180467163302259
+South-Eastern Asia,sea level rise,ssp245_current,#D2D2C3FF,7.035203115211644e-5
+South-eastern Asia,sea level rise,ssp245_current,#D2D2C3FF,0.006779951522116486
+Southern Africa,sea level rise,ssp245_current,#D2D2C3FF,0.010928485718547307
+Southern Asia,sea level rise,ssp245_current,#D2D2C3FF,3.619367676760597e-4
+Southern Europe,sea level rise,ssp245_current,#D2D2C3FF,0.010469549977654181
+Southern Islands,sea level rise,ssp245_current,#D2D2C3FF,0.016731262962383444
+Western Africa,sea level rise,ssp245_current,#D2D2C3FF,0.014103094837020798
+Western Asia,sea level rise,ssp245_current,#D2D2C3FF,0.004019731909855406
+Western Europe,sea level rise,ssp245_current,#D2D2C3FF,0.025288920689805594
+Antarctica,sea level rise,ssp245_medium-term,#D2D2C3FF,0.0105501647442685
+Atlantic Eastern Central,sea level rise,ssp245_medium-term,#D2D2C3FF,0
+Australia and New Zealand,sea level rise,ssp245_medium-term,#D2D2C3FF,0.05545411355275442
+Caribbean,sea level rise,ssp245_medium-term,#D2D2C3FF,0.05694974365913099
+Central America,sea level rise,ssp245_medium-term,#D2D2C3FF,0.08614467546376009
+Eastern Africa,sea level rise,ssp245_medium-term,#D2D2C3FF,0.04856570062074148
+Eastern Asia,sea level rise,ssp245_medium-term,#D2D2C3FF,0.05237848893478918
+Eastern Europe,sea level rise,ssp245_medium-term,#D2D2C3FF,0.06250318385046703
+Melanesia,sea level rise,ssp245_medium-term,#D2D2C3FF,0.02826454564749796
+Micronesia,sea level rise,ssp245_medium-term,#D2D2C3FF,0.012015316935108558
+Middle Africa,sea level rise,ssp245_medium-term,#D2D2C3FF,0.05811947967902075
+Northern Africa,sea level rise,ssp245_medium-term,#D2D2C3FF,0.045221995246510556
+Northern America,sea level rise,ssp245_medium-term,#D2D2C3FF,0.04856039149843741
+Northern Europe,sea level rise,ssp245_medium-term,#D2D2C3FF,0.022264364410413212
+Polynesia,sea level rise,ssp245_medium-term,#D2D2C3FF,0.01250574578725468
+South America,sea level rise,ssp245_medium-term,#D2D2C3FF,0.032913521846972486
+South-Eastern Asia,sea level rise,ssp245_medium-term,#D2D2C3FF,0.042094329269809924
+South-eastern Asia,sea level rise,ssp245_medium-term,#D2D2C3FF,0.0517764421452484
+Southern Africa,sea level rise,ssp245_medium-term,#D2D2C3FF,0.053784729681796005
+Southern Asia,sea level rise,ssp245_medium-term,#D2D2C3FF,0.030221382191983195
+Southern Europe,sea level rise,ssp245_medium-term,#D2D2C3FF,0.033080990514253894
+Southern Islands,sea level rise,ssp245_medium-term,#D2D2C3FF,0.07088117787929217
+Western Africa,sea level rise,ssp245_medium-term,#D2D2C3FF,0.06585596564861715
+Western Asia,sea level rise,ssp245_medium-term,#D2D2C3FF,0.035747083526651596
+Western Europe,sea level rise,ssp245_medium-term,#D2D2C3FF,0.06067575906381565
+Antarctica,sea level rise,ssp245_near-term,#D2D2C3FF,4.1551052508321347e-4
+Atlantic Eastern Central,sea level rise,ssp245_near-term,#D2D2C3FF,0
+Australia and New Zealand,sea level rise,ssp245_near-term,#D2D2C3FF,0.005029922517725042
+Caribbean,sea level rise,ssp245_near-term,#D2D2C3FF,0.01847798946307554
+Central America,sea level rise,ssp245_near-term,#D2D2C3FF,0.04040669275850901
+Eastern Africa,sea level rise,ssp245_near-term,#D2D2C3FF,0.010269857873595472
+Eastern Asia,sea level rise,ssp245_near-term,#D2D2C3FF,0.0023075831175274134
+Eastern Europe,sea level rise,ssp245_near-term,#D2D2C3FF,0.024207673093192786
+Melanesia,sea level rise,ssp245_near-term,#D2D2C3FF,7.096542357109854e-4
+Micronesia,sea level rise,ssp245_near-term,#D2D2C3FF,7.095069056003722e-4
+Middle Africa,sea level rise,ssp245_near-term,#D2D2C3FF,0.018231803757586058
+Northern Africa,sea level rise,ssp245_near-term,#D2D2C3FF,0.012779266344847585
+Northern America,sea level rise,ssp245_near-term,#D2D2C3FF,0.03299585551086113
+Northern Europe,sea level rise,ssp245_near-term,#D2D2C3FF,0.007827026975563542
+Polynesia,sea level rise,ssp245_near-term,#D2D2C3FF,0.0024299813296950446
+South America,sea level rise,ssp245_near-term,#D2D2C3FF,0.006180467163302259
+South-Eastern Asia,sea level rise,ssp245_near-term,#D2D2C3FF,7.035203115211644e-5
+South-eastern Asia,sea level rise,ssp245_near-term,#D2D2C3FF,0.006779951522116486
+Southern Africa,sea level rise,ssp245_near-term,#D2D2C3FF,0.010928485718547307
+Southern Asia,sea level rise,ssp245_near-term,#D2D2C3FF,3.619367676760597e-4
+Southern Europe,sea level rise,ssp245_near-term,#D2D2C3FF,0.010469549977654181
+Southern Islands,sea level rise,ssp245_near-term,#D2D2C3FF,0.016731262962383444
+Western Africa,sea level rise,ssp245_near-term,#D2D2C3FF,0.014103094837020798
+Western Asia,sea level rise,ssp245_near-term,#D2D2C3FF,0.004019731909855406
+Western Europe,sea level rise,ssp245_near-term,#D2D2C3FF,0.025288920689805594
+Antarctica,sea level rise,ssp585_current,#D2D2C3FF,0.0016896127096518753
+Atlantic Eastern Central,sea level rise,ssp585_current,#D2D2C3FF,0
+Australia and New Zealand,sea level rise,ssp585_current,#D2D2C3FF,0.012613267710991586
+Caribbean,sea level rise,ssp585_current,#D2D2C3FF,0.021999689211361854
+Central America,sea level rise,ssp585_current,#D2D2C3FF,0.04814448680447634
+Eastern Africa,sea level rise,ssp585_current,#D2D2C3FF,0.016421169386780034
+Eastern Asia,sea level rise,ssp585_current,#D2D2C3FF,0.008032792652154765
+Eastern Europe,sea level rise,ssp585_current,#D2D2C3FF,0.030591635868589314
+Melanesia,sea level rise,ssp585_current,#D2D2C3FF,0.0036456578904967927
+Micronesia,sea level rise,ssp585_current,#D2D2C3FF,0.002912144263609801
+Middle Africa,sea level rise,ssp585_current,#D2D2C3FF,0.030819533626352424
+Northern Africa,sea level rise,ssp585_current,#D2D2C3FF,0.01963624110145939
+Northern America,sea level rise,ssp585_current,#D2D2C3FF,0.035909655047789646
+Northern Europe,sea level rise,ssp585_current,#D2D2C3FF,0.009569860367883064
+Polynesia,sea level rise,ssp585_current,#D2D2C3FF,0.003531862676084109
+South America,sea level rise,ssp585_current,#D2D2C3FF,0.00828544134734473
+South-Eastern Asia,sea level rise,ssp585_current,#D2D2C3FF,0.005051604721499184
+South-eastern Asia,sea level rise,ssp585_current,#D2D2C3FF,0.009422236956055036
+Southern Africa,sea level rise,ssp585_current,#D2D2C3FF,0.018225933515362832
+Southern Asia,sea level rise,ssp585_current,#D2D2C3FF,0.0021719925578945185
+Southern Europe,sea level rise,ssp585_current,#D2D2C3FF,0.014092336273275222
+Southern Islands,sea level rise,ssp585_current,#D2D2C3FF,0.01966239723412893
+Western Africa,sea level rise,ssp585_current,#D2D2C3FF,0.02209544835863757
+Western Asia,sea level rise,ssp585_current,#D2D2C3FF,0.011378611871803777
+Western Europe,sea level rise,ssp585_current,#D2D2C3FF,0.028042392560251914
+Antarctica,sea level rise,ssp585_medium-term,#D2D2C3FF,0.025783521267778026
+Atlantic Eastern Central,sea level rise,ssp585_medium-term,#D2D2C3FF,0
+Australia and New Zealand,sea level rise,ssp585_medium-term,#D2D2C3FF,0.09967263431303627
+Caribbean,sea level rise,ssp585_medium-term,#D2D2C3FF,0.07995445756927388
+Central America,sea level rise,ssp585_medium-term,#D2D2C3FF,0.1187291733935885
+Eastern Africa,sea level rise,ssp585_medium-term,#D2D2C3FF,0.08876906506648664
+Eastern Asia,sea level rise,ssp585_medium-term,#D2D2C3FF,0.10337322737266855
+Eastern Europe,sea level rise,ssp585_medium-term,#D2D2C3FF,0.08955017309773138
+Melanesia,sea level rise,ssp585_medium-term,#D2D2C3FF,0.049015415161570715
+Micronesia,sea level rise,ssp585_medium-term,#D2D2C3FF,0.018042865386619006
+Middle Africa,sea level rise,ssp585_medium-term,#D2D2C3FF,0.09440985268698245
+Northern Africa,sea level rise,ssp585_medium-term,#D2D2C3FF,0.07935931974129141
+Northern America,sea level rise,ssp585_medium-term,#D2D2C3FF,0.06016685279986569
+Northern Europe,sea level rise,ssp585_medium-term,#D2D2C3FF,0.04186683990234868
+Polynesia,sea level rise,ssp585_medium-term,#D2D2C3FF,0.019709809934232662
+South America,sea level rise,ssp585_medium-term,#D2D2C3FF,0.06004760463075747
+South-Eastern Asia,sea level rise,ssp585_medium-term,#D2D2C3FF,0.0737386871605537
+South-eastern Asia,sea level rise,ssp585_medium-term,#D2D2C3FF,0.08533324474053089
+Southern Africa,sea level rise,ssp585_medium-term,#D2D2C3FF,0.08843511078051933
+Southern Asia,sea level rise,ssp585_medium-term,#D2D2C3FF,0.07100048454471272
+Southern Europe,sea level rise,ssp585_medium-term,#D2D2C3FF,0.06091901482661617
+Southern Islands,sea level rise,ssp585_medium-term,#D2D2C3FF,0.11417017602389176
+Western Africa,sea level rise,ssp585_medium-term,#D2D2C3FF,0.10228466799068235
+Western Asia,sea level rise,ssp585_medium-term,#D2D2C3FF,0.07972657470716109
+Western Europe,sea level rise,ssp585_medium-term,#D2D2C3FF,0.09896947013913204
+Antarctica,sea level rise,ssp585_near-term,#D2D2C3FF,0.0016896127096518753
+Atlantic Eastern Central,sea level rise,ssp585_near-term,#D2D2C3FF,0
+Australia and New Zealand,sea level rise,ssp585_near-term,#D2D2C3FF,0.012613267710991586
+Caribbean,sea level rise,ssp585_near-term,#D2D2C3FF,0.021999689211361854
+Central America,sea level rise,ssp585_near-term,#D2D2C3FF,0.04814448680447634
+Eastern Africa,sea level rise,ssp585_near-term,#D2D2C3FF,0.016421169386780034
+Eastern Asia,sea level rise,ssp585_near-term,#D2D2C3FF,0.008032792652154765
+Eastern Europe,sea level rise,ssp585_near-term,#D2D2C3FF,0.030591635868589314
+Melanesia,sea level rise,ssp585_near-term,#D2D2C3FF,0.0036456578904967927
+Micronesia,sea level rise,ssp585_near-term,#D2D2C3FF,0.002912144263609801
+Middle Africa,sea level rise,ssp585_near-term,#D2D2C3FF,0.030819533626352424
+Northern Africa,sea level rise,ssp585_near-term,#D2D2C3FF,0.01963624110145939
+Northern America,sea level rise,ssp585_near-term,#D2D2C3FF,0.035909655047789646
+Northern Europe,sea level rise,ssp585_near-term,#D2D2C3FF,0.009569860367883064
+Polynesia,sea level rise,ssp585_near-term,#D2D2C3FF,0.003531862676084109
+South America,sea level rise,ssp585_near-term,#D2D2C3FF,0.00828544134734473
+South-Eastern Asia,sea level rise,ssp585_near-term,#D2D2C3FF,0.005051604721499184
+South-eastern Asia,sea level rise,ssp585_near-term,#D2D2C3FF,0.009422236956055036
+Southern Africa,sea level rise,ssp585_near-term,#D2D2C3FF,0.018225933515362832
+Southern Asia,sea level rise,ssp585_near-term,#D2D2C3FF,0.0021719925578945185
+Southern Europe,sea level rise,ssp585_near-term,#D2D2C3FF,0.014092336273275222
+Southern Islands,sea level rise,ssp585_near-term,#D2D2C3FF,0.01966239723412893
+Western Africa,sea level rise,ssp585_near-term,#D2D2C3FF,0.02209544835863757
+Western Asia,sea level rise,ssp585_near-term,#D2D2C3FF,0.011378611871803777
+Western Europe,sea level rise,ssp585_near-term,#D2D2C3FF,0.028042392560251914
