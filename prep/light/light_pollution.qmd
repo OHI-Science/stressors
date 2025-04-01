@@ -449,8 +449,5 @@ for(raster_file in raster_list){ # raster_file = raster_list[[1]]
 }
 
 new <- rast("/home/shares/ohi/stressors_2021/_dataprep/light/rescale/light_rescaled_ssp5_near-term.tif")
-old <- rast("/home/shares/ohi/stressors_2021/_dataprep/light/rescale_v2/light_rescaled_ssp5_near-term.tif")
-tmp <- new-old
-global(tmp, "mean", na.rm=TRUE)
-plot(tmp)
+plot(new)
 ```

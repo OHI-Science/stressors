@@ -81,7 +81,7 @@ table(pressure)
 ```
 
 ## adjust air temperature impact
-The impact is a little different for salt-marsh, seagrass, and ice
+The impact is a little different for salt-marsh, and seagrass
 ```{r}
 
 combo_files <- list.files("/home/shares/ohi/stressors_2021/impacts/hab_vuln_pressure/", full=TRUE)
@@ -165,7 +165,7 @@ Now apply to coral, kelp, and mangroves.
 ```{r}
 
 sst_modify <- function(habitat, lower_threshold, upper_threshold){ 
-#habitat <- "kelp"
+#habitat <- "coral"
 #lower_threshold <- 18.3
 #upper_threshold <- 24
 combo_files <- list.files("/home/shares/ohi/stressors_2021/impacts/hab_vuln_pressure/", full=TRUE)  
@@ -178,7 +178,21 @@ hab_raster <- rast(hab_file)
 sst_raw_files <- list.files("/home/shares/ohi/stressors_2021/impacts/raw_sst", full=TRUE)    
 sst_raw_rasts <- rast(sst_raw_files)
 cat(" n = ", length(sst_raw_files), "\n")
-  
+
+## habitat <- ifel(hab_raster>0, 1, 0)  
+## sst_curr <- rast(sst_raw_files[1])
+## current_kelp <- habitat*sst_curr
+## sst_future <- rast(sst_raw_files[7])
+## future_kelp <- habitat*sst_future
+##tmp <- c(current_kelp, future_kelp)
+##tmp_df <- data.frame(tmp)
+##plot(tmp_df$kelp, tmp_df$kelp.1, pch=16, col = rgb(0.2, 0.2, 1, 0.05), cex=0.6, ##xlab="current_temp", ylab="ssp585-2050")
+##abline(0,1, col="black")
+##abline(v=18.3, col="orange")
+##abline(h=18.3, col="orange")
+##abline(v=24, col="red")
+##abline(h=24, col="red")
+
   p <- sst_raw_rasts
   p <- ifel(p <= lower_threshold, 0, p)
   p <- ifel(p >= upper_threshold, 1, p)
@@ -254,11 +268,9 @@ Create raster with total number of habitats in each cell.
 habitat_files <- list.files(here("habitats/data"), full=TRUE)
 habitat_rast <- rast(habitat_files)
 habitat_n <- sum(habitat_rast, na.rm=TRUE)
-check <- ifel(habitat_n == 0, 1, NA)
-plot(check, col="red")
-global(check, "sum", na.rm=TRUE)
-
+plot(habitat_n)
 writeRaster(habitat_n, here("habitats/habitat_n.tif"), overwrite=TRUE)
+
 
 ```
 
@@ -344,8 +356,11 @@ names(stack) <- new_names
 
 # paper statistics
 global(stack, "sum", na.rm=TRUE)
-1957006.7/890768.3
-2330441.5/888146.8
+1954814.9/893408.4
+2325471.4/890850.4
+
+#1957006.7/890768.3
+#2330441.5/888146.8
 
 #1958809.2/892389.5 ##ssp245
 #2331685.3/889717.7 ##ssp585
@@ -1070,6 +1085,8 @@ ggsave(combined_plot, filename ="impact/figs/coastal_vs_offshore.png", width=5, 
 
 ```
 
+
+
 2nd part of stats for table S3
 ```{r}
 
@@ -1523,7 +1540,6 @@ write_csv(dataS2, "impact/data/dataS2.csv")
 
 # paper statistics
 filter(avg_georgn_impact, ssp245_change<0)
-
 
 # Step 1: Summarize the data to get total values for each pressure within each geosubrgn
 pressure_order <- avg_georgn_impact %>%

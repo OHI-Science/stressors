@@ -1,0 +1,176 @@
+---
+title: "Habitat data: beach, intertidal mud, rocky intertidal"
+output: html_document
+date: "2025-03-20"
+---
+
+## Issue for this: https://github.com/OHI-Science/stressors_issues/issues/74
+
+```{r setup, include=FALSE}
+library(sf)
+library(mapview)
+library(tidyverse)
+library(terra)
+
+ocean_raw <- terra::rast(here('_spatial/ocean_area_mol.tif'))
+
+ocean_10km <- terra::ifel(ocean_raw >0, 1, NA)
+ocean_1km <- disagg(ocean_10km, fact = 10, method = "near") 
+plot(ocean_1km)
+terra::global(ocean_10km, "sum", na.rm=TRUE)
+terra::global(ocean_1km, "sum", na.rm=TRUE)
+
+mask <- ifel(ocean_raw > 0, 1, NA)
+
+```
+
+
+## Intertidal habitats
+
+https://zenodo.org/records/13943679
+
+Zhang, L., Zuo, J., & Chen, B. (2024). GCL_FCS30: a global coastline dataset with 30-m resolution and a fine classification system from 2010 to 2020 [Data set]. Zenodo. https://doi.org/10.5281/zenodo.13943679
+
+A Global CoastLine Dataset (GCL_FCS30) with a detailed classification system, including categories for (0) artificial, (1) biogenic, (2) sandy, (3) muddy, (4) rocky, and (5) estuary coastlines for 2010, 2015, and 2020. The coastline extraction employed a combined algorithm incorporating the Modified Normalized Difference Water Index (MNDWI), an adaptive threshold segmentation method based on the Maximum Between-Class Variance Method (OTSU), and the Canny edge detector. The coastline classification was performed using a hybrid transect classifier that integrates a random forest algorithm with globally stable training samples derived from multi-source geophysical data.
+
+
+```{r}
+# original coastal habitat data
+coast <- st_read("/home/shares/ohi/stressors_2021/_raw_data/Zhang_coastline_hab/GCL2020.shp")
+#mapview(coast)
+coast <- st_transform(coast, crs(ocean_1km))
+
+# For gapfilling:
+## get the cells that the coastal habitat data touches to identify where there is data
+coast_gf <- coast 
+coast_gf_1km <- rasterize(vect(coast_gf), ocean_1km, touches = TRUE) 
+coast_gf_rast <- aggregate(coast_gf_1km, fact = 10, fun = sum, na.rm = TRUE)
+coast_gf_rast <- ifel(coast_gf_rast>0, 1, 0)
+coast_gf_rast <- ifel(is.na(coast_gf_rast), 0, coast_gf_rast)
+
+## This is the older habitat data, we will use this to gapfill when there is missing data
+## previously, all coastal cells included all the habitats. That is what we will do here when there is missing data.
+## checked that all previous habitat data was the same...yep! (this is what we expected)
+beach <- rast(here("_spatial/old_habs/beach.tif"))
+beach_presence <- ifel(beach>0, 1, 0)
+beach_presence <- ifel(is.na(beach_presence), 0, beach_presence)
+#rocky <- ifel(rast(here("_spatial/old_habs/rky_intidal.tif"))>0, 1, NA)
+#mud <- ifel(rast(here("_spatial/old_habs/inttidalmud.tif"))>0, 1, NA)
+#old_habs <-  beach + rocky + mud 
+              
+missing_data <- beach_presence - coast_gf_rast # previously identified coastal cells without habitat data
+missing_data <- ifel(missing_data==1, 1, NA)
+gf_data <- missing_data*beach # get original cell percentage of habitats
+
+plot(gf_data)
+
+## Sand gapfill data
+sand <- filter(coast, class %in% c(2,5))
+mapview(sand)
+
+sand_rast_1km <- rasterize(vect(sand), ocean_1km, touches = TRUE) 
+sand_rast <- aggregate(sand_rast_1km, fact = 10, fun = sum, na.rm = TRUE)
+sand_rast <- sand_rast/100
+sand_rast_gf <- ifel(is.na(sand_rast), gf_data, sand_rast)
+sand_rast_gf <- sand_rast_gf*mask
+writeRaster(sand_rast_gf, here("habitats/data/beach.tif"), overwrite=TRUE)
+
+mud <- filter(coast, class %in% c(3,5))
+mapview(mud)
+
+mud_rast_1km <- rasterize(vect(mud), ocean_1km, touches = TRUE) 
+mud_rast <- aggregate(mud_rast_1km, fact = 10, fun = sum, na.rm = TRUE)
+mud_rast <- mud_rast/100
+mud_rast_gf <- ifel(is.na(mud_rast), gf_data, mud_rast)
+mud_rast_gf <- mud_rast_gf*mask
+writeRaster(mud_rast_gf, here("habitats/data/inttidalmud.tif"), overwrite=TRUE)
+
+
+rocky <- filter(coast, class %in% c(4,5))
+mapview(rocky)
+
+rocky_rast_1km <- rasterize(vect(rocky), ocean_1km, touches = TRUE) 
+rocky_rast <- aggregate(rocky_rast_1km, fact = 10, fun = sum, na.rm = TRUE)
+rocky_rast <- rocky_rast/100
+rocky_rast_gf <- ifel(is.na(rocky_rast), gf_data, rocky_rast)
+rocky_rast_gf <- rocky_rast_gf*mask
+writeRaster(rocky_rast_gf, here("habitats/data/rky-intidal.tif"), overwrite=TRUE)
+
+check <- ifel(is.na(sand_rast_gf), 0, sand_rast_gf) + ifel(is.na(mud_rast_gf), 0, mud_rast_gf) + ifel(is.na(rocky_rast_gf), 0, rocky_rast_gf)
+check <-ifel(check==0, NA, check)
+plot(check)
+
+
+```
+
+
+## Alternative coastline
+I was hoping to use this to fill in some gaps in the other data, but this doesn't seem likely to work.
+https://www.nature.com/articles/s41467-023-43819-6
+```{r}
+coast <- st_read("/home/shares/ohi/stressors_2021/_raw_data/romy_coastline_habs/PredictedClasses_MuddyBeaches.shp")
+coast2 <- st_read("/home/shares/ohi/stressors_2021/_raw_data/romy_coastline_habs/MuddyZonesFleming.shp")
+
+
+```
+
+## Seamounts
+This dataset shows the global distribution of seamounts and knolls identified using global bathymetric data at 30 arc-sec resolution. A total of 33,452 seamounts and 138,412 knolls were identified, representing the largest global set of identified seamounts and knolls to date. Seamount habitat was found to constitute approximately 4.7% of the ocean floor, whilst knolls covered 16.3%.
+
+Yesson C, Clark MR, Taylor M, Rogers AD (2011). The global distribution of seamounts based on 30-second bathymetry data. Deep Sea Research Part I: Oceanographic Research Papers 58: 442-453. doi: 10.1016/j.dsr.2011.02.004. Data URL: http://data.unep-wcmc.org/datasets/41
+
+
+```{r}
+seamount_old <- rast(here("habitats/data/seamounts.tif"))
+global(seamount_old, "sum", na.rm=TRUE)
+
+#seamount <- st_read("/home/shares/ohi/stressors_2021/_raw_data/unep_wcmc_ModelledSeamounts2011_v1/01_Data/Seamounts/Seamounts.shp")
+seamount <- st_read("/home/shares/ohi/stressors_2021/_raw_data/unep_wcmc_ModelledSeamounts2011_v1/01_Data/SeamountsBaseArea/SeamountsBaseArea.shp")
+seamount <- seamount %>%
+  mutate(seamount_value = 1) 
+seamount <- st_wrap_dateline(seamount, options = "WRAPDATELINE=YES", quiet = TRUE)
+seamount <- st_transform(seamount, crs(ocean_1km))
+areas <- st_area(seamount)
+total_area <- sum(areas)
+total_area_km2 <- units::set_units(total_area, km^2)
+print(total_area_km2) # larger area due to overlapping areas
+
+seamount_1km <- rasterize(seamount, ocean_1km, field="seamount_value", touches=TRUE)
+global(seamount_1km, "sum", na.rm=TRUE)
+seamount_rast <- aggregate(seamount_1km, fact = 10, fun = sum, na.rm = TRUE)
+seamount_rast <- seamount_rast/100
+seamount_rast <- seamount_rast*mask
+global(seamount_rast, "sum", na.rm=TRUE)
+writeRaster(seamount_rast, here("habitats/data/seamounts.tif"), overwrite=TRUE)
+
+```
+
+
+## Shellfish reef
+https://zenodo.org/records/5090931
+Indicative distribution map for Ecosystem Functional Group M1.4 Shellfish beds and reefs
+Creators
+Keith, David A.1
+ 
+Ferrer-Paris, Jose R.1
+ORCID icon
+Description
+This archive contains indicative distribution maps and profiles for M1.4 Shellfish beds and reefs, a ecosystem functional group (EFG, level 3) of the IUCN Global Ecosystem Typology (v2.0). Please refer to Keith et al. (2020) for details.
+
+The descriptive profiles provide brief summaries of key ecological traits and processes, maps are indicative of global distribution patterns, and are not intended to represent fine-scale patterns. The maps show areas of the world containing major (value of 1, coloured red) or minor occurrences (value of 2, coloured yellow) of each ecosystem functional group. Minor occurrences are areas where an ecosystem functional group is scattered in patches within matrices of other ecosystem functional groups or where they occur in substantial areas, but only within a segment of a larger region. Given bounds of resolution and accuracy of source data, the maps should be used to query which EFG are likely to occur within areas, rather than which occur at particular point locations. Detailed methods and references for the maps are included in the profile (xml format).
+
+```{r}
+
+filterfeed <- rast("/home/shares/ohi/stressors_2021/_raw_data/shellfish_reef/M1.4.web.orig_v1.0.tif")
+filterfeed <- project(filterfeed, ocean_1km)
+global(filterfeed, "sum", na.rm=TRUE)
+filterfeed <- ifel(filterfeed>0, 1, 1)
+filterfeed_rast <- aggregate(filterfeed, fact = 10, fun = sum, na.rm = TRUE)
+filterfeed_rast <- filterfeed_rast/100
+global(filterfeed_rast, "sum", na.rm=TRUE)
+plot(filterfeed_rast)
+filterfeed_rast <- filterfeed_rast* mask
+writeRaster(filterfeed_rast, here("habitats/data/suspension-reef.tif"), overwrite=TRUE)
+
+
+```

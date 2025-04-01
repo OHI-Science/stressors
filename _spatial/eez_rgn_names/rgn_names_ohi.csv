@@ -180,7 +180,7 @@ rgn_id,rgn_label,m49_code,iso3c,georgn,geosubrgn
 250,Aruba,533,ABW,Latin America and the Caribbean,Caribbean
 4,Macquarie Island,NA,NA,Oceania,Australia and New Zealand
 12,Wake Island,NA,NA,Oceania,Micronesia
-26,Andaman and Nicobar,NA,NA,Asia,South-Eastern Asia
+26,Andaman and Nicobar,NA,NA,Asia,South-eastern Asia
 28,Comoro Islands,NA,NA,Africa,Eastern Africa
 30,Glorioso Islands,NA,NA,Africa,Eastern Africa
 33,Juan de Nova Island,NA,NA,Africa,Eastern Africa
@@ -215,10 +215,10 @@ rgn_id,rgn_label,m49_code,iso3c,georgn,geosubrgn
 180,United Kingdom,NA,NA,Europe,Northern Europe
 195,Ivory Coast,NA,NA,Africa,Western Africa
 221,Northern Saint-Martin,NA,NA,Latin America and the Caribbean,Caribbean
-231,East Timor,NA,NA,Asia,South-Eastern Asia
-237,Oecussi Ambeno,NA,NA,Asia,South-Eastern Asia
+231,East Timor,NA,NA,Asia,South-eastern Asia
+237,Oecussi Ambeno,NA,NA,Asia,South-eastern Asia
 245,Bonaire,NA,NA,Latin America and the Caribbean,Caribbean
-247,Brunei,NA,NA,Asia,South-Eastern Asia
+247,Brunei,NA,NA,Asia,South-eastern Asia
 248,Saba,NA,NA,Latin America and the Caribbean,Caribbean
 249,Sint Eustatius,NA,NA,Latin America and the Caribbean,Caribbean
 255,disputed,NA,NA,disputed,disputed

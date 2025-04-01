@@ -3,39 +3,26 @@ title: "Downloading population data"
 output: html_document
 date: '2022-09-07'
 ---
-Data from here: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8762352/
-But also see: https://www.nature.com/articles/s41597-022-01675-x
+ https://www.nature.com/articles/s41597-022-01675-x
+version 3, downloaded Jan 17 2025
+
+Spatially explicit population grids can play an important role in climate change, resource management, sustainable development, and other fields. Several gridded datasets already exist, but global data, especially high-resolution data on future populations, are largely lacking. Based on the WorldPop dataset, we present a global gridded population dataset covering 248 countries or areas at 30 arc-seconds (approximately 1 km) spatial resolution with five-year intervals for the period 2020–2100 by implementing random forest (RF) algorithm. Our dataset is quantitatively consistent with the shared socioeconomic pathways (SSPs) national population. The spatially explicit population grid we predicted in this study is validated by comparison with the WorldPop dataset at both the sub-national and grid level. A total of 3,569 provinces (almost all provinces on the globe) and more than 480 thousand grids are verified, and the results show that our dataset can serve as an input for predictive research in various fields.
+
 
 ```{r}
-library(curl)
-#url = "ftp://sidekick.nateko.lu.se/SSP2_RCP4_5/"
-#url = "ftp://sidekick.nateko.lu.se/SSP1_RCP2_6/"
-#url = "ftp://sidekick.nateko.lu.se/SSP5_RCP8_5/"
-#url = "ftp://sidekick.nateko.lu.se/SSP3_RCP7/"
-#url = "ftp://sidekick.nateko.lu.se/SSP4_RCP6/"
-url = "ftp://sidekick.nateko.lu.se/SSP4_RCP3_4/"
 
-h = new_handle(dirlistonly=TRUE)
-con = curl(url, "r", h)
-tbl = read.table(con, stringsAsFactors=TRUE, fill = TRUE)
-close(con)
-tbl
+options(timeout = 800)
+url <- "https://figshare.com/ndownloader/articles/19608594/versions/3"
+url <- "https://figshare.com/ndownloader/files/34829160"
+download_dir <- "/home/shares/ohi/stressors_2021/_raw_data/wang_population/SSP1.zip"
 
-complete <- dir("/home/shares/ohi/stressors_2021/_raw_data/olen_population")
-#complete <- grep("SSP1", complete, value=TRUE)
-todo <- setdiff(tbl$V1, complete)
-urls <- paste0(url[1], todo)
+download.file(url, download_dir, mode = "wb") 
 
-fls = basename(urls)
+unzip("/home/shares/ohi/stressors_2021/_raw_data/wang_population/population_data.zip", exdir = "/home/shares/ohi/stressors_2021/_raw_data/wang_population")  # Extract to the specified directory
 
-
-for(url_item in urls){ # url_item = urls[1]
-fileName = basename(url_item)
-  curl_download(url_item, sprintf("/home/shares/ohi/stressors_2021/_raw_data/olen_population/%s", fileName))
-  cat(paste0(fileName, "\n"))
-}
-
-complete <- dir("/home/shares/ohi/stressors_2021/_raw_data/olen_population")
-complete <- grep("SSP1", complete, value=TRUE)
-dir("/home/shares/ohi/stressors_2021/_raw_data/population/SSP4_RCP3_4")
+unzip("/home/shares/ohi/stressors_2021/_raw_data/wang_population/SSP1.zip", exdir = "/home/shares/ohi/stressors_2021/_raw_data/wang_population")  # Extract to the specified directory
+unzip("/home/shares/ohi/stressors_2021/_raw_data/wang_population/SSP2.zip", exdir = "/home/shares/ohi/stressors_2021/_raw_data/wang_population")  # Extract to the specified directory
+unzip("/home/shares/ohi/stressors_2021/_raw_data/wang_population/SSP3.zip", exdir = "/home/shares/ohi/stressors_2021/_raw_data/wang_population")  # Extract to the specified directory
+unzip("/home/shares/ohi/stressors_2021/_raw_data/wang_population/SSP4.zip", exdir = "/home/shares/ohi/stressors_2021/_raw_data/wang_population")  # Extract to the specified directory
+unzip("/home/shares/ohi/stressors_2021/_raw_data/wang_population/SSP5.zip", exdir = "/home/shares/ohi/stressors_2021/_raw_data/wang_population")  # Extract to the specified directory
 ```
