@@ -109,7 +109,6 @@ writeRaster(rmean, filename = file.path("/home/shares/ohi/stressors_2021/_raw_da
 
 ```
 
-
 # Project and gapfill raw data
 
 ```{r}
@@ -151,8 +150,6 @@ writeRaster(r, filename = sprintf("/home/shares/ohi/stressors_2021/_dataprep/T_b
 }
 
 ```
-
-
 
 # Rescaling
 
@@ -214,7 +211,6 @@ file.remove(delete_files)
 
 
 ```
-
 
 Quick look at some!
 

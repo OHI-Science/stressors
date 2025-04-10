@@ -100,7 +100,7 @@ pivot_longer(
   pivot_wider(names_from = pressure,
               values_from = value)
   
-write_csv(vuln, here("impact/tables/vulnerability.csv"))
+write_csv(vuln, here("impact/data/vulnerability.csv"))
 
 ```
 
@@ -889,13 +889,13 @@ Get habitat impact data
    mutate(scen_time = paste(scenario, time_frame, sep="_")) %>%
    dplyr::select(habitat = plot_name_habitat, pressure = plot_name_pressure, scen_time, color, avg_impact)
 
- write_csv(avg_hab_impact_tmp, here::here('impact/int/avg_hab_impact_tmp.csv'))
+ write_csv(avg_hab_impact_tmp, here::here('impact/data/avg_hab_impact_tmp.csv'))
 ```
 ## Suplement table S1
 
 ```{r}
 ## make data wide
-avg_hab_impact <- read_csv(here('impact/int/avg_hab_impact_tmp.csv')) %>%
+avg_hab_impact <- read_csv(here('impact/data/avg_hab_impact_tmp.csv')) %>%
   pivot_wider(
     names_from = scen_time,
     values_from = avg_impact,
@@ -942,7 +942,7 @@ calc_start_end <- function(df, group = 'habitat', var = 'pressure', val = 'impac
 
 ```{r}
 
-avg_hab_impact_tmp <- read_csv(here::here('impact/int/avg_hab_impact_tmp.csv'))
+avg_hab_impact_tmp <- read_csv(here::here('impact/data/avg_hab_impact_tmp.csv'))
 
 ## make data wide
 avg_hab_impact <- avg_hab_impact_tmp %>%
@@ -1147,7 +1147,7 @@ write_csv(datas4, here("impact/data/dataS4.csv"))
    mutate(scen_time = paste(scenario, time_frame, sep="_")) %>%
    dplyr::select(georgn = geosubrgn, pressure = plot_name_pressure, scen_time, color, avg_impact)
  
- write_csv(pressure_georgn, here('impact/int/pressure_georgn.csv'))
+ write_csv(pressure_georgn, here('impact/data/pressure_georgn.csv'))
 
 
 ### Make supplementary table 2
@@ -1177,7 +1177,7 @@ filter(avg_georgn_impact, ssp245_change<0)
 ```{r}
 ## make data wide
 
-pressure_georgn <- read_csv(here('impact/int/pressure_georgn.csv'))
+pressure_georgn <- read_csv(here('impact/data/pressure_georgn.csv'))
 
 avg_georgn_impact <- pressure_georgn %>%
   pivot_wider(
