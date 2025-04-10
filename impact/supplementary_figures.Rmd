@@ -18,11 +18,24 @@ library(terra)
 library(here)
 library(countrycode)
 
+library(showtext)
+font_add(family = 'bentonbold', 
+         regular = here('font/BentonSans', 
+                        'BentonSans Condensed Bold', 
+                        'BentonSans Condensed Bold.otf'))
+font_add(family = 'benton', 
+         regular = here('font/BentonSans', 
+                        'BentonSans Condensed Book', 
+                        'BentonSans Condensed Book.otf'))
+showtext_auto()
+
+
 ```
 
 Get land boundaries
 
 ```{r}
+
 world <- ne_countries(scale = "medium", returnclass = "sf")
 # Define the Mollweide projection string
 moll_crs <- "+proj=moll"
@@ -34,7 +47,7 @@ world_moll <- st_transform(world, crs = moll_crs)
 
 
 
-Map of decreased areas
+# Plot S1 Map of decreased areas
 ```{r}
 
 ssp2_med <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp245_medium-term.tif")- 
@@ -47,18 +60,6 @@ global(area, "sum", na.rm=TRUE)/global(ocean, "sum", na.rm=TRUE)
 
 decrease_df <- as.data.frame(decrease, xy=TRUE)
 ocean2 <- ifel(ocean>0, 1, NA)
-# Remove borders and labels
-par(mar = c(0, 0, 0, 0), xaxt = 'n', yaxt = 'n', bty = 'n')
-plot(ocean2, col="lightblue", axes=FALSE, box=FALSE, legend=FALSE )
-points(decrease_df$x, decrease_df$y, col="red", pch=16, cex=0.2)
-
-
-ssp5_med <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp585_medium-term.tif")- 
-            rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp585_current.tif") 
-
-decrease <- ifel(ssp5_med <= 0, 1, NA)
-
-decrease_df <- as.data.frame(decrease, xy=TRUE)
 # Remove borders and labels
 par(mar = c(0, 0, 0, 0), xaxt = 'n', yaxt = 'n', bty = 'n')
 plot(ocean2, col="lightblue", axes=FALSE, box=FALSE, legend=FALSE )
@@ -78,9 +79,37 @@ tmp <- zonal(pressure_stack, decrease, fun="mean", na.rm=TRUE) %>%
 
 
 
+ssp5_med <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp585_medium-term.tif")- 
+            rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp585_current.tif") 
+
+decrease <- ifel(ssp5_med <= 0, 1, NA)
+
+decrease_df <- as.data.frame(decrease, xy=TRUE)
+# Remove borders and labels
+par(mar = c(0, 0, 0, 0), xaxt = 'n', yaxt = 'n', bty = 'n')
+plot(ocean2, col="lightblue", axes=FALSE, box=FALSE, legend=FALSE )
+points(decrease_df$x, decrease_df$y, col="red", pch=16, cex=0.2)
+
 ```
 
+# Plot S2
 Some figures made in impacts.Rmd for SSP5-8.5 scenarios. They are in impact/figs/cumulative
+
+### Figure 1
+Maps of cumulative impact and change in cumulative impact
+
+Get land boundaries
+
+```{r}
+
+world <- ne_countries(scale = "medium", returnclass = "sf")
+# Define the Mollweide projection string
+moll_crs <- "+proj=moll"
+
+# Reproject the world data to Mollweide
+world_moll <- st_transform(world, crs = moll_crs)
+
+```
 
 histogram and statistics for latitudinal patterns
 ```{r}
@@ -101,7 +130,7 @@ global_df <- as.data.frame(stack, xy=TRUE) %>%
             sum_impact = sum(value)) %>%
   ungroup() %>%
   mutate(avg_impact = sum_impact/n) %>%
-  select(y, scenario, avg_impact) 
+  dplyr::select(y, scenario, avg_impact) 
 
 
 plot_data <- global_df %>%
@@ -131,8 +160,29 @@ hist <- ggplot(plot_data, aes(x = y, y = avg_impact, fill = scenario)) +
     panel.grid = element_blank(),    # Remove grid lines
     panel.border = element_blank()   # Remove border
   )
-hist
+
 ggsave(hist, filename=here("impact/figs/latitudinal_impacts_ssp585.png"), width=5.5, height =2, units = c("in"))
+
+```
+
+
+Hotspot statistics
+
+```{r}
+
+## find the highest spots
+list.files("/home/shares/ohi/stressors_2021/impacts/cumulative", full=TRUE)
+
+current <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp585_current.tif")
+max(current$sum)
+quantile(as.data.frame(current)$sum, c(0.5))
+quantile(as.data.frame(current)$sum, c(0.9999))
+
+
+future <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp585_medium-term.tif")
+
+quantile(as.data.frame(future)$sum, c(0.9999))
+quantile(as.data.frame(future)$sum, c(0.5))
 
 ```
 
@@ -140,67 +190,57 @@ ggsave(hist, filename=here("impact/figs/latitudinal_impacts_ssp585.png"), width=
 Global plot of hotspots
 ```{r}
 
-ssp5_change <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp585_medium-term.tif") -
+ssp2_change <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp585_medium-term.tif") -
                rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp585_current.tif")
-ssp5_change_high_quant <-global(ssp5_change, fun = quantile, probs = 0.80, na.rm = TRUE) %>% pull()
-ssp5_change_high <- ifel(ssp5_change >= ssp5_change_high_quant, 1, 0)
-ssp5_change_low_quant <-global(ssp5_change, fun = quantile, probs = 0.20, na.rm = TRUE) %>% pull()
-ssp5_change_low <- ifel(ssp5_change <= ssp5_change_low_quant, 1, 0)
+ssp2_change_high_quant <-global(ssp2_change, fun = quantile, probs = 0.80, na.rm = TRUE) %>% pull()
+ssp2_change_high <- ifel(ssp2_change >= ssp2_change_high_quant, 1, 0)
+ssp2_change_low_quant <-global(ssp2_change, fun = quantile, probs = 0.20, na.rm = TRUE) %>% pull()
+ssp2_change_low <- ifel(ssp2_change <= ssp2_change_low_quant, 1, 0)
 
-ssp5_current <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp585_current.tif")
-ssp5_current_high_quant <-global(ssp5_current, fun = quantile, probs = 0.80, na.rm = TRUE) %>% pull()
-ssp5_current_high <- ifel(ssp5_current >= ssp5_current_high_quant, 1, 0)
-ssp5_current_low_quant <-global(ssp5_current, fun = quantile, probs = 0.20, na.rm = TRUE) %>% pull()
-ssp5_current_low <- ifel(ssp5_current <= ssp5_current_low_quant, 1, 0)
+ssp2_current <- rast("/home/shares/ohi/stressors_2021/impacts/cumulative/ssp585_current.tif")
+ssp2_current_high_quant <-global(ssp2_current, fun = quantile, probs = 0.80, na.rm = TRUE) %>% pull()
+ssp2_current_high <- ifel(ssp2_current >= ssp2_current_high_quant, 1, 0)
+ssp2_current_low_quant <-global(ssp2_current, fun = quantile, probs = 0.20, na.rm = TRUE) %>% pull()
+ssp2_current_low <- ifel(ssp2_current <= ssp2_current_low_quant, 1, 0)
 
 # category 1: current low and stable
-cat1 <- ssp5_current_low + ssp5_change_low
+cat1 <- ssp2_current_low + ssp2_change_low
 cat1 <- ifel(cat1 == 2, 3, NA)
-plot(cat1, col="#44ACC8")
+plot(cat1, col="#26547C")
 
 # category 2: current high and stable
-cat2 <- ssp5_current_high + ssp5_change_low
+cat2 <- ssp2_current_high + ssp2_change_low
 cat2 <- ifel(cat2 == 2, 4, NA)
-plot(cat2, col="#E2D100", add=TRUE)
+plot(cat2, col="#FDCFF3", add=TRUE)
 
-# category 3: current high and fast increase
-cat3 <- ssp5_current_high + ssp5_change_high
-cat3 <- ifel(cat3 == 2, 3, NA)
-plot(cat3, col="#E58501", add=TRUE)
+# category 3: current low and fast increase
+cat3 <- ssp2_current_low + ssp2_change_high
+cat3 <- ifel(cat3 == 2, 4, NA)
+plot(cat3, col="#FFD166", add=TRUE)
 
-# category 4: current low and fast increase
-cat4 <- ssp5_current_low + ssp5_change_high
-cat4 <- ifel(cat4 == 2, 4, NA)
-plot(cat4, col="#B41821", add=TRUE)
+
+# category 4: current high and fast increase
+cat4 <- ssp2_current_high + ssp2_change_high
+cat4 <- ifel(cat4 == 2, 3, NA)
+plot(cat4, col="#EF476F", add=TRUE)
+
 
 png(here("impact/figs/hotspots_ssp585.png"), width = 2000, height = 1500, res = 300)
 
 plot(st_geometry(world_moll), col="gray80", border="gray85")
-plot(cat1, col="#44ACC8", add=TRUE, legend=FALSE)
-plot(cat2, col="#E2D100", add=TRUE, legend=FALSE)
-plot(cat3, col="#B41821", add=TRUE, legend=FALSE)
-plot(cat4, col="#E58501", add=TRUE, legend=FALSE)
+plot(cat1, col="#26547C", add=TRUE, legend=FALSE)
+plot(cat2, col="#FDCFF3", add=TRUE, legend=FALSE)
+plot(cat3, col="#FFD166", add=TRUE, legend=FALSE)
+plot(cat4, col="#EF476F", add=TRUE, legend=FALSE)
 
 dev.off()
 
 ```
 
-## Figure 2: coastal vs ocean
 
-Cumulative impact plots
+
+## Figure S4: coastal vs ocean
 ```{r}
-# relative pressures coastal vs global
-
-## global coast
-coast <- rast(here("_spatial/coastal_country_mol.tif"))
-coast <- ifel(coast>0, 1, 0)
-
-## offshore area only
-ocean <- rast(here("_spatial/ocean_area_mol.tif"))
-ocean <- ifel(ocean>0, 2, 0)
-offshore <- ocean - ifel(is.na(coast), 0, coast)
-offshore <- ifel(offshore ==2, 1, NA)
-
 
 cumulative <- list.files("/home/shares/ohi/stressors_2021/impacts/cumulative", full=TRUE)
 cum_stack <- rast(cumulative)
@@ -241,15 +281,17 @@ cum <- ggplot(point_data_plot, aes(y = region, x = value, fill = region)) +
   xlim(0, 2) + 
   facet_wrap(~ time_period, ncol = 1) +
   scale_fill_manual(values = c("offshore" = "#3CA8BCFF", "coastal" = "#EF8A0CFF")) +
-  theme_minimal() +
-  labs(
+    labs(
     title = "",
     x = "",
     y = "",
     fill = ""
   ) +
   scale_x_continuous(breaks = c(0, 1, 2)) +  # Customize x-axis values
-  theme(
+  theme(text = element_text(family = 'benton', size=37.5),
+        #axis.title = element_blank(),
+        legend.key.height = unit(0.25, "cm"),
+        legend.key.width = unit(0.25, "cm"),
     panel.background = element_rect(fill = "white", color = NA),
     plot.background = element_rect(fill = "white", color = NA),
     panel.grid.major = element_line(color = "grey90"),
@@ -262,49 +304,16 @@ cum <- ggplot(point_data_plot, aes(y = region, x = value, fill = region)) +
     axis.ticks.y = element_blank(), # Remove y-axis ticks
     strip.text = element_blank()    # Remove facet plot titles
   )
-cum
-ggsave(cum, filename=here("impact/figs/coastal_vs_offshore_cumulative_impact_ssp585.png"), width=3, height =1.5, units = c("in"))
+print(cum)
+ggsave(cum, filename=here("impact/figs/coastal_vs_offshore_cumulative_impact_ssp585.png"), width=4.5, height =1.75, units = c("in"), dpi=300)
+
+
 
 ```
 
-Now get pressure impacts data together by summarizing pressure impacts across habitats.
 
-```{r}
-# 1. summarize pressure rasters across habitats
-summarize_pressures <- function(scenario ="ssp585", time = "medium-term"){
-  # scenario = "ssp245"
-  # time = "medium-term"
-  
-files <- list.files("/home/shares/ohi/stressors_2021/impacts/hab_vuln_pressure_habitat_corrected/", full=TRUE)
 
-pressure_list <- data.frame(pressures=c("sst-extremes|temperature", "slr", "_oxygen-", "_oa_", "nutrient", "npp", "light-pollution", "fisheries", "coastal-disturbance", "air-heat-index"),
-                            pressure_name = c("ocean-warming", "sea-level-rise", "reduced-oxygen", "acidification", "nutrient-pollution", "primary-productivity", "light-pollution",
-                                              "fisheries-biomass-loss", "coastal-disturbance", "air-heat-index"))
-
-  for(pressure in pressure_list$pressures){
-    #pressure = pressure_list$pressures[2]
-    pressure_files <- grep(scenario, files, value=TRUE)
-    pressure_files <- grep(time, pressure_files, value=TRUE)
-    pressure_files <- grep(pressure, pressure_files, value=TRUE)
-    cat(pressure, "n = ", length(pressure_files), "\n")
-    
-    pressure_impact_rasts <- rast(pressure_files)
-    pressure_impact_sum <- sum(pressure_impact_rasts, na.rm=TRUE)
-   
-    name_raster <- paste0(pressure_list$pressure_name[pressure_list$pressures==pressure],"_",
-                          scenario, "_", time, ".tif")
-    writeRaster(pressure_impact_sum, 
-                paste0("/home/shares/ohi/stressors_2021/impacts/pressure_impacts/", name_raster),
-                overwrite=TRUE) 
-  }
-}
-
-summarize_pressures(scenario ="ssp585", time = "medium-term")
-summarize_pressures(scenario ="ssp585", time = "current")
-
-```
-
-Now get the data for each pressure and plot by region
+Plot each pressure by region
 ```{r}
 
 list.files("/home/shares/ohi/stressors_2021/impacts/pressure_impacts/")
@@ -313,6 +322,7 @@ pressures <- list.files("/home/shares/ohi/stressors_2021/impacts/pressure_impact
 pressure_stack <- rast(pressures)
 source_info <- gsub(".tif", "", basename(sources(pressure_stack)))
 names(pressure_stack) <- source_info
+
 
 offshore2 <- ifel(offshore>=1, 2, 0)
 offshore2 <- ifel(is.na(offshore2), 0, offshore2)
@@ -342,7 +352,7 @@ separate(
   mutate(pressure = gsub("-", " ", pressure)) %>%
   left_join(area_df, by="region") %>%
   mutate(pressure_impact = value/area) %>%
-  select(pressure, scenario, time_period, region, pressure_impact)
+  dplyr::select(pressure, scenario, time_period, region, pressure_impact)
 
 # Calculate average impact for each pressure
 average_impacts <- avg_pressure_impacts %>%
@@ -412,7 +422,7 @@ coast_compare <- ggplot() +
   scale_shape_manual(
     name = "",  # Legend title
     values = c("Current" = 16, "Medium-Term" = 17),
-    labels = c("Current" = "current", "Medium-Term" = "future, 2041-2060")  # Customized labels
+    labels = c("Current" = "current", "Medium-Term" = "future")  # Customized labels
   ) +
   scale_color_manual(
     name = "",
@@ -424,7 +434,10 @@ coast_compare <- ggplot() +
     x = "Impact",
     y = ""
   ) +
-  theme(
+  theme(text = element_text(family = 'benton', size = 37.5),
+        #axis.title = element_blank(),
+        legend.key.height = unit(0.25, "cm"),
+        legend.key.width = unit(0.25, "cm"),
     panel.background = element_rect(fill = "white", color = NA),
     plot.background = element_rect(fill = "white", color = NA),
     panel.grid.major = element_line(color = "grey90"),
@@ -434,76 +447,17 @@ coast_compare <- ggplot() +
     axis.title = element_text(color = "black"),
     legend.position = "none"  )
 coast_compare
-ggsave(coast_compare, filename ="impact/figs/coastal_vs_offshore_pressure_impact_ssp585.png", width=6, height =3, units = c("in"))
-
-combined_plot <- cowplot::plot_grid(cum, coast_compare, ncol = 1,  rel_heights = c(1, 2))  # Use ncol = 1 for stacking
-combined_plot
-ggsave(combined_plot, filename ="impact/figs/coastal_vs_offshoret_ssp585.png", width=5, height =5, units = c("in"))
+ggsave(coast_compare, filename ="impact/figs/coastal_vs_offshore_pressure_impact_585.png", width=5, height =3.5, units = c("in"))
 
 
 ```
 
-## Figure 3 Habitat comparison
 
-Get habitat impact data
+## Figure S5 Habitat comparison
+
 ```{r}
 
-pressures <- list.files("/home/shares/ohi/stressors_2021/impacts/hab_vuln_pressure/", full=TRUE)
-pressures <- grep("ssp245|ssp585", pressures, value=TRUE)
-pressures <- grep("_current|_near-term|_medium-term", pressures, value=TRUE)
-
-hab_impacts_stack <- rast(pressures)
-source_info <- gsub(".tif", "", basename(sources(hab_impacts_stack)))
-names(hab_impacts_stack) <- source_info
-
-hab_impacts_sum <- global(hab_impacts_stack, "sum", na.rm=TRUE) 
-
-hab_impacts <- hab_impacts_sum %>%
-  rename(impact = sum) %>%
-  mutate(hab_vul_scen = rownames(hab_impacts_sum)) %>%
-    separate(
-    col = hab_vul_scen,           
-    into = c("habitat", "pressure", "scenario", "time_frame"),  
-    sep = "_",                  
-    remove = TRUE,                
-    extra = "merge",              
-    fill = "right"                
-  )
-rownames(hab_impacts) <- NULL
-
-# join with names and condense benthic and surface oxygen and benthic and surface temperatures
-habitats <- read_csv(here("impact/habitat_list.csv"))
-pressures <- read_csv(here("impact/pressure_list.csv"))
-setdiff(hab_impacts$habitat, habitats$file_name)
-setdiff(habitats$file_name, hab_impacts$habitat)
-setdiff(hab_impacts$pressure, pressures$pressure)
-setdiff(pressures$pressure, hab_impacts$pressure)
-
-hab_impacts <- hab_impacts %>%
-  full_join(pressures, by=c("pressure")) %>%
-  group_by(habitat, plot_name_pressure, scenario, time_frame, color) %>%
-  summarize(impact = sum(impact, na.rm=TRUE)) %>%
-  ungroup() %>%
-  full_join(habitats, by=c("habitat" = "file_name"))
-
-# get habitat areas
-habitats <- list.files(here("habitats/data"), full=TRUE)
-hab_stack <- rast(habitats)
-source_info <- gsub(".tif", "", basename(sources(hab_stack)))
-names(hab_stack) <- source_info
-
-hab_area <- global(hab_stack, "sum", na.rm=TRUE)  
-hab_area$habitat <- rownames(hab_area)
-rownames(hab_area) <- NULL
-hab_area <- hab_area %>%
-  rename(area=sum)
-
-
-## join with impact
-avg_hab_impact_tmp <- left_join(hab_impacts, hab_area, by="habitat") %>%
-  mutate(avg_impact = impact/area) %>%
-  mutate(scen_time = paste(scenario, time_frame, sep="_")) %>%
-  select(habitat = plot_name_habitat, pressure = plot_name_pressure, scen_time, color, avg_impact)
+avg_hab_impact_tmp <- read_csv(here::here('impact/int/avg_hab_impact_tmp.csv'))
 
 ## make data wide
 avg_hab_impact <- avg_hab_impact_tmp %>%
@@ -514,229 +468,94 @@ avg_hab_impact <- avg_hab_impact_tmp %>%
   mutate(ssp245_change = `ssp245_medium-term`-ssp245_current,
          ssp585_change = `ssp585_medium-term`-ssp585_current)
 
-filter(avg_hab_impact, ssp585_change <0)
-
-# Step 1: Summarize the data to get total values for each pressure within each geosubrgn
-pressure_order <- avg_hab_impact %>%
+filter(avg_hab_impact, ssp585_change<0)
+# Step 1: Summarize the data to get total values for each pressure within each habitat
+pressure_change_order <- avg_hab_impact %>%
   group_by(pressure) %>%
   summarize(total_value = sum(`ssp585_change`), .groups = 'drop') %>%
   arrange(total_value) %>%
   mutate(pressure = factor(pressure, levels = unique(pressure)))
 
 
-habitat_order <- avg_hab_impact %>%
+habitat_change_order <- avg_hab_impact %>%
   group_by(habitat) %>%
-  summarize(total_value = sum(`ssp585_change`), .groups='drop') %>%
+  summarize(total_value = sum(`ssp585_medium-term`), .groups='drop') %>%
   arrange(desc(total_value)) %>%
   mutate(habitat = factor(habitat, levels = unique(habitat)))
 
+
  # Step 2: Get plot data and reorder the 'pressure' factor levels based on the total_value
-plot_data <- avg_hab_impact %>%
-  select(habitat, pressure, impact =`ssp585_medium-term`, color)
+current_plot_data <- avg_hab_impact %>%
+  dplyr::select(habitat, pressure, impact = ssp585_current, color) %>%
+  mutate(pressure = factor(pressure, levels = unique(pressure_change_order$pressure))) %>%
+  mutate(habitat = factor(habitat, levels = unique(habitat_change_order$habitat))) %>%
+  calc_start_end(group = 'habitat')
 
-plot_data <- plot_data %>%
-  mutate(pressure = factor(pressure, levels = unique(pressure_order$pressure))) %>%
-  mutate(habitat = factor(habitat, levels = unique(habitat_order$habitat))) %>%
-  arrange(habitat, pressure)
-
-
-# Step 3: Plot the data
-
-plots_bars <- ggplot(plot_data, aes(y = habitat, x = impact, fill = pressure)) +
-  geom_bar(stat = "identity") +
-  #facet_wrap(~variable, nrow = 1) +
-  labs(x = "", y = "", title = "", fill = NULL) +  # fill = NULL removes the legend title
-  theme_minimal() +
-  scale_fill_manual(values = setNames(plot_data$color, plot_data$pressure)) +
-  theme(
-    panel.background = element_rect(fill = "white", color = NA),
-    plot.background = element_rect(fill = "white", color = NA),
-    panel.grid.major = element_line(color = "grey90"),
-    panel.grid.minor = element_blank(),
-    axis.line = element_line(color = "white"),
-    axis.text = element_text(color = "black"),
-    axis.title = element_text(color = "black"),
-    axis.text.y = element_text(angle = 20, hjust = 1)
-  )
-plots_bars
-ggsave(here("impact/figs/habitat_impact_future_barplot_ssp585.png"), plot = plots_bars, width = 8, height = 4, dpi = 300)
-
+current_totals <- current_plot_data %>%
+  group_by(habitat) %>%
+  summarize(current_tot = sum(impact))
 
 # get the change
- # Step 2b: Get plot data and reorder the 'pressure' factor levels based on the total_value
-plot_data <- avg_hab_impact %>%
-  select(habitat, pressure, impact =`ssp585_change`, color)
+# Step 2b: Get plot data and reorder the 'pressure' factor levels based on the total_value
+change_plot_data <- avg_hab_impact %>%
+  dplyr::select(habitat, pressure, impact =`ssp585_change`, color) %>%
+  mutate(pressure = factor(pressure, levels = unique(pressure_change_order$pressure))) %>%
+  mutate(habitat = factor(habitat, levels = unique(habitat_change_order$habitat))) %>%
+  calc_start_end(group = 'habitat') %>%
+  ### to emphasize negative scores on plot
+  # mutate(start = ifelse(start < 0, start*50, start)) %>%
+  left_join(current_totals, by = c('habitat')) %>%
+  mutate(end = end + current_tot, start = start + current_tot)
 
-plot_data <- plot_data %>%
-  mutate(pressure = factor(pressure, levels = unique(pressure_order$pressure))) %>%
-  mutate(habitat = factor(habitat, levels = unique(habitat_order$habitat))) %>%
-  arrange(habitat, pressure)
+```
 
+```{r}
 
-# Step 3: Plot the data
+# Step 3: Plot the future impacts data
 
-plots_bars <- ggplot(plot_data, aes(y = habitat, x = impact, fill = pressure)) +
-  geom_bar(stat = "identity") +
-  #facet_wrap(~variable, nrow = 1) +
-  labs(x = "", y = "", title = "", fill = NULL) +  # fill = NULL removes the legend title
+current_plots_bars <- ggplot() +
+  ### adjust position_nudge and linewidth to get the desired look
+  geom_segment(data = change_plot_data, position = position_nudge(y = .25),
+               aes(x = start, xend = end, y = habitat, color = pressure), linewidth = 4) +
+  ### adjust position_nudge and linewidth to get the desired look
+  geom_segment(data = current_plot_data, position = position_nudge(y = -.09),
+               aes(x = start, xend = end, y = habitat, color = pressure), linewidth = 2.5) +
+  labs(color = NULL) +  # removes the legend title
   theme_minimal() +
-  scale_fill_manual(values = setNames(plot_data$color, plot_data$pressure)) +
-  theme(
+  scale_color_manual(values = setNames(current_plot_data$color, current_plot_data$pressure)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  geom_vline(xintercept = 0, color = 'black') +
+  ylab("Habitat") + 
+  xlab("Cumulative impact") +
+  theme(text = element_text(family = 'benton', size = 37.5),
+        #axis.title = element_blank(),
+        legend.key.height = unit(0.25, "cm"),
+        legend.key.width = unit(0.25, "cm"),
     panel.background = element_rect(fill = "white", color = NA),
     plot.background = element_rect(fill = "white", color = NA),
     panel.grid.major = element_line(color = "grey90"),
     panel.grid.minor = element_blank(),
     axis.line = element_line(color = "white"),
     axis.text = element_text(color = "black"),
-    axis.title = element_text(color = "black"),
-    axis.text.y = element_text(angle = 20, hjust = 1)
-  )
-plots_bars
-ggsave(here("impact/figs/habitat_impact_change_barplot_ssp585.png"), plot = plots_bars, width = 8, height = 4, dpi = 300)
+    axis.title = element_text(color = "black")
+    #,
+    #legend.position = "none"  
+    )
+ggsave(here("impact/figs/habitat_impact_current_barplot_ssp585.png"), plot = current_plots_bars, 
+       width = 7, height = 4, units = 'in', dpi = 300)
 
-
+#knitr::include_graphics(here("impact/figs/habitat_impact_current_barplot.png"))
 ```
 
-Make the second part of the plot that shows overall change in cumulative pressure.
+## Figure S6: Ecoregion and pressure
+
+
 ```{r}
-cum_impact_habitat <- avg_hab_impact_tmp %>%
-  group_by(habitat, scen_time) %>%
-  summarize(avg_impact = sum(avg_impact, na.rm=TRUE))
-
-# Reshape data to wide format
-cum_wide <- cum_impact_habitat %>%
-  pivot_wider(
-    id_cols = c(habitat),
-    names_from = scen_time,
-    values_from = avg_impact
-  ) 
-
-
-# Create combined factor and adjust positions
-cum_wide <- cum_wide %>%
-  mutate(
-    habitat = factor(habitat, levels = unique(habitat_order$habitat)),
-    habitat_position = as.numeric(factor(habitat, levels = unique(habitat_order$habitat))),
-    y_position = habitat_position,
-    delta = `ssp585_medium-term` - ssp585_current,
-    offset = delta * 0.05,  # Adjust this fraction as needed
-    x_start = ssp585_current + sign(delta) * offset,
-    x_end = `ssp585_medium-term` - sign(delta) * offset
-  )
-
-
-# Create the plot
-habitat_compare <- ggplot() +
-  # Add segments with arrows
-  geom_segment(
-    data = cum_wide,
-    aes(
-      x = x_start,
-      xend = x_end,
-      y = habitat,
-      yend = habitat
-    ),
-    arrow = arrow(length = unit(0.2, "cm")),
-    size = 0.5,
-    alpha = 0.5
-  ) +
-  # Add points for current impacts
-  geom_point(
-    data = cum_wide,
-    aes(x = ssp585_current, y = habitat, shape = "current"),
-    size = 2.5
-  ) +
-  # Add points for future impacts
-  geom_point(
-    data = cum_wide,
-    aes(x = `ssp585_medium-term`, y = habitat, shape = "future"),
-    size = 2.5
-  ) +
-  theme_minimal() +
-  labs(
-    title = "",
-    x = "Cumulative impact",
-    y = ""
-  ) +
-  # Customize the legend title and labels
-  scale_shape_manual(
-    name = "",  # Set the legend title here
-    values = c("current" = 16, "future" = 17)  # Use different shapes for "Current" and "Future"
-  ) +
-  theme(
-    panel.background = element_rect(fill = "white", color = NA),
-    plot.background = element_rect(fill = "white", color = NA),
-    panel.grid.major = element_line(color = "grey90"),
-    panel.grid.minor = element_blank(),
-    axis.line = element_line(color = "white"),
-    axis.text = element_text(color = "black"),
-    axis.title = element_text(color = "black"),
-    axis.text.y = element_text(angle = 20, hjust = 1)
-  )
-habitat_compare
-ggsave(habitat_compare, filename ="impact/figs/habitat_pressure_cumulative_impact_ssp585.png", width=8, height =4, units = c("in"))
-
-```
-
-
-## Figure 4:  Zonal region pressure impacts
-```{r}
-
-pressure_country <- read_csv(here("impact/data/country_eez_habxpressurexscenario_impact.csv"))
-
-pressure_rgn <- pressure_country %>%
-  separate(
-    col = impact,
-    into = c("habitat", "pressure", "scenario", "time_frame"),
-    sep = "_",
-    remove = FALSE,
-    extra = "merge",
-    fill = "right"
-  )
-
-## summarize each pressure (across all habitats) for each region
-pressure_rgn <- pressure_rgn %>%
-  group_by(pressure, scenario, time_frame, rgn_id, geosubrgn) %>%
-  summarize(value = sum(value, na.rm=TRUE))
-
-# join with names and condense benthic and surface oxygen and benthic and surface temperatures
-pressures <- read_csv(here("impact/pressure_list.csv"))
-setdiff(pressure_rgn$pressure, pressures$pressure)
-setdiff(pressures$pressure, pressure_rgn$pressure)
-
-pressure_rgn <- pressure_rgn %>%
-  full_join(pressures, by=c("pressure")) %>%
-  group_by(geosubrgn, rgn_id, plot_name_pressure, scenario, time_frame, color) %>%
-  summarize(impact = sum(value, na.rm=TRUE)) %>%
-  ungroup() 
-
-
-## country coastal raster
-eez <- rast(here("_spatial/eez_mol_w_land.tif"))
-coast <- rast(here("_spatial/coastal_country_mol.tif"))
-coast <- ifel(coast>0, 1, 0)
-#get the area
-country_coast <- eez*coast
-plot(country_coast)
-
-# get number of coastal cells in each country:
- coast_cell_num <- zonal(ifel(country_coast>0, 1, 0), country_coast, fun = "sum", na.rm=TRUE)
- names(coast_cell_num) <- c("rgn_id", "cells")
-
-pressure_rgn <- pressure_rgn %>%
-  left_join(coast_cell_num, by="rgn_id")
-
- pressure_georgn <- pressure_rgn %>%
-   group_by(plot_name_pressure, scenario, time_frame, geosubrgn, color) %>%
-   summarize(value = sum(impact, na.rm=TRUE),
-             area = sum(cells, na.rm=TRUE)) %>%
-   ungroup() %>%
-  mutate(avg_impact = value/area) %>%
-  mutate(scen_time = paste(scenario, time_frame, sep="_")) %>%
-  select(habitat = geosubrgn, pressure = plot_name_pressure, scen_time, color, avg_impact)
-
 ## make data wide
-avg_hab_impact <- pressure_georgn %>%
+
+pressure_georgn <- read_csv(here('impact/int/pressure_georgn.csv'))
+
+avg_georgn_impact <- pressure_georgn %>%
   pivot_wider(
     names_from = scen_time,
     values_from = avg_impact,
@@ -746,163 +565,77 @@ avg_hab_impact <- pressure_georgn %>%
 
 
 # Step 1: Summarize the data to get total values for each pressure within each geosubrgn
-pressure_order <- avg_hab_impact %>%
+pressure_change_order <- avg_georgn_impact %>%
   group_by(pressure) %>%
   summarize(total_value = sum(`ssp585_change`), .groups = 'drop') %>%
   arrange(total_value) %>%
   mutate(pressure = factor(pressure, levels = unique(pressure)))
 
 
-habitat_order <- avg_hab_impact %>%
-  group_by(habitat) %>%
-  summarize(total_value = sum(`ssp585_change`), .groups='drop') %>%
+georgn_change_order <- avg_georgn_impact %>%
+  group_by(georgn) %>%
+  summarize(total_value = sum(`ssp585_medium-term`), .groups='drop') %>%
   arrange(desc(total_value)) %>%
-  mutate(habitat = factor(habitat, levels = unique(habitat)))
+  mutate(georgn = factor(georgn, levels = unique(georgn)))
 
  # Step 2: Get plot data and reorder the 'pressure' factor levels based on the total_value
-plot_data <- avg_hab_impact %>%
-  select(habitat, pressure, impact =`ssp585_medium-term`, color)
+current_plot_data <- avg_georgn_impact %>%
+  dplyr::select(georgn, pressure, impact = ssp585_current, color) %>%
+  mutate(pressure = factor(pressure, levels = unique(pressure_change_order$pressure))) %>%
+  mutate(georgn = factor(georgn, levels = unique(georgn_change_order$georgn))) %>%
+  arrange(georgn, pressure) %>%
+  calc_start_end(group = 'georgn')
 
-plot_data <- plot_data %>%
-  mutate(pressure = factor(pressure, levels = unique(pressure_order$pressure))) %>%
-  mutate(habitat = factor(habitat, levels = unique(habitat_order$habitat))) %>%
-  arrange(habitat, pressure)
-
-
-# Step 3: Plot the data
-
-plots_bars <- ggplot(plot_data, aes(y = habitat, x = impact, fill = pressure)) +
-  geom_bar(stat = "identity") +
-  #facet_wrap(~variable, nrow = 1) +
-  labs(x = "", y = "", title = "", fill = NULL) +  # fill = NULL removes the legend title
-  theme_minimal() +
-  scale_fill_manual(values = setNames(plot_data$color, plot_data$pressure)) +
-  theme(
-    panel.background = element_rect(fill = "white", color = NA),
-    plot.background = element_rect(fill = "white", color = NA),
-    panel.grid.major = element_line(color = "grey90"),
-    panel.grid.minor = element_blank(),
-    axis.line = element_line(color = "white"),
-    axis.text = element_text(color = "black"),
-    axis.title = element_text(color = "black"),
-    axis.text.y = element_text(angle = 20, hjust = 1)
-  )
-plots_bars
-ggsave(here("impact/figs/subregion_impact_future_barplot_ssp585.png"), plot = plots_bars, width = 8, height = 4, dpi = 300)
-
+current_totals <- current_plot_data %>%
+  group_by(georgn) %>%
+  summarize(current_tot = sum(impact))
 
 # get the change
- # Step 2b: Get plot data and reorder the 'pressure' factor levels based on the total_value
-plot_data <- avg_hab_impact %>%
-  select(habitat, pressure, impact =`ssp585_change`, color)
-
-plot_data <- plot_data %>%
-  mutate(pressure = factor(pressure, levels = unique(pressure_order$pressure))) %>%
-  mutate(habitat = factor(habitat, levels = unique(habitat_order$habitat))) %>%
-  arrange(habitat, pressure)
-
-
-# Step 3: Plot the data
-
-plots_bars <- ggplot(plot_data, aes(y = habitat, x = impact, fill = pressure)) +
-  geom_bar(stat = "identity") +
-  #facet_wrap(~variable, nrow = 1) +
-  labs(x = "", y = "", title = "", fill = NULL) +  # fill = NULL removes the legend title
-  theme_minimal() +
-  scale_fill_manual(values = setNames(plot_data$color, plot_data$pressure)) +
-  theme(
-    panel.background = element_rect(fill = "white", color = NA),
-    plot.background = element_rect(fill = "white", color = NA),
-    panel.grid.major = element_line(color = "grey90"),
-    panel.grid.minor = element_blank(),
-    axis.line = element_line(color = "white"),
-    axis.text = element_text(color = "black"),
-    axis.title = element_text(color = "black"),
-    axis.text.y = element_text(angle = 20, hjust = 1)
-  )
-plots_bars
-ggsave(here("impact/figs/subregion_impact_change_barplot_ssp585.png"), plot = plots_bars, width = 8, height = 4, dpi = 300)
-
-
+# Step 2b: Get plot data and reorder the 'pressure' factor levels based on the total_value
+change_plot_data <- avg_georgn_impact %>%
+  dplyr::select(georgn, pressure, impact =`ssp585_change`, color) %>%
+  mutate(pressure = factor(pressure, levels = unique(pressure_change_order$pressure))) %>%
+  mutate(georgn = factor(georgn, levels = unique(georgn_change_order$georgn))) %>%
+  calc_start_end(group = 'georgn') %>%
+  ### to emphasize negative scores on plot
+  # mutate(start = ifelse(start < 0, start*50, start)) %>%
+  left_join(current_totals, by = c('georgn')) %>%
+  mutate(end = end + current_tot, start = start + current_tot)
 ```
 
-Make the second part of the plot that shows overall change in cumulative pressure.
 ```{r}
-cum_impact_habitat <- pressure_georgn %>%
-  group_by(habitat, scen_time) %>%
-  summarize(avg_impact = sum(avg_impact, na.rm=TRUE))
 
-# Reshape data to wide format
-cum_wide <- cum_impact_habitat %>%
-  pivot_wider(
-    id_cols = c(habitat),
-    names_from = scen_time,
-    values_from = avg_impact
-  ) 
+# Step 3: Plot the future impacts data
 
-# Create combined factor and adjust positions
-cum_wide <- cum_wide %>%
-  mutate(
-    habitat = factor(habitat, levels = unique(habitat_order$habitat)),
-    habitat_position = as.numeric(factor(habitat, levels = unique(habitat_order$habitat))),
-    y_position = habitat_position,
-    delta = `ssp585_medium-term` - ssp585_current,
-    offset = delta * 0.05,  # Adjust this fraction as needed
-    x_start = ssp585_current + sign(delta) * offset,
-    x_end = `ssp585_medium-term` - sign(delta) * offset
-  )
-
-
-# Create the plot
-habitat_compare <- ggplot() +
-  # Add segments with arrows
-  geom_segment(
-    data = cum_wide,
-    aes(
-      x = x_start,
-      xend = x_end,
-      y = habitat,
-      yend = habitat
-    ),
-    arrow = arrow(length = unit(0.2, "cm")),
-    size = 0.5,
-    alpha = 0.5
-  ) +
-  # Add points for current impacts
-  geom_point(
-    data = cum_wide,
-    aes(x = ssp585_current, y = habitat, shape = "current"),
-    size = 2.5
-  ) +
-  # Add points for future impacts
-  geom_point(
-    data = cum_wide,
-    aes(x = `ssp585_medium-term`, y = habitat, shape = "future"),
-    size = 2.5
-  ) +
+current_plots_bars <- ggplot() +
+  ### adjust position_nudge and linewidth to get the desired look
+  geom_segment(data = change_plot_data, position = position_nudge(y = .25),
+               aes(x = start, xend = end, y = georgn, color = pressure), linewidth = 4) +
+  ### adjust position_nudge and linewidth to get the desired look
+  geom_segment(data = current_plot_data, position = position_nudge(y = -.09),
+               aes(x = start, xend = end, y = georgn, color = pressure), linewidth = 2.2) +
+  labs(color = NULL) +  # removes the legend title
   theme_minimal() +
-  labs(
-    title = "",
-    x = "Cumulative impact",
-    y = ""
-  ) +
-  # Customize the legend title and labels
-  scale_shape_manual(
-    name = "",  # Set the legend title here
-    values = c("current" = 16, "future" = 17)  # Use different shapes for "Current" and "Future"
-  ) +
-  theme(
+  scale_color_manual(values = setNames(current_plot_data$color, current_plot_data$pressure)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  geom_vline(xintercept = 0, color = 'black') +ylab("Georegion") + 
+  xlab("Cumulative impact") +
+  theme(text = element_text(family = 'benton', size = 37.5),
+        #axis.title = element_blank(),
+        legend.key.height = unit(0.25, "cm"),
+        legend.key.width = unit(0.25, "cm"),
     panel.background = element_rect(fill = "white", color = NA),
     plot.background = element_rect(fill = "white", color = NA),
     panel.grid.major = element_line(color = "grey90"),
     panel.grid.minor = element_blank(),
     axis.line = element_line(color = "white"),
     axis.text = element_text(color = "black"),
-    axis.title = element_text(color = "black"),
-    axis.text.y = element_text(angle = 20, hjust = 1)
+    axis.title = element_text(color = "black")#,
+    #legend.position = "none")
   )
-habitat_compare
-ggsave(habitat_compare, filename ="impact/figs/georegion_pressure_cumulative_impact_ssp585.png", width=8, height =4, units = c("in"))
+ggsave(here("impact/figs/georgn_impact_current_barplot_ssp585.png"), plot = current_plots_bars, 
+       width = 7, height = 4, units = 'in', dpi = 300)
+
+
 
 ```
-

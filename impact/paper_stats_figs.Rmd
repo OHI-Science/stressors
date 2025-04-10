@@ -1,15 +1,17 @@
 ---
-title: "Calculating impacts - fig 3"
+title: "Paper Figures and stats"
 output: html_document
 date: "2024-09-16"
 ---
 
 ```{r setup, include=FALSE}
 library(tidyverse)
+library(dplyr)
 library(here)
 library(paletteer)
 library(png)
 library(sf)
+library(terra)
 library(rnaturalearth)
 library(rnaturalearthdata)
 
@@ -42,11 +44,32 @@ global(stack, "sum", na.rm=TRUE)
 1954814.9/893408.4
 2325471.4/890850.4
 
-#1957006.7/890768.3
-#2330441.5/888146.8
-
 #1958809.2/892389.5 ##ssp245
 #2331685.3/889717.7 ##ssp585
+
+
+## percent area with pressure >1 
+ocean <- rast(here("_spatial/ocean_area_mol.tif"))
+ocean <- ifel(ocean>0, 1, ocean)
+ocean_area <- global(ocean, "sum", na.rm=TRUE)
+
+stack_high <- ifel(stack >= 1, 1, NA)
+high_spots <- global(stack_high, "sum", na.rm=TRUE)
+high_spots <- data.frame(high_spots) %>%
+  mutate(ocean_area = ocean_area) %>%
+  mutate(ocean_percent = sum/ocean_area*100)
+
+
+## global coast
+coast <- rast(here("_spatial/coastal_country_mol.tif"))
+coast <- ifel(coast>0, 1, 0)
+coast_area <- global(coast, "sum", na.rm=TRUE)
+
+stack_high <- ifel(stack >= 1, 1, NA)
+coast_high_spots <- stack_high * coast
+coast_high_spots <- data.frame(global(coast_high_spots, "sum", na.rm=TRUE)) %>%
+  mutate(coast_area = coast_area) %>%
+  mutate(coast_percent = sum/coast_area*100)
 
 
 ```
@@ -56,9 +79,9 @@ global(stack, "sum", na.rm=TRUE)
 ```{r}
 
 habitats <- read_csv(here("impact/habitat_list.csv")) %>%
-  select(file_name, plot_name_habitat)
+  dplyr::select(file_name, plot_name_habitat)
 pressures <- read_csv(here("impact/pressure_list.csv")) %>%
-  select(pressure, plot_name_pressure) %>%
+  dplyr::select(pressure, plot_name_pressure) %>%
   mutate(plot_name_pressure = ifelse(pressure == "sst-extremes", "ocean warming, surface", plot_name_pressure))  %>%
   mutate(plot_name_pressure = ifelse(pressure=="temperature-benthic", "ocean warming, benthic", plot_name_pressure)) %>%
  mutate(plot_name_pressure = ifelse(pressure == "oxygen-benthic", "reduced oxygen, benthic", plot_name_pressure)) %>%
@@ -73,13 +96,11 @@ pivot_longer(
   mutate(value = round(value/4, 2)) %>%
   left_join(habitats) %>%
   left_join(pressures) %>%
-  select(pressure = plot_name_pressure, habitat=plot_name_habitat, value) %>%
+  dplyr::select(pressure = plot_name_pressure, habitat=plot_name_habitat, value) %>%
   pivot_wider(names_from = pressure,
               values_from = value)
   
 write_csv(vuln, here("impact/tables/vulnerability.csv"))
-
-
 
 ```
 
@@ -246,7 +267,7 @@ global_df <- as.data.frame(stack, xy=TRUE) %>%
             sum_impact = sum(value)) %>%
   ungroup() %>%
   mutate(avg_impact = sum_impact/n) %>%
-  select(y, scenario, avg_impact) 
+  dplyr::select(y, scenario, avg_impact) 
 
 
 plot_data <- global_df %>%
@@ -343,7 +364,6 @@ mean(ssp5_eq$value)
 0.7531475/0.3859171
 0.6308192/0.1968092
 
-
 #0.6254916/0.2498347  #antarctic
 #0.7532798/0.3847086 #arctic
 #0.6355367/0.1973814 #equator
@@ -426,7 +446,6 @@ dev.off()
 
 Some stats for the paper
 ```{r}
-
 
 # relative pressures coastal vs global
 
@@ -514,15 +533,14 @@ cum <- ggplot(point_data_plot, aes(y = region, x = value, fill = region)) +
   xlim(0, 2) + 
   facet_wrap(~ time_period, ncol = 1) +
   scale_fill_manual(values = c("offshore" = "#3CA8BCFF", "coastal" = "#EF8A0CFF")) +
-  theme_minimal() +
-  labs(
+    labs(
     title = "",
     x = "",
     y = "",
     fill = ""
   ) +
   scale_x_continuous(breaks = c(0, 1, 2)) +  # Customize x-axis values
-  theme(text = element_text(family = 'benton', size = 9),
+  theme(text = element_text(family = 'benton', size=37.5),
         #axis.title = element_blank(),
         legend.key.height = unit(0.25, "cm"),
         legend.key.width = unit(0.25, "cm"),
@@ -538,8 +556,10 @@ cum <- ggplot(point_data_plot, aes(y = region, x = value, fill = region)) +
     axis.ticks.y = element_blank(), # Remove y-axis ticks
     strip.text = element_blank()    # Remove facet plot titles
   )
-cum
-ggsave(cum, filename=here("impact/figs/coastal_vs_offshore_cumulative_impact.png"), width=4.5, height =3.5, units = c("in"))
+print(cum)
+ggsave(cum, filename=here("impact/figs/coastal_vs_offshore_cumulative_impact.png"), width=4.5, height =1.75, units = c("in"), dpi=300)
+
+
 
 ```
 
@@ -626,7 +646,7 @@ separate(
   mutate(pressure = gsub("-", " ", pressure)) %>%
   left_join(area_df, by="region") %>%
   mutate(pressure_impact = value/area) %>%
-  select(pressure, scenario, time_period, region, pressure_impact)
+  dplyr::select(pressure, scenario, time_period, region, pressure_impact)
 
 # Calculate average impact for each pressure
 average_impacts <- avg_pressure_impacts %>%
@@ -708,7 +728,7 @@ coast_compare <- ggplot() +
     x = "Impact",
     y = ""
   ) +
-  theme(text = element_text(family = 'benton', size = 9),
+  theme(text = element_text(family = 'benton', size = 37.5),
         #axis.title = element_blank(),
         legend.key.height = unit(0.25, "cm"),
         legend.key.width = unit(0.25, "cm"),
@@ -721,11 +741,7 @@ coast_compare <- ggplot() +
     axis.title = element_text(color = "black"),
     legend.position = "none"  )
 coast_compare
-ggsave(coast_compare, filename ="impact/figs/coastal_vs_offshore_pressure_impact.png", width=4, height =2, units = c("in"))
-
-combined_plot <- cowplot::plot_grid(cum, coast_compare, ncol = 1,  rel_heights = c(1, 2))  # Use ncol = 1 for stacking
-combined_plot
-ggsave(combined_plot, filename ="impact/figs/coastal_vs_offshore.png", width=5, height =4, units = c("in"))
+ggsave(coast_compare, filename ="impact/figs/coastal_vs_offshore_pressure_impact.png", width=5, height =3.5, units = c("in"))
 
 
 ```
@@ -777,7 +793,7 @@ separate(
   mutate(pressure = gsub("-", " ", pressure)) %>%
   left_join(area_df, by="region") %>%
   mutate(pressure_impact = value/area) %>%
-  select(pressure, scenario, time_period, region, pressure_impact)
+  dplyr::select(pressure, scenario, time_period, region, pressure_impact)
 
 # Calculate average impact for each pressure
 average_impacts <- avg_pressure_impacts %>%
@@ -807,8 +823,6 @@ df_wide %>% filter(region == "offshore") %>%
   mutate(dif = `medium-term` - current)
 df_wide %>% filter(region == "coastal") %>%
   mutate(dif = `medium-term` - current)
-
-
 
 ```
 
@@ -873,7 +887,7 @@ Get habitat impact data
  avg_hab_impact_tmp <- left_join(hab_impacts, hab_area, by="habitat") %>%
    mutate(avg_impact = impact/area) %>%
    mutate(scen_time = paste(scenario, time_frame, sep="_")) %>%
-   select(habitat = plot_name_habitat, pressure = plot_name_pressure, scen_time, color, avg_impact)
+   dplyr::select(habitat = plot_name_habitat, pressure = plot_name_pressure, scen_time, color, avg_impact)
 
  write_csv(avg_hab_impact_tmp, here::here('impact/int/avg_hab_impact_tmp.csv'))
 ```
@@ -881,7 +895,7 @@ Get habitat impact data
 
 ```{r}
 ## make data wide
-avg_hab_impact <- avg_hab_impact_tmp %>%
+avg_hab_impact <- read_csv(here('impact/int/avg_hab_impact_tmp.csv')) %>%
   pivot_wider(
     names_from = scen_time,
     values_from = avg_impact,
@@ -893,7 +907,7 @@ filter(avg_hab_impact, ssp245_change <0)
 
 ### prepare supplemental data
 dataS1 <- avg_hab_impact %>%
-  select(-color, -`ssp245_near-term`, -`ssp585_near-term`)
+  dplyr::select(-color, -`ssp245_near-term`, -`ssp585_near-term`)
 write_csv(dataS1, "impact/data/dataS1.csv")
 ### 
 ```
@@ -920,7 +934,7 @@ calc_start_end <- function(df, group = 'habitat', var = 'pressure', val = 'impac
            start = lag(end, default = 0) + nudge,
            end = end + nudge) %>%
     ungroup() %>%
-    select(-neg, -tmp, -nudge)
+    dplyr::select(-neg, -tmp, -nudge)
   
   return(out_df)
 }
@@ -953,11 +967,11 @@ habitat_change_order <- avg_hab_impact %>%
   summarize(total_value = sum(`ssp245_medium-term`), .groups='drop') %>%
   arrange(desc(total_value)) %>%
   mutate(habitat = factor(habitat, levels = unique(habitat)))
-
+1.32/ 0.333
 
  # Step 2: Get plot data and reorder the 'pressure' factor levels based on the total_value
 current_plot_data <- avg_hab_impact %>%
-  select(habitat, pressure, impact = ssp245_current, color) %>%
+  dplyr::select(habitat, pressure, impact = ssp245_current, color) %>%
   mutate(pressure = factor(pressure, levels = unique(pressure_change_order$pressure))) %>%
   mutate(habitat = factor(habitat, levels = unique(habitat_change_order$habitat))) %>%
   calc_start_end(group = 'habitat')
@@ -966,10 +980,11 @@ current_totals <- current_plot_data %>%
   group_by(habitat) %>%
   summarize(current_tot = sum(impact))
 
+
 # get the change
 # Step 2b: Get plot data and reorder the 'pressure' factor levels based on the total_value
 change_plot_data <- avg_hab_impact %>%
-  select(habitat, pressure, impact =`ssp245_change`, color) %>%
+  dplyr::select(habitat, pressure, impact =`ssp245_change`, color) %>%
   mutate(pressure = factor(pressure, levels = unique(pressure_change_order$pressure))) %>%
   mutate(habitat = factor(habitat, levels = unique(habitat_change_order$habitat))) %>%
   calc_start_end(group = 'habitat') %>%
@@ -996,13 +1011,24 @@ current_plots_bars <- ggplot() +
   scale_color_manual(values = setNames(current_plot_data$color, current_plot_data$pressure)) +
   scale_x_continuous(expand = c(0, 0)) +
   geom_vline(xintercept = 0, color = 'black') +
-  theme(text = element_text(family = 'benton', size = 18),
-        axis.title = element_blank(),
+  ylab("Habitat") + 
+  xlab("Cumulative impact") +
+  theme(text = element_text(family = 'benton', size = 37.5),
+        #axis.title = element_blank(),
         legend.key.height = unit(0.25, "cm"),
-        legend.key.width = unit(0.25, "cm")
-        )
+        legend.key.width = unit(0.25, "cm"),
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.grid.major = element_line(color = "grey90"),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(color = "white"),
+    axis.text = element_text(color = "black"),
+    axis.title = element_text(color = "black")
+    #,
+    #legend.position = "none"  
+    )
 ggsave(here("impact/figs/habitat_impact_current_barplot.png"), plot = current_plots_bars, 
-       width = 10, height = 5, units = 'in', dpi = 300)
+       width = 7, height = 4, units = 'in', dpi = 300)
 
 #knitr::include_graphics(here("impact/figs/habitat_impact_current_barplot.png"))
 ```
@@ -1095,16 +1121,16 @@ pressure_country <- read_csv(here("impact/data/country_eez_habxpressurexscenario
 
 
 #####
- ### Save supplement of coastal data for supplmenet
+ ### Save figure coastal data for supplement
 rgn_names <- read_csv("_spatial/eez_rgn_names/rgn_names_ohi.csv") %>%
-  select(rgn_id, rgn_label) %>%
+  dplyr::select(rgn_id, rgn_label) %>%
   unique() # guam and northern mariana islands have same ID
 
 
 datas4 <- left_join(pressure_rgn, rgn_names, by= "rgn_id") %>%
   filter(time_frame %in% c("current", "medium-term")) %>%
   mutate(average_impact = impact/cells) %>%
-  select(region = rgn_label, scenario, time_frame, pressure = plot_name_pressure, average_impact)
+  dplyr::select(region = rgn_label, scenario, time_frame, pressure = plot_name_pressure, average_impact)
 
 filter(datas4, pressure == "fisheries biomass loss", region %in% c("New Caledonia", "Vanuatu",
                                                                    "Soloman", "Papua New Guinae", "Fiji"))
@@ -1119,7 +1145,7 @@ write_csv(datas4, here("impact/data/dataS4.csv"))
     ungroup() %>%
    mutate(avg_impact = value/area) %>%
    mutate(scen_time = paste(scenario, time_frame, sep="_")) %>%
-   select(georgn = geosubrgn, pressure = plot_name_pressure, scen_time, color, avg_impact)
+   dplyr::select(georgn = geosubrgn, pressure = plot_name_pressure, scen_time, color, avg_impact)
  
  write_csv(pressure_georgn, here('impact/int/pressure_georgn.csv'))
 
@@ -1137,7 +1163,7 @@ avg_georgn_impact <- pressure_georgn %>%
 
 ### prepare supplemental data
 dataS2 <- avg_georgn_impact %>%
-  select(-color, -`ssp245_near-term`, -`ssp585_near-term`)
+  dplyr::select(-color, -`ssp245_near-term`, -`ssp585_near-term`)
 write_csv(dataS2, "impact/data/dataS2.csv")
 ### 
 
@@ -1178,7 +1204,7 @@ georgn_change_order <- avg_georgn_impact %>%
 
  # Step 2: Get plot data and reorder the 'pressure' factor levels based on the total_value
 current_plot_data <- avg_georgn_impact %>%
-  select(georgn, pressure, impact = ssp245_current, color) %>%
+  dplyr::select(georgn, pressure, impact = ssp245_current, color) %>%
   mutate(pressure = factor(pressure, levels = unique(pressure_change_order$pressure))) %>%
   mutate(georgn = factor(georgn, levels = unique(georgn_change_order$georgn))) %>%
   arrange(georgn, pressure) %>%
@@ -1191,7 +1217,7 @@ current_totals <- current_plot_data %>%
 # get the change
 # Step 2b: Get plot data and reorder the 'pressure' factor levels based on the total_value
 change_plot_data <- avg_georgn_impact %>%
-  select(georgn, pressure, impact =`ssp245_change`, color) %>%
+  dplyr::select(georgn, pressure, impact =`ssp245_change`, color) %>%
   mutate(pressure = factor(pressure, levels = unique(pressure_change_order$pressure))) %>%
   mutate(georgn = factor(georgn, levels = unique(georgn_change_order$georgn))) %>%
   calc_start_end(group = 'georgn') %>%
@@ -1216,14 +1242,23 @@ current_plots_bars <- ggplot() +
   theme_minimal() +
   scale_color_manual(values = setNames(current_plot_data$color, current_plot_data$pressure)) +
   scale_x_continuous(expand = c(0, 0)) +
-  geom_vline(xintercept = 0, color = 'black') +
-  theme(text = element_text(family = 'benton', size = 18),
-        axis.title = element_blank(),
+  geom_vline(xintercept = 0, color = 'black') +ylab("Georegion") + 
+  xlab("Cumulative impact") +
+  theme(text = element_text(family = 'benton', size = 37.5),
+        #axis.title = element_blank(),
         legend.key.height = unit(0.25, "cm"),
-        legend.key.width = unit(0.25, "cm")
-        )
+        legend.key.width = unit(0.25, "cm"),
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA),
+    panel.grid.major = element_line(color = "grey90"),
+    panel.grid.minor = element_blank(),
+    axis.line = element_line(color = "white"),
+    axis.text = element_text(color = "black"),
+    axis.title = element_text(color = "black"),
+    legend.position = "none")
 ggsave(here("impact/figs/georgn_impact_current_barplot.png"), plot = current_plots_bars, 
-       width = 10, height = 5.5, units = 'in', dpi = 300)
+       width = 7, height = 4, units = 'in', dpi = 300)
+
 
 knitr::include_graphics(here("impact/figs/georgn_impact_current_barplot_cco.png"))
 ```
@@ -1356,13 +1391,13 @@ impact_country <- coast_impact_result %>%
 #  separate(impact, into = c("scenario", "time_period"), sep = "_")
 
 impact_country <- impact_country %>%
-  select(region, rgn_label, iso3c, impact, avg_value) %>%
+  dplyr::select(region, rgn_label, iso3c, impact, avg_value) %>%
     pivot_wider(
     names_from = impact,
     values_from = avg_value
   )
 
-impact_country$iso3c <- countrycode(impact_country$rgn_label, "country.name", "iso3c") 
+impact_country$iso3c <- countrycode::countrycode(impact_country$rgn_label, "country.name", "iso3c") 
 impact_country <- filter(impact_country, rgn_label != "Bassas da India")
 
 
@@ -1374,7 +1409,7 @@ double_rgns <- data.frame(rgn_label = c("Guadeloupe and Martinique", "Guadeloupe
 coastal_double_eez <- filter(impact_country, rgn_label %in% c("Guadeloupe and Martinique",
                                                "Northern Mariana Islands and Guam",
                                                "Puerto Rico and Virgin Islands of the United States")) %>%
-  select(-iso3c)
+  dplyr::select(-iso3c)
 
 coastal_double_eez2 <- left_join(double_rgns, coastal_double_eez, by="rgn_label")
 
@@ -1396,7 +1431,7 @@ coastal_eez_impact <- filter(coastal_eez_impact, iso3c != "ATF")
 
 coastal_eez_impact2 <- coastal_eez_impact %>%
   filter(!is.na(iso3c)) %>%
-  select(-rgn_label)
+  dplyr::select(-rgn_label)
 
 
 missing_iso3c <- setdiff(depend$iso3c, coastal_eez_impact2$iso3c)
@@ -1411,13 +1446,13 @@ coastal_compare <- coastal_eez_impact2 %>%
 coastal_compare <- coastal_compare %>%
   mutate(change_ssp245_medium = `ssp245_medium-term` - ssp245_current) %>%
     mutate(change_ssp585_medium = `ssp585_medium-term` - ssp585_current) %>%
-  select(region, iso3c, ssp245_current, `ssp245_medium-term`, change_ssp245_medium, ssp585_current, `ssp585_medium-term`, change_ssp585_medium, marine_dependence = integrated_depend)
+  dplyr::select(region, iso3c, ssp245_current, `ssp245_medium-term`, change_ssp245_medium, ssp585_current, `ssp585_medium-term`, change_ssp585_medium, marine_dependence = integrated_depend)
 
 rgn_names <- read_csv("_spatial/eez_rgn_names/rgn_names_ohi.csv") %>%
-  select(rgn_label, iso3c)
+  dplyr::select(rgn_label, iso3c)
 
 coastal_compare <- left_join(coastal_compare, rgn_names, by="iso3c") %>%
-  select(region, iso3c, region_name = rgn_label,  ssp245_current, `ssp245_medium-term`, change_ssp245_medium, ssp585_current, `ssp585_medium-term`, change_ssp585_medium, marine_dependence)
+  dplyr::select(region, iso3c, region_name = rgn_label,  ssp245_current, `ssp245_medium-term`, change_ssp245_medium, ssp585_current, `ssp585_medium-term`, change_ssp585_medium, marine_dependence)
 
 
 write_csv(coastal_compare, here("impact/data/country_coast_cumulative_impact.csv"))
@@ -1459,10 +1494,12 @@ ggsave(here("impact/figs/current_future_scatterplot.png"), plot = p, width = 5, 
 p <- ggplot(data=coastal_compare , aes(y=`ssp245_medium-term`, x=change_ssp245_medium, color=integrated_depend_category)) +
   geom_point(aes(text=iso3c), alpha=0.7, size = 1.5) +
   scale_color_manual(values = c("1" = "darkgray", "2" = "darkgray", "3" = "darkgray", "4"="orange", "5"= "red")) + 
+  ylim(c(0,2.0)) +
+  xlim(c(0, 0.85)) +
   geom_vline(xintercept = median(coastal_compare$change_ssp245_medium, na.rm=TRUE), linetype="dashed", color="orange") +
    geom_hline(yintercept = median(coastal_compare$`ssp245_medium-term`, na.rm=TRUE), linetype="dashed", color="orange") +
   theme_classic()  +
-  theme(text = element_text(family = 'benton', size = 18),
+  theme(text = element_text(family = 'benton', size = 37.5),
         #axis.title = element_blank(),
         legend.key.height = unit(0.25, "cm"),
         legend.key.width = unit(0.25, "cm"),
@@ -1472,8 +1509,8 @@ p <- ggplot(data=coastal_compare , aes(y=`ssp245_medium-term`, x=change_ssp245_m
     panel.grid.minor = element_blank(),
     legend.position = "none"
   ) +
-  labs(y="Future impact", x = "\u0394 impact")
-ggsave(here("impact/figs/current_future_scatterplot.png"), plot = p, width = 6, height = 4, dpi = 300)
+  labs(y="Future impact", x = "Change in impact")
+ggsave(here("impact/figs/current_future_scatterplot.png"), plot = p, width = 4.5, height = 3.5, dpi = 300)
 
 
 p
