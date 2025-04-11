@@ -13,10 +13,6 @@ library(countrycode)
 ```
 
 ```{r}
-vulnerability <- read_csv(here("impact/vulnerability_weighting_matrix_old.csv")) %>%
-  mutate_if(is.numeric, ~ . / 4)
-write_csv(vulnerability, here("impact/vulnerability_weighting_matrix.csv"))
-
 vulnerability <- read_csv(here("impact/vulnerability_weighting_matrix.csv")) 
 
 habitat_files <- list.files(here("habitats/data"), full=TRUE)

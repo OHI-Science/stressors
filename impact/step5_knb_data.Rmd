@@ -1,0 +1,114 @@
+---
+title: "Preparing KNB files"
+output: html_document
+date: "2025-04-10"
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(terra)
+library(sf)
+```
+
+1. Habitat vulnerability matrix
+```{r}
+hab_vuln <- read_csv(here("impact/vulnerability_weighting_matrix.csv"))
+write_csv(hab_vuln, "/home/shares/ohi/stressors_2021/impacts/knb/vulnerability_weighting_matrix.csv")
+
+```
+
+2. Habitat maps
+```{r}
+
+hab_maps <- list.files(here("habitats/data"), full=TRUE)
+
+# Destination directory
+dest_dir <- "/home/shares/ohi/stressors_2021/impacts/knb/habitat_maps"
+
+# Copy the files
+file.copy(from = hab_maps,
+          to = file.path(dest_dir, basename(hab_maps)),
+          overwrite = TRUE)
+
+```
+
+3. Pressures_raw
+```{r}
+
+raw_list <- read_csv(here("impact/raw_pressure_locations.csv")) %>%
+   filter(str_detect(new_fn_scenario, regex("ssp2|ssp5|SSP2|SSP5"))) %>%
+   filter(str_detect(fn_time, regex("current|medium"))) %>%
+  mutate(filepath = paste0(f_path, "/", fn_pressure, "_", fn_scenario, "_", fn_time, ".tif"))
+
+raw_save <- "/home/shares/ohi/stressors_2021/impacts/knb/pressures_raw"
+
+files_new_loc <- file.path(raw_save, paste0(raw_list$new_fn_pressure, "_", tolower(raw_list$new_fn_scenario), "_", raw_list$fn_time, ".tif"))
+                           
+for (i in 1:length(raw_list$filepath)) { # i = 35
+  file.copy(from = raw_list$filepath[i], to = files_new_loc[i], overwrite = TRUE)
+}
+
+## Check that there are 60 files
+
+```
+
+4. Rescaled pressures
+```{r}
+
+rescaled_files <- list.files("/home/shares/ohi/stressors_2021/_final_data/rescaled_pressures", full=TRUE) 
+rescaled_files <-    rescaled_files[str_detect(rescaled_files, regex("ssp2|ssp5|SSP2|SSP5"))]
+rescaled_files <-   rescaled_files[str_detect(rescaled_files, regex("current|medium"))]
+
+raw_save <- "/home/shares/ohi/stressors_2021/impacts/knb/pressures_rescaled"
+
+files_new_loc <- file.path(raw_save, basename(rescaled_files))
+                           
+for (i in 1:length(raw_list$filepath)) { # i = 35
+  file.copy(from = raw_list$filepath[i], to = files_new_loc[i], overwrite = TRUE)
+}
+
+## Check that there are 48 files
+
+```
+
+
+5. Habitat impacts
+
+6. Impact by pressure
+```{r}
+impact_files <- list.files("/home/shares/ohi/stressors_2021/impacts/pressure_impacts", full=TRUE) 
+impact_files <-    impact_files[str_detect(impact_files, regex("ssp2|ssp5|SSP2|SSP5"))]
+impact_files <-   impact_files[str_detect(impact_files, regex("current|medium"))]
+
+raw_save <- "/home/shares/ohi/stressors_2021/impacts/knb/impacts_by_pressure"
+
+files_new_loc <- file.path(raw_save, basename(impact_files))
+                           
+for (i in 1:length(raw_list$filepath)) { # i = 35
+  file.copy(from = raw_list$filepath[i], to = files_new_loc[i], overwrite = TRUE)
+}
+
+## Check that there are 40 files
+
+```
+
+
+7. Cumulative impacts
+```{r}
+
+rescaled_files <- list.files("/home/shares/ohi/stressors_2021/impacts/cumulative", full=TRUE) 
+rescaled_files <-    rescaled_files[str_detect(rescaled_files, regex("ssp2|ssp5|SSP2|SSP5"))]
+rescaled_files <-   rescaled_files[str_detect(rescaled_files, regex("current|medium"))]
+
+raw_save <- "/home/shares/ohi/stressors_2021/impacts/knb/cumulative_impact"
+
+files_new_loc <- file.path(raw_save, basename(rescaled_files))
+                           
+for (i in 1:length(raw_list$filepath)) { # i = 35
+  file.copy(from = raw_list$filepath[i], to = files_new_loc[i], overwrite = TRUE)
+}
+
+## Check that there are 4 files
+
+```
+
