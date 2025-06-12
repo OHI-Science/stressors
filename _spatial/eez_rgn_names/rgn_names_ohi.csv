@@ -181,29 +181,29 @@ rgn_id,rgn_label,m49_code,iso3c,georgn,geosubrgn
 4,Macquarie Island,NA,NA,Oceania,Australia and New Zealand
 12,Wake Island,NA,NA,Oceania,Micronesia
 26,Andaman and Nicobar,NA,NA,Asia,South-eastern Asia
-28,Comoro Islands,NA,NA,Africa,Eastern Africa
+28,Comoro Islands,COM,NA,Africa,Eastern Africa
 30,Glorioso Islands,NA,NA,Africa,Eastern Africa
 33,Juan de Nova Island,NA,NA,Africa,Eastern Africa
 34,Bassas da India,NA,NA,Africa,Eastern Africa
 35,Ile Europa,NA,NA,Africa,Eastern Africa
 36,Ile Tromelin,NA,NA,Africa,Eastern Africa
 55,Azores,NA,NA,Europe,Southern Europe
-56,Cape Verde,NA,NA,Africa,Western Africa
+56,Cape Verde,CPV,NA,Africa,Western Africa
 57,Madeira,NA,NA,Europe,Southern Europe
 58,Canary Islands,NA,NA,Europe,Southern Europe
-77,Syria,NA,NA,Asia,Western Asia
+77,Syria,SYR,NA,Asia,Western Asia
 85,Ascension,NA,NA,Europe,Northern Europe
 88,Tristan da Cunha,NA,NA,Europe,Northern Europe
 90,Prince Edward Islands,NA,NA,Southern Islands,Southern Islands
 91,Crozet Islands,NA,NA,Southern Islands,Southern Islands
 92,Amsterdam Island and Saint Paul Island,NA,NA,Southern Islands,Southern Islands
 93,Kerguelen Islands,NA,NA,Southern Islands,Southern Islands
-94,Heard and McDonald Islands,NA,NA,Southern Islands,Southern Islands
-100,Republique du Congo,NA,NA,Africa,Middle Africa
+94,Heard and McDonald Islands,HMD,NA,Southern Islands,Southern Islands
+100,Republique du Congo,COG,NA,Africa,Middle Africa
 107,Clipperton Island,NA,NA,Latin America and the Caribbean,Central America
 116,Puerto Rico and Virgin Islands of the United States,NA,NA,Latin America and the Caribbean,Caribbean
 140,Guadeloupe and Martinique,NA,NA,Latin America and the Caribbean,Caribbean
-141,Faeroe Islands,NA,NA,Europe,Northern Europe
+141,Faeroe Islands,FRO,NA,Europe,Northern Europe
 144,Jan Mayen,NA,NA,Europe,Northern Europe
 148,Line Group,NA,NA,Oceania,Micronesia
 149,Jarvis Island,NA,NA,Oceania,Micronesia
@@ -211,11 +211,11 @@ rgn_id,rgn_label,m49_code,iso3c,georgn,geosubrgn
 157,Phoenix Group,NA,NA,Oceania,Micronesia
 158,Howland Island and Baker Island,NA,NA,Oceania,Micronesia
 159,Johnston Atoll,NA,NA,Oceania,Micronesia
-161,Wallis and Futuna,NA,NA,Oceania,Polynesia
-180,United Kingdom,NA,NA,Europe,Northern Europe
-195,Ivory Coast,NA,NA,Africa,Western Africa
-221,Northern Saint-Martin,NA,NA,Latin America and the Caribbean,Caribbean
-231,East Timor,NA,NA,Asia,South-eastern Asia
+161,Wallis and Futuna,WLF,NA,Oceania,Polynesia
+180,United Kingdom,GBR,NA,Europe,Northern Europe
+195,Ivory Coast,CIV,NA,Africa,Western Africa
+221,Northern Saint-Martin,NSM,NA,Latin America and the Caribbean,Caribbean
+231,East Timor,TLS,NA,Asia,South-eastern Asia
 237,Oecussi Ambeno,NA,NA,Asia,South-eastern Asia
 245,Bonaire,NA,NA,Latin America and the Caribbean,Caribbean
 247,Brunei,NA,NA,Asia,South-eastern Asia

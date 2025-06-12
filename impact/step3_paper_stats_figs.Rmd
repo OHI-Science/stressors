@@ -532,7 +532,7 @@ cum <- ggplot(point_data_plot, aes(y = region, x = value, fill = region)) +
   geom_violin(trim = FALSE) +
   xlim(0, 2) + 
   facet_wrap(~ time_period, ncol = 1) +
-  scale_fill_manual(values = c("offshore" = "#3CA8BCFF", "coastal" = "#EF8A0CFF")) +
+  scale_fill_manual(values = c("offshore" = "gray10", "coastal" = "gray75")) +
     labs(
     title = "",
     x = "",
@@ -720,7 +720,7 @@ coast_compare <- ggplot() +
   ) +
   scale_color_manual(
     name = "",
-    values = c("offshore" = "#3CA8BCFF", "coastal" = "#EF8A0CFF")
+    values = c("offshore" = "gray10", "coastal" = "gray75")
   ) +
   theme_minimal() +
   labs(
