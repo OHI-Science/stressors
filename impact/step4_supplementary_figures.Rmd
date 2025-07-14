@@ -457,7 +457,7 @@ ggsave(coast_compare, filename ="impact/figs/coastal_vs_offshore_pressure_impact
 
 ```{r}
 
-avg_hab_impact_tmp <- read_csv(here::here('impact/int/avg_hab_impact_tmp.csv'))
+avg_hab_impact_tmp <- read_csv(here::here('impact/data/avg_hab_impact_tmp2.csv'))
 
 ## make data wide
 avg_hab_impact <- avg_hab_impact_tmp %>%
@@ -515,11 +515,11 @@ change_plot_data <- avg_hab_impact %>%
 
 current_plots_bars <- ggplot() +
   ### adjust position_nudge and linewidth to get the desired look
-  geom_segment(data = change_plot_data, position = position_nudge(y = .25),
-               aes(x = start, xend = end, y = habitat, color = pressure), linewidth = 4) +
+  geom_segment(data = change_plot_data, position = position_nudge(y = .03),
+               aes(x = start, xend = end, y = habitat, color = pressure), linewidth = 4.3) +
   ### adjust position_nudge and linewidth to get the desired look
-  geom_segment(data = current_plot_data, position = position_nudge(y = -.09),
-               aes(x = start, xend = end, y = habitat, color = pressure), linewidth = 2.5) +
+  geom_segment(data = current_plot_data, position = position_nudge(y = -.15),
+               aes(x = start, xend = end, y = habitat, color = pressure), linewidth = 2.3) +
   labs(color = NULL) +  # removes the legend title
   theme_minimal() +
   scale_color_manual(values = setNames(current_plot_data$color, current_plot_data$pressure)) +
