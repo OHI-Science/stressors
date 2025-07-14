@@ -1,21 +1,21 @@
-habitat_file,file_name,plot_name_habitat
-intertidal,rky-intidal,rocky intertidal
-intertidal,beach,beach
-intertidal,inttidalmud,intertidal mud
-intertidal,salt-marsh,salt marsh
-intertidal,mangroves,mangrove
-intertidal,seagrass,seagrass
-coastal (<60m depth),suspension-reef,shellfish reef
-coastal (<60m depth),coral-reef,coral reef
-coastal (<60m depth),rocky-reef,rocky reef
-coastal (<60m depth),kelp,kelp forest
-coastal (<60m depth),s-t-s-bottom,subtidal soft bottom
-offshore (<60m depth),surface-waters,shallow pelagic
-offshore,hard-shelf,hard shelf
-offshore,soft-shelf,soft shelf
-offshore,hard-slope,hard slope
-offshore,soft-slope,soft slope
-offshore,d-h-bottom,deep hard-bottom
-offshore,d-s-benthic,deep soft-bottom
-offshore,deep-waters,deep pelagic
-offshore,seamounts,seamounts
+habitat_file,habitat_class,file_name,plot_name_habitat
+intertidal,intertidal-coastal,rky-intidal,rocky intertidal
+intertidal,intertidal-coastal,beach,beach
+intertidal,intertidal-coastal,inttidalmud,intertidal mud
+intertidal,intertidal-coastal,salt-marsh,salt marsh
+intertidal,intertidal-coastal,mangroves,mangrove
+intertidal,intertidal-coastal,seagrass,seagrass
+coastal (<60m depth),intertidal-coastal,suspension-reef,shellfish reef
+coastal (<60m depth),intertidal-coastal,coral-reef,coral reef
+coastal (<60m depth),intertidal-coastal,rocky-reef,rocky reef
+coastal (<60m depth),intertidal-coastal,kelp,kelp forest
+coastal (<60m depth),intertidal-coastal,s-t-s-bottom,subtidal soft bottom
+offshore (<60m depth),intertidal-coastal,surface-waters,shallow pelagic
+offshore,offshore,hard-shelf,hard shelf
+offshore,offshore,soft-shelf,soft shelf
+offshore,offshore,hard-slope,hard slope
+offshore,offshore,soft-slope,soft slope
+offshore,offshore,d-h-bottom,deep hard-bottom
+offshore,offshore,d-s-benthic,deep soft-bottom
+offshore,offshore,deep-waters,deep pelagic
+offshore,offshore,seamounts,seamounts

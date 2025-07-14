@@ -865,7 +865,7 @@ Get habitat impact data
  
  hab_impacts <- hab_impacts %>%
    full_join(pressures, by=c("pressure")) %>%
-   group_by(habitat, plot_name_pressure, scenario, time_frame, color) %>%
+   group_by(habitat, plot_name_pressure, pressure_category, scenario, time_frame, color) %>%
     summarize(impact = sum(impact, na.rm=TRUE)) %>%
    ungroup() %>%
    full_join(habitats, by=c("habitat" = "file_name"))
@@ -887,11 +887,11 @@ Get habitat impact data
  avg_hab_impact_tmp <- left_join(hab_impacts, hab_area, by="habitat") %>%
    mutate(avg_impact = impact/area) %>%
    mutate(scen_time = paste(scenario, time_frame, sep="_")) %>%
-   dplyr::select(habitat = plot_name_habitat, pressure = plot_name_pressure, scen_time, color, avg_impact)
+   dplyr::select(habitat = plot_name_habitat, habitat_class, pressure = plot_name_pressure, pressure_category, scen_time, color, avg_impact)
 
- write_csv(avg_hab_impact_tmp, here::here('impact/data/avg_hab_impact_tmp.csv'))
+ write_csv(avg_hab_impact_tmp, here::here('impact/data/avg_hab_impact_tmp2.csv'))
 ```
-## Suplement table S1
+## Supplement table S1
 
 ```{r}
 ## make data wide
@@ -913,6 +913,7 @@ write_csv(dataS1, "impact/data/dataS1.csv")
 ```
 
 ```{r}
+
 calc_start_end <- function(df, group = 'habitat', var = 'pressure', val = 'impact') {
   ordered_df <- df %>%
     ### flag negative vars
@@ -942,7 +943,7 @@ calc_start_end <- function(df, group = 'habitat', var = 'pressure', val = 'impac
 
 ```{r}
 
-avg_hab_impact_tmp <- read_csv(here::here('impact/data/avg_hab_impact_tmp.csv'))
+avg_hab_impact_tmp <- read_csv(here::here('impact/data/avg_hab_impact_tmp2.csv'))
 
 ## make data wide
 avg_hab_impact <- avg_hab_impact_tmp %>%
@@ -956,17 +957,22 @@ avg_hab_impact <- avg_hab_impact_tmp %>%
 filter(avg_hab_impact, ssp245_change<0)
 # Step 1: Summarize the data to get total values for each pressure within each habitat
 pressure_change_order <- avg_hab_impact %>%
-  group_by(pressure) %>%
-  summarize(total_value = sum(`ssp245_change`), .groups = 'drop') %>%
-  arrange(total_value) %>%
+  group_by(pressure, pressure_category) %>%
+  summarize(total_pressure_value = sum(`ssp245_change`), .groups = 'drop') %>%
+  group_by(pressure_category) %>%
+  mutate(total_category_value = sum(`total_pressure_value`)) %>%
+  arrange(desc(total_category_value), desc(total_pressure_value)) %>%
   mutate(pressure = factor(pressure, levels = unique(pressure)))
 
 
 habitat_change_order <- avg_hab_impact %>%
-  group_by(habitat) %>%
+  group_by(habitat, habitat_class) %>%
   summarize(total_value = sum(`ssp245_medium-term`), .groups='drop') %>%
-  arrange(desc(total_value)) %>%
+  group_by(habitat_class) %>%
+  arrange(habitat_class, desc(total_value), .by_group = TRUE) %>%
   mutate(habitat = factor(habitat, levels = unique(habitat)))
+
+
 1.32/ 0.333
 
  # Step 2: Get plot data and reorder the 'pressure' factor levels based on the total_value
@@ -974,7 +980,8 @@ current_plot_data <- avg_hab_impact %>%
   dplyr::select(habitat, pressure, impact = ssp245_current, color) %>%
   mutate(pressure = factor(pressure, levels = unique(pressure_change_order$pressure))) %>%
   mutate(habitat = factor(habitat, levels = unique(habitat_change_order$habitat))) %>%
-  calc_start_end(group = 'habitat')
+  calc_start_end(group = 'habitat') %>%
+  mutate(diff = end-start)
 
 current_totals <- current_plot_data %>%
   group_by(habitat) %>%

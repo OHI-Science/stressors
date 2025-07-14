@@ -1,13 +1,13 @@
-pressure,color,plot_name_pressure
-light-pollution,#B4B45AFF,light pollution
-oxygen-surface,#78963CFF,reduced oxygen
-nutrient-input,#1E4B3CFF,nutrient pollution
-npp,#AB84A5FF,primary productivity
-air-heat-index,#D2A54BFF,air heat index
-slr,#D2D2C3FF,sea level rise
-coastal-disturbance,#90D8C8FF,coastal disturbance
-oxygen-benthic,#78963CFF,reduced oxygen
-oa,#D48F90FF ,acidification
-fisheries-biomass-loss,#87A5A5FF,fisheries biomass loss
-sst-extremes,#B4783CFF,ocean warming
-temperature-benthic,#B4783CFF,ocean warming
+pressure,pressure_category,color,plot_name_pressure
+light-pollution,land-based,#DFC524FF,light pollution
+oxygen-surface,climate-change-other,#E95D93FF,reduced oxygen
+nutrient-input,land-based,#ED8660FF,nutrient pollution
+npp,productivity,#A1BE79FF,primary productivity
+air-heat-index,climate-change-temperature,#8A0000FF,air heat index
+slr,climate-change-other,#9F2C6CFF,sea level rise
+coastal-disturbance,land-based,#ECA045FF,coastal disturbance
+oxygen-benthic,climate-change-other,#E95D93FF,reduced oxygen
+oa,climate-change-other,#C84382FF,acidification
+fisheries-biomass-loss,fisheries,#4DB0D3FF,fisheries biomass loss
+sst-extremes,climate-change-temperature,#3B060AFF,ocean warming
+temperature-benthic,climate-change-temperature,#3B060AFF,ocean warming
