@@ -1008,11 +1008,11 @@ change_plot_data <- avg_hab_impact %>%
 
 current_plots_bars <- ggplot() +
   ### adjust position_nudge and linewidth to get the desired look
-  geom_segment(data = change_plot_data, position = position_nudge(y = .25),
-               aes(x = start, xend = end, y = habitat, color = pressure), linewidth = 4) +
+  geom_segment(data = change_plot_data, position = position_nudge(y = .03),
+               aes(x = start, xend = end, y = habitat, color = pressure), linewidth = 4.3) +
   ### adjust position_nudge and linewidth to get the desired look
-  geom_segment(data = current_plot_data, position = position_nudge(y = -.09),
-               aes(x = start, xend = end, y = habitat, color = pressure), linewidth = 2.5) +
+  geom_segment(data = current_plot_data, position = position_nudge(y = -.15),
+               aes(x = start, xend = end, y = habitat, color = pressure), linewidth = 2.3) +
   labs(color = NULL) +  # removes the legend title
   theme_minimal() +
   scale_color_manual(values = setNames(current_plot_data$color, current_plot_data$pressure)) +
@@ -1240,11 +1240,11 @@ change_plot_data <- avg_georgn_impact %>%
 
 current_plots_bars <- ggplot() +
   ### adjust position_nudge and linewidth to get the desired look
-  geom_segment(data = change_plot_data, position = position_nudge(y = .25),
-               aes(x = start, xend = end, y = georgn, color = pressure), linewidth = 4) +
+  geom_segment(data = change_plot_data, position = position_nudge(y = .02),
+               aes(x = start, xend = end, y = georgn, color = pressure), linewidth = 3.5) +
   ### adjust position_nudge and linewidth to get the desired look
-  geom_segment(data = current_plot_data, position = position_nudge(y = -.09),
-               aes(x = start, xend = end, y = georgn, color = pressure), linewidth = 2.2) +
+  geom_segment(data = current_plot_data, position = position_nudge(y = -.14),
+               aes(x = start, xend = end, y = georgn, color = pressure), linewidth = 2) +
   labs(color = NULL) +  # removes the legend title
   theme_minimal() +
   scale_color_manual(values = setNames(current_plot_data$color, current_plot_data$pressure)) +
@@ -1267,7 +1267,7 @@ ggsave(here("impact/figs/georgn_impact_current_barplot.png"), plot = current_plo
        width = 7, height = 4, units = 'in', dpi = 300)
 
 
-knitr::include_graphics(here("impact/figs/georgn_impact_current_barplot_cco.png"))
+knitr::include_graphics(here("impact/figs/georgn_impact_current_barplot.png"))
 ```
 
 ## Figure 5: 
